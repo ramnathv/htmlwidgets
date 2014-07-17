@@ -143,7 +143,8 @@ server = function(input, output, session){
 runApp(list(ui = ui, server = server))
 ```
 
-![knob2](http://i.imgur.com/f9p07hI)
+
+![knob2](http://i.imgur.com/f9p07hI.png)
 
 
 #### Credits
