@@ -95,6 +95,7 @@ knob <- function(title, value, min, max, width = NULL, height = NULL, ...){
 
 We also define a `knobOutput` function using the generic `widgetOutput` function in `htmlwidgets` that allows it to be used in a shiny application on the UI side.
 
+```
 #' @export
 knobOutput <- htmlwidgets::widgetOutput('knob')
 ```
