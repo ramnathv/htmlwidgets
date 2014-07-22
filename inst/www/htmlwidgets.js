@@ -50,7 +50,7 @@
     }
     
     // Merge defaults into the definition; don't mutate the original definition
-    definition = extend({}, definition, defaults);
+    definition = extend({}, defaults, definition);
     
     if (typeof(window.Shiny) === "undefined") {
       // We're not in a Shiny context. Use a simple widget registration scheme.
