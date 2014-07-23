@@ -64,9 +64,8 @@ widgetOutput <- function(x){
 renderWidget <- function(expr, env = parent.frame(), quoted = FALSE){
   func <- shiny::exprToFunction(expr, env, quoted)
   function(){
-    data <- func()
-    defaults <- list(min = 0, max = 100, title = 'JustGage')
-    modifyList(defaults, data)
+    data <- unclass(func())
+    return(data)
   }
 }
 
