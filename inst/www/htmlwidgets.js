@@ -70,6 +70,13 @@
     if (!definition.name) {
       throw new Error("Widget must have a name");
     }
+    if (!definition.type) {
+      throw new Error("Widget must have a type");
+    }
+    // Currently we only support output widgets
+    if (definition.type !== "output") {
+      throw new Error("Unrecognized widget type '" + definition.type + "'");
+    }
     // TODO: Verify that .name is a valid CSS classname
     if (!definition.renderValue) {
       throw new Error("Widget must have a renderValue function");
