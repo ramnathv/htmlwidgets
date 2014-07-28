@@ -36,7 +36,7 @@ toHTML.htmlwidget <- function(x, defaultWidth, defaultHeight){
   x$id = id
   
   html <- htmltools::tagList(
-    widget_div(x, id = id, style = style, class = class(x)[1]),
+    widget_html(x, id = id, style = style, class = class(x)[1]),
     widget_data(x, id)
   )
   
@@ -51,7 +51,7 @@ widgetOutput <- function(x){
   function(outputId, width, height){
     cx = structure(class = c(x, 'htmlwidget'), list(value = 10))
     html <- htmltools::tagList(
-      widget_div(cx, id = outputId, class = paste(x, "html-widget html-widget-output"), 
+      widget_html(cx, id = outputId, class = paste(x, "html-widget html-widget-output"), 
         style = sprintf("width:%dpx; height:%dpx", width, height)
       )
     )
@@ -72,12 +72,12 @@ renderWidget <- function(expr, env = parent.frame(), quoted = FALSE){
 
 
 #' @export
-widget_div <- function(x, id, style, class){
-  UseMethod('widget_div')
+widget_html <- function(x, id, style, class){
+  UseMethod('widget_html')
 }
 
 #' @export
-widget_div.htmlwidget <- function(x, id, style, class){
+widget_html.htmlwidget <- function(x, id, style, class){
   tags$div(id = id, style = style, class = class)
 }
 
