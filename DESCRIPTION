@@ -7,3 +7,9 @@ Author: Ramnath Vaidyanathan, Joe Cheng, and JJ Allaire
 Maintainer: Ramnath Vaidyanathan <ramnath.vaidya@gmail.com>
 Description: HTML Widgets for R
 License: MIT
+Imports:
+    htmltools,
+    RJSONIO,
+    yaml
+Enhances: shiny,
+    knitr

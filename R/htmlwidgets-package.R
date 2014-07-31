@@ -1,3 +1,2 @@
-#' @import htmltools
-#' @importFrom knitr knit_print
+#' @import htmltools RJSONIO
 NULL

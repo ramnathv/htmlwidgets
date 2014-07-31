@@ -20,3 +20,25 @@ getScript <- function(x, file, package){
 `%||%` <- function(x, y){
   if (is.null(x)) y else x
 }
+
+prop <- function(x, path) {
+  tryCatch({
+    for (i in strsplit(path, "$", fixed = TRUE)[[1]]) {
+      if (is.null(x))
+        return(NULL)
+      x <- x[[i]]
+    }
+    return(x)
+  }, error = function(e) {
+    return(NULL)
+  })
+}
+
+any_prop <- function(scopes, path) {
+  for (scope in scopes) {
+    result <- prop(scope, path)
+    if (!is.null(result))
+      return(result)
+  }
+  return(NULL)
+}
