@@ -1,6 +1,43 @@
-DEFAULT_WIDTH <- 450
-DEFAULT_HEIGHT <- 350
-DEFAULT_PADDING <- 15
+DEFAULT_WIDTH <- 960
+DEFAULT_HEIGHT <- 500
+DEFAULT_PADDING <- 40
+DEFAULT_WIDTH_VIEWER <- 450
+DEFAULT_HEIGHT_VIEWER <- 350
+DEFAULT_PADDING_VIEWER <- 15
+
+#' @export
+sizePolicy <- function(
+  defaultWidth = NULL, defaultHeight = NULL, padding = NULL,
+  viewer.defaultWidth = NULL, viewer.defaultHeight = NULL,
+  viewer.padding = NULL, viewer.fill = TRUE,
+  browser.defaultWidth = NULL, browser.defaultHeight = NULL,
+  browser.padding = NULL, browser.fill = FALSE,
+  knitr.defaultWidth = NULL, knitr.defaultHeight = NULL,
+  knitr.figure = TRUE) {
+  
+  list(
+    defaultWidth = defaultWidth,
+    defaultHeight = defaultHeight,
+    padding = padding,
+    viewer = list(
+      defaultWidth = viewer.defaultWidth,
+      defaultHeight = viewer.defaultHeight,
+      padding = viewer.padding,
+      fill = viewer.fill
+    ),
+    browser = list(
+      defaultWidth = browser.defaultWidth,
+      defaultHeight = browser.defaultHeight,
+      padding = browser.padding,
+      fill = browser.fill
+    ),
+    knitr = list(
+      defaultWidth = knitr.defaultWidth,
+      defaultHeight = knitr.defaultHeight,
+      figure = knitr.figure
+    )
+  )
+}
 
 #' Resolve widget sizing policy
 #' 
@@ -71,9 +108,9 @@ resolveSizing <- function(x, sp, standalone, knitrOptions = NULL) {
     return(list(
       runtime = list(
         viewer = list(
-          width = x$width %||% any_prop(viewerScopes, "defaultWidth") %||% DEFAULT_WIDTH,
-          height = x$height %||% any_prop(viewerScopes, "defaultHeight") %||% DEFAULT_HEIGHT,
-          padding = any_prop(viewerScopes, "padding") %||% DEFAULT_PADDING,
+          width = x$width %||% any_prop(viewerScopes, "defaultWidth") %||% DEFAULT_WIDTH_VIEWER,
+          height = x$height %||% any_prop(viewerScopes, "defaultHeight") %||% DEFAULT_HEIGHT_VIEWER,
+          padding = any_prop(viewerScopes, "padding") %||% DEFAULT_PADDING_VIEWER,
           fill = !userSized && any_prop(viewerScopes, "fill") %||% TRUE
         ),
         browser = list(
@@ -83,8 +120,8 @@ resolveSizing <- function(x, sp, standalone, knitrOptions = NULL) {
           fill = !userSized && any_prop(browserScopes, "fill") %||% FALSE
         )
       ),
-      width = x$width %||% prop(sp, "defaultWidth"),
-      height = x$height %||% prop(sp, "defaultHeight")
+      width = x$width %||% prop(sp, "defaultWidth") %||% DEFAULT_WIDTH,
+      height = x$height %||% prop(sp, "defaultHeight") %||% DEFAULT_HEIGHT
     ))
   } else if (!is.null(knitrOptions)) {
     knitrScopes <- list(sp$knitr, sp)
@@ -93,15 +130,15 @@ resolveSizing <- function(x, sp, standalone, knitrOptions = NULL) {
     figHeight <- if (isFigure) knitrOptions$out.height.px else NULL
     # Compute the width and height
     return(list(
-      width = x$width %||% figWidth %||% any_prop(knitrScopes, "defaultWidth"),
-      height = x$height %||% figHeight %||% any_prop(knitrScopes, "defaultHeight")
+      width = x$width %||% figWidth %||% any_prop(knitrScopes, "defaultWidth") %||% DEFAULT_WIDTH,
+      height = x$height %||% figHeight %||% any_prop(knitrScopes, "defaultHeight") %||% DEFAULT_HEIGHT
     ))
   } else {
     # Some non-knitr, non-print scenario.
     # Just resolve the width/height vs. defaultWidth/defaultHeight
     return(list(
-      width = x$width %||% prop(sp, "defaultWidth"),
-      height = x$height %||% prop(sp, "defaultHeight")
+      width = x$width %||% prop(sp, "defaultWidth") %||% DEFAULT_WIDTH,
+      height = x$height %||% prop(sp, "defaultHeight") %||% DEFAULT_HEIGHT
     ))
   }
 }

@@ -51,6 +51,25 @@
     }
   }
   
+  function on(obj, eventName, func) {
+    if (obj.addEventListener) {
+      obj.addEventListener(eventName, func, false);
+    } else if (obj.attachEvent) {
+      obj.attachEvent(eventName, func);
+    }
+  }
+  
+  function off(obj, eventName, func) {
+    if (obj.removeEventListener)
+      obj.removeEventListener(eventName, func, false);
+    else if (obj.detachEvent) {
+      obj.detachEvent(eventName, func);
+    }
+  }
+  
+  // Translate array of values to top/right/bottom/left, as usual with
+  // the "padding" CSS property
+  // https://developer.mozilla.org/en-US/docs/Web/CSS/padding
   function unpackPadding(value) {
     if (typeof(value) === "number")
       value = [value];
@@ -68,10 +87,12 @@
     }
   }
   
+  // Convert an unpacked padding object to a CSS value
   function paddingToCss(paddingObj) {
     return paddingObj.top + "px " + paddingObj.right + "px " + paddingObj.bottom + "px " + paddingObj.left + "px";
   }
   
+  // Makes a number suitable for CSS
   function px(x) {
     if (typeof(x) === "number")
       return x + "px";
@@ -79,7 +100,10 @@
       return x;
   }
   
-  function sizePolicy(el, binding) {
+  // Retrieves runtime widget sizing information for an element.
+  // The return value is either null, or an object with fill, padding,
+  // defaultWidth, defaultHeight fields.
+  function sizePolicy(el) {
     var sizingEl = document.querySelector("script[data-for='" + el.id + "'][type='application/htmlwidget-sizing']");
     if (!sizingEl)
       return null;
@@ -91,8 +115,8 @@
     }
   }
   
-  function initSizing(el, binding) {
-    var sizing = sizePolicy(el, binding);
+  function initSizing(el) {
+    var sizing = sizePolicy(el);
     if (!sizing)
       return;
     
@@ -138,11 +162,13 @@
   
   function onResize(el, binding) {
     var sp;
-    if (binding.resize && (sp = sizePolicy(el, binding)) && sp.fill) {
+    if (binding.resize && (sp = sizePolicy(el)) && sp.fill) {
       var cel = document.getElementById("htmlwidget_container");
       binding.resize(el, cel.offsetWidth, cel.offsetHeight);
     } else {
-      binding.resize(el);
+      // Are there occasions when we know we don't need to resize
+      // and can skip this step??
+      binding.resize(el);  // Don't know what size to use, leave it up to widget
     }
   }
   
@@ -207,7 +233,7 @@
         definition._htmlwidgets_renderValue = definition.renderValue;
         definition.renderValue = function(el, data) {
           if (!elementData(el, "initialized")) {
-            initSizing(el, definition);
+            initSizing(el);
 
             elementData(el, "initialized", true);
             var result = this._htmlwidgets_initialize(el);
@@ -227,35 +253,36 @@
   if (!shinyMode) {
     // Statically render all elements that are of this widget's class
     function staticRender() {
-      var widgets = window.HTMLWidgets.widgets || [];
-      for (var i = 0; i < widgets.length; i++) {
-        var widget = widgets[i];
-        var matches = widget.find(document.documentElement);
+      var bindings = window.HTMLWidgets.widgets || [];
+      for (var i = 0; i < bindings.length; i++) {
+        var binding = bindings[i];
+        var matches = binding.find(document.documentElement);
         for (var j = 0; j < matches.length; j++) {
           var el = matches[j];
-          var sizeObj = initSizing(el, widget);
+          var sizeObj = initSizing(el, binding);
           // TODO: Check if el is already bound
           var initResult;
-          if (widget.initialize) {
-            initResult = widget.initialize(el, sizeObj ? sizeObj.getWidth() : null,
-              sizeObj ? sizeObj.getHeight() : null);
+          if (binding.initialize) {
+            initResult = binding.initialize(el,
+              sizeObj ? sizeObj.getWidth() : null,
+              sizeObj ? sizeObj.getHeight() : null
+            );
           }
           
-          if (widget.resize) {
-            // TODO: Use real event listener
-            window.onresize = function(e) {
-              widget.resize(el,
+          if (binding.resize) {
+            on(window, "resize", function(e) {
+              binding.resize(el,
                 sizeObj ? sizeObj.getWidth() : null,
                 sizeObj ? sizeObj.getHeight() : null,
                 initResult
               );
-            };
+            });
           }
           
           var scriptData = document.querySelector("script[data-for='" + el.id + "'][type='application/json']");
           if (scriptData) {
             var data = JSON.parse(scriptData.textContent || scriptData.text);
-            widget.renderValue(el, data, initResult);
+            binding.renderValue(el, data, initResult);
           }
         }
       }
