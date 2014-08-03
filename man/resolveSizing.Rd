@@ -59,17 +59,17 @@ x <- list(
 )
 
 # Sizing for standalone mode
-resolveSizing(x, x$sizingPolicy, TRUE, NULL)
+str(resolveSizing(x, x$sizingPolicy, TRUE, NULL))
 # Sizing for knitr
-resolveSizing(x, x$sizingPolicy, FALSE,
-  list(out.width.px = 150, out.height.px = 100))
+str(resolveSizing(x, x$sizingPolicy, FALSE,
+  list(out.width.px = 150, out.height.px = 100)))
 
 # Explicit width/height provided by user--overrides any
 # default width/height
 x$width <- 300
 x$height <- 250
-resolveSizing(x, x$sizingPolicy, FALSE,
-  list(out.width.px = 150, out.height.px = 100))
+str(resolveSizing(x, x$sizingPolicy, FALSE,
+  list(out.width.px = 150, out.height.px = 100)))
 }
 \keyword{internal}
 

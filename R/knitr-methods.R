@@ -33,7 +33,6 @@ registerMethods <- function(methods) {
   ))
 }
 
-#' @export
 knit_print.htmlwidget <- function(x, ..., options) {
   knitr::knit_print(toHTML(x, standalone = FALSE, knitrOptions = options), options = options,  ...)
 }

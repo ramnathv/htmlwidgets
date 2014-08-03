@@ -9,14 +9,6 @@ getDependency <- function(file, package){
   })
 }
 
-#' @export
-getScript <- function(x, file, package){
-  payload = sprintf("var payload = %s", RJSONIO::toJSON(x, digits = 13))
-  script_file = system.file(file, package = package)
-  lines <- readLines(script_file, warn = FALSE, encoding = "UTF-8")
-  tags$script(HTML(paste(c(payload, lines), collapse = "\r\n")))
-}
-
 `%||%` <- function(x, y){
   if (is.null(x)) y else x
 }

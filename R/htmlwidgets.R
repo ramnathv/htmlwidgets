@@ -1,9 +1,16 @@
 #' @export
 print.htmlwidget <- function(x, ...) {
-  print(browsable(htmltools::as.tags(x, standalone=TRUE)))
+  print(browsable(htmltools::as.tags(x, standalone=TRUE)), ...)
+  invisible(x)
 }
 
 #' @export
+print.suppress_viewer <- function(x) {
+  html_print(htmltools::as.tags(x, standalone=TRUE), viewer = browseURL)
+  invisible(x)
+}
+
+#' @S3method as.tags htmlwidget
 as.tags.htmlwidget <- function(x, standalone = FALSE) {
   toHTML(x, standalone = standalone)
 }
@@ -17,7 +24,7 @@ toHTML <- function(x, ...){
 #' @export
 toHTML.htmlwidget <- function(x, standalone = FALSE, knitrOptions = NULL, ...){
   
-  sizeInfo <- resolveSizing(x, x$sizePolicy, standalone = standalone, knitrOptions = knitrOptions)
+  sizeInfo <- resolveSizing(x, x$sizingPolicy, standalone = standalone, knitrOptions = knitrOptions)
   
   id <- paste("htmlwidget", as.integer(stats::runif(1, 1, 10000)), sep="-")
   
@@ -133,7 +140,7 @@ widget_data <- function(x, id, ...){
 }
 
 #' @export
-widget_data.htmlwidget <- function(x, id, ...){
+widget_data.default <- function(x, id, ...){
   tags$script(type="application/json", `data-for` = id,
     HTML(toJSON(x, collapse = ""))
   )

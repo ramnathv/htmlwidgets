@@ -16,7 +16,7 @@ This sizing mechanism is designed to address the following design forces that af
 
 ## Terminology
 
-**Size policy:** A size policy is a collection of metadata that allows htmlwidgets to determine the proper size of widget for each rendering context (RStudio Viewer pane, R Markdown document, external browser, etc.). A size policy can be created using the htmlwidgets package's `sizePolicy` function.
+**Sizing policy:** A sizing policy is a collection of metadata that allows htmlwidgets to determine the proper size of widget for each rendering context (RStudio Viewer pane, R Markdown document, external browser, etc.). A sizing policy can be created using the htmlwidgets package's `sizingPolicy` function.
 
 **Standalone:** A type of rendering context in which a static widget is rendered in its own dedicated HTML file, usually as a result of calling `print()` on a widget or simply calling a widget-generating function from the R console. Standalone rendering allows htmlwidgets to take control of the widget's padding and for the widget to fill the entire page. (If a rendering context involves knitr or Shiny then it cannot be standalone.)
 
@@ -26,7 +26,7 @@ This sizing mechanism is designed to address the following design forces that af
 
 ## Writing a size policy
 
-Call the `sizePolicy()` function and assign the result to the widget data object, using the name `sizePolicy`. The following (optional) arguments can be passed to the `sizePolicy` function:
+Call the `sizingPolicy()` function and assign the result to the widget data object, using the name `sizingPolicy`. The following (optional) arguments can be passed to the `sizingPolicy` function:
 
 **defaultWidth = NULL, defaultHeight = NULL**  
 The default width and height for this widget. If not specified, the default value is 960px by 500px (though this is subject to change in future releases---provide a defaultWidth and defaultHeight explicitly if size stability is important to you!). This width and height will be ignored if the user explicitly provides a width and height.

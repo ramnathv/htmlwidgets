@@ -103,7 +103,7 @@
   // Retrieves runtime widget sizing information for an element.
   // The return value is either null, or an object with fill, padding,
   // defaultWidth, defaultHeight fields.
-  function sizePolicy(el) {
+  function sizingPolicy(el) {
     var sizingEl = document.querySelector("script[data-for='" + el.id + "'][type='application/htmlwidget-sizing']");
     if (!sizingEl)
       return null;
@@ -116,7 +116,7 @@
   }
   
   function initSizing(el) {
-    var sizing = sizePolicy(el);
+    var sizing = sizingPolicy(el);
     if (!sizing)
       return;
     
@@ -162,7 +162,7 @@
   
   function onResize(el, binding) {
     var sp;
-    if (binding.resize && (sp = sizePolicy(el)) && sp.fill) {
+    if (binding.resize && (sp = sizingPolicy(el)) && sp.fill) {
       var cel = document.getElementById("htmlwidget_container");
       binding.resize(el, cel.offsetWidth, cel.offsetHeight, 
                      elementData(el, "init_result"));

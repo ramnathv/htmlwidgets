@@ -6,7 +6,7 @@ DEFAULT_HEIGHT_VIEWER <- 350
 DEFAULT_PADDING_VIEWER <- 15
 
 #' @export
-sizePolicy <- function(
+sizingPolicy <- function(
   defaultWidth = NULL, defaultHeight = NULL, padding = NULL,
   viewer.defaultWidth = NULL, viewer.defaultHeight = NULL,
   viewer.padding = NULL, viewer.fill = TRUE,
@@ -88,17 +88,18 @@ sizePolicy <- function(
 #' )
 #' 
 #' # Sizing for standalone mode
-#' resolveSizing(x, x$sizingPolicy, TRUE, NULL)
+#' str(resolveSizing(x, x$sizingPolicy, TRUE, NULL))
 #' # Sizing for knitr
-#' resolveSizing(x, x$sizingPolicy, FALSE,
-#'   list(out.width.px = 150, out.height.px = 100))
+#' str(resolveSizing(x, x$sizingPolicy, FALSE,
+#'   list(out.width.px = 150, out.height.px = 100)))
 #' 
 #' # Explicit width/height provided by user--overrides any
 #' # default width/height
 #' x$width <- 300
 #' x$height <- 250
-#' resolveSizing(x, x$sizingPolicy, FALSE,
-#'   list(out.width.px = 150, out.height.px = 100))
+#' str(resolveSizing(x, x$sizingPolicy, FALSE,
+#'   list(out.width.px = 150, out.height.px = 100)))
+#' @export
 resolveSizing <- function(x, sp, standalone, knitrOptions = NULL) {  
   if (isTRUE(standalone)) {
     userSized <- !is.null(x$width) || !is.null(x$height)
