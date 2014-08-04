@@ -1,12 +1,28 @@
 #' @export
-getDependency <- function(file, package){
+getDependency <- function(package, lib, config, jsfile){
   config = yaml::yaml.load_file(
-    system.file(file, package = package)
+    system.file(config, package = package)
   )
-  lapply(config$dependencies, function(l){
+  widgetDep <- lapply(config$dependencies, function(l){
     l$src = system.file(l$src, package = package)
     do.call(htmlDependency, l)
   })
+  
+  # TODO: The binding JS file should really be in its own directory to prevent
+  # htmltools from picking up the entire package
+  bindingDep <- htmlDependency(paste0(lib, "-binding"), packageVersion(package),
+    system.file(package = package),
+    script = jsfile
+  )
+  
+  c(
+    list(htmlDependency("htmlwidgets", packageVersion("htmlwidgets"),
+      src = system.file("www", package="htmlwidgets"),
+      script = "htmlwidgets.js"
+    )),
+    widgetDep,
+    list(bindingDep)
+  )
 }
 
 `%||%` <- function(x, y){

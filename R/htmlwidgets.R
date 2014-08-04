@@ -121,23 +121,7 @@ widget_dependencies.htmlwidget <- function(x){
   jsfile = attr(x, "jsfile", exact = TRUE) %||% sprintf('%s.js', lib)
   config = attr(x, "config", exact = TRUE) %||% sprintf('%s.yaml', lib)
   package = attr(x, "package", exact = TRUE) %||% lib
-  widgetDep <- getDependency(config, package)
-  
-  # TODO: The binding JS file should really be in its own directory to prevent
-  # htmltools from picking up the entire package
-  bindingDep <- htmlDependency(paste0(lib, "-binding"), packageVersion(package),
-    system.file(package = package),
-    script = jsfile
-  )
-  
-  c(
-    list(htmlDependency("htmlwidgets", packageVersion("htmlwidgets"),
-      src = system.file("www", package="htmlwidgets"),
-      script = "htmlwidgets.js"
-    )),
-    widgetDep,
-    list(bindingDep)
-  )
+  getDependency(package, lib, config, jsfile)
 }
 
 # Generates a <script type="application/json"> tag with the JSON-encoded data,
