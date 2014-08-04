@@ -73,7 +73,8 @@ widgetOutput <- function(x){
     cx = structure(class = c(x, 'htmlwidget'), list(value = 10))
     html <- htmltools::tagList(
       widget_html(cx, id = outputId, class = paste(x, "html-widget html-widget-output"), 
-        style = sprintf("width:%dpx; height:%dpx", width, height)
+        style = sprintf("width:%dpx; height:%dpx", width, height),
+        width = width, height = height
       )
     )
     dependencies = widget_dependencies(cx)
