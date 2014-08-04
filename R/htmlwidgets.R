@@ -71,13 +71,15 @@ toHTML.htmlwidget <- function(x, standalone = FALSE, knitrOptions = NULL, ...){
 widgetOutput <- function(x){
   if (is.character(x)) {
     cx <- structure(class = c(x, 'htmlwidget'), list(value = 10))
+    className <- x
   } else {
     cx <- x
+    className <- class(cx)[[1]]
   }
   
   function(outputId, width, height){
     html <- htmltools::tagList(
-      widget_html(cx, id = outputId, class = paste(x, "html-widget html-widget-output"), 
+      widget_html(cx, id = outputId, class = paste(className, "html-widget html-widget-output"), 
         style = sprintf("width:%dpx; height:%dpx", width, height),
         width = width, height = height
       )
