@@ -266,8 +266,8 @@
           var initResult;
           if (binding.initialize) {
             initResult = binding.initialize(el,
-              sizeObj ? sizeObj.getWidth() : null,
-              sizeObj ? sizeObj.getHeight() : null
+              sizeObj ? sizeObj.getWidth() : el.offsetWidth,
+              sizeObj ? sizeObj.getHeight() : el.offsetHeight
             );
           }
           
