@@ -164,11 +164,13 @@
     var sp;
     if (binding.resize && (sp = sizePolicy(el)) && sp.fill) {
       var cel = document.getElementById("htmlwidget_container");
-      binding.resize(el, cel.offsetWidth, cel.offsetHeight);
+      binding.resize(el, cel.offsetWidth, cel.offsetHeight, 
+                     elementData(el, "init_result"));
     } else {
       // Are there occasions when we know we don't need to resize
       // and can skip this step??
-      binding.resize(el);  // Don't know what size to use, leave it up to widget
+      // Don't know what size to use, leave it up to widget
+      binding.resize(el, elementData(el, "init_result")); 
     }
   }
   
