@@ -1,5 +1,8 @@
 #' @export
-getDependency <- function(package, lib, config, jsfile){
+getDependency <- function(lib,
+                          package = lib, 
+                          config = sprintf("htmlwidgets/%s.yaml", lib), 
+                          jsfile = sprintf("htmlwidgets/%s.js", lib)){
   config = yaml::yaml.load_file(
     system.file(config, package = package)
   )

@@ -121,7 +121,7 @@ widget_dependencies.htmlwidget <- function(x){
   jsfile = attr(x, "jsfile", exact = TRUE) %||% sprintf('%s.js', lib)
   config = attr(x, "config", exact = TRUE) %||% sprintf('%s.yaml', lib)
   package = attr(x, "package", exact = TRUE) %||% lib
-  getDependency(package, lib, config, jsfile)
+  getDependency(lib, package, config, jsfile)
 }
 
 # Generates a <script type="application/json"> tag with the JSON-encoded data,
