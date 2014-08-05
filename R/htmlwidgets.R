@@ -94,7 +94,7 @@ renderWidget <- function(expr, env = parent.frame(), quoted = FALSE){
   func <- shiny::exprToFunction(expr, env, quoted)
   function(){
     data <- unclass(func())
-    return(data)
+    return(data$x)
   }
 }
 
@@ -134,7 +134,7 @@ widget_data <- function(x, id, ...){
 #' @export
 widget_data.default <- function(x, id, ...){
   tags$script(type="application/json", `data-for` = id,
-    HTML(toJSON(x, collapse = ""))
+    HTML(toJSON(x$x, collapse = ""))
   )
 }
 
