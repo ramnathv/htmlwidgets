@@ -137,3 +137,27 @@ widget_data.default <- function(x, id, ...){
     HTML(toJSON(x, collapse = ""))
   )
 }
+
+#' @export
+createWidget <- function(name, 
+                         data,
+                         options,
+                         width = NULL,
+                         height = NULL,
+                         sizingPolicy = sizingPolicy(), 
+                         package = name, 
+                         config = sprintf("htmlwidgets/%s.yaml", name), 
+                         jsfile = sprintf("htmlwidgets/%s.js", name)) {  
+  structure(
+    list(data = data,
+         options = options,
+         width = width,
+         height = height,
+         sizingPolicy = sizingPolicy), 
+    class = c(name, "htmlwidget"),
+    package = package,
+    config = config,
+    jsfile = jsfile
+  )
+}
+
