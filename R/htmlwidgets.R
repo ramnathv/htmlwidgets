@@ -94,7 +94,7 @@ renderWidget <- function(expr, env = parent.frame(), quoted = FALSE){
   func <- shiny::exprToFunction(expr, env, quoted)
   function(){
     data <- unclass(func())
-    return(data)
+    return(data$x)
   }
 }
 
@@ -121,7 +121,7 @@ widget_dependencies.htmlwidget <- function(x){
   jsfile = attr(x, "jsfile", exact = TRUE) %||% sprintf('%s.js', lib)
   config = attr(x, "config", exact = TRUE) %||% sprintf('%s.yaml', lib)
   package = attr(x, "package", exact = TRUE) %||% lib
-  getDependency(package, lib, config, jsfile)
+  getDependency(lib, package, config, jsfile)
 }
 
 # Generates a <script type="application/json"> tag with the JSON-encoded data,
@@ -134,6 +134,28 @@ widget_data <- function(x, id, ...){
 #' @export
 widget_data.default <- function(x, id, ...){
   tags$script(type="application/json", `data-for` = id,
-    HTML(toJSON(x, collapse = ""))
+    HTML(toJSON(x$x, collapse = ""))
   )
 }
+
+#' @export
+createWidget <- function(name, 
+                         x,
+                         width = NULL,
+                         height = NULL,
+                         sizingPolicy = htmlwidgets::sizingPolicy(), 
+                         package = name, 
+                         config = sprintf("htmlwidgets/%s.yaml", name), 
+                         jsfile = sprintf("htmlwidgets/%s.js", name)) {  
+  structure(
+    list(x = x,
+         width = width,
+         height = height,
+         sizingPolicy = sizingPolicy), 
+    class = c(name, "htmlwidget"),
+    package = package,
+    config = config,
+    jsfile = jsfile
+  )
+}
+
