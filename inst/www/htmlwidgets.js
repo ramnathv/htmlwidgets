@@ -238,7 +238,7 @@
             initSizing(el);
 
             elementData(el, "initialized", true);
-            var result = this._htmlwidgets_initialize(el);
+            var result = this._htmlwidgets_initialize(el, el.offsetWidth, el.offsetHeight);
             elementData(el, "init_result", result);
           }
           this._htmlwidgets_renderValue(el, data,
