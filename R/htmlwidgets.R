@@ -140,8 +140,7 @@ widget_data.default <- function(x, id, ...){
 
 #' @export
 createWidget <- function(name, 
-                         data,
-                         options,
+                         x,
                          width = NULL,
                          height = NULL,
                          sizingPolicy = sizingPolicy(), 
@@ -149,8 +148,7 @@ createWidget <- function(name,
                          config = sprintf("htmlwidgets/%s.yaml", name), 
                          jsfile = sprintf("htmlwidgets/%s.js", name)) {  
   structure(
-    list(data = data,
-         options = options,
+    list(x = x,
          width = width,
          height = height,
          sizingPolicy = sizingPolicy), 
