@@ -143,7 +143,7 @@ createWidget <- function(name,
                          x,
                          width = NULL,
                          height = NULL,
-                         sizingPolicy = sizingPolicy(), 
+                         sizingPolicy = htmlwidgets::sizingPolicy(), 
                          package = name, 
                          config = sprintf("htmlwidgets/%s.yaml", name), 
                          jsfile = sprintf("htmlwidgets/%s.js", name)) {  
