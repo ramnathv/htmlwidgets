@@ -76,7 +76,7 @@ widgetOutput <- function(x, ...){
     cx <- x
     className <- class(cx)[[1]]
   }
-
+  
   function(outputId, width, height){
     html <- htmltools::tagList(
       widget_html(cx, id = outputId, class = paste(className, "html-widget html-widget-output"), 
