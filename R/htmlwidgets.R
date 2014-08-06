@@ -68,7 +68,7 @@ toHTML.htmlwidget <- function(x, standalone = FALSE, knitrOptions = NULL, ...){
 }
 
 #' @export
-widgetOutput <- function(x, width = "100%", height = "400px", ...){
+widgetOutput <- function(x, ...){
   if (is.character(x)) {
     cx <- createWidget(name = x, list(), ...)
     className <- x
@@ -76,20 +76,14 @@ widgetOutput <- function(x, width = "100%", height = "400px", ...){
     cx <- x
     className <- class(cx)[[1]]
   }
-
-  # compute style (use 's' to prevent recursive default argument error)
-  s <- sprintf("width:%s; height:%s", 
-               htmltools::validateCssUnit(width), 
-               htmltools::validateCssUnit(height))
-  
-  # alias width and height to prevent recursive default argument error
-  w <- width
-  h <- height
-  
-  function(outputId, width = w, height = h){
+ 
+  function(outputId, width, height){
     html <- htmltools::tagList(
       widget_html(cx, id = outputId, class = paste(className, "html-widget html-widget-output"), 
-        style = s, width = width, height = height
+        style = sprintf("width:%s; height:%s", 
+                        htmltools::validateCssUnit(width), 
+                        htmltools::validateCssUnit(height)), 
+        width = width, height = height
       )
     )
     dependencies = widget_dependencies(cx)
