@@ -68,9 +68,9 @@ toHTML.htmlwidget <- function(x, standalone = FALSE, knitrOptions = NULL, ...){
 }
 
 #' @export
-widgetOutput <- function(x){
+widgetOutput <- function(x, ...){
   if (is.character(x)) {
-    cx <- structure(class = c(x, 'htmlwidget'), list(value = 10))
+    cx <- createWidget(name = x, list(), ...)
     className <- x
   } else {
     cx <- x
