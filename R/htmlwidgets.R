@@ -80,7 +80,9 @@ widgetOutput <- function(x, ...){
   function(outputId, width, height){
     html <- htmltools::tagList(
       widget_html(cx, id = outputId, class = paste(className, "html-widget html-widget-output"), 
-        style = sprintf("width:%dpx; height:%dpx", width, height),
+        style = sprintf("width:%s; height:%s", 
+                        htmltools::validateCssUnit(width), 
+                        htmltools::validateCssUnit(height)), 
         width = width, height = height
       )
     )
