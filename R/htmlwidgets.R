@@ -68,40 +68,6 @@ toHTML.htmlwidget <- function(x, standalone = FALSE, knitrOptions = NULL, ...){
 }
 
 #' @export
-widgetOutput <- function(x, ...){
-  if (is.character(x)) {
-    cx <- createWidget(name = x, list(), ...)
-    className <- x
-  } else {
-    cx <- x
-    className <- class(cx)[[1]]
-  }
-  
-  function(outputId, width, height){
-    html <- htmltools::tagList(
-      widget_html(cx, id = outputId, class = paste(className, "html-widget html-widget-output"), 
-        style = sprintf("width:%s; height:%s", 
-                        htmltools::validateCssUnit(width), 
-                        htmltools::validateCssUnit(height)), 
-        width = width, height = height
-      )
-    )
-    dependencies = widget_dependencies(cx)
-    htmltools::attachDependencies(html, dependencies)
-  }
-}
-
-#' @export
-renderWidget <- function(expr, env = parent.frame(), quoted = FALSE){
-  func <- shiny::exprToFunction(expr, env, quoted)
-  function(){
-    data <- unclass(func())
-    return(data$x)
-  }
-}
-
-
-#' @export
 widget_html <- function(x, id, style, class, width, height, ...){
   UseMethod('widget_html')
 }
@@ -162,4 +128,70 @@ createWidget <- function(name,
     jsfile = jsfile
   )
 }
+
+
+#' Create a shiny output function for a widget
+#' 
+#' @export
+makeShinyOutput <- function(widgetName, 
+                            package = widgetName, 
+                            defaultWidth = "100%", 
+                            defaultHeight = "400px") {
+  
+  # create a "fake" widget instance (used for S3 lookup of widget html and dependencies)
+  cx <- createWidget(widgetName, list(), package = package)
+  
+  # shiny output function (defaults are injected below via formals)
+  output <- function(outputId, width, height) {
+    
+    # generate html
+    html <- htmltools::tagList(
+      widget_html(cx, id = outputId, class = paste(widgetName, "html-widget html-widget-output"), 
+                  style = sprintf("width:%s; height:%s", 
+                                  htmltools::validateCssUnit(width), 
+                                  htmltools::validateCssUnit(height)), 
+                  width = width, height = height
+      )
+    )
+    
+    # attach dependencies
+    dependencies = widget_dependencies(cx)
+    htmltools::attachDependencies(html, dependencies)
+  }
+  
+  # fixup formals so roxygen inherits the right default arguments
+  formals(output)$width <- substitute(defaultWidth)
+  formals(output)$height <- substitute(defaultHeight)
+  
+  # return the function
+  output
+}
+
+
+#' Create a shiny render function for a widget 
+#' 
+#' @export
+makeShinyRender <- function(outputFunction) {
+  
+  force(outputFunction)
+  
+  function(expr, env = parent.frame(), quoted = FALSE) {
+    
+    # ensure that quoted is always true (required for correct handling of expr)
+    if (!quoted) {
+      expr <- substitute(expr)
+      quoted <- TRUE
+    }
+    
+    # generate a function for the expression
+    func <- shiny::exprToFunction(expr, env, quoted)
+    
+    # create the render function
+    renderFunc <- function() .subset2(func(), "x")
+    
+    # mark it with the output function so we can use it in Rmd files
+    shiny::markRenderFunction(outputFunction, function() .subset2(func(), "x"))
+  }  
+}
+
 
