@@ -9,7 +9,7 @@ DEFAULT_PADDING_VIEWER <- 15
 sizingPolicy <- function(
   defaultWidth = NULL, defaultHeight = NULL, padding = NULL,
   viewer.defaultWidth = NULL, viewer.defaultHeight = NULL,
-  viewer.padding = NULL, viewer.fill = TRUE,
+  viewer.padding = NULL, viewer.fill = TRUE, viewer.suppress = FALSE,
   browser.defaultWidth = NULL, browser.defaultHeight = NULL,
   browser.padding = NULL, browser.fill = FALSE,
   knitr.defaultWidth = NULL, knitr.defaultHeight = NULL,
@@ -23,7 +23,8 @@ sizingPolicy <- function(
       defaultWidth = viewer.defaultWidth,
       defaultHeight = viewer.defaultHeight,
       padding = viewer.padding,
-      fill = viewer.fill
+      fill = viewer.fill,
+      suppress = viewer.suppress
     ),
     browser = list(
       defaultWidth = browser.defaultWidth,
