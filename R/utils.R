@@ -1,8 +1,8 @@
 #' @export
-getDependency <- function(lib,
-                          package = lib, 
-                          config = sprintf("htmlwidgets/%s.yaml", lib), 
-                          jsfile = sprintf("htmlwidgets/%s.js", lib)){
+getDependency <- function(name,
+                          package = name, 
+                          config = sprintf("htmlwidgets/%s.yaml", name), 
+                          jsfile = sprintf("htmlwidgets/%s.js", name)){
   config = yaml::yaml.load_file(
     system.file(config, package = package)
   )
@@ -13,7 +13,7 @@ getDependency <- function(lib,
   
   # TODO: The binding JS file should really be in its own directory to prevent
   # htmltools from picking up the entire package
-  bindingDep <- htmlDependency(paste0(lib, "-binding"), packageVersion(package),
+  bindingDep <- htmlDependency(paste0(name, "-binding"), packageVersion(package),
     system.file(package = package),
     script = jsfile
   )

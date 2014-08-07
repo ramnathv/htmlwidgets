@@ -85,11 +85,11 @@ widget_dependencies <- function(x){
 
 #' @export
 widget_dependencies.htmlwidget <- function(x){
-  lib = class(x)[1]
-  jsfile = attr(x, "jsfile", exact = TRUE) %||% sprintf('%s.js', lib)
-  config = attr(x, "config", exact = TRUE) %||% sprintf('%s.yaml', lib)
-  package = attr(x, "package", exact = TRUE) %||% lib
-  getDependency(lib, package, config, jsfile)
+  name = class(x)[1]
+  jsfile = attr(x, "jsfile", exact = TRUE) %||% sprintf('%s.js', name)
+  config = attr(x, "config", exact = TRUE) %||% sprintf('%s.yaml', name)
+  package = attr(x, "package", exact = TRUE) %||% name
+  getDependency(name, package, config, jsfile)
 }
 
 # Generates a <script type="application/json"> tag with the JSON-encoded data,
@@ -131,20 +131,20 @@ createWidget <- function(name,
 #' Create a shiny output function for a widget
 #' 
 #' @export
-makeShinyOutput <- function(widgetName, 
-                            package = widgetName, 
+makeShinyOutput <- function(name, 
+                            package = name, 
                             defaultWidth = "100%", 
                             defaultHeight = "400px") {
   
   # create a "fake" widget instance (used for S3 lookup of widget html and dependencies)
-  cx <- createWidget(widgetName, list(), package = package)
+  cx <- createWidget(name, list(), package = package)
   
   # shiny output function (defaults are injected below via formals)
   output <- function(outputId, width, height) {
     
     # generate html
     html <- htmltools::tagList(
-      widget_html(cx, id = outputId, class = paste(widgetName, "html-widget html-widget-output"), 
+      widget_html(cx, id = outputId, class = paste(name, "html-widget html-widget-output"), 
                   style = sprintf("width:%s; height:%s", 
                                   htmltools::validateCssUnit(width), 
                                   htmltools::validateCssUnit(height)), 
