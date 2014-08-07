@@ -3,7 +3,7 @@
 \alias{makeShinyOutput}
 \title{Create a shiny output function for a widget}
 \usage{
-makeShinyOutput(widgetName, package = widgetName, defaultWidth = "100\%",
+makeShinyOutput(name, package = name, defaultWidth = "100\%",
   defaultHeight = "400px")
 }
 \description{
