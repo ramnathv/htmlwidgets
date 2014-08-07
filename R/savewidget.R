@@ -1,13 +1,8 @@
 
 
 #' @export
-saveWidget <- function(widget, file, selfContained = TRUE) {
-  
-  if (!pandoc_available()) {
-    stop("saveWidget requires the installation of pandoc. For details see:\n",
-         "https://github.com/rstudio/rmarkdown/blob/master/PANDOC.md")
-  }
-  
+saveWidget <- function(widget, file, selfContained = FALSE) {
+   
   # convert to HTML tags
   html <- toHTML(widget, standalone = TRUE)
   
@@ -19,6 +14,12 @@ saveWidget <- function(widget, file, selfContained = TRUE) {
   
   # make it self-contained if requested
   if (selfContained) {
+    
+    if (!pandoc_available()) {
+      stop("selfContained requires the installation of pandoc. For details see:\n",
+           "https://github.com/rstudio/rmarkdown/blob/master/PANDOC.md")
+    }
+    
     pandoc_self_contained_html(file, file)
     unlink(libdir, recursive = TRUE)
   }
