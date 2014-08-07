@@ -258,12 +258,18 @@
           }
           
           if (binding.resize) {
+            var lastSize = {};
             on(window, "resize", function(e) {
-              binding.resize(el,
-                sizeObj ? sizeObj.getWidth() : el.offsetWidth,
-                sizeObj ? sizeObj.getHeight() : el.offsetHeight,
-                initResult
-              );
+              var size = {
+                w: sizeObj ? sizeObj.getWidth() : el.offsetWidth,
+                h: sizeObj ? sizeObj.getHeight() : el.offsetHeight
+              }
+              if (size.w === 0 && size.h === 0)
+                return;
+              if (size.w === lastSize.w && size.h === lastSize.h)
+                return;
+              lastSize = size;
+              binding.resize(el, size.w, size.h, initResult);
             });
           }
           
