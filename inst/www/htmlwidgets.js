@@ -160,20 +160,6 @@
     }
   }
   
-  function onResize(el, binding) {
-    var sp;
-    if (binding.resize && (sp = sizingPolicy(el)) && sp.fill) {
-      var cel = document.getElementById("htmlwidget_container");
-      binding.resize(el, cel.offsetWidth, cel.offsetHeight, 
-                     elementData(el, "init_result"));
-    } else {
-      // Are there occasions when we know we don't need to resize
-      // and can skip this step??
-      // Don't know what size to use, leave it up to widget
-      binding.resize(el, elementData(el, "init_result")); 
-    }
-  }
-  
   // Default implementations for methods
   var defaults = {
     find: function(scope) {
@@ -274,8 +260,8 @@
           if (binding.resize) {
             on(window, "resize", function(e) {
               binding.resize(el,
-                sizeObj ? sizeObj.getWidth() : null,
-                sizeObj ? sizeObj.getHeight() : null,
+                sizeObj ? sizeObj.getWidth() : el.offsetWidth,
+                sizeObj ? sizeObj.getHeight() : el.offsetHeight,
                 initResult
               );
             });
