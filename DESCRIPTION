@@ -9,7 +9,7 @@ Description: HTML Widgets for R
 License: MIT
 VignetteBuilder: knitr
 Imports:
-    htmltools (>= 0.2.5),
+    htmltools (>= 0.2.6),
     RJSONIO,
     yaml
 Suggests:
