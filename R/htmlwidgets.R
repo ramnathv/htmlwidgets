@@ -121,11 +121,6 @@ widget_dependencies.htmlwidget <- function(x){
 # to be picked up by htmlwidgets.js for static rendering.
 #' @export
 widget_data <- function(x, id, ...){
-  UseMethod('widget_data')
-}
-
-#' @export
-widget_data.default <- function(x, id, ...){
   tags$script(type="application/json", `data-for` = id,
     HTML(toJSON(x$x, collapse = ""))
   )
