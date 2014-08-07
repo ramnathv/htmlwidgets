@@ -85,8 +85,9 @@ toHTML.htmlwidget <- function(x, standalone = FALSE, knitrOptions = NULL, ...){
       )
     }
   )
-  
-  html <- htmltools::attachDependencies(html, widget_dependencies(x))
+  html <- htmltools::attachDependencies(html, 
+    widget_dependencies(class(x)[1], attr(x, 'package'))
+  )
   
   htmltools::browsable(html)
   
@@ -103,18 +104,8 @@ widget_html.htmlwidget <- function(x, id, style, class, ...){
 }
 
 #' @export
-widget_dependencies <- function(x){
-  UseMethod('widget_dependencies')
-}
-
-
-#' @export
-widget_dependencies.htmlwidget <- function(x){
-  name = class(x)[1]
-  jsfile = attr(x, "jsfile", exact = TRUE) %||% sprintf('%s.js', name)
-  config = attr(x, "config", exact = TRUE) %||% sprintf('%s.yaml', name)
-  package = attr(x, "package", exact = TRUE) %||% name
-  getDependency(name, package, config, jsfile)
+widget_dependencies <- function(name, package){
+  getDependency(name, package)
 }
 
 # Generates a <script type="application/json"> tag with the JSON-encoded data,
@@ -161,6 +152,8 @@ makeShinyOutput <- function(name,
   # create a "fake" widget instance (used for S3 lookup of widget html and dependencies)
   cx <- createWidget(name, list(), package = package)
   
+  dependencies = widget_dependencies(name, package)
+  
   # shiny output function (defaults are injected below via formals)
   output <- function(outputId, width, height) {
     
@@ -175,7 +168,6 @@ makeShinyOutput <- function(name,
     )
     
     # attach dependencies
-    dependencies = widget_dependencies(cx)
     htmltools::attachDependencies(html, dependencies)
   }
   
