@@ -11,13 +11,17 @@ getDependency <- function(name,
     do.call(htmlDependency, l)
   })
   
-  # TODO: The binding JS file should really be in its own directory to prevent
-  # htmltools from picking up the entire package
-  bindingDep <- htmlDependency(paste0(name, "-binding"), packageVersion(package),
-    system.file(package = package),
-    script = jsfile
-  )
+  # Create a dependency that will cause the jsfile and only the jsfile (rather
+  # than all of its filesystem siblings) to be copied
+  bindingDir <- tempfile("widgetbinding")
+  dir.create(bindingDir, mode = "0700")
+  file.copy(system.file(jsfile, package = package), bindingDir)
   
+  bindingDep <- htmlDependency(paste0(name, "-binding"), packageVersion(package),
+    bindingDir,
+    script = basename(jsfile)
+  )
+
   c(
     list(htmlDependency("htmlwidgets", packageVersion("htmlwidgets"),
       src = system.file("www", package="htmlwidgets"),
