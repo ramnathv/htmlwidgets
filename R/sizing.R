@@ -10,6 +10,7 @@ sizingPolicy <- function(
   defaultWidth = NULL, defaultHeight = NULL, padding = NULL,
   viewer.defaultWidth = NULL, viewer.defaultHeight = NULL,
   viewer.padding = NULL, viewer.fill = TRUE, viewer.suppress = FALSE,
+  viewer.paneHeight = NULL,
   browser.defaultWidth = NULL, browser.defaultHeight = NULL,
   browser.padding = NULL, browser.fill = FALSE,
   knitr.defaultWidth = NULL, knitr.defaultHeight = NULL,
@@ -24,7 +25,8 @@ sizingPolicy <- function(
       defaultHeight = viewer.defaultHeight,
       padding = viewer.padding,
       fill = viewer.fill,
-      suppress = viewer.suppress
+      suppress = viewer.suppress,
+      paneHeight = viewer.paneHeight
     ),
     browser = list(
       defaultWidth = browser.defaultWidth,
