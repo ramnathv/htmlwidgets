@@ -263,7 +263,7 @@
               var size = {
                 w: sizeObj ? sizeObj.getWidth() : el.offsetWidth,
                 h: sizeObj ? sizeObj.getHeight() : el.offsetHeight
-              }
+              };
               if (size.w === 0 && size.h === 0)
                 return;
               if (size.w === lastSize.w && size.h === lastSize.h)
