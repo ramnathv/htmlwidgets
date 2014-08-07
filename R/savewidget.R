@@ -1,7 +1,7 @@
 
 
 #' @export
-saveWidget <- function(widget, file, selfContained = FALSE) {
+saveWidget <- function(widget, file, selfcontained = FALSE) {
    
   # convert to HTML tags
   html <- toHTML(widget, standalone = TRUE)
@@ -13,7 +13,7 @@ saveWidget <- function(widget, file, selfContained = FALSE) {
   htmltools::save_html(html, file = file, libdir = libdir)
   
   # make it self-contained if requested
-  if (selfContained) {
+  if (selfcontained) {
     
     if (!pandoc_available()) {
       stop("selfContained requires the installation of pandoc. For details see:\n",
