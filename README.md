@@ -4,8 +4,7 @@
 
 ```r
 library(devtools)
-install_github('rstudio/htmltools')
-install_github('ramnathv/htmlwidgets', ref = 'refactor/remove-s3-methods')
+install_github(c('rstudio/htmltools', 'ramnathv/htmlwidgets'))
 ```
 
 ### Philosophy
