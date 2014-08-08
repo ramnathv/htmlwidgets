@@ -146,8 +146,7 @@ makeShinyOutput <- function(name,
                             package = name, 
                             defaultWidth = "100%", 
                             defaultHeight = "400px") {  
-  dependencies = widget_dependencies(name, package)
-
+ 
   # shiny output function (defaults are injected below via formals)
   output <- function(outputId, width, height) {
     
@@ -163,6 +162,7 @@ makeShinyOutput <- function(name,
     )
     
     # attach dependencies
+    dependencies = widget_dependencies(name, package)
     htmltools::attachDependencies(html, dependencies)
   }
   
