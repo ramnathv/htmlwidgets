@@ -74,8 +74,9 @@ toHTML.htmlwidget <- function(x, standalone = FALSE, knitrOptions = NULL, ...){
   
   html <- htmltools::tagList(
     container(
-      widget_html(x, id = id, style = style, class = class(x)[1],
-        width = sizeInfo$width, height = sizeInfo$height
+      widget_html(name = class(x)[1], id = id, style = style, 
+        class = class(x)[1], width = sizeInfo$width, 
+        height = sizeInfo$height
       )
     ),
     widget_data(x, id),
@@ -85,47 +86,34 @@ toHTML.htmlwidget <- function(x, standalone = FALSE, knitrOptions = NULL, ...){
       )
     }
   )
-  
-  html <- htmltools::attachDependencies(html, widget_dependencies(x))
+  html <- htmltools::attachDependencies(html, 
+    widget_dependencies(class(x)[1], attr(x, 'package'))
+  )
   
   htmltools::browsable(html)
   
 }
 
+
 #' @export
-widget_html <- function(x, id, style, class, width, height, ...){
-  UseMethod('widget_html')
+widget_html <- function(name, id, style, class, ...){
+  fn = paste0(name, "_html")
+  if(exists(fn) && is.function(match.fun(fn))){
+    match.fun(fn)(id = id, style = style, class = class, ...)
+  } else {
+    tags$div(id = id, style = style, class = class)
+  }
 }
 
 #' @export
-widget_html.htmlwidget <- function(x, id, style, class, ...){
-  tags$div(id = id, style = style, class = class)
-}
-
-#' @export
-widget_dependencies <- function(x){
-  UseMethod('widget_dependencies')
-}
-
-
-#' @export
-widget_dependencies.htmlwidget <- function(x){
-  name = class(x)[1]
-  jsfile = attr(x, "jsfile", exact = TRUE) %||% sprintf('%s.js', name)
-  config = attr(x, "config", exact = TRUE) %||% sprintf('%s.yaml', name)
-  package = attr(x, "package", exact = TRUE) %||% name
-  getDependency(name, package, config, jsfile)
+widget_dependencies <- function(name, package){
+  getDependency(name, package)
 }
 
 # Generates a <script type="application/json"> tag with the JSON-encoded data,
 # to be picked up by htmlwidgets.js for static rendering.
 #' @export
 widget_data <- function(x, id, ...){
-  UseMethod('widget_data')
-}
-
-#' @export
-widget_data.default <- function(x, id, ...){
   tags$script(type="application/json", `data-for` = id,
     HTML(toJSON(x$x, collapse = ""))
   )
@@ -137,9 +125,7 @@ createWidget <- function(name,
                          width = NULL,
                          height = NULL,
                          sizingPolicy = htmlwidgets::sizingPolicy(), 
-                         package = name, 
-                         config = sprintf("htmlwidgets/%s.yaml", name), 
-                         jsfile = sprintf("htmlwidgets/%s.js", name)) {  
+                         package = name) {  
   structure(
     list(x = x,
          width = width,
@@ -148,9 +134,7 @@ createWidget <- function(name,
     class = c(name, 
               if (sizingPolicy$viewer$suppress) "suppress_viewer", 
               "htmlwidget"),
-    package = package,
-    config = config,
-    jsfile = jsfile
+    package = package
   )
 }
 
@@ -161,26 +145,24 @@ createWidget <- function(name,
 makeShinyOutput <- function(name, 
                             package = name, 
                             defaultWidth = "100%", 
-                            defaultHeight = "400px") {
-  
-  # create a "fake" widget instance (used for S3 lookup of widget html and dependencies)
-  cx <- createWidget(name, list(), package = package)
-  
+                            defaultHeight = "400px") {  
+ 
   # shiny output function (defaults are injected below via formals)
   output <- function(outputId, width, height) {
     
     # generate html
     html <- htmltools::tagList(
-      widget_html(cx, id = outputId, class = paste(name, "html-widget html-widget-output"), 
-                  style = sprintf("width:%s; height:%s", 
-                                  htmltools::validateCssUnit(width), 
-                                  htmltools::validateCssUnit(height)), 
-                  width = width, height = height
+      widget_html(name, id = outputId, 
+        class = paste(name, "html-widget html-widget-output"), 
+        style = sprintf("width:%s; height:%s", 
+          htmltools::validateCssUnit(width), 
+          htmltools::validateCssUnit(height)
+        ), width = width, height = height
       )
     )
     
     # attach dependencies
-    dependencies = widget_dependencies(cx)
+    dependencies = widget_dependencies(name, package)
     htmltools::attachDependencies(html, dependencies)
   }
   
