@@ -1,5 +1,15 @@
 
 
+#' Save a widget to an HTML file
+#' 
+#' Save a rendered widget to an HTML file (e.g. for sharing with others).
+#' 
+#' @param widget Widget to save
+#' @param file File to save HTML into
+#' @param selfcontained Whether to save the HTML as a single self-contained file
+#'   (with external resources base64 encoded) or a file with external resources 
+#'   placed in an adjacent directory.
+#'
 #' @export
 saveWidget <- function(widget, file, selfcontained = FALSE) {
    
