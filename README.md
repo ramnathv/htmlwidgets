@@ -11,7 +11,7 @@ install_github(c('rstudio/htmltools', 'ramnathv/htmlwidgets'))
 
 The basic philosophy of the `htmlwidgets` package is convention over configuration. By following a small set of easy-to-follow conventions, it is possible to create html widgets with very little code. Let me explain this by developing a html widget for [jquery Knob](http://anthonyterrien.com/knob/).
 
-Any HTML widget consists of three pieces
+Any HTML widget consists of four components.
 
 1. Dependencies
 2. HTML
