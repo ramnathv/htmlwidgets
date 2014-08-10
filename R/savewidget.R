@@ -11,7 +11,7 @@
 #'   placed in an adjacent directory.
 #'
 #' @export
-saveWidget <- function(widget, file, selfcontained = FALSE) {
+saveWidget <- function(widget, file, selfcontained = TRUE) {
    
   # convert to HTML tags
   html <- toHTML(widget, standalone = TRUE)
@@ -26,7 +26,7 @@ saveWidget <- function(widget, file, selfcontained = FALSE) {
   if (selfcontained) {
     
     if (!pandoc_available()) {
-      stop("selfContained requires the installation of pandoc. For details see:\n",
+      stop("Saving a widget with selfcontained = TRUE requires pandoc. For details see:\n",
            "https://github.com/rstudio/rmarkdown/blob/master/PANDOC.md")
     }
     
