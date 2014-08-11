@@ -209,29 +209,43 @@
     } else {
       // It's Shiny. Register the definition as an output binding.
 
-      if (definition.initialize) {
-        // Wrap renderValue to handle initialization, which unfortunately isn't
-        // supported natively by Shiny at the time of this writing.
+      // Wrap renderValue to handle initialization, which unfortunately isn't
+      // supported natively by Shiny at the time of this writing.
 
-        // Rename initialize to make sure it isn't called by a future version
-        // of Shiny that does support initialize directly.
-        definition._htmlwidgets_initialize = definition.initialize;
-        delete definition.initialize;
-        
-        definition._htmlwidgets_renderValue = definition.renderValue;
-        definition.renderValue = function(el, data) {
-          if (!elementData(el, "initialized")) {
-            initSizing(el);
+      // NB: definition.initialize may be undefined, as it's optional.
 
-            elementData(el, "initialized", true);
-            var result = this._htmlwidgets_initialize(el, el.offsetWidth, el.offsetHeight);
+      // Rename initialize to make sure it isn't called by a future version
+      // of Shiny that does support initialize directly.
+      definition._htmlwidgets_initialize = definition.initialize;
+      delete definition.initialize;
+
+      definition._htmlwidgets_renderValue = definition.renderValue;
+      definition.renderValue = function(el, data) {
+        if (!elementData(el, "initialized")) {
+          initSizing(el);
+
+          elementData(el, "initialized", true);
+          if (this._htmlwidgets_initialize) {
+            var result = this._htmlwidgets_initialize(el, el.offsetWidth,
+              el.offsetHeight);
             elementData(el, "init_result", result);
           }
-          this._htmlwidgets_renderValue(el, data,
-            elementData(el, "init_result")
-          );
         }
-      }
+        this._htmlwidgets_renderValue(el, data,
+          elementData(el, "init_result")
+        );
+      };
+
+      // Wrap resize to include the return value from initialize.
+      definition._htmlwidgets_resize = definition.resize;
+      definition.resize = function(el, width, height) {
+        // Shiny can call resize before initialize/renderValue have been
+        // called, which doesn't make sense for widgets.
+        if (elementData(el, "initialized")) {
+          this._htmlwidgets_resize(el, width, height,
+            elementData(el, "init_result"));
+        }
+      };
 
       Shiny.outputBindings.register(definition, definition.name);
     }
