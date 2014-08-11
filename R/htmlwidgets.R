@@ -139,66 +139,49 @@ createWidget <- function(name,
 }
 
 
-#' Create a shiny output function for a widget
+#' Shiny output function for an htmlwidget
 #' 
 #' @export
-makeShinyOutput <- function(name, 
-                            package = name, 
-                            defaultWidth = "100%", 
-                            defaultHeight = "400px") {  
+shinyWidgetOutput <- function(outputId, name, width, height, package = name) {
  
-  # shiny output function (defaults are injected below via formals)
-  output <- function(outputId, width, height) {
-    
-    # generate html
-    html <- htmltools::tagList(
-      widget_html(name, id = outputId, 
-        class = paste(name, "html-widget html-widget-output"), 
-        style = sprintf("width:%s; height:%s", 
-          htmltools::validateCssUnit(width), 
-          htmltools::validateCssUnit(height)
-        ), width = width, height = height
-      )
+  # generate html
+  html <- htmltools::tagList(
+    widget_html(name, id = outputId, 
+      class = paste(name, "html-widget html-widget-output"), 
+      style = sprintf("width:%s; height:%s", 
+        htmltools::validateCssUnit(width), 
+        htmltools::validateCssUnit(height)
+      ), width = width, height = height
     )
-    
-    # attach dependencies
-    dependencies = widget_dependencies(name, package)
-    htmltools::attachDependencies(html, dependencies)
-  }
+  )
   
-  # fixup formals so roxygen inherits the right default arguments
-  formals(output)$width <- substitute(defaultWidth)
-  formals(output)$height <- substitute(defaultHeight)
-  
-  # return the function
-  output
+  # attach dependencies
+  dependencies = widget_dependencies(name, package)
+  htmltools::attachDependencies(html, dependencies)
 }
 
 
-#' Create a shiny render function for a widget 
+#' Shiny render function for an htmlwidget 
 #' 
 #' @export
-makeShinyRender <- function(outputFunction) {
+shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
   
   force(outputFunction)
   
-  function(expr, env = parent.frame(), quoted = FALSE) {
-    
-    # ensure that quoted is always true (required for correct handling of expr)
-    if (!quoted) {
-      expr <- substitute(expr)
-      quoted <- TRUE
-    }
-    
-    # generate a function for the expression
-    func <- shiny::exprToFunction(expr, env, quoted)
-    
-    # create the render function
-    renderFunc <- function() .subset2(func(), "x")
-    
-    # mark it with the output function so we can use it in Rmd files
-    shiny::markRenderFunction(outputFunction, function() .subset2(func(), "x"))
-  }  
+  # ensure that quoted is always true (required for correct handling of expr)
+  if (!quoted) {
+    expr <- substitute(expr)
+    quoted <- TRUE
+  }
+  
+  # generate a function for the expression
+  func <- shiny::exprToFunction(expr, env, quoted)
+  
+  # create the render function
+  renderFunc <- function() .subset2(func(), "x")
+  
+  # mark it with the output function so we can use it in Rmd files
+  shiny::markRenderFunction(outputFunction, renderFunc)
 }
 
 
