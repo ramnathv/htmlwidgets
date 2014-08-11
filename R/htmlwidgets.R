@@ -166,14 +166,6 @@ shinyWidgetOutput <- function(outputId, name, width, height, package = name) {
 #' @export
 shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
   
-  force(outputFunction)
-  
-  # ensure that quoted is always true (required for correct handling of expr)
-  if (!quoted) {
-    expr <- substitute(expr)
-    quoted <- TRUE
-  }
-  
   # generate a function for the expression
   func <- shiny::exprToFunction(expr, env, quoted)
   
