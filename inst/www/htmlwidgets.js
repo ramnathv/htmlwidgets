@@ -336,4 +336,13 @@
     }
     return results;
   }
+  
+  window.HTMLWidgets.transposeArray2D = function(array) {
+      var newArray = array[0].map(function(col, i) { 
+          return array.map(function(row) { 
+              return row[i] 
+          })
+      });
+      return newArray;
+  }
 })();
