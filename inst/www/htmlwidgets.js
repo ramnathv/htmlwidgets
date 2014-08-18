@@ -231,7 +231,8 @@
             elementData(el, "init_result", result);
           }
         }
-        this._htmlwidgets_renderValue(el, data,
+        Shiny.renderDependencies(data.deps);
+        this._htmlwidgets_renderValue(el, data.x,
           elementData(el, "init_result")
         );
       };
@@ -249,7 +250,7 @@
 
       Shiny.outputBindings.register(definition, definition.name);
     }
-  }
+  };
 
   // If not Shiny, then render after the document finishes loading
   if (!shinyMode) {
@@ -311,6 +312,18 @@
       });
     }
   }
+  
+  window.HTMLWidgets.getAttachmentUrl = function(depname, key) {
+    // If no key, default to the first item
+    if (typeof(key) === "undefined")
+      key = 1;
+    
+    var link = document.getElementById(depname + "-" + key + "-attachment");
+    if (!link) {
+      throw new Error("Attachment " + depname + "/" + key + " not found in document");
+    }
+    return link.getAttribute("href");
+  };
 
   window.HTMLWidgets.dataframeToD3 = function(df) {
     var names = [];
@@ -335,7 +348,7 @@
         results.push(item);
     }
     return results;
-  }
+  };
   
   window.HTMLWidgets.transposeArray2D = function(array) {
       var newArray = array[0].map(function(col, i) { 
@@ -344,5 +357,5 @@
           })
       });
       return newArray;
-  }
+  };
 })();

@@ -87,7 +87,8 @@ toHTML.htmlwidget <- function(x, standalone = FALSE, knitrOptions = NULL, ...){
     }
   )
   html <- htmltools::attachDependencies(html, 
-    widget_dependencies(class(x)[1], attr(x, 'package'))
+    c(widget_dependencies(class(x)[1], attr(x, 'package')),
+      x$dependencies)
   )
   
   htmltools::browsable(html)
@@ -125,12 +126,19 @@ createWidget <- function(name,
                          width = NULL,
                          height = NULL,
                          sizingPolicy = htmlwidgets::sizingPolicy(), 
-                         package = name) {  
+                         package = name,
+                         dependencies = NULL) {
+  
+  # Turn single dependency object into list of dependencies, if necessary
+  if (inherits(dependencies, "html_dependency"))
+    dependencies <- list(dependencies)
+  
   structure(
     list(x = x,
          width = width,
          height = height,
-         sizingPolicy = sizingPolicy), 
+         sizingPolicy = sizingPolicy,
+         dependencies = dependencies), 
     class = c(name, 
               if (sizingPolicy$viewer$suppress) "suppress_viewer", 
               "htmlwidget"),
@@ -170,7 +178,16 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
   func <- shiny::exprToFunction(expr, env, quoted)
   
   # create the render function
-  renderFunc <- function() .subset2(func(), "x")
+  renderFunc <- function() {
+    instance <- func()
+    x <- .subset2(instance, "x")
+    deps <- .subset2(instance, "dependencies")
+    deps <- lapply(
+      htmltools::resolveDependencies(deps),
+      shiny::createWebDependency
+    )
+    list(x = x, deps = deps)
+  }
   
   # mark it with the output function so we can use it in Rmd files
   shiny::markRenderFunction(outputFunction, renderFunc)
