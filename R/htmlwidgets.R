@@ -51,7 +51,10 @@ toHTML.htmlwidget <- function(x, standalone = FALSE, knitrOptions = NULL, ...){
   
   sizeInfo <- resolveSizing(x, x$sizingPolicy, standalone = standalone, knitrOptions = knitrOptions)
   
-  id <- paste("htmlwidget", as.integer(stats::runif(1, 1, 10000)), sep="-")
+  if (!is.null(x$elementId))
+    id <- x$elementId
+  else
+    id <- paste("htmlwidget", as.integer(stats::runif(1, 1, 10000)), sep="-")
   
   w <- validateCssUnit(sizeInfo$width)
   h <- validateCssUnit(sizeInfo$height)
@@ -125,12 +128,14 @@ createWidget <- function(name,
                          width = NULL,
                          height = NULL,
                          sizingPolicy = htmlwidgets::sizingPolicy(), 
-                         package = name) {  
+                         package = name,
+                         elementId = NULL) {  
   structure(
     list(x = x,
          width = width,
          height = height,
-         sizingPolicy = sizingPolicy), 
+         sizingPolicy = sizingPolicy,
+         elementId = elementId), 
     class = c(name, 
               if (sizingPolicy$viewer$suppress) "suppress_viewer", 
               "htmlwidget"),
@@ -170,7 +175,14 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
   func <- shiny::exprToFunction(expr, env, quoted)
   
   # create the render function
-  renderFunc <- function() .subset2(func(), "x")
+  renderFunc <- function() {
+    result <- func()
+    if (!is.null(result$elementId)) {
+      warning("Ignoring explicitly provided widget ID \"", result$elementId,
+        "\"; Shiny doesn't use them")
+    }
+    return(.subset2(result, "x"))
+  }
   
   # mark it with the output function so we can use it in Rmd files
   shiny::markRenderFunction(outputFunction, renderFunc)
