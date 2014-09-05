@@ -90,7 +90,8 @@ toHTML.htmlwidget <- function(x, standalone = FALSE, knitrOptions = NULL, ...){
     }
   )
   html <- htmltools::attachDependencies(html, 
-    widget_dependencies(class(x)[1], attr(x, 'package'))
+    c(widget_dependencies(class(x)[1], attr(x, 'package')),
+      x$dependencies)
   )
   
   htmltools::browsable(html)
@@ -129,13 +130,19 @@ createWidget <- function(name,
                          height = NULL,
                          sizingPolicy = htmlwidgets::sizingPolicy(), 
                          package = name,
-                         elementId = NULL) {  
+                         dependencies = NULL,
+                         elementId = NULL) {
+  
+  # Turn single dependency object into list of dependencies, if necessary
+  if (inherits(dependencies, "html_dependency"))
+    dependencies <- list(dependencies)
   structure(
     list(x = x,
          width = width,
          height = height,
          sizingPolicy = sizingPolicy,
-         elementId = elementId), 
+         dependencies = dependencies, 
+         elementId = elementId),
     class = c(name, 
               if (sizingPolicy$viewer$suppress) "suppress_viewer", 
               "htmlwidget"),
@@ -176,12 +183,19 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
   
   # create the render function
   renderFunc <- function() {
-    result <- func()
-    if (!is.null(result$elementId)) {
-      warning("Ignoring explicitly provided widget ID \"", result$elementId,
-        "\"; Shiny doesn't use them")
+    instance <- func()
+    if (!is.null(instance$elementId)) {
+      warning("Ignoring explicitly provided widget ID \"", 
+        instance$elementId, "\"; Shiny doesn't use them"
+      )
     }
-    return(.subset2(result, "x"))
+    x <- .subset2(instance, "x")
+    deps <- .subset2(instance, "dependencies")
+    deps <- lapply(
+      htmltools::resolveDependencies(deps),
+      shiny::createWebDependency
+    )
+    list(x = x, deps = deps)
   }
   
   # mark it with the output function so we can use it in Rmd files
