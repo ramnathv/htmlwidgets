@@ -51,7 +51,10 @@ toHTML.htmlwidget <- function(x, standalone = FALSE, knitrOptions = NULL, ...){
   
   sizeInfo <- resolveSizing(x, x$sizingPolicy, standalone = standalone, knitrOptions = knitrOptions)
   
-  id <- paste("htmlwidget", as.integer(stats::runif(1, 1, 10000)), sep="-")
+  if (!is.null(x$elementId))
+    id <- x$elementId
+  else
+    id <- paste("htmlwidget", as.integer(stats::runif(1, 1, 10000)), sep="-")
   
   w <- validateCssUnit(sizeInfo$width)
   h <- validateCssUnit(sizeInfo$height)
@@ -127,18 +130,19 @@ createWidget <- function(name,
                          height = NULL,
                          sizingPolicy = htmlwidgets::sizingPolicy(), 
                          package = name,
-                         dependencies = NULL) {
+                         dependencies = NULL,
+                         elementId = NULL) {
   
   # Turn single dependency object into list of dependencies, if necessary
   if (inherits(dependencies, "html_dependency"))
     dependencies <- list(dependencies)
-  
   structure(
     list(x = x,
          width = width,
          height = height,
          sizingPolicy = sizingPolicy,
-         dependencies = dependencies), 
+         dependencies = dependencies, 
+         elementId = elementId),
     class = c(name, 
               if (sizingPolicy$viewer$suppress) "suppress_viewer", 
               "htmlwidget"),
@@ -180,6 +184,11 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
   # create the render function
   renderFunc <- function() {
     instance <- func()
+    if (!is.null(instance$elementId)) {
+      warning("Ignoring explicitly provided widget ID \"", 
+        instance$elementId, "\"; Shiny doesn't use them"
+      )
+    }
     x <- .subset2(instance, "x")
     deps <- .subset2(instance, "dependencies")
     deps <- lapply(
