@@ -11,13 +11,16 @@
 #'   placed in an adjacent directory.
 #'
 #' @export
-saveWidget <- function(widget, file, selfcontained = TRUE) {
+saveWidget <- function(widget, file, selfcontained = TRUE, libdir = NULL) {
    
   # convert to HTML tags
   html <- toHTML(widget, standalone = TRUE)
   
   # form a path for dependenent files
-  libdir <- paste(tools::file_path_sans_ext(basename(file)), "_files", sep = "")
+  if (is.null(libdir)){
+    libdir <- paste(tools::file_path_sans_ext(basename(file)), "_files", 
+      sep = "")
+  }
   
   # save the file
   htmltools::save_html(html, file = file, libdir = libdir)
