@@ -7,7 +7,10 @@
   // See if we're running in a viewer pane. If not, we're in a web browser.
   var viewerMode = window.HTMLWidgets.viewerMode =
       /\bviewer_pane=1\b/.test(window.location);
+
   // See if we're running in Shiny mode. If not, it's a static document.
+  // Note that static widgets can appear in both Shiny and static modes, but
+  // obviously, Shiny widgets can only appear in Shiny apps/documents.
   var shinyMode = window.HTMLWidgets.shinyMode =
       typeof(window.Shiny) !== "undefined" && !!window.Shiny.outputBindings;
 
@@ -37,6 +40,21 @@
     }
     return target;
   }
+  
+  // Replaces the specified method with the return value of funcSource.
+  //
+  // Note that funcSource should not BE the new method, it should be a function
+  // that RETURNS the new method. funcSource receives a single argument that is
+  // the overridden method, it can be called from the new method. The overridden
+  // method can be called like a regular function, it has the target permanently
+  // bound to it so "this" will work correctly.
+  function overrideMethod(target, methodName, funcSource) {
+    var superFunc = target[methodName] || function() {};
+    var superFuncBound = function() {
+      return superFunc.apply(target, arguments);
+    };
+    target[methodName] = funcSource(superFuncBound);
+  }
 
   // Implement a vague facsimilie of jQuery's data method 
   function elementData(el, name, value) {
@@ -49,6 +67,29 @@
       throw new Error("Wrong number of arguments for elementData: " +
         arguments.length);
     }
+  }
+  
+  // http://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
+  function escapeRegExp(str) {
+    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+  }
+
+  function hasClass(el, className) {
+    var re = new RegExp("\\b" + escapeRegExp(className) + "\\b");
+    return re.test(el.className);
+  }
+  
+  // elements - array (or array-like object) of HTML elements
+  // className - class name to test for
+  // include - if true, only return elements with given className;
+  //   if false, only return elements *without* given className
+  function filterByClass(elements, className, include) {
+    var results = [];
+    for (var i = 0; i < elements.length; i++) {
+      if (hasClass(elements[i], className) == include)
+        results.push(elements[i]);
+    }
+    return results;
   }
   
   function on(obj, eventName, func) {
@@ -195,123 +236,163 @@
       throw new Error("Widget must have a renderValue function");
     }
     
+    // For static rendering (non-Shiny), use a simple widget registration
+    // scheme. We also use this scheme for Shiny apps/documents that also
+    // contain static widgets.
+    window.HTMLWidgets.widgets = window.HTMLWidgets.widgets || [];
     // Merge defaults into the definition; don't mutate the original definition.
-    // The base object is a Shiny output binding if we're running in Shiny mode,
-    // or an empty object if we're not.
-    definition = extend(shinyMode ? new Shiny.OutputBinding() : {},
-      defaults, definition
-    );
-    
-    if (!shinyMode) {
-      // We're not in a Shiny context. Use a simple widget registration scheme.
-      window.HTMLWidgets.widgets = window.HTMLWidgets.widgets || [];
-      window.HTMLWidgets.widgets.push(definition);
-    } else {
-      // It's Shiny. Register the definition as an output binding.
+    var staticBinding = extend({}, defaults, definition);
+    overrideMethod(staticBinding, "find", function(superfunc) {
+      return function(scope) {
+        var results = superfunc(scope);
+        // Filter out Shiny outputs, we only want the static kind
+        return filterByClass(results, "html-widget-output", false);
+      };
+    });
+    window.HTMLWidgets.widgets.push(staticBinding);
 
+    if (shinyMode) {
+      // Shiny is running. Register the definition as an output binding.
+
+      // Merge defaults into the definition; don't mutate the original definition.
+      // The base object is a Shiny output binding if we're running in Shiny mode,
+      // or an empty object if we're not.
+      var shinyBinding = extend(new Shiny.OutputBinding(), defaults, definition);
+      
       // Wrap renderValue to handle initialization, which unfortunately isn't
       // supported natively by Shiny at the time of this writing.
 
-      // NB: definition.initialize may be undefined, as it's optional.
+      // NB: shinyBinding.initialize may be undefined, as it's optional.
 
       // Rename initialize to make sure it isn't called by a future version
       // of Shiny that does support initialize directly.
-      definition._htmlwidgets_initialize = definition.initialize;
-      delete definition.initialize;
+      shinyBinding._htmlwidgets_initialize = shinyBinding.initialize;
+      delete shinyBinding.initialize;
+      
+      overrideMethod(shinyBinding, "find", function(superfunc) {
+        return function(scope) {
+          
+          var results = superfunc(scope);
 
-      definition._htmlwidgets_renderValue = definition.renderValue;
-      definition.renderValue = function(el, data) {
-        if (!elementData(el, "initialized")) {
-          initSizing(el);
+          // Only return elements that are Shiny outputs, not static ones
+          var dynamicResults = results.filter(".html-widget-output");
+          
+          // It's possible that whatever caused Shiny to think there might be
+          // new dynamic outputs, also caused there to be new static outputs.
+          // Since there might be lots of different htmlwidgets bindings, we
+          // schedule execution for later--no need to staticRender multiple
+          // times.
+          if (results.length !== dynamicResults.length)
+            scheduleStaticRender();
+          
+          return dynamicResults;
+        };
+      });
 
-          elementData(el, "initialized", true);
-          if (this._htmlwidgets_initialize) {
-            var result = this._htmlwidgets_initialize(el, el.offsetWidth,
-              el.offsetHeight);
-            elementData(el, "init_result", result);
+      overrideMethod(shinyBinding, "renderValue", function(superfunc) {
+        return function(el, data) {
+          if (!elementData(el, "initialized")) {
+            initSizing(el);
+  
+            elementData(el, "initialized", true);
+            if (this._htmlwidgets_initialize) {
+              var result = this._htmlwidgets_initialize(el, el.offsetWidth,
+                el.offsetHeight);
+              elementData(el, "init_result", result);
+            }
           }
-        }
-        Shiny.renderDependencies(data.deps);
-        this._htmlwidgets_renderValue(el, data.x,
-          elementData(el, "init_result")
-        );
-      };
+          Shiny.renderDependencies(data.deps);
+          superfunc(el, data.x, elementData(el, "init_result"));
+        };
+      });
 
-      // Wrap resize to include the return value from initialize.
-      definition._htmlwidgets_resize = definition.resize;
-      definition.resize = function(el, width, height) {
-        // Shiny can call resize before initialize/renderValue have been
-        // called, which doesn't make sense for widgets.
-        if (elementData(el, "initialized")) {
-          this._htmlwidgets_resize(el, width, height,
-            elementData(el, "init_result"));
-        }
-      };
+      overrideMethod(shinyBinding, "resize", function(superfunc) {
+        return function(el, width, height) {
+          // Shiny can call resize before initialize/renderValue have been
+          // called, which doesn't make sense for widgets.
+          if (elementData(el, "initialized")) {
+            superfunc(el, width, height, elementData(el, "init_result"));
+          }
+        };
+      });
 
-      Shiny.outputBindings.register(definition, definition.name);
+      Shiny.outputBindings.register(shinyBinding, shinyBinding.name);
     }
   };
+  
+  var scheduleStaticRenderTimerId = null;
+  function scheduleStaticRender() {
+    if (!scheduleStaticRenderTimerId) {
+      scheduleStaticRenderTimerId = setTimeout(function() {
+        scheduleStaticRenderTimerId = null;
+        staticRender();
+      }, 1);
+    }
+  }
 
-  // If not Shiny, then render after the document finishes loading
-  if (!shinyMode) {
-    // Statically render all elements that are of this widget's class
-    function staticRender() {
-      var bindings = window.HTMLWidgets.widgets || [];
-      for (var i = 0; i < bindings.length; i++) {
-        var binding = bindings[i];
-        var matches = binding.find(document.documentElement);
-        for (var j = 0; j < matches.length; j++) {
-          var el = matches[j];
-          var sizeObj = initSizing(el, binding);
-          // TODO: Check if el is already bound
-          var initResult;
-          if (binding.initialize) {
-            initResult = binding.initialize(el,
-              sizeObj ? sizeObj.getWidth() : el.offsetWidth,
-              sizeObj ? sizeObj.getHeight() : el.offsetHeight
-            );
-          }
-          
-          if (binding.resize) {
-            var lastSize = {};
-            on(window, "resize", function(e) {
-              var size = {
-                w: sizeObj ? sizeObj.getWidth() : el.offsetWidth,
-                h: sizeObj ? sizeObj.getHeight() : el.offsetHeight
-              };
-              if (size.w === 0 && size.h === 0)
-                return;
-              if (size.w === lastSize.w && size.h === lastSize.h)
-                return;
-              lastSize = size;
-              binding.resize(el, size.w, size.h, initResult);
-            });
-          }
-          
-          var scriptData = document.querySelector("script[data-for='" + el.id + "'][type='application/json']");
-          if (scriptData) {
-            var data = JSON.parse(scriptData.textContent || scriptData.text);
-            binding.renderValue(el, data, initResult);
-          }
+  // Render static widgets after the document finishes loading
+  // Statically render all elements that are of this widget's class
+  function staticRender() {
+    var bindings = window.HTMLWidgets.widgets || [];
+    for (var i = 0; i < bindings.length; i++) {
+      var binding = bindings[i];
+      var matches = binding.find(document.documentElement);
+      for (var j = 0; j < matches.length; j++) {
+        var el = matches[j];
+        var sizeObj = initSizing(el, binding);
+        
+        if (hasClass(el, "html-widget-static-bound"))
+          continue;
+        el.className = el.className + " html-widget-static-bound";
+        
+        var initResult;
+        if (binding.initialize) {
+          initResult = binding.initialize(el,
+            sizeObj ? sizeObj.getWidth() : el.offsetWidth,
+            sizeObj ? sizeObj.getHeight() : el.offsetHeight
+          );
+        }
+        
+        if (binding.resize) {
+          var lastSize = {};
+          on(window, "resize", function(e) {
+            var size = {
+              w: sizeObj ? sizeObj.getWidth() : el.offsetWidth,
+              h: sizeObj ? sizeObj.getHeight() : el.offsetHeight
+            };
+            if (size.w === 0 && size.h === 0)
+              return;
+            if (size.w === lastSize.w && size.h === lastSize.h)
+              return;
+            lastSize = size;
+            binding.resize(el, size.w, size.h, initResult);
+          });
+        }
+        
+        var scriptData = document.querySelector("script[data-for='" + el.id + "'][type='application/json']");
+        if (scriptData) {
+          var data = JSON.parse(scriptData.textContent || scriptData.text);
+          binding.renderValue(el, data, initResult);
         }
       }
     }
-
-    // Wait until after the document has loaded to render the widgets.
-    if (document.addEventListener) {
-      document.addEventListener("DOMContentLoaded", function() {
-        document.removeEventListener("DOMContentLoaded", arguments.callee, false);
-        staticRender();
-      }, false);
-    } else if (document.attachEvent) {
-      document.attachEvent("onreadystatechange", function() {
-        if (document.readyState === "complete") {
-          document.detachEvent("onreadystatechange", arguments.callee);
-          staticRender();
-        }
-      });
-    }
   }
+
+  // Wait until after the document has loaded to render the widgets.
+  if (document.addEventListener) {
+    document.addEventListener("DOMContentLoaded", function() {
+      document.removeEventListener("DOMContentLoaded", arguments.callee, false);
+      staticRender();
+    }, false);
+  } else if (document.attachEvent) {
+    document.attachEvent("onreadystatechange", function() {
+      if (document.readyState === "complete") {
+        document.detachEvent("onreadystatechange", arguments.callee);
+        staticRender();
+      }
+    });
+  }
+  
   
   window.HTMLWidgets.getAttachmentUrl = function(depname, key) {
     // If no key, default to the first item
