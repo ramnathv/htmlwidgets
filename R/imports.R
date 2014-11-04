@@ -1,2 +1,2 @@
-#' @import htmltools RJSONIO
+#' @import htmltools jsonlite
 NULL
