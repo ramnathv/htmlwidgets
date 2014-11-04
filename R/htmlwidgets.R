@@ -35,7 +35,8 @@ print.suppress_viewer <- function(x) {
   invisible(x)
 }
 
-#' @S3method as.tags htmlwidget
+#' @method as.tags htmlwidget
+#' @export
 as.tags.htmlwidget <- function(x, standalone = FALSE) {
   toHTML(x, standalone = standalone)
 }
