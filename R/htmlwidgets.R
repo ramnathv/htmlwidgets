@@ -121,6 +121,7 @@ widget_dependencies <- function(name, package){
 
 # Generates a <script type="application/json"> tag with the JSON-encoded data,
 # to be picked up by htmlwidgets.js for static rendering.
+#' @importFrom jsonlite toJSON
 widget_data <- function(x, id, ...){
   payload <- createPayload(x)
   args <- c(payload, attr(x$x, 'TOJSON_ARGS'))

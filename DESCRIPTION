@@ -13,7 +13,7 @@ License: MIT + file LICENSE
 VignetteBuilder: knitr
 Imports:
     htmltools (>= 0.2.6),
-    RJSONIO,
+    jsonlite,
     yaml
 Suggests:
     knitr (>= 1.8)

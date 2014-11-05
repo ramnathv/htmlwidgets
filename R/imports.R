@@ -1,2 +1,2 @@
-#' @import htmltools jsonlite
+#' @import htmltools
 NULL
