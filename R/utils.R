@@ -57,3 +57,9 @@ any_prop <- function(scopes, path) {
   }
   return(NULL)
 }
+
+toJSON <- function(x) {
+  convert <- attr(x, 'JSON_CONVERTER', exact = TRUE)
+  if (!is.function(convert)) convert <- RJSONIO::toJSON
+  convert(x)
+}

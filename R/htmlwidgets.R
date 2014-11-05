@@ -86,7 +86,7 @@ toHTML.htmlwidget <- function(x, standalone = FALSE, knitrOptions = NULL, ...){
     widget_data(x, id),
     if (!is.null(sizeInfo$runtime)) {
       tags$script(type="application/htmlwidget-sizing", `data-for` = id,
-        toJSON(sizeInfo$runtime, collapse="")
+        toJSON(sizeInfo$runtime)
       )
     }
   )
@@ -120,7 +120,7 @@ widget_dependencies <- function(name, package){
 #' @export
 widget_data <- function(x, id, ...){
   tags$script(type="application/json", `data-for` = id,
-    HTML(toJSON(x$x, collapse = ""))
+    HTML(toJSON(x$x))
   )
 }
 
