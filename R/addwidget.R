@@ -1,14 +1,18 @@
 #' @export
-addNewWidget <- function(name, package){
+addNewWidget <- function(name, edit = interactive()){
   if (!file.exists('DESCRIPTION')){
-    stop("You need to create a package to house your widget first!", call. = F)
+    stop(
+      "You need to create a package to house your widget first!", 
+      call. = F
+    )
   }
-  addWidgetConstructor(name, package)
-  addWidgetYAML(name)
-  addWidgetJS(name)
+  package = read.dcf('DESCRIPTION')[[1,"Package"]]
+  addWidgetConstructor(name, package, edit)
+  addWidgetYAML(name, edit)
+  addWidgetJS(name, edit)
 }
 
-addWidgetConstructor <- function(name, package = name){
+addWidgetConstructor <- function(name, package, edit){
   tpl <- "#' <Add Title>
 #'
 #' <Add Description>
@@ -18,9 +22,9 @@ addWidgetConstructor <- function(name, package = name){
 %s <- function(..., width, height){
   params = list(...)
   createWidget(
-   name = %s,
+   name = '%s',
    params,
-   package = %s
+   package = '%s'
   )
 }
 
@@ -52,9 +56,10 @@ render%s <- function(expr, env = parent.frame(), quoted = FALSE) {
   } else {
     message(file_, " already exists")
   }
+  if (edit) file.edit(file_)
 }
 
-addWidgetYAML <- function(name){
+addWidgetYAML <- function(name, edit){
   tpl <- "# widget dependencies
 dependencies:
   - name:
@@ -74,9 +79,10 @@ dependencies:
   } else {
     message(file_, " already exists")
   }
+  if (edit) file.edit(file_)
 }
 
-addWidgetJS <- function(name){
+addWidgetJS <- function(name, edit){
   tpl <- "// widget binding
 HTMLWidgets.widget({
   name: '%s',
@@ -91,10 +97,11 @@ HTMLWidgets.widget({
 "
   if (!file.exists(file_ <- sprintf('inst/htmlwidgets/%s.js', name))){
     cat(sprintf(tpl, name), file = file_)
-    message('Created boilerplate for widget javascript bindings at', 
+    message('Created boilerplate for widget javascript bindings at ', 
       sprintf('inst/htmlwidgets/%s.js', name)
     )
   } else {
     message(file_, " already exists")
   }
+  if (edit) file.edit(file_)
 }
