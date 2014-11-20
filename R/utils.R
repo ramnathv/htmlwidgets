@@ -72,17 +72,17 @@ JS <- function(x){
   structure(x, class = unique(c("JS_EVAL", oldClass(x))))
 }
 
-#' Creates a list of keys whose values need to be evaluated on the client-side.
-#' 
-#' It works by transforming \code{list(foo = list(1, list(bar = I('function(){}')), 2))} to \code{list("foo.2.bar")}. Later on the JS side, we will split foo.2.bar to
-#' ['foo', '2', 'bar'] and evaluate the JSON object member. Note '2' (character)
-#' should have been 2 (integer) but it does not seem to matter in JS: x[2] is the
-#' same as x['2'] when all child members of x are unnamed, and ('2' in x) will be
-#' true even if x is an array without names. This is a little hackish.
-#' 
-#' @param list a list in which the elements that should be evaluated as JavaScript 
-#'    are to be identified
-#' @author Yihui Xie
+# Creates a list of keys whose values need to be evaluated on the client-side.
+# 
+# It works by transforming \code{list(foo = list(1, list(bar = I('function(){}')), 2))} to \code{list("foo.2.bar")}. Later on the JS side, we will split foo.2.bar to
+# ['foo', '2', 'bar'] and evaluate the JSON object member. Note '2' (character)
+# should have been 2 (integer) but it does not seem to matter in JS: x[2] is the
+# same as x['2'] when all child members of x are unnamed, and ('2' in x) will be
+# true even if x is an array without names. This is a little hackish.
+# 
+# @param list a list in which the elements that should be evaluated as JavaScript 
+#    are to be identified
+# @author Yihui Xie
 JSEvals <- function(list) {
   evals <- names(which(unlist(shouldEval(list))))
   I(evals)  # need I() to prevent RJSONIO::toJSON() from converting it to scalar
@@ -96,8 +96,13 @@ shouldEval <- function(options) {
   if (is.list(options)) {
     if ((n <- length(options)) == 0) return(FALSE)
     # use numeric indices as names (remember JS indexes from 0, hence -1 here)
-    if (is.null(nms <- names(options)))
-      nms <- names(options) <- seq_len(n) - 1L
+    if (is.null(names(options)))
+      names(options) <- seq_len(n) - 1L
+    # Escape '\' and '.' by prefixing them with '\'. This allows us to tell the
+    # difference between periods as separators and periods that are part of the
+    # name itself.
+    names(options) <- gsub("([\\.])", "\\\\\\1", names(options))
+    nms <- names(options)
     if (length(nms) != n || any(nms == ''))
       stop("'options' must be a fully named list, or have no names (NULL)")
     lapply(options, shouldEval)
@@ -105,3 +110,4 @@ shouldEval <- function(options) {
     is.character(options) && inherits(options, 'JS_EVAL')
   }
 }
+# JSEvals(list(list(foo.bar=JS("hi"), baz.qux="bye"))) == "0.foo\\.bar"
