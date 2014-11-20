@@ -1,5 +1,5 @@
 #' @export
-addNewWidget <- function(name, bower_pkg = NULL, edit = interactive()){
+addNewWidget <- function(name, bowerPkg = NULL, edit = interactive()){
   if (!file.exists('DESCRIPTION')){
     stop(
       "You need to create a package to house your widget first!", 
@@ -11,7 +11,7 @@ addNewWidget <- function(name, bower_pkg = NULL, edit = interactive()){
   }
   package = read.dcf('DESCRIPTION')[[1,"Package"]]
   addWidgetConstructor(name, package, edit)
-  addWidgetYAML(name, bower_pkg, edit)
+  addWidgetYAML(name, bowerPkg, edit)
   addWidgetJS(name, edit)
 }
 
@@ -62,7 +62,7 @@ render%s <- function(expr, env = parent.frame(), quoted = FALSE) {
   if (edit) file.edit(file_)
 }
 
-addWidgetYAML <- function(name, bower_pkg, edit){
+addWidgetYAML <- function(name, bowerPkg, edit){
   tpl <- "# widget dependencies
 dependencies:
   - name:
@@ -74,9 +74,9 @@ dependencies:
   if (!file.exists('inst/htmlwidgets')){
     dir.create('inst/htmlwidgets')
   }
-  if (!is.null(bower_pkg)){
-    install_bower_pkg(bower_pkg)
-    tpl <- get_config(bower_pkg)
+  if (!is.null(bowerPkg)){
+    installBowerPkg(bowerPkg)
+    tpl <- getConfig(bowerPkg)
   }
   if (!file.exists(file_ <- sprintf('inst/htmlwidgets/%s.yaml', name))){
     cat(tpl, file = file_)
@@ -120,9 +120,9 @@ HTMLWidgets.widget({
 #' 
 #' @param pkg name of bower package to install
 #' @export
-install_bower_pkg <- function(pkg){
+installBowerPkg <- function(pkg){
   # check if bower is installed
-  if (Sys.which('bower') == ""){
+  if (findBower() == ""){
     stop(
       "Please install bower from http://bower.io",
       call. = FALSE
@@ -143,16 +143,36 @@ install_bower_pkg <- function(pkg){
   
   # Install package
   message("Installing ", pkg, " using bower...", "\n\n")
-  cmd <- sprintf("bower install %s", pkg)
+  cmd <- sprintf('%s install %s', findBower(), pkg)
   system(cmd)
   message("... Done! installing ", pkg)
+}
+
+#' Try really hard to find bower in Windows
+#' 
+#' @keywords internal
+#' @noRd
+findBower <- function(){
+  # a slightly more robust finder of bower for windows
+  # which does not require PATH environment variable to be set
+  bower_path = if(Sys.which("bower") == "") {
+      # if it does not find Sys.which('bower')
+      # also check APPDATA to see if found there
+      if(identical(.Platform$OS.type,"windows")) {
+        Sys.which(file.path(Sys.getenv("APPDATA"),"npm","bower."))
+      }
+    } else {
+      Sys.which("bower")
+    }
+  
+  return(bower_path)
 }
 
 #' Read the bower.json file
 #' 
 #' @keywords internal
 #' @noRd
-read_bower <- function(pkg, src = "inst/htmlwidgets/lib"){
+readBower <- function(pkg, src = "inst/htmlwidgets/lib"){
   bower = RJSONIO::fromJSON(
     file.path(src, pkg, 'bower.json')
   )
@@ -171,12 +191,12 @@ read_bower <- function(pkg, src = "inst/htmlwidgets/lib"){
 #' Get YAML configuration for widget
 #' 
 #' @export
-get_config <- function(pkg, src = "inst/htmlwidgets/lib"){
-  deps = read_bower(pkg, src)$deps
+getConfig <- function(pkg, src = "inst/htmlwidgets/lib"){
+  deps = readBower(pkg, src)$deps
   all = c(pkg, names(deps))
   config = lapply(all, function(pkg){
-    read_bower(pkg, src = src)$spec
+    readBower(pkg, src = src)$spec
   })
-  yaml::as.yaml(config)
+  yaml::as.yaml(list(dependencies = config))
 }
 
