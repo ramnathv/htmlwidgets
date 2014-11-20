@@ -81,11 +81,16 @@ knob <- function(title, value, min, max, width = NULL, height = NULL, ...){
 }
 ```
 
-To complete the proceedings, we will go ahead and define functions that will allow the `knob` widget to be used in a Shiny application or document. This is made really simple by the `makeShinyOutput` and `makeShinyRender` utility functions provided by the `htmlwidgets` package.
+To complete the proceedings, we will go ahead and define functions that will allow the `knob` widget to be used in a Shiny application or document. This is made really simple by the `shinyWidgetOutput` and `shinyRenderWidget` utility functions provided by the `htmlwidgets` package.
 
 ```r
-knobOutput <- htmlwidgets::makeShinyOutput('knob')
-renderKnob <- htmlwidgets::makeShinyRender('knob')
+knobOutput <- function(outputId, width = "100%", height = "500px") {
+  shinyWidgetOutput(outputId, "knob", width, height, package = "knob")
+}
+renderKnob <- function(expr, env = parent.frame(), quoted = FALSE) {
+  if (!quoted) { expr <- substitute(expr) } # force quoted
+  shinyRenderWidget(expr, knobOutput, env, quoted = TRUE)
+}
 ```
 
 That is all there is! With these four pieces, we have an HTML widget that is ready to go! You can install the [knob](http://github.com/ramnathv/knob) widget from github.
