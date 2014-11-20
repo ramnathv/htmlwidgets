@@ -373,6 +373,11 @@
 
       overrideMethod(shinyBinding, "renderValue", function(superfunc) {
         return function(el, data) {
+          // Resolve strings marked as javascript literals to objects
+          data.x["__evals__"].map(function(member) {
+            window.HTMLWidgets.evaluateStringMember(data.x, member);
+          });
+          delete data["__evals__"]
           if (!this.renderOnNullValue) {
             if (data.x === null) {
               el.style.visibility = "hidden";
@@ -462,6 +467,12 @@
         var scriptData = document.querySelector("script[data-for='" + el.id + "'][type='application/json']");
         if (scriptData) {
           var data = JSON.parse(scriptData.textContent || scriptData.text);
+          // Resolve strings marked as javascript literals to objects
+          console.log(data)
+          data["__evals__"].map(function(member) {
+            window.HTMLWidgets.evaluateStringMember(data, member);
+          });
+          delete data["__evals__"]
           binding.renderValue(el, data, initResult);
         }
       }
