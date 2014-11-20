@@ -57,3 +57,53 @@ any_prop <- function(scopes, path) {
   }
   return(NULL)
 }
+
+#' Mark elements of a list as a javascript literal.
+#' 
+#' This function \code{JS()} marks a character vector with a special class, so that 
+#' it will be treated as a javascript literal when evaluated on the client-side.
+#' The function \code{JSEvals()} will then identify the elements of a
+#' list that should be evaluated as javascript objects on the client side.
+#' 
+#' @param x character vector that needs to be treated as a javascript object.
+#' @author Yihui Xie
+#' @export
+JS <- function(x){
+  structure(x, class = unique(c("JS_EVAL", oldClass(x))))
+}
+
+#' Creates a list of keys whose values need to be evaluated on the client-side.
+#' 
+#' It works by transforming \code{list(foo = list(1, list(bar = I('function(){}')), 2))} to \code{list("foo.2.bar")}. Later on the JS side, we will split foo.2.bar to
+#' ['foo', '2', 'bar'] and evaluate the JSON object member. Note '2' (character)
+#' should have been 2 (integer) but it does not seem to matter in JS: x[2] is the
+#' same as x['2'] when all child members of x are unnamed, and ('2' in x) will be
+#' true even if x is an array without names. This is a little hackish.
+#' 
+#' @param list a list in which the elements that should be evaluated as JavaScript 
+#'    are to be identified
+#' @author Yihui Xie
+#' @rdname JS
+#' @export
+JSEvals <- function(list) {
+  evals <- names(which(unlist(shouldEval(list))))
+  I(evals)  # need I() to prevent RJSONIO::toJSON() from converting it to scalar
+}
+
+#' JSON elements that are character with the class JS_EVAL will be evaluated
+#' 
+#' @noRd
+#' @keywords internal
+shouldEval <- function(options) {
+  if (is.list(options)) {
+    if ((n <- length(options)) == 0) return(FALSE)
+    # use numeric indices as names (remember JS indexes from 0, hence -1 here)
+    if (is.null(nms <- names(options)))
+      nms <- names(options) <- seq_len(n) - 1L
+    if (length(nms) != n || any(nms == ''))
+      stop("'options' must be a fully named list, or have no names (NULL)")
+    lapply(options, shouldEval)
+  } else {
+    is.character(options) && inherits(options, 'JS_EVAL')
+  }
+}
