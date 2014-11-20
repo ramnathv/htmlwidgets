@@ -83,8 +83,6 @@ JS <- function(x){
 #' @param list a list in which the elements that should be evaluated as JavaScript 
 #'    are to be identified
 #' @author Yihui Xie
-#' @rdname JS
-#' @export
 JSEvals <- function(list) {
   evals <- names(which(unlist(shouldEval(list))))
   I(evals)  # need I() to prevent RJSONIO::toJSON() from converting it to scalar
