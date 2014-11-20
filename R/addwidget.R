@@ -159,7 +159,7 @@ find_bower <- function(){
     # if it does not find Sys.which('bower')
     # also check APPDATA to see if found there
     if(identical(.Platform$OS.type,"windows")) {
-      Sys.which(file.path(Sys.getenv("APPDATA"),"npm","bower"))
+      Sys.which(file.path(Sys.getenv("APPDATA"),"npm","bower."))
   } else
   {
     Sys.which("bower")
