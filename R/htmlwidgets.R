@@ -119,6 +119,7 @@ widget_dependencies <- function(name, package){
 # to be picked up by htmlwidgets.js for static rendering.
 #' @export
 widget_data <- function(x, id, ...){
+  x$x[["__evals__"]] = JSEvals(x$x)
   tags$script(type="application/json", `data-for` = id,
     HTML(toJSON(x$x, collapse = ""))
   )
@@ -196,6 +197,7 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
       htmltools::resolveDependencies(deps),
       shiny::createWebDependency
     )
+    x[["__evals__"]] = JSEvals(x)
     list(x = x, deps = deps)
   }
   
