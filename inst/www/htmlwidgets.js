@@ -529,4 +529,20 @@
       });
       return newArray;
   };
+  // Function authored by Yihui/JJ Allaire
+  window.HTMLWidgets.evaluateStringMember = function(o, member) {
+    var parts = member.split('.');
+    for (var i = 0, l = parts.length; i < l; i++) {
+      var part = parts[i];
+      // part may be a character or 'numeric' member name
+      if (o !== null && typeof o === "object" && part in o) {
+        if (i == (l - 1)) { // if we are at the end of the line then evalulate
+          if (typeof o[part] === "string")
+            o[part] = eval("(" + o[part] + ")");
+        } else { // otherwise continue to next embedded object
+          o = o[part];
+        }
+      }
+    }
+  };
 })();
