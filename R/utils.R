@@ -69,7 +69,12 @@ any_prop <- function(scopes, path) {
 #' @author Yihui Xie
 #' @export
 JS <- function(x){
-  structure(x, class = unique(c("JS_EVAL", oldClass(x))))
+  if (is.character(x))
+    structure(x, class = unique(c("JS_EVAL", oldClass(x))))
+  else if (is.null(x))
+    NULL
+  else
+    stop("x must be a chraracter vector")
 }
 
 # Creates a list of keys whose values need to be evaluated on the client-side.
