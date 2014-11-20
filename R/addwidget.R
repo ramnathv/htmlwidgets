@@ -197,6 +197,6 @@ getConfig <- function(pkg, src = "inst/htmlwidgets/lib"){
   config = lapply(all, function(pkg){
     readBower(pkg, src = src)$spec
   })
-  yaml::as.yaml(config)
+  yaml::as.yaml(list(dependencies = config))
 }
 
