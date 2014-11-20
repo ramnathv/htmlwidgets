@@ -143,7 +143,7 @@ install_bower_pkg <- function(pkg){
   
   # Install package
   message("Installing ", pkg, " using bower...", "\n\n")
-  cmd <- sprintf(find_bower(), pkg)
+  cmd <- sprintf('%s install %s', find_bower(), pkg)
   system(cmd)
   message("... Done! installing ", pkg)
 }
