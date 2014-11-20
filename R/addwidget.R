@@ -122,7 +122,7 @@ HTMLWidgets.widget({
 #' @export
 install_bower_pkg <- function(pkg){
   # check if bower is installed
-  if (Sys.which('bower') == ""){
+  if (find_bower() == ""){
     stop(
       "Please install bower from http://bower.io",
       call. = FALSE
@@ -143,9 +143,29 @@ install_bower_pkg <- function(pkg){
   
   # Install package
   message("Installing ", pkg, " using bower...", "\n\n")
-  cmd <- sprintf("bower install %s", pkg)
+  cmd <- sprintf(find_bower(), pkg)
   system(cmd)
   message("... Done! installing ", pkg)
+}
+
+#' Try really hard to find bower in Windows
+#' 
+#' @keywords internal
+#' @noRd
+find_bower <- function(){
+  # a slightly more robust finder of bower for windows
+  # which does not require PATH environment variable to be set
+  bower_path = if(Sys.which("bower") == "")
+    # if it does not find Sys.which('bower')
+    # also check APPDATA to see if found there
+    if(identical(.Platform$OS.type,"windows")) {
+      Sys.which(file.path(Sys.getenv("APPDATA"),"npm","bower"))
+  } else
+  {
+    Sys.which("bower")
+  }
+  
+  return(bower_path)
 }
 
 #' Read the bower.json file
