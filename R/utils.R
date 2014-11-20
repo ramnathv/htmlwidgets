@@ -72,19 +72,17 @@ JS <- function(x){
   structure(x, class = unique(c("JS_EVAL", oldClass(x))))
 }
 
-#' Creates a list of keys whose values need to be evaluated on the client-side.
-#' 
-#' It works by transforming \code{list(foo = list(1, list(bar = I('function(){}')), 2))} to \code{list("foo.2.bar")}. Later on the JS side, we will split foo.2.bar to
-#' ['foo', '2', 'bar'] and evaluate the JSON object member. Note '2' (character)
-#' should have been 2 (integer) but it does not seem to matter in JS: x[2] is the
-#' same as x['2'] when all child members of x are unnamed, and ('2' in x) will be
-#' true even if x is an array without names. This is a little hackish.
-#' 
-#' @param list a list in which the elements that should be evaluated as JavaScript 
-#'    are to be identified
-#' @author Yihui Xie
-#' @rdname JS
-#' @export
+# Creates a list of keys whose values need to be evaluated on the client-side.
+# 
+# It works by transforming \code{list(foo = list(1, list(bar = I('function(){}')), 2))} to \code{list("foo.2.bar")}. Later on the JS side, we will split foo.2.bar to
+# ['foo', '2', 'bar'] and evaluate the JSON object member. Note '2' (character)
+# should have been 2 (integer) but it does not seem to matter in JS: x[2] is the
+# same as x['2'] when all child members of x are unnamed, and ('2' in x) will be
+# true even if x is an array without names. This is a little hackish.
+# 
+# @param list a list in which the elements that should be evaluated as JavaScript 
+#    are to be identified
+# @author Yihui Xie
 JSEvals <- function(list) {
   evals <- names(which(unlist(shouldEval(list))))
   I(evals)  # need I() to prevent RJSONIO::toJSON() from converting it to scalar
