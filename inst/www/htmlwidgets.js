@@ -373,6 +373,10 @@
 
       overrideMethod(shinyBinding, "renderValue", function(superfunc) {
         return function(el, data) {
+          // Resolve strings marked as javascript literals to objects
+          for (var i = 0; data.evals && i < data.evals.length; i++) {
+            window.HTMLWidgets.evaluateStringMember(data.x, data.evals[i]);
+          }
           if (!this.renderOnNullValue) {
             if (data.x === null) {
               el.style.visibility = "hidden";
@@ -462,7 +466,11 @@
         var scriptData = document.querySelector("script[data-for='" + el.id + "'][type='application/json']");
         if (scriptData) {
           var data = JSON.parse(scriptData.textContent || scriptData.text);
-          binding.renderValue(el, data, initResult);
+          // Resolve strings marked as javascript literals to objects
+          for (var i = 0; data.evals && i < data.evals.length; i++) {
+            window.HTMLWidgets.evaluateStringMember(data.x, data.evals[i]);
+          }
+          binding.renderValue(el, data.x, initResult);
         }
       }
     }
@@ -528,5 +536,48 @@
           })
       });
       return newArray;
+  };
+  // Split value at splitChar, but allow splitChar to be escaped
+  // using escapeChar. Any other characters escaped by escapeChar
+  // will be included as usual (including escapeChar itself).
+  function splitWithEscape(value, splitChar, escapeChar) {
+    var results = [];
+    var escapeMode = false;
+    var currentResult = "";
+    for (var pos = 0; pos < value.length; pos++) {
+      if (!escapeMode) {
+        if (value[pos] === splitChar) {
+          results.push(currentResult);
+          currentResult = "";
+        } else if (value[pos] === escapeChar) {
+          escapeMode = true;
+        } else {
+          currentResult += value[pos];
+        }
+      } else {
+        currentResult += value[pos];
+        escapeMode = false;
+      }
+    }
+    if (currentResult !== "") {
+      results.push(currentResult);
+    }
+    return results;
+  }
+  // Function authored by Yihui/JJ Allaire
+  window.HTMLWidgets.evaluateStringMember = function(o, member) {
+    var parts = splitWithEscape(member, '.', '\\');
+    for (var i = 0, l = parts.length; i < l; i++) {
+      var part = parts[i];
+      // part may be a character or 'numeric' member name
+      if (o !== null && typeof o === "object" && part in o) {
+        if (i == (l - 1)) { // if we are at the end of the line then evalulate
+          if (typeof o[part] === "string")
+            o[part] = eval("(" + o[part] + ")");
+        } else { // otherwise continue to next embedded object
+          o = o[part];
+        }
+      }
+    }
   };
 })();
