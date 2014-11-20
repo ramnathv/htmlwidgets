@@ -98,8 +98,13 @@ shouldEval <- function(options) {
   if (is.list(options)) {
     if ((n <- length(options)) == 0) return(FALSE)
     # use numeric indices as names (remember JS indexes from 0, hence -1 here)
-    if (is.null(nms <- names(options)))
-      nms <- names(options) <- seq_len(n) - 1L
+    if (is.null(names(options)))
+      names(options) <- seq_len(n) - 1L
+    # Escape '\' and '.' by prefixing them with '\'. This allows us to tell the
+    # difference between periods as separators and periods that are part of the
+    # name itself.
+    names(options) <- gsub("([\\.])", "\\\\\\1", names(options))
+    nms <- names(options)
     if (length(nms) != n || any(nms == ''))
       stop("'options' must be a fully named list, or have no names (NULL)")
     lapply(options, shouldEval)
@@ -107,3 +112,4 @@ shouldEval <- function(options) {
     is.character(options) && inherits(options, 'JS_EVAL')
   }
 }
+# JSEvals(list(list(foo.bar=JS("hi"), baz.qux="bye"))) == "0.foo\\.bar"
