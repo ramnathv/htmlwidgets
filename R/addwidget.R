@@ -157,7 +157,7 @@ read_bower <- function(pkg, src = "inst/htmlwidgets/lib"){
     file.path(src, pkg, 'bower.json')
   )
   spec = list(
-    name = bower$name, 
+    name = basename(bower$name), 
     version = bower$version,
     src = paste0('htmlwidgets/lib/', pkg),
     script = bower$main[grepl('^.*\\.js$', bower$main)],
