@@ -125,6 +125,15 @@ widget_data <- function(x, id, ...){
   )
 }
 
+#' Create an instance of a widget
+#' 
+#' @param name name of the widget
+#' @param x list containing the data payload to send
+#' @param width width of the widget container
+#' @param height height of the widget container
+#' @param sizingPolicy 
+#' @param dependencies additional dependencies to pass to the widget
+#' @param elementId string of id to assign to the widget container
 #' @export
 createWidget <- function(name, 
                          x,
@@ -134,7 +143,6 @@ createWidget <- function(name,
                          package = name,
                          dependencies = NULL,
                          elementId = NULL) {
-  
   # Turn single dependency object into list of dependencies, if necessary
   if (inherits(dependencies, "html_dependency"))
     dependencies <- list(dependencies)
