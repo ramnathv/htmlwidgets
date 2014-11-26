@@ -1,5 +1,3 @@
-
-
 #' Save a widget to an HTML file
 #' 
 #' Save a rendered widget to an HTML file (e.g. for sharing with others).
