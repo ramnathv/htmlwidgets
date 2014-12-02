@@ -58,16 +58,19 @@ any_prop <- function(scopes, path) {
   return(NULL)
 }
 
-#' Mark elements of a list as a javascript literal.
-#' 
-#' This function \code{JS()} marks a character vector with a special class, so that 
-#' it will be treated as a javascript literal when evaluated on the client-side.
-#' The function \code{JSEvals()} will then identify the elements of a
-#' list that should be evaluated as javascript objects on the client side.
-#' 
-#' @param x character vector that needs to be treated as a javascript object.
+#' Mark character strings as literal JavaScript code
+#'
+#' This function \code{JS()} marks character vectors with a special class, so
+#' that it will be treated as literal JavaScript code when evaluated on the
+#' client-side.
+#' @param ... character vectors as the JavaScript source code (all arguments
+#'   will be pasted into one character string)
 #' @author Yihui Xie
 #' @export
+#' @examples library(htmlwidgets)
+#' JS('1 + 1')
+#' list(x = JS('function(foo) {return foo;}'), y = 1:10)
+#' JS('function(x) {', 'return x + 1;', '}')
 JS <- function(...) {
   x <- c(...)
   if (is.null(x)) return()
