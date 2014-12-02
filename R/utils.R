@@ -68,13 +68,13 @@ any_prop <- function(scopes, path) {
 #' @param x character vector that needs to be treated as a javascript object.
 #' @author Yihui Xie
 #' @export
-JS <- function(x){
-  if (is.character(x))
-    structure(x, class = unique(c("JS_EVAL", oldClass(x))))
-  else if (is.null(x))
-    NULL
-  else
-    stop("x must be a chraracter vector")
+JS <- function(...) {
+  x <- c(...)
+  if (is.null(x)) return()
+  if (!is.character(x))
+    stop("The arguments for JS() must be a chraracter vector")
+  x <- paste(x, collapse = '\n')
+  structure(x, class = unique(c("JS_EVAL", oldClass(x))))
 }
 
 # Creates a list of keys whose values need to be evaluated on the client-side.
