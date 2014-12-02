@@ -1,4 +1,4 @@
-#' @export
+
 getDependency <- function(name, package = name){
   config = sprintf("htmlwidgets/%s.yaml", name)
   jsfile = sprintf("htmlwidgets/%s.js", name)

@@ -113,13 +113,10 @@ HTMLWidgets.widget({
   if (edit) file.edit(file_)
 }
 
-#' Install bower package to inst/htmlwidgets/lib
-#' 
-#' This function uses bower to install a javascript package along with
-#' its dependencies.
-#' 
-#' @param pkg name of bower package to install
-#' @export
+# Install bower package to inst/htmlwidgets/lib
+# 
+# This function uses bower to install a javascript package along with
+# its dependencies.
 install_bower_pkg <- function(pkg){
   # check if bower is installed
   if (Sys.which('bower') == ""){
@@ -148,10 +145,7 @@ install_bower_pkg <- function(pkg){
   message("... Done! installing ", pkg)
 }
 
-#' Read the bower.json file
-#' 
-#' @keywords internal
-#' @noRd
+# Read the bower.json file
 read_bower <- function(pkg, src = "inst/htmlwidgets/lib"){
   bower = RJSONIO::fromJSON(
     file.path(src, pkg, 'bower.json')
@@ -168,9 +162,7 @@ read_bower <- function(pkg, src = "inst/htmlwidgets/lib"){
   list(spec = spec, deps = deps)
 }
 
-#' Get YAML configuration for widget
-#' 
-#' @export
+# Get YAML configuration for widget
 get_config <- function(pkg, src = "inst/htmlwidgets/lib"){
   deps = read_bower(pkg, src)$deps
   all = c(pkg, names(deps))
