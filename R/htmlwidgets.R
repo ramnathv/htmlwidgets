@@ -72,8 +72,13 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
   
   html <- htmltools::tagList(
     container(
-      widget_html(name = class(x)[1], id = id, style = style, 
-        class = class(x)[1], width = sizeInfo$width, 
+      widget_html(
+        name = class(x)[1], 
+        package = attr(x, "package"),
+        id = id, 
+        style = style, 
+        class = class(x)[1], 
+        width = sizeInfo$width, 
         height = sizeInfo$height
       )
     ),
@@ -94,10 +99,17 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
 }
 
 
-widget_html <- function(name, id, style, class, ...){
-  fn = paste0(name, "_html")
-  if(exists(fn) && is.function(match.fun(fn))){
-    match.fun(fn)(id = id, style = style, class = class, ...)
+widget_html <- function(name, package, id, style, class, ...){
+
+  # attempt to lookup custom html function for widget
+  fn <- tryCatch(get(paste0(name, "_html"),
+                     asNamespace(package),
+                     inherits = FALSE),
+                 error = function(e) NULL)
+
+  # call the custom function if we have one, otherwise create a div
+  if (is.function(fn)) {
+    fn(id = id, style = style, class = class, ...)
   } else {
     tags$div(id = id, style = style, class = class)
   }
@@ -151,7 +163,7 @@ shinyWidgetOutput <- function(outputId, name, width, height, package = name) {
  
   # generate html
   html <- htmltools::tagList(
-    widget_html(name, id = outputId, 
+    widget_html(name, package, id = outputId, 
       class = paste(name, "html-widget html-widget-output"), 
       style = sprintf("width:%s; height:%s", 
         htmltools::validateCssUnit(width), 
