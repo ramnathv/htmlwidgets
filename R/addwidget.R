@@ -1,5 +1,5 @@
 #' @export
-addNewWidget <- function(name, bower_pkg = NULL, edit = interactive()){
+widgetScaffold <- function(name, bower_pkg = NULL, edit = interactive()){
   if (!file.exists('DESCRIPTION')){
     stop(
       "You need to create a package to house your widget first!",
