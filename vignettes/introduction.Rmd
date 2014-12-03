@@ -3,6 +3,16 @@
 %\VignetteIndexEntry{Introduction to htmlwidgets}
 -->
 
+<!---
+TODO:
+  - Debug shiny sizing issues
+  - Additional exposition in widget sizing section
+  - Section on widget instance data
+  - Section on creating your own widgets
+  - Remove or revise sizing vignette
+  - Solicit feedback/testing 
+-->
+
 ## Introduction to htmlwidgets
 
 ### Overview
