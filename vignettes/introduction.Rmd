@@ -77,10 +77,9 @@ Note that `src` refers to the directory that contains the library and `script` r
 We need to provide users with an R function that invokes our widget. Typically this function will accept input data as well as various options that control the widget's display. Here's the R function for `knob`:
 
 ```r
-knob <- function(title, value, min, max, width = NULL, height = NULL) {
+knob <- function(value, min, max, width = NULL, height = NULL) {
   
   x <- list()
-  x$title <- title
   x$value <- value
   x$min <- min
   x$max <- max
@@ -143,7 +142,7 @@ Let us first create a simple knob:
 
 ```r
 library(knob)
-knob('Test', 20, 0, 100)
+knob(value = 20, min = 0, max = 100)
 ```
 
 ![knob](images/knob.png)
@@ -158,15 +157,17 @@ library(knob)
 
 ui = shinyUI(fluidPage(
   sliderInput('value', 'Value', 0, 200, 50),
-  knobOutput('gauge', width = 250, height = 200)
+  sliderInput('angleArc', 'Arc Angle', 0, 360, 250),
+  knobOutput('gauge')
 ))
 
-server = function(input, output) {
+server = function(input, output){
   output$gauge <- renderKnob(knob(
-    title = 'My Gauge',
-    min = 0,
     value = input$value,
-    max = 200
+    min = 0,
+    max = 200,
+    angleArc = input$angleArc,
+    fgColor="#66CC66"
   ))
 }
 
@@ -201,22 +202,56 @@ HTML widgets can be rendered in a wide variety of contexts and can be resized at
 
 2) Widgets can implement a `resize` method on the JavaScript side to forward sizing behavior on to the underlying JavaScript libary.
 
-Let's extend our knob widget to handle sizing intelligently. First, we'll tweak the default sizing policy
+Let's extend our knob widget to handle sizing intelligently (more explanation here)
 
-... more here ...
+```js
+HTMLWidgets.widget({
+  
+  name: "knob",
+  
+  type: "output",
+  
+  initialize: function(el, width, height) {
+    // initialize the knob with the specified height
+    $(el).knob(this.toSquare(width, height));
+  },
+
+  renderValue: function(el, x) {
+    // forward options to the knob
+    $(el).trigger("configure", x);
+    // set the knob value and trigger a change event
+    $(el).val(x.value).trigger("change");
+  },
+
+  resize: function(el, width, height) { 
+    // size the knob as dictated by the enclosing widget's size
+    $(el).trigger("configure", this.toSquare(width, height));
+  },
+  
+  // knob relies on being rendered with equal width
+  // and height -- this function ensures that the
+  // values are the same
+  toSquare: function(width, height) {
+    var size = Math.min(width, height);
+    return {
+      width: size,
+      height: size
+    };
+  }
+});
+```
 
 #### Additional Options
 
 In our initial implementation we exposed only a subset of the options available for jQuery knob. Adding more options is simply a matter of adding parameters to our `knob` R function and including them in the `x` object that is ultimately passed to the `renderValue` function. Here's what our function looks like with some additonal options:
 
 ```r
-knob <- function(title, value, min, max, step = 1, 
+knob <- function(value, min, max, step = 1, 
                  angleOffset = 0, angleArc = 360,
                  font = NULL, fgColor = NULL, bgColor = NULL,
                  width = NULL, height = NULL) {
   
   x <- list()
-  x$title <- title
   x$value <- value
   x$min <- min
   x$max <- max
