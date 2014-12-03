@@ -45,9 +45,11 @@ inst/
 |   |-- knob.yaml
 |   |-- lib/
 |   |   |-- jquery/
-|   |   |   |-- jquery.min.js
+|   |   |   |-- dist/
+|   |   |   |   |-- jquery.min.js
 |   |   |-- knob/
-|   |   |   |-- jquery.knob.min.js
+|   |   |   |-- dist/
+|   |   |   |   |-- jquery.knob.min.js
 ```
 
 Note the convetion that the JavaScript, YAML, and other dependencies are all contained within the `inst/htmlwidgets` directory.
