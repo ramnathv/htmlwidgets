@@ -1,30 +1,30 @@
 #' @export
 print.htmlwidget <- function(x, ...) {
- 
+
   # if we have a viewer then forward viewer pane height (if any)
   viewer <- getOption("viewer")
   if (!is.null(viewer)) {
     viewerFunc <- function(url) {
-      
+
       # get the requested pane height (it defaults to NULL)
       paneHeight <- x$sizingPolicy$viewer$paneHeight
-      
+
       # convert maximize to -1 for compatibility with older versions of rstudio
       # (newer versions convert 'maximize' to -1 interally, older versions
       # will simply ignore the height if it's less than zero)
-      if (identical(paneHeight, "maximize")) 
-        paneHeight <- -1 
-      
+      if (identical(paneHeight, "maximize"))
+        paneHeight <- -1
+
       # call the viewer
       viewer(url, height = paneHeight)
     }
   } else {
     viewerFunc <- utils::browseURL
   }
-  
+
   # call html_print with the viewer
   html_print(htmltools::as.tags(x, standalone=TRUE), viewer = viewerFunc)
-  
+
   # return value
   invisible(x)
 }
@@ -43,25 +43,25 @@ as.tags.htmlwidget <- function(x, standalone = FALSE) {
 
 
 toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
-  
+
   sizeInfo <- resolveSizing(x, x$sizingPolicy, standalone = standalone, knitrOptions = knitrOptions)
-  
+
   if (!is.null(x$elementId))
     id <- x$elementId
   else
     id <- paste("htmlwidget", as.integer(stats::runif(1, 1, 10000)), sep="-")
-  
+
   w <- validateCssUnit(sizeInfo$width)
   h <- validateCssUnit(sizeInfo$height)
-  
+
   # create a style attribute for the width and height
   style <- paste(
     "width:", w, ";",
     "height:", h, ";",
     sep = "")
-  
+
   x$id <- id
-  
+
   container <- if (isTRUE(standalone)) {
     function(x) {
       div(id="htmlwidget_container", x)
@@ -69,16 +69,16 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
   } else {
     identity
   }
-  
+
   html <- htmltools::tagList(
     container(
       widget_html(
-        name = class(x)[1], 
+        name = class(x)[1],
         package = attr(x, "package"),
-        id = id, 
-        style = style, 
-        class = class(x)[1], 
-        width = sizeInfo$width, 
+        id = id,
+        style = style,
+        class = class(x)[1],
+        width = sizeInfo$width,
         height = sizeInfo$height
       )
     ),
@@ -89,13 +89,13 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
       )
     }
   )
-  html <- htmltools::attachDependencies(html, 
+  html <- htmltools::attachDependencies(html,
     c(widget_dependencies(class(x)[1], attr(x, 'package')),
       x$dependencies)
   )
-  
+
   htmltools::browsable(html)
-  
+
 }
 
 
@@ -129,15 +129,15 @@ widget_data <- function(x, id, ...){
 }
 
 #' @export
-createWidget <- function(name, 
+createWidget <- function(name,
                          x,
                          width = NULL,
                          height = NULL,
-                         sizingPolicy = htmlwidgets::sizingPolicy(), 
+                         sizingPolicy = htmlwidgets::sizingPolicy(),
                          package = name,
                          dependencies = NULL,
                          elementId = NULL) {
-  
+
   # Turn single dependency object into list of dependencies, if necessary
   if (inherits(dependencies, "html_dependency"))
     dependencies <- list(dependencies)
@@ -146,10 +146,10 @@ createWidget <- function(name,
          width = width,
          height = height,
          sizingPolicy = sizingPolicy,
-         dependencies = dependencies, 
+         dependencies = dependencies,
          elementId = elementId),
-    class = c(name, 
-              if (sizingPolicy$viewer$suppress) "suppress_viewer", 
+    class = c(name,
+              if (sizingPolicy$viewer$suppress) "suppress_viewer",
               "htmlwidget"),
     package = package
   )
@@ -157,40 +157,40 @@ createWidget <- function(name,
 
 
 #' Shiny output function for an htmlwidget
-#' 
+#'
 #' @export
 shinyWidgetOutput <- function(outputId, name, width, height, package = name) {
- 
+
   # generate html
   html <- htmltools::tagList(
-    widget_html(name, package, id = outputId, 
-      class = paste(name, "html-widget html-widget-output"), 
-      style = sprintf("width:%s; height:%s", 
-        htmltools::validateCssUnit(width), 
+    widget_html(name, package, id = outputId,
+      class = paste(name, "html-widget html-widget-output"),
+      style = sprintf("width:%s; height:%s",
+        htmltools::validateCssUnit(width),
         htmltools::validateCssUnit(height)
       ), width = width, height = height
     )
   )
-  
+
   # attach dependencies
   dependencies = widget_dependencies(name, package)
   htmltools::attachDependencies(html, dependencies)
 }
 
 
-#' Shiny render function for an htmlwidget 
-#' 
+#' Shiny render function for an htmlwidget
+#'
 #' @export
 shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
-  
+
   # generate a function for the expression
   func <- shiny::exprToFunction(expr, env, quoted)
-  
+
   # create the render function
   renderFunc <- function() {
     instance <- func()
     if (!is.null(instance$elementId)) {
-      warning("Ignoring explicitly provided widget ID \"", 
+      warning("Ignoring explicitly provided widget ID \"",
         instance$elementId, "\"; Shiny doesn't use them"
       )
     }
@@ -203,9 +203,8 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
     evals = JSEvals(x)
     list(x = x, evals = evals, deps = deps)
   }
-  
+
   # mark it with the output function so we can use it in Rmd files
   shiny::markRenderFunction(outputFunction, renderFunc)
 }
-
 

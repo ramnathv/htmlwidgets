@@ -15,7 +15,7 @@ sizingPolicy <- function(
   browser.padding = NULL, browser.fill = FALSE,
   knitr.defaultWidth = NULL, knitr.defaultHeight = NULL,
   knitr.figure = TRUE) {
-  
+
   list(
     defaultWidth = defaultWidth,
     defaultHeight = defaultHeight,
@@ -43,20 +43,20 @@ sizingPolicy <- function(
 }
 
 #' Resolve widget sizing policy
-#' 
-#' Take a widget object and sizing policy, and some other contextual details, 
+#'
+#' Take a widget object and sizing policy, and some other contextual details,
 #' and figure out what width/height to use, if possible. Some decisions may need
 #' to be deferred until runtime; include any metadata that's needed for that
 #' decision in the result as well.
-#' 
+#'
 #' @param x The widget object whose size is to be determined. It may have $width
 #'   and $height directly on it, which means we should obey those.
 #' @param sp The sizing policy to use.
 #' @param standalone Logical value indicating whether the widget is being
 #'   rendered in a standalone context (where it's the only thing on the page;
 #'   this is usually via `print.htmlwidget()`).
-#' @param knitrOptions Object representing the knitr options passed to us via 
-#'   `knit_print`. If we're not doing a `knit_print` right now, then the value 
+#' @param knitrOptions Object representing the knitr options passed to us via
+#'   `knit_print`. If we're not doing a `knit_print` right now, then the value
 #'   should be `NULL`.
 #' @return A list that is guaranteed to have `width` and `height` values, each of
 #'   which is either a number or CSS unit string. If `standalone=TRUE` then the
@@ -89,21 +89,21 @@ sizingPolicy <- function(
 #'     )
 #'   )
 #' )
-#' 
+#'
 #' # Sizing for standalone mode
 #' str(resolveSizing(x, x$sizingPolicy, TRUE, NULL))
 #' # Sizing for knitr
 #' str(resolveSizing(x, x$sizingPolicy, FALSE,
 #'   list(out.width.px = 150, out.height.px = 100)))
-#' 
+#'
 #' # Explicit width/height provided by user--overrides any
 #' # default width/height
 #' x$width <- 300
 #' x$height <- 250
 #' str(resolveSizing(x, x$sizingPolicy, FALSE,
 #'   list(out.width.px = 150, out.height.px = 100)))
-#'   
-resolveSizing <- function(x, sp, standalone, knitrOptions = NULL) {  
+#'
+resolveSizing <- function(x, sp, standalone, knitrOptions = NULL) {
   if (isTRUE(standalone)) {
     userSized <- !is.null(x$width) || !is.null(x$height)
     viewerScopes <- list(sp$viewer, sp)
@@ -146,3 +146,4 @@ resolveSizing <- function(x, sp, standalone, knitrOptions = NULL) {
     ))
   }
 }
+

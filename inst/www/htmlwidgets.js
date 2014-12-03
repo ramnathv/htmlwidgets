@@ -3,7 +3,7 @@
   // new object. This allows preceding code to set options that affect the
   // initialization process (though none currently exist).
   window.HTMLWidgets = window.HTMLWidgets || {};
-  
+
   // See if we're running in a viewer pane. If not, we're in a web browser.
   var viewerMode = window.HTMLWidgets.viewerMode =
       /\bviewer_pane=1\b/.test(window.location);
@@ -24,7 +24,7 @@
       return scope.querySelectorAll(selector);
     }
   }
-  
+
   function asArray(value) {
     if (value === null)
       return [];
@@ -48,7 +48,7 @@
     }
     return target;
   }
-  
+
   // Replaces the specified method with the return value of funcSource.
   //
   // Note that funcSource should not BE the new method, it should be a function
@@ -64,7 +64,7 @@
     target[methodName] = funcSource(superFuncBound);
   }
 
-  // Implement a vague facsimilie of jQuery's data method 
+  // Implement a vague facsimilie of jQuery's data method
   function elementData(el, name, value) {
     if (arguments.length == 2) {
       return el["htmlwidget_data_" + name];
@@ -76,7 +76,7 @@
         arguments.length);
     }
   }
-  
+
   // http://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
   function escapeRegExp(str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
@@ -86,7 +86,7 @@
     var re = new RegExp("\\b" + escapeRegExp(className) + "\\b");
     return re.test(el.className);
   }
-  
+
   // elements - array (or array-like object) of HTML elements
   // className - class name to test for
   // include - if true, only return elements with given className;
@@ -99,7 +99,7 @@
     }
     return results;
   }
-  
+
   function on(obj, eventName, func) {
     if (obj.addEventListener) {
       obj.addEventListener(eventName, func, false);
@@ -107,7 +107,7 @@
       obj.attachEvent(eventName, func);
     }
   }
-  
+
   function off(obj, eventName, func) {
     if (obj.removeEventListener)
       obj.removeEventListener(eventName, func, false);
@@ -115,7 +115,7 @@
       obj.detachEvent(eventName, func);
     }
   }
-  
+
   // Translate array of values to top/right/bottom/left, as usual with
   // the "padding" CSS property
   // https://developer.mozilla.org/en-US/docs/Web/CSS/padding
@@ -135,12 +135,12 @@
       return {top: value[0], right: value[1], bottom: value[2], left: value[3]};
     }
   }
-  
+
   // Convert an unpacked padding object to a CSS value
   function paddingToCss(paddingObj) {
     return paddingObj.top + "px " + paddingObj.right + "px " + paddingObj.bottom + "px " + paddingObj.left + "px";
   }
-  
+
   // Makes a number suitable for CSS
   function px(x) {
     if (typeof(x) === "number")
@@ -148,7 +148,7 @@
     else
       return x;
   }
-  
+
   // Retrieves runtime widget sizing information for an element.
   // The return value is either null, or an object with fill, padding,
   // defaultWidth, defaultHeight fields.
@@ -163,21 +163,21 @@
       return sp.browser;
     }
   }
-  
+
   function initSizing(el) {
     var sizing = sizingPolicy(el);
     if (!sizing)
       return;
-    
+
     var cel = document.getElementById("htmlwidget_container");
     if (!cel)
       return;
-    
+
     if (typeof(sizing.padding) !== "undefined") {
       document.body.style.margin = "0";
       document.body.style.padding = paddingToCss(unpackPadding(sizing.padding));
     }
-    
+
     if (sizing.fill) {
       document.body.style.overflow = "hidden";
       document.body.style.width = "100%";
@@ -198,7 +198,7 @@
       el.style.width = px(sizing.width);
       el.style.height = px(sizing.height);
     }
-    
+
     return {
       getWidth: function() {
         return cel.offsetWidth;
@@ -208,7 +208,7 @@
       }
     }
   }
-  
+
   // Default implementations for methods
   var defaults = {
     find: function(scope) {
@@ -216,7 +216,7 @@
     },
     renderError: function(el, err) {
       var $el = $(el);
-      
+
       this.clearError(el);
 
       // Add all these error classes, as Shiny does
@@ -233,7 +233,7 @@
       // and add an inline error.
       var display = $el.css("display");
       $el.data("restore-display-mode", display);
-      
+
       if (display === "inline" || display === "inline-block") {
         $el.hide();
         if (err.message !== "") {
@@ -257,7 +257,7 @@
             .css("height", el.offsetHeight);
           errorDiv.text(err.message);
           $el.after(errorDiv);
-          
+
           // Really dumb way to keep the size/position of the error in sync with
           // the parent element as the window is resized or whatever.
           var intId = setInterval(function() {
@@ -278,7 +278,7 @@
       var $el = $(el);
       var display = $el.data("restore-display-mode");
       $el.data("restore-display-mode", null);
-      
+
       if (display === "inline" || display === "inline-block") {
         if (display)
           $el.css("display", display);
@@ -290,7 +290,7 @@
     },
     sizing: {}
   };
-  
+
   // Called by widget bindings to register a new type of widget. The definition
   // object can contain the following properties:
   // - name (required) - A string indicating the binding name, which will be
@@ -317,7 +317,7 @@
     if (!definition.renderValue) {
       throw new Error("Widget must have a renderValue function");
     }
-    
+
     // For static rendering (non-Shiny), use a simple widget registration
     // scheme. We also use this scheme for Shiny apps/documents that also
     // contain static widgets.
@@ -340,7 +340,7 @@
       // The base object is a Shiny output binding if we're running in Shiny mode,
       // or an empty object if we're not.
       var shinyBinding = extend(new Shiny.OutputBinding(), defaults, definition);
-      
+
       // Wrap renderValue to handle initialization, which unfortunately isn't
       // supported natively by Shiny at the time of this writing.
 
@@ -350,15 +350,15 @@
       // of Shiny that does support initialize directly.
       shinyBinding._htmlwidgets_initialize = shinyBinding.initialize;
       delete shinyBinding.initialize;
-      
+
       overrideMethod(shinyBinding, "find", function(superfunc) {
         return function(scope) {
-          
+
           var results = superfunc(scope);
 
           // Only return elements that are Shiny outputs, not static ones
           var dynamicResults = results.filter(".html-widget-output");
-          
+
           // It's possible that whatever caused Shiny to think there might be
           // new dynamic outputs, also caused there to be new static outputs.
           // Since there might be lots of different htmlwidgets bindings, we
@@ -366,7 +366,7 @@
           // times.
           if (results.length !== dynamicResults.length)
             scheduleStaticRender();
-          
+
           return dynamicResults;
         };
       });
@@ -387,7 +387,7 @@
           }
           if (!elementData(el, "initialized")) {
             initSizing(el);
-  
+
             elementData(el, "initialized", true);
             if (this._htmlwidgets_initialize) {
               var result = this._htmlwidgets_initialize(el, el.offsetWidth,
@@ -413,7 +413,7 @@
       Shiny.outputBindings.register(shinyBinding, shinyBinding.name);
     }
   };
-  
+
   var scheduleStaticRenderTimerId = null;
   function scheduleStaticRender() {
     if (!scheduleStaticRenderTimerId) {
@@ -434,11 +434,11 @@
       for (var j = 0; j < matches.length; j++) {
         var el = matches[j];
         var sizeObj = initSizing(el, binding);
-        
+
         if (hasClass(el, "html-widget-static-bound"))
           continue;
         el.className = el.className + " html-widget-static-bound";
-        
+
         var initResult;
         if (binding.initialize) {
           initResult = binding.initialize(el,
@@ -446,7 +446,7 @@
             sizeObj ? sizeObj.getHeight() : el.offsetHeight
           );
         }
-        
+
         if (binding.resize) {
           var lastSize = {};
           on(window, "resize", function(e) {
@@ -462,7 +462,7 @@
             binding.resize(el, size.w, size.h, initResult);
           });
         }
-        
+
         var scriptData = document.querySelector("script[data-for='" + el.id + "'][type='application/json']");
         if (scriptData) {
           var data = JSON.parse(scriptData.textContent || scriptData.text);
@@ -490,13 +490,13 @@
       }
     });
   }
-  
-  
+
+
   window.HTMLWidgets.getAttachmentUrl = function(depname, key) {
     // If no key, default to the first item
     if (typeof(key) === "undefined")
       key = 1;
-    
+
     var link = document.getElementById(depname + "-" + key + "-attachment");
     if (!link) {
       throw new Error("Attachment " + depname + "/" + key + " not found in document");
@@ -528,11 +528,11 @@
     }
     return results;
   };
-  
+
   window.HTMLWidgets.transposeArray2D = function(array) {
-      var newArray = array[0].map(function(col, i) { 
-          return array.map(function(row) { 
-              return row[i] 
+      var newArray = array[0].map(function(col, i) {
+          return array.map(function(row) {
+              return row[i]
           })
       });
       return newArray;
@@ -581,3 +581,4 @@
     }
   };
 })();
+

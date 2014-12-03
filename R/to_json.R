@@ -1,11 +1,11 @@
 # Convert data frames to JSON more flexibly
-# 
+#
 # The toJSON function in RJSONIO converts a dataframe to an object of
 # arrays by column. Sometimes, we need an array of objects. This function
 # provides more flexible options to convert a dataframe to JSON. It also
 # allows one to return an R object which when passed to the toJSON function
 # will return the desired JSON structure.
-# 
+#
 # examples:
 
 # d <- data.frame(x = c(1, 2), y = c("a", "b"))
@@ -14,7 +14,7 @@
 # to_json(d, orient = 'values')  # [[1,"a"],[2,"b"]]
 to_json = function(df, orient = "columns", json = TRUE){
   dl = as.list(df)
-  dl = switch(orient, 
+  dl = switch(orient,
     columns = dl,
     records = do.call('zip_vectors_', dl),
     values = do.call('zip_vectors_', setNames(dl, NULL))
@@ -35,3 +35,4 @@ zip_vectors_ = function(..., names = F){
 pluck_ = function (element){
   function(x) x[[element]]
 }
+

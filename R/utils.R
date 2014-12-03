@@ -121,3 +121,4 @@ shouldEval <- function(options) {
   }
 }
 # JSEvals(list(list(foo.bar=JS("hi"), baz.qux="bye"))) == "0.foo\\.bar"
+
