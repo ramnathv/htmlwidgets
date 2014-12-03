@@ -102,7 +102,7 @@ sizingPolicy <- function(
 #' x$height <- 250
 #' str(resolveSizing(x, x$sizingPolicy, FALSE,
 #'   list(out.width.px = 150, out.height.px = 100)))
-#' @export
+#'   
 resolveSizing <- function(x, sp, standalone, knitrOptions = NULL) {  
   if (isTRUE(standalone)) {
     userSized <- !is.null(x$width) || !is.null(x$height)

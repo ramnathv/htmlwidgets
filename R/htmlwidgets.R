@@ -42,13 +42,7 @@ as.tags.htmlwidget <- function(x, standalone = FALSE) {
 }
 
 
-#' @export
-toHTML <- function(x, ...){
-  UseMethod('toHTML')
-}
-
-#' @export
-toHTML.htmlwidget <- function(x, standalone = FALSE, knitrOptions = NULL, ...){
+toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
   
   sizeInfo <- resolveSizing(x, x$sizingPolicy, standalone = standalone, knitrOptions = knitrOptions)
   
@@ -100,7 +94,6 @@ toHTML.htmlwidget <- function(x, standalone = FALSE, knitrOptions = NULL, ...){
 }
 
 
-#' @export
 widget_html <- function(name, id, style, class, ...){
   fn = paste0(name, "_html")
   if(exists(fn) && is.function(match.fun(fn))){
@@ -110,14 +103,12 @@ widget_html <- function(name, id, style, class, ...){
   }
 }
 
-#' @export
 widget_dependencies <- function(name, package){
   getDependency(name, package)
 }
 
 # Generates a <script type="application/json"> tag with the JSON-encoded data,
 # to be picked up by htmlwidgets.js for static rendering.
-#' @export
 widget_data <- function(x, id, ...){
   evals <- JSEvals(x$x)
   tags$script(type="application/json", `data-for` = id,
