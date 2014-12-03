@@ -2,7 +2,7 @@
 getDependency <- function(name, package = name){
   config = sprintf("htmlwidgets/%s.yaml", name)
   jsfile = sprintf("htmlwidgets/%s.js", name)
-  
+
   config = yaml::yaml.load_file(
     system.file(config, package = package)
   )
@@ -10,13 +10,13 @@ getDependency <- function(name, package = name){
     l$src = system.file(l$src, package = package)
     do.call(htmlDependency, l)
   })
-  
+
   # Create a dependency that will cause the jsfile and only the jsfile (rather
   # than all of its filesystem siblings) to be copied
   bindingDir <- tempfile("widgetbinding")
   dir.create(bindingDir, mode = "0700")
   file.copy(system.file(jsfile, package = package), bindingDir)
-  
+
   bindingDep <- htmlDependency(paste0(name, "-binding"), packageVersion(package),
     bindingDir,
     script = basename(jsfile)
@@ -58,35 +58,40 @@ any_prop <- function(scopes, path) {
   return(NULL)
 }
 
-#' Mark elements of a list as a javascript literal.
-#' 
-#' This function \code{JS()} marks a character vector with a special class, so that 
-#' it will be treated as a javascript literal when evaluated on the client-side.
-#' The function \code{JSEvals()} will then identify the elements of a
-#' list that should be evaluated as javascript objects on the client side.
-#' 
-#' @param x character vector that needs to be treated as a javascript object.
+#' Mark character strings as literal JavaScript code
+#'
+#' This function \code{JS()} marks character vectors with a special class, so
+#' that it will be treated as literal JavaScript code when evaluated on the
+#' client-side.
+#' @param ... character vectors as the JavaScript source code (all arguments
+#'   will be pasted into one character string)
 #' @author Yihui Xie
 #' @export
-JS <- function(x){
-  if (is.character(x))
-    structure(x, class = unique(c("JS_EVAL", oldClass(x))))
-  else if (is.null(x))
-    NULL
-  else
-    stop("x must be a chraracter vector")
+#' @examples library(htmlwidgets)
+#' JS('1 + 1')
+#' list(x = JS('function(foo) {return foo;}'), y = 1:10)
+#' JS('function(x) {', 'return x + 1;', '}')
+JS <- function(...) {
+  x <- c(...)
+  if (is.null(x)) return()
+  if (!is.character(x))
+    stop("The arguments for JS() must be a chraracter vector")
+  x <- paste(x, collapse = '\n')
+  structure(x, class = unique(c("JS_EVAL", oldClass(x))))
 }
 
 # Creates a list of keys whose values need to be evaluated on the client-side.
-# 
-# It works by transforming \code{list(foo = list(1, list(bar = I('function(){}')), 2))} to \code{list("foo.2.bar")}. Later on the JS side, we will split foo.2.bar to
-# ['foo', '2', 'bar'] and evaluate the JSON object member. Note '2' (character)
-# should have been 2 (integer) but it does not seem to matter in JS: x[2] is the
-# same as x['2'] when all child members of x are unnamed, and ('2' in x) will be
-# true even if x is an array without names. This is a little hackish.
-# 
-# @param list a list in which the elements that should be evaluated as JavaScript 
-#    are to be identified
+#
+# It works by transforming \code{list(foo = list(1, list(bar =
+# I('function(){}')), 2))} to \code{list("foo.2.bar")}. Later on the JS side, we
+# will split foo.2.bar to ['foo', '2', 'bar'] and evaluate the JSON object
+# member. Note '2' (character) should have been 2 (integer) but it does not seem
+# to matter in JS: x[2] is the same as x['2'] when all child members of x are
+# unnamed, and ('2' in x) will be true even if x is an array without names. This
+# is a little hackish.
+#
+# @param list a list in which the elements that should be evaluated as
+#   JavaScript are to be identified
 # @author Yihui Xie
 JSEvals <- function(list) {
   evals <- names(which(unlist(shouldEval(list))))
@@ -94,7 +99,7 @@ JSEvals <- function(list) {
 }
 
 #' JSON elements that are character with the class JS_EVAL will be evaluated
-#' 
+#'
 #' @noRd
 #' @keywords internal
 shouldEval <- function(options) {
