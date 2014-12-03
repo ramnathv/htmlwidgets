@@ -1,5 +1,20 @@
+#' Create implementation scaffolding for an HTML widget
+#'
+#' Add the minimal code required to implement an HTML widget to an R package.
+#'
+#' @param name Name of widget
+#' @param bowerPkg Optional name of \href{http://bower.io/}{Bower} package upon
+#'   which this widget is based. If you specify this parameter then bower will
+#'   be used to automatically download the widget's source code and dependencies
+#'   and add them to the widget's YAML.
+#' @param edit Automatially open the widget's JavaScript source file after
+#'   creating the scaffolding.
+#'
+#' @note This function must be executed from the root directory of the package
+#'   you wish to add the widget to.
+#'
 #' @export
-scaffoldWidget <- function(name, bower_pkg = NULL, edit = interactive()){
+scaffoldWidget <- function(name, bowerPkg = NULL, edit = interactive()){
   if (!file.exists('DESCRIPTION')){
     stop(
       "You need to create a package to house your widget first!",
@@ -11,7 +26,7 @@ scaffoldWidget <- function(name, bower_pkg = NULL, edit = interactive()){
   }
   package = read.dcf('DESCRIPTION')[[1,"Package"]]
   addWidgetConstructor(name, package, edit)
-  addWidgetYAML(name, bower_pkg, edit)
+  addWidgetYAML(name, bowerPkg, edit)
   addWidgetJS(name, edit)
 }
 

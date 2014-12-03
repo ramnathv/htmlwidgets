@@ -30,7 +30,7 @@ print.htmlwidget <- function(x, ...) {
 }
 
 #' @export
-print.suppress_viewer <- function(x) {
+print.suppress_viewer <- function(x, ...) {
   html_print(htmltools::as.tags(x, standalone=TRUE), viewer = browseURL)
   invisible(x)
 }

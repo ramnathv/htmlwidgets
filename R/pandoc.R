@@ -75,10 +75,6 @@ pandoc_convert <- function(input,
   if (!is.null(output))
     args <- c(args, "--output", output)
 
-  # citeproc filter if requested
-  if (citeproc)
-    args <- c(args, "--filter", pandoc_citeproc())
-
   # additional command line options
   args <- c(args, options)
 
