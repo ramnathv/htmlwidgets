@@ -5,6 +5,7 @@ DEFAULT_WIDTH_VIEWER <- 450
 DEFAULT_HEIGHT_VIEWER <- 350
 DEFAULT_PADDING_VIEWER <- 15
 
+#' Widget sizing policy
 #' @export
 sizingPolicy <- function(
   defaultWidth = NULL, defaultHeight = NULL, padding = NULL,
@@ -102,7 +103,8 @@ sizingPolicy <- function(
 #' x$height <- 250
 #' str(resolveSizing(x, x$sizingPolicy, FALSE,
 #'   list(out.width.px = 150, out.height.px = 100)))
-#'
+#' @keywords internal
+#' @noRd
 resolveSizing <- function(x, sp, standalone, knitrOptions = NULL) {
   if (isTRUE(standalone)) {
     userSized <- !is.null(x$width) || !is.null(x$height)
