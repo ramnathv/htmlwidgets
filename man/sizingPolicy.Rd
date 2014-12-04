@@ -17,7 +17,7 @@ parameter specifies the default width for viewing in all contexts (browser,
 viewer, and knitr) unless it is specifically overridden with e.g.
 \code{browser.defaultWidth}.}
 
-\item{defaultHeight}{The default width used to display the widget. This
+\item{defaultHeight}{The default height used to display the widget. This
 parameter specifies the default height for viewing in all contexts
 (browser, viewer, and knitr) unless it is specifically overridden with e.g.
 \code{browser.defaultHeight}.}
