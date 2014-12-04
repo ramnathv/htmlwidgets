@@ -178,7 +178,6 @@ createWidget <- function(name,
                          package = name,
                          dependencies = NULL,
                          elementId = NULL) {
-
   # Turn single dependency object into list of dependencies, if necessary
   if (inherits(dependencies, "html_dependency"))
     dependencies <- list(dependencies)

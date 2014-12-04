@@ -166,7 +166,7 @@ read_bower <- function(pkg, src = "inst/htmlwidgets/lib"){
     file.path(src, pkg, 'bower.json')
   )
   spec = list(
-    name = bower$name,
+    name = basename(bower$name),
     version = bower$version,
     src = paste0('htmlwidgets/lib/', pkg),
     script = bower$main[grepl('^.*\\.js$', bower$main)],
@@ -180,9 +180,9 @@ read_bower <- function(pkg, src = "inst/htmlwidgets/lib"){
 # Get YAML configuration for widget
 get_config <- function(pkg, src = "inst/htmlwidgets/lib"){
   deps = read_bower(pkg, src)$deps
-  all = c(pkg, names(deps))
+  all = c(names(deps), pkg)
   config = lapply(all, function(pkg){
     read_bower(pkg, src = src)$spec
   })
-  yaml::as.yaml(config)
+  yaml::as.yaml(list(dependencies = config))
 }
