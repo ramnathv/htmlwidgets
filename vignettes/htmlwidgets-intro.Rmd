@@ -15,8 +15,9 @@ vignette: >
 TODO:
   - Debug shiny sizing issues
   - Update images in vignettes
-  - Docs on Dynamic Dependencie
+  - Docs on Dynamic Dependencies
   - Incorporate scaffolding vignette
+  - Add links to rCharts2 and leaflet packages once they are public
   - R CMD check with R-devel
 -->
 
