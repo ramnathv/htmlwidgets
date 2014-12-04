@@ -1,18 +1,19 @@
 Package: htmlwidgets
 Type: Package
 Title: HTML Widgets for R
-Version: 0.2.4
-Date: 2014-07-17
-Author: Ramnath Vaidyanathan, Joe Cheng, and JJ Allaire
-Maintainer: Ramnath Vaidyanathan <ramnath.vaidya@gmail.com>
-Description: HTML Widgets for R
-License: MIT
+Version: 0.3
+Date: 2014-12-03
+Author: Ramnath Vaidyanathan, Joe Cheng, JJ Allaire, and Yihui Xie
+Maintainer: JJ Allaire <jj@rstudio.com>
+Description: A framework for creating HTML widgets that render in various
+    contexts including the R console, R Markdown documents, and Shiny
+    web applications.
+License: MIT + file LICENSE
 VignetteBuilder: knitr
 Imports:
     htmltools (>= 0.2.6),
     RJSONIO,
     yaml
 Suggests:
-    knitr
-Enhances: shiny,
-    knitr
+    knitr (>= 1.6)
+Enhances: shiny (>= 0.10.2),

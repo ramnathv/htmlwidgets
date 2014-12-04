@@ -11,8 +11,11 @@ saveWidget(widget, file, selfcontained = TRUE, libdir = NULL)
 \item{file}{File to save HTML into}
 
 \item{selfcontained}{Whether to save the HTML as a single self-contained file
-  (with external resources base64 encoded) or a file with external resources
-  placed in an adjacent directory.}
+(with external resources base64 encoded) or a file with external resources
+placed in an adjacent directory.}
+
+\item{libdir}{Directory to copy HTML dependencies into (defaults to
+  filename_files).}
 }
 \description{
 Save a rendered widget to an HTML file (e.g. for sharing with others).

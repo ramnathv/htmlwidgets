@@ -75,10 +75,6 @@ pandoc_convert <- function(input,
   if (!is.null(output))
     args <- c(args, "--output", output)
 
-  # citeproc filter if requested
-  if (citeproc)
-    args <- c(args, "--filter", pandoc_citeproc())
-
   # additional command line options
   args <- c(args, options)
 
@@ -202,13 +198,13 @@ quoted <- function(args) {
 # Find common base directory, throw error if it doesn't exist
 base_dir <- function(x) {
   abs <- vapply(x, tools::file_path_as_absolute, character(1))
-  
+
   base <- unique(dirname(abs))
   if (length(base) > 1) {
     stop("Input files not all in same directory, please supply explicit wd",
          call. = FALSE)
   }
-  
+
   base
 }
 
@@ -232,7 +228,4 @@ is_windows <- function() {
 .pandoc <- new.env()
 .pandoc$dir <- NULL
 .pandoc$version <- NULL
-
-
-
 
