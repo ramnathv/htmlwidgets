@@ -22,7 +22,7 @@ TODO:
   - Update images in vignettes
 -->
 
-### Introduction to HTML Widgets
+### Overview
 
 `htmlwidgets` is a framework for creating HTML widgets that render in various contexts including the R console, [R Markdown](http://rmarkdown.rstudio.com) documents, and [Shiny](http://shiny.rstudio.com) web applications. Widgets can include arbitrary HTML and JavaScript and are an ideal way to bridge the gap between R and JavaScript data visualization libraries. 
 
