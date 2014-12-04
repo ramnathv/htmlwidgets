@@ -293,7 +293,15 @@ Studying the code of other packages is a great way to learn more about creating 
 
 3. The [sparkline](https://github.com/htmlwidgets/sparkline) package illustrates  providing a custom HTML generation function (since sparklines must be housed in `<span>` rather than `<div>` elements).
  
-
+<script>
+// hack to enable Rmd vignette cross references to work both on GitHub and
+// within built package vignettes
+(function () {
+  for (var links = document.links, numLinks = links.length, i=0; i<numLinks; i++)
+    links[i].href = links[i].href.replace(new RegExp("\\.Rmd$"), ".html")
+                                                            .split("/").pop();
+})();
+</script>
 
 
 
