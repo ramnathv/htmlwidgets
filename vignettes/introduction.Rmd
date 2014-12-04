@@ -145,9 +145,9 @@ HTMLWidgets.widget({
 
 We provide a name and type for the widget and then implement two functions:
 
-1) The `initialize` function creates and/or attaches to DOM elements as required. In this case we call `knob` on our element to let the knob library know we want to attach it's behavior to the element. We pass the `readOnly` flag because the knob is being used only to display values rather than accept input.
+1. The `initialize` function creates and/or attaches to DOM elements as required. In this case we call `knob` on our element to let the knob library know we want to attach it's behavior to the element. We pass the `readOnly` flag because the knob is being used only to display values rather than accept input.
 
-2) The `renderValue` function actually pours our dynamic data (the `x` value from the R binding) into the widget. Here we apply options, set the value, and trigger the change event.
+2. The `renderValue` function actually pours our dynamic data (the `x` value from the R binding) into the widget. Here we apply options, set the value, and trigger the change event.
 
 #### Demo
 
@@ -212,9 +212,9 @@ Most widgets won't need a custom HTML function but if you need to generate custo
 
 HTML widgets can be rendered in a wide variety of contexts and can be resized at any time so they need a way to deal with these concerns. The htmlwidgets framework includes some tools to help:
 
-1) Widgets can pass a `sizingPolicy` as part of the `createWidget` call which dictates how they want to be sized in various contexts (browser, viewer, knitr, etc.).
+1. Widgets can pass a `sizingPolicy` as part of the `createWidget` call which dictates how they want to be sized in various contexts (browser, viewer, knitr, etc.).
 
-2) Widgets can implement a `resize` method on the JavaScript side to forward sizing behavior on to the underlying JavaScript libary.
+2. Widgets can implement a `resize` method on the JavaScript side to forward sizing behavior on to the underlying JavaScript libary.
 
 In the case of the **knob** widget, the default sizing policy works fine (i.e. treat the widget like an R plot) however dynamic sizing requires a custom `resize` method. You can see the details of the resize implementation in the [Sizing](sizing.Rmd) vignette.
 
@@ -257,9 +257,9 @@ When you want to create your own widget you can call the `scaffoldWidget` functi
 
 This method is highly recommended as it ensures that you get started with the right structure. Here's how it works:
 
-1) First create an R package to house your widget
+1. First create an R package to house your widget
 
-2) Next, change to the working directory of your package and execute the following:
+2. Next, change to the working directory of your package and execute the following:
 
 ```r
 > htmlwidgets::scaffoldWidget("mywidget") # add optional bower pkg name if appropriate
@@ -273,9 +273,19 @@ Build the package and you'll have a simple working widget (that doesn't do anyth
 
 Note that it has no parameters yet. Next you should study the API of the JavaScript library you are wrapping and map it as appropriate into the R and JavaScript bindings.
 
-#### Learning from Examples
+#### Learning More
 
-Get started by studying the code of the simple example above and applying it to the widget that you are building. You may also want to study the code of other packages to learn about specific things relevant to your widget:
+##### Vignettes
+
+There are additional vignettes which cover more advanced ground:
+
+* [HTML Widget Sizing](sizing.Rmd) explains custom sizing policies and when you might need to use them and describes implementing a `resize` method within JavaScript bindings.
+
+* [HTML Widgets: Advanced Topics](advanced.Rmd) describes framework features that support per-widget instance data, data tranformations (e.g. converting a data frame into a d3 dataset), and providing widget options that are live JavaScript objects (e.g. function definitions).
+
+##### Examples
+
+Studying the code of other packages is a great way to learn more about creating widgets:
 
 1. The [networkD3](https://github.com/christophergandrud/networkD3) package illustrates creating a widget on top of [D3](http://d3js.org), using a custom sizing policy for a larger widget, and providing multiple widgets from a single package.
 
