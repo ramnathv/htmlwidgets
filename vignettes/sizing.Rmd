@@ -1,0 +1,59 @@
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Sizing}
+-->
+
+## HTML Widget Sizing
+
+### Sizing Policy
+
+The default HTML widget sizing policy treats the widget with the same sizing semantics as an R plot. When printed at the R console the widget is displayed within the RStudio Viewer and sized to fill the Viewer pane (modulo any padding). When rendered inside an R Markdown document the widget is sized based on the default size of figures in the document.
+
+You might need to change the default behavior if your widget is extremely large. In this case you might specify `viewer.suppress = TRUE` and `knitr.figure = FALSE` as well provide for a larger default width and height for knitr. You also might need to change the default behavior if you widget already incorporates padding. In this case you might specify `viewer.padding = 0`.
+
+In the case of the knob widget, the defaults will work fine so we leave the sizing policy. If we did need to customize the policy, we'd provide our custom policy as a parameter to the `createWidget` function. See the documentation on the `sizingPolicy` function in the **htmlwidgets** package for additional details.
+
+### Resize Method
+
+Every JavaScript library handles dynamic sizing a bit differently. Some do it automatically, some require just a one-line resize call, and some require that size be set only along with data and other options. In the spirit of HTML widgets working just like plots in R, it's important that HTML widgets intelligently size themselves to their container, whether it be the RStudio Viewer, a figure in knitr, or a UI panel within a Shiny application.
+
+Let's extend our knob widget to handle sizing intelligently. To do this we add a `resize` method to our JavaScript binding, and also add `width` and `height` parmaeters to our `initialize` function. The knob widget can accept width and height parameters at initialization time or anytime later in a call to `configure`. We use both of these codepaths below to sync our knob's height with the height of the widget container. We also handle one other complexity: knobs like their width and height to be nearly equal (otherwise the bottom is clipped) so set the size using a helper functions that ensures that width and height are equal.
+
+```js
+HTMLWidgets.widget({
+  
+  name: "knob",
+  
+  type: "output",
+  
+  initialize: function(el, width, height) {
+    // initialize the knob with the specified height
+    $(el).knob(this.toSquare(width, height));
+  },
+
+  renderValue: function(el, x) {
+    // forward options to the knob
+    $(el).trigger("configure", x);
+    // set the knob value and trigger a change event
+    $(el).val(x.value).trigger("change");
+  },
+
+  resize: function(el, width, height) { 
+    // size the knob as dictated by the enclosing widget's size
+    $(el).trigger("configure", this.toSquare(width, height));
+  },
+  
+  // knob relies on being rendered with equal width
+  // and height -- this function ensures that the
+  // values are the same
+  toSquare: function(width, height) {
+    var size = Math.min(width, height);
+    return {
+      width: size,
+      height: size
+    };
+  }
+});
+```
+
+

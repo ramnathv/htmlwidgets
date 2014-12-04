@@ -1,16 +1,18 @@
 <!--
 %\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Introduction to htmlwidgets}
+%\VignetteIndexEntry{Introduction}
 -->
 
 <!---
 TODO:
   - Debug shiny sizing issues
-  - Section on creating your own widgets
+
   - Render vignette with rmarkdown
+  - Readonly?
+  - Update README
 -->
 
-## Introduction to htmlwidgets
+## Introduction to HTML Widgets
 
 ### Overview
 
@@ -21,7 +23,7 @@ Some examples of packages that use `htmlwidgets` are:
 * [dygraphs](http://rstudio.github.io/dygraphs/) --- Interactive time series visualization
 * [networkD3](http://christophergandrud.github.io/networkD3/) --- Network visualization with D3
 * [sparkline](https://github.com/htmlwidgets/sparkline) --- Small inline charts
-* [DT](https://github.com/rstudio/DT) --- Tabular data via DataTables
+* [DT](http://rstudio.github.io/DT/) --- Tabular data via DataTables
 * [rthreejs](https://github.com/bwlewis/rthreejs) -- Interactive 3D graphics
 
 ### Widget Basics
@@ -183,7 +185,7 @@ shinyApp(ui = ui, server = server)
 
 ![knob2](images/shiny-knob.png)
 
-### Final Touches
+### Finishing Touches
 
 To keep the initial presentation focused on the essentials we didn't include all of the code required to build the knob widget above. Here we cover the rest of what's required.
 
@@ -209,56 +211,7 @@ HTML widgets can be rendered in a wide variety of contexts and can be resized at
 
 2) Widgets can implement a `resize` method on the JavaScript side to forward sizing behavior on to the underlying JavaScript libary.
 
-##### Sizing Policy
-
-The default HTML widget sizing policy treats the widget with the same sizing semantics as an R plot. When printed at the R console the widget is displayed within the RStudio Viewer and sized to fill the Viewer pane (modulo any padding). When rendered inside an R Markdown document the widget is sized based on the default size of figures in the document.
-
-You might need to change the default behavior if your widget is extremely large. In this case you might specify `viewer.suppress = TRUE` and `knitr.figure = FALSE` as well provide for a larger default width and height for knitr. You also might need to change the default behavior if you widget already incorporates padding. In this case you might specify `viewer.padding = 0`.
-
-In the case of the knob widget, the defaults will work fine so we leave the sizing policy. If we did need to customize the policy, we'd provide our custom policy as a parameter to the `createWidget` function. See the documentation on the `sizingPolicy` function in the **htmlwidgets** package for additional details.
-
-##### Resize Method
-
-Every JavaScript library handles dynamic sizing a bit differently. Some do it automatically, some require just a one-line resize call, and some require that size be set only along with data and other options. In the spirit of HTML widgets working just like plots in R, it's important that HTML widgets intelligently size themselves to their container, whether it be the RStudio Viewer, a figure in knitr, or a UI panel within a Shiny application.
-
-Let's extend our knob widget to handle sizing intelligently. To do this we add a `resize` method to our JavaScript binding, and also add `width` and `height` parmaeters to our `initialize` function. The knob widget can accept width and height parameters at initialization time or anytime later in a call to `configure`. We use both of these codepaths below to sync our knob's height with the height of the widget container. We also handle one other complexity: knobs like their width and height to be nearly equal (otherwise the bottom is clipped) so set the size using a helper functions that ensures that width and height are equal.
-
-```js
-HTMLWidgets.widget({
-  
-  name: "knob",
-  
-  type: "output",
-  
-  initialize: function(el, width, height) {
-    // initialize the knob with the specified height
-    $(el).knob(this.toSquare(width, height));
-  },
-
-  renderValue: function(el, x) {
-    // forward options to the knob
-    $(el).trigger("configure", x);
-    // set the knob value and trigger a change event
-    $(el).val(x.value).trigger("change");
-  },
-
-  resize: function(el, width, height) { 
-    // size the knob as dictated by the enclosing widget's size
-    $(el).trigger("configure", this.toSquare(width, height));
-  },
-  
-  // knob relies on being rendered with equal width
-  // and height -- this function ensures that the
-  // values are the same
-  toSquare: function(width, height) {
-    var size = Math.min(width, height);
-    return {
-      width: size,
-      height: size
-    };
-  }
-});
-```
+In the case of the **knob** widget, the default sizing policy works fine (i.e. treat the widget like an R plot) however dynamic sizing requires a custom `resize` method. The details of this aren't provided here (see the [Sizing](Sizing.Rmd) vignette for all of the details).
 
 #### Additional Options
 
@@ -287,46 +240,44 @@ knob <- function(value, min, max, step = 1,
 
 Note that it would also be possible to add a `...` parameter to forward arbitrary additional options to the knob. For libraries that have a large surface area this may be a good idea, but it's helpful in general to provide as many options directly reflected in R parameters so that users can learn how to use your widget without needing to consult the documentation for the underlying JavaScript library.
 
-#### Widget Instance Data
-
-You may have noticed that the JavaScript binding for a widget consists of a set of JavaScript functions rather than a class which has it's own instance data. Many widgets don't require instance data, but if yours does (e.g. you need to save an id, reference to a DOM element, or any other computed data) there is a mechanism available to do so.
-
-Here's how it works: return an object from the `initialize` method and that object will subsequently be passed to the `renderValue` and `resize` methods. For example:
-
-```js
-HTMLWidgets.widget({
-  
-  name: "demo",
-  
-  type: "output",
-  
-  initialize: function(el, width, height) {
-    // object we'll use for instance data
-    return {};
-  },
-
-  renderValue: function(el, x, instance) {
-    // access instance as necessary
-  },
-
-  resize: function(el, width, height, instance) { 
-    // access instance as necessary
-  }
-});
-```
-
-A real-life example of using instance data is in the [dygraphs](http://rstudio.github.io/dygraphs) widget, which uses the instance to store the actual Dygraph object for later manipulation. Here's the code for the dygraphs JavaScript binding that takes advantage of instance data: <https://github.com/rstudio/dygraphs/blob/master/inst/htmlwidgets/dygraphs.js>
-
-
 ### Creating Your Own Widgets
 
-- Discuss the scaffoldWidget function
+#### Scaffolding
 
-- Link to ramnath's video
+When you want to create your own widget you can call the `scaffoldWidget` function to create the basic structure for your widget. This function will:
 
-- Link to the source code of other good examples
+* Create the .R, .js, and .yaml files required for your widget;
 
+* If provided, take a [Bower](http://bower.io/) package name and automatically download the JavaScript library (and it's dependencies) and add the required entries to the .yaml file.
 
+This method is highly recommended as it ensures that you get started with the right structure. Here's how it works:
+
+1) First create an R package to house your widget
+
+2) Next, change to the working directory of your package and execute the following:
+
+```r
+> htmlwidgets::scaffoldWidget("mywidget") # add optional bower pkg name if appropriate
+```
+
+Build the package and you'll have a simple working widget (that doesn't do anything yet). For this example you could invoke your widget at the R console as follows:
+
+```r
+> mywidget()
+```
+
+Note that it has no parameters yet. Next you should study the API of the JavaScript library you are wrapping and map it as appropriate into the R and JavaScript bindings.
+
+#### Learning from Examples
+
+Get started by studying the code of the simple example above and applying it to the widget that you are building. You may also want to study the code of other packages to learn about specific things relevant to your widget:
+
+1) The [networkD3](https://github.com/christophergandrud/networkD3) package illustrates creating a widget on top of [D3](http://d3js.org), using a custom sizing policy for a larger widget, and providing multiple widgets from a single package.
+
+2) The [dygraphs](https://github.com/rstudio/dygraphs/) package illustrates using widget instance data, handling dynamic resizing, and using [magrittr](https://github.com/smbache/magrittr) to decompose a large and flat JavaScript API into a more modular and pipeable R API.
+
+3) The [sparkline](https://github.com/htmlwidgets/sparkline) package illustrates  providing a custom HTML generation function (since sparklines must be housed in `<span>` rather than `<div>` elements).
+ 
 
 
 

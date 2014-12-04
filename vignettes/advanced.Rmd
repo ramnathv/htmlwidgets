@@ -1,0 +1,36 @@
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Advanced Topics}
+-->
+
+## HTML Widgets: Advanced Topics
+
+### Widget Instance Data
+
+You may have noticed that the JavaScript binding for a widget consists of a set of JavaScript functions rather than a class which has it's own instance data. Many widgets don't require instance data, but if yours does (e.g. you need to save an id, reference to a DOM element, or any other computed data) there is a mechanism available to do so.
+
+Here's how it works: return an object from the `initialize` method and that object will subsequently be passed to the `renderValue` and `resize` methods. For example:
+
+```js
+HTMLWidgets.widget({
+  
+  name: "demo",
+  
+  type: "output",
+  
+  initialize: function(el, width, height) {
+    // object we'll use for instance data
+    return {};
+  },
+
+  renderValue: function(el, x, instance) {
+    // access instance as necessary
+  },
+
+  resize: function(el, width, height, instance) { 
+    // access instance as necessary
+  }
+});
+```
+
+A real-life example of using instance data is in the [dygraphs](http://rstudio.github.io/dygraphs) widget, which uses the instance to store the actual Dygraph object for later manipulation. Here's the code for the dygraphs JavaScript binding that takes advantage of instance data: <https://github.com/rstudio/dygraphs/blob/master/inst/htmlwidgets/dygraphs.js>
