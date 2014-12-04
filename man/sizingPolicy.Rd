@@ -95,5 +95,9 @@ height for knitr.
 You also might need to change the default behavior if you widget already
 incorporates padding. In this case you might specify \code{viewer.padding =
 0}.
+
+For additionals details on widget sizing:
+
+\code{vignette("htmlwidgets-sizing")}
 }
 

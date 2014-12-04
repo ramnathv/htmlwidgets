@@ -50,4 +50,9 @@ An object of class \code{htmlwidget} that will intelligently print
 Create an HTML widget based on widget YAML and JavaScript contained within the
 specified package.
 }
+\details{
+For additionals details on developing widgets:
+
+\code{vignette("htmlwidgets-intro")}
+}
 

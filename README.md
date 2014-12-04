@@ -18,5 +18,5 @@ You can install the **htmlwidgets** package from GitHub:
 devtools::install_github('ramnathv/htmlwidgets')
 ```
 
-To learn more about developing your own widgets see the package vignette [Introduction to HTML Widgets](vignettes/introduction.Rmd).
+To learn more about developing your own widgets see the package vignette [Introduction to HTML Widgets](vignettes/htmlwidgets-intro.Rmd).
 

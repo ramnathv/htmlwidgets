@@ -216,7 +216,7 @@ HTML widgets can be rendered in a wide variety of contexts and can be resized at
 
 2. Widgets can implement a `resize` method on the JavaScript side to forward sizing behavior on to the underlying JavaScript libary.
 
-In the case of the **knob** widget, the default sizing policy works fine (i.e. treat the widget like an R plot) however dynamic sizing requires a custom `resize` method. You can see the details of the resize implementation in the [Sizing](sizing.Rmd) vignette.
+In the case of the **knob** widget, the default sizing policy works fine (i.e. treat the widget like an R plot) however dynamic sizing requires a custom `resize` method. You can see the details of the resize implementation in the [Sizing](htmlwidgets-sizing.Rmd) vignette.
 
 #### Additional Options
 
@@ -279,9 +279,9 @@ Note that it has no parameters yet. Next you should study the API of the JavaScr
 
 There are additional vignettes which cover more advanced ground:
 
-* [HTML Widget Sizing](sizing.Rmd) explains custom sizing policies and when you might need to use them and describes implementing a `resize` method within JavaScript bindings.
+* [HTML Widget Sizing](htmlwidgets-sizing.Rmd) explains custom sizing policies and when you might need to use them and describes implementing a `resize` method within JavaScript bindings.
 
-* [HTML Widgets: Advanced Topics](advanced.Rmd) describes framework features that support per-widget instance data, data tranformations (e.g. converting a data frame into a d3 dataset), and providing widget options that are live JavaScript objects (e.g. function definitions).
+* [HTML Widgets: Advanced Topics](htmlwidgets-advanced.Rmd) describes framework features that support per-widget instance data, data tranformations (e.g. converting a data frame into a d3 dataset), and providing widget options that are live JavaScript objects (e.g. function definitions).
 
 ##### Examples
 

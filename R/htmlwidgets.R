@@ -159,6 +159,12 @@ widget_data <- function(x, id, ...){
 #'  automatically generated one). Useful if you have other JavaScript that needs
 #'  to explicitly discover and interact with a specific widget instance.
 #'
+#'@details
+#'
+#'For additionals details on developing widgets:
+#'
+#'\code{vignette("htmlwidgets-intro")}
+#'
 #'@return An object of class \code{htmlwidget} that will intelligently print
 #'  itself into HTML in a variety of contexts including the R console, within R
 #'  Markdown documents, and within Shiny output bindings.

@@ -68,6 +68,11 @@
 #' incorporates padding. In this case you might specify \code{viewer.padding =
 #' 0}.
 #'
+#' For additionals details on widget sizing:
+#'
+#' \code{vignette("htmlwidgets-sizing")}
+#'
+#'
 #' @export
 sizingPolicy <- function(
   defaultWidth = NULL, defaultHeight = NULL, padding = NULL,
