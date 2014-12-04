@@ -160,7 +160,7 @@ We provide a name and type for the widget and then implement two functions:
 These three components are the core of implementing any widget. There are a couple of other subtleties to the implementation which we'll cover below, but before getting to that let's give the widget a test drive. You can install it from GitHub as follows:
 
 ```r
-install_github(c('ramnathv/htmlwidgets', 'jjallaire/knob'))
+install_github(c('ramnathv/htmlwidgets', 'ramnathv/knob'))
 ```
 
 Let us first create a simple knob:
