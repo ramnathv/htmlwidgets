@@ -17,7 +17,9 @@ vignette: >
 <!---
 TODO:
   - Debug shiny sizing issues
-  - Update README
+  - Sizing vignette
+  - Advanced vignette
+  - Update images in vignettes
 -->
 
 ### Introduction to HTML Widgets
@@ -152,7 +154,7 @@ We provide a name and type for the widget and then implement two functions:
 These three components are the core of implementing any widget. There are a couple of other subtleties to the implementation which we'll cover below, but before getting to that let's give the widget a test drive. You can install it from GitHub as follows:
 
 ```r
-install_github(c('ramnathv/htmlwidgets', 'ramnathv/knob'))
+install_github(c('ramnathv/htmlwidgets', 'jjallaire/knob'))
 ```
 
 Let us first create a simple knob:
@@ -173,19 +175,14 @@ library(shiny)
 library(knob)
 
 ui = shinyUI(fluidPage(
-  sliderInput('value', 'Value', 0, 200, 50),
-  sliderInput('angleArc', 'Arc Angle', 0, 360, 250),
+  sliderInput('value', 'Value', min = 0, max = 200, value = 50),
   knobOutput('gauge')
 ))
 
-server = function(input, output){
-  output$gauge <- renderKnob(knob(
-    value = input$value,
-    min = 0,
-    max = 200,
-    angleArc = input$angleArc,
-    fgColor="#66CC66"
-  ))
+server = function(input, output) {
+  output$gauge <- renderKnob(
+    knob(value = input$value, min = 0, max = 200)
+  )
 }
 
 shinyApp(ui = ui, server = server)
@@ -219,7 +216,7 @@ HTML widgets can be rendered in a wide variety of contexts and can be resized at
 
 2) Widgets can implement a `resize` method on the JavaScript side to forward sizing behavior on to the underlying JavaScript libary.
 
-In the case of the **knob** widget, the default sizing policy works fine (i.e. treat the widget like an R plot) however dynamic sizing requires a custom `resize` method. The details of this aren't provided here (see the [Sizing](sizing.Rmd) vignette for all of the details).
+In the case of the **knob** widget, the default sizing policy works fine (i.e. treat the widget like an R plot) however dynamic sizing requires a custom `resize` method. You can see the details of the resize implementation in the [Sizing](sizing.Rmd) vignette.
 
 #### Additional Options
 
