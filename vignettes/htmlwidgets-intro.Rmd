@@ -14,9 +14,10 @@ vignette: >
 <!---
 TODO:
   - Debug shiny sizing issues
-  - Sizing vignette
-  - Advanced vignette
   - Update images in vignettes
+  - Docs on Dynamic Dependencie
+  - Incorporate scaffolding vignette
+  - R CMD check with R-devel
 -->
 
 ### Overview
