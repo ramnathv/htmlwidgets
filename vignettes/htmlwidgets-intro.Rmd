@@ -24,15 +24,21 @@ TODO:
 
 ### Overview
 
-`htmlwidgets` is a framework for creating HTML widgets that render in various contexts including the R console, [R Markdown](http://rmarkdown.rstudio.com) documents, and [Shiny](http://shiny.rstudio.com) web applications. Widgets can include arbitrary HTML and JavaScript and are an ideal way to bridge the gap between R and JavaScript data visualization libraries. 
+The **htmlwidgets** package provides a framework for easily creating R bindings to JavaScript libraries. Widgets created using the framework can be:
 
-Some examples of packages that use `htmlwidgets` are:
+* Used at the R console for data analysis just like conventional R plots (via RStudio Viewer).
+* Seamlessly embedded within [R Markdown](http://rmarkdown.rstudio.com) documents and [Shiny](http://shiny.rstudio.com) web applications.
+* Saved as standalone web pages for ad-hoc sharing via email, Dropbox, etc.
+
+There are already several R packages based on **htmlwidgets**, including:
 
 * [dygraphs](http://rstudio.github.io/dygraphs/) --- Interactive time series visualization
 * [networkD3](http://christophergandrud.github.io/networkD3/) --- Network visualization with D3
 * [sparkline](https://github.com/htmlwidgets/sparkline) --- Small inline charts
 * [DT](http://rstudio.github.io/DT/) --- Tabular data via DataTables
 * [rthreejs](https://github.com/bwlewis/rthreejs) -- Interactive 3D graphics
+
+The package was created in collaboration by Ramnath Vaidyanathan, Joe Cheng, JJ Allaire, and Yihui Xie. We've all spent countless hours building bindings between R and the web, and were motivated to create a framework that made this as easy as possible for all R developers. 
 
 ### Widget Basics
 
