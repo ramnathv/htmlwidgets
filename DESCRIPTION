@@ -15,5 +15,5 @@ Imports:
     RJSONIO,
     yaml
 Suggests:
-    knitr (>= 1.6)
-Enhances: shiny (>= 0.10.2),
+    knitr (>= 1.8)
+Enhances: shiny (>= 0.10.2.1),
