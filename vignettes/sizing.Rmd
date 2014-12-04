@@ -1,9 +1,16 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Sizing}
--->
-
-## HTML Widget Sizing
+---
+title: "HTML Widget Sizing"
+author: 
+  - Joe Cheng
+  - JJ Allaire
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Sizing}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
 
 ### Sizing Policy
 
@@ -19,7 +26,7 @@ Every JavaScript library handles dynamic sizing a bit differently. Some do it au
 
 Let's extend our knob widget to handle sizing intelligently. To do this we add a `resize` method to our JavaScript binding, and also add `width` and `height` parmaeters to our `initialize` function. The knob widget can accept width and height parameters at initialization time or anytime later in a call to `configure`. We use both of these codepaths below to sync our knob's height with the height of the widget container. We also handle one other complexity: knobs like their width and height to be nearly equal (otherwise the bottom is clipped) so set the size using a helper functions that ensures that width and height are equal.
 
-```js
+```javascript
 HTMLWidgets.widget({
   
   name: "knob",
@@ -27,20 +34,32 @@ HTMLWidgets.widget({
   type: "output",
   
   initialize: function(el, width, height) {
-    // initialize the knob with the specified height
-    $(el).knob(this.toSquare(width, height));
+    
+    // sizing options
+    var options = this.toSquare(width, height);
+    
+    // readOnly since this is a display widget
+    options.readOnly = true;
+    
+    // initialize the knob
+    $(el).knob(options);
   },
 
   renderValue: function(el, x) {
+    
     // forward options to the knob
     $(el).trigger("configure", x);
+    
     // set the knob value and trigger a change event
     $(el).val(x.value).trigger("change");
+    
   },
 
   resize: function(el, width, height) { 
+    
     // size the knob as dictated by the enclosing widget's size
     $(el).trigger("configure", this.toSquare(width, height));
+  
   },
   
   // knob relies on being rendered with equal width
@@ -53,6 +72,7 @@ HTMLWidgets.widget({
       height: size
     };
   }
+  
 });
 ```
 

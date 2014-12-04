@@ -1,9 +1,16 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Advanced Topics}
--->
-
-## HTML Widgets: Advanced Topics
+---
+title: "HTML Widgets: Advanced Topics"
+author: 
+  - Ramnath Vaidyanathan
+  - JJ Allaire
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Advanced}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
 
 ### Widget Instance Data
 

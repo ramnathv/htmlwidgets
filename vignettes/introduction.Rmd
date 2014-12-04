@@ -1,13 +1,20 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Introduction}
--->
+---
+title: "Introduction to HTML Widgets"
+author: 
+  - Ramnath Vaidyanathan
+  - JJ Allaire
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
 
 <!---
 TODO:
   - Debug shiny sizing issues
-
-  - Render vignette with rmarkdown
   - Update README
 -->
 
@@ -43,7 +50,7 @@ Below we'll walk through an example widget that wraps the [jQuery Knob](http://a
 
 Let's assume that our widget is named `knob` and is located within an R package of the same name. Here are the files that we'll add to the package:
 
-```bash
+```
 R/
 | knob.R
 
@@ -114,7 +121,7 @@ renderKnob <- function(expr, env = parent.frame(), quoted = FALSE) {
 
 The third piece in the puzzle is the JavaScript required to activate the widget. By convention we'll define our JavaScript binding in the file `inst/htmlwidgets/knob.js`. Here is the binding:
 
-```js
+```javascript
 HTMLWidgets.widget({
 
   name: "knob",
