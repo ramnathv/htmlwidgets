@@ -5,14 +5,16 @@ author:
   - JJ Allaire
 date: "`r Sys.Date()`"
 output: 
-  rmarkdown::html_vignette
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 4
 vignette: >
   %\VignetteIndexEntry{Advanced}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
 
-### Widget Instance Data
+### HTML Widgets: Advanced Topics
 
 You may have noticed that the JavaScript binding for a widget consists of a set of JavaScript functions rather than a class which has it's own instance data. Many widgets don't require instance data, but if yours does (e.g. you need to save an id, reference to a DOM element, or any other computed data) there is a mechanism available to do so.
 
