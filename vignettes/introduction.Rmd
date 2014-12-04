@@ -18,9 +18,7 @@ TODO:
   - Update README
 -->
 
-## Introduction to HTML Widgets
-
-### Overview
+### Introduction to HTML Widgets
 
 `htmlwidgets` is a framework for creating HTML widgets that render in various contexts including the R console, [R Markdown](http://rmarkdown.rstudio.com) documents, and [Shiny](http://shiny.rstudio.com) web applications. Widgets can include arbitrary HTML and JavaScript and are an ideal way to bridge the gap between R and JavaScript data visualization libraries. 
 
@@ -280,11 +278,11 @@ Note that it has no parameters yet. Next you should study the API of the JavaScr
 
 Get started by studying the code of the simple example above and applying it to the widget that you are building. You may also want to study the code of other packages to learn about specific things relevant to your widget:
 
-1) The [networkD3](https://github.com/christophergandrud/networkD3) package illustrates creating a widget on top of [D3](http://d3js.org), using a custom sizing policy for a larger widget, and providing multiple widgets from a single package.
+1. The [networkD3](https://github.com/christophergandrud/networkD3) package illustrates creating a widget on top of [D3](http://d3js.org), using a custom sizing policy for a larger widget, and providing multiple widgets from a single package.
 
-2) The [dygraphs](https://github.com/rstudio/dygraphs/) package illustrates using widget instance data, handling dynamic resizing, and using [magrittr](https://github.com/smbache/magrittr) to decompose a large and flat JavaScript API into a more modular and pipeable R API.
+2. The [dygraphs](https://github.com/rstudio/dygraphs/) package illustrates using widget instance data, handling dynamic resizing, and using [magrittr](https://github.com/smbache/magrittr) to decompose a large and flat JavaScript API into a more modular and pipeable R API.
 
-3) The [sparkline](https://github.com/htmlwidgets/sparkline) package illustrates  providing a custom HTML generation function (since sparklines must be housed in `<span>` rather than `<div>` elements).
+3. The [sparkline](https://github.com/htmlwidgets/sparkline) package illustrates  providing a custom HTML generation function (since sparklines must be housed in `<span>` rather than `<div>` elements).
  
 
 
