@@ -8,7 +8,6 @@ TODO:
   - Debug shiny sizing issues
 
   - Render vignette with rmarkdown
-  - Readonly?
   - Update README
 -->
 
@@ -123,7 +122,9 @@ HTMLWidgets.widget({
   type: "output",
   
   initialize: function(el) {
-    $(el).knob()
+    $(el).knob({
+      readOnly: true
+    });
   },
   
   renderValue: function(el, x) {
@@ -135,7 +136,7 @@ HTMLWidgets.widget({
 
 We provide a name and type for the widget and then implement two functions:
 
-1) The `initialize` function creates and/or attaches to DOM elements as required. In this case we call `knob` on our element to let the knob library know we want to attach it's behavior to the element.
+1) The `initialize` function creates and/or attaches to DOM elements as required. In this case we call `knob` on our element to let the knob library know we want to attach it's behavior to the element. We pass the `readOnly` flag because the knob is being used only to display values rather than accept input.
 
 2) The `renderValue` function actually pours our dynamic data (the `x` value from the R binding) into the widget. Here we apply options, set the value, and trigger the change event.
 
