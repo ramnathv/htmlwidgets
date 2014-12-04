@@ -6,11 +6,8 @@
 <!---
 TODO:
   - Debug shiny sizing issues
-  - Additional exposition in widget sizing section
-  - Section on widget instance data
   - Section on creating your own widgets
-  - Remove or revise sizing vignette
-  - Solicit feedback/testing 
+  - Render vignette with rmarkdown
 -->
 
 ## Introduction to htmlwidgets
@@ -62,7 +59,7 @@ inst/
 |   |   |   |   |-- jquery.knob.min.js
 ```
 
-Note the convetion that the JavaScript, YAML, and other dependencies are all contained within the `inst/htmlwidgets` directory.
+Note the convention that the JavaScript, YAML, and other dependencies are all contained within the `inst/htmlwidgets` directory.
 
 #### Dependencies
 
@@ -212,7 +209,19 @@ HTML widgets can be rendered in a wide variety of contexts and can be resized at
 
 2) Widgets can implement a `resize` method on the JavaScript side to forward sizing behavior on to the underlying JavaScript libary.
 
-Let's extend our knob widget to handle sizing intelligently (more explanation here)
+##### Sizing Policy
+
+The default HTML widget sizing policy treats the widget with the same sizing semantics as an R plot. When printed at the R console the widget is displayed within the RStudio Viewer and sized to fill the Viewer pane (modulo any padding). When rendered inside an R Markdown document the widget is sized based on the default size of figures in the document.
+
+You might need to change the default behavior if your widget is extremely large. In this case you might specify `viewer.suppress = TRUE` and `knitr.figure = FALSE` as well provide for a larger default width and height for knitr. You also might need to change the default behavior if you widget already incorporates padding. In this case you might specify `viewer.padding = 0`.
+
+In the case of the knob widget, the defaults will work fine so we leave the sizing policy. If we did need to customize the policy, we'd provide our custom policy as a parameter to the `createWidget` function. See the documentation on the `sizingPolicy` function in the **htmlwidgets** package for additional details.
+
+##### Resize Method
+
+Every JavaScript library handles dynamic sizing a bit differently. Some do it automatically, some require just a one-line resize call, and some require that size be set only along with data and other options. In the spirit of HTML widgets working just like plots in R, it's important that HTML widgets intelligently size themselves to their container, whether it be the RStudio Viewer, a figure in knitr, or a UI panel within a Shiny application.
+
+Let's extend our knob widget to handle sizing intelligently. To do this we add a `resize` method to our JavaScript binding, and also add `width` and `height` parmaeters to our `initialize` function. The knob widget can accept width and height parameters at initialization time or anytime later in a call to `configure`. We use both of these codepaths below to sync our knob's height with the height of the widget container. We also handle one other complexity: knobs like their width and height to be nearly equal (otherwise the bottom is clipped) so set the size using a helper functions that ensures that width and height are equal.
 
 ```js
 HTMLWidgets.widget({
@@ -277,6 +286,37 @@ knob <- function(value, min, max, step = 1,
 ```
 
 Note that it would also be possible to add a `...` parameter to forward arbitrary additional options to the knob. For libraries that have a large surface area this may be a good idea, but it's helpful in general to provide as many options directly reflected in R parameters so that users can learn how to use your widget without needing to consult the documentation for the underlying JavaScript library.
+
+#### Widget Instance Data
+
+You may have noticed that the JavaScript binding for a widget consists of a set of JavaScript functions rather than a class which has it's own instance data. Many widgets don't require instance data, but if yours does (e.g. you need to save an id, reference to a DOM element, or any other computed data) there is a mechanism available to do so.
+
+Here's how it works: return an object from the `initialize` method and that object will subsequently be passed to the `renderValue` and `resize` methods. For example:
+
+```js
+HTMLWidgets.widget({
+  
+  name: "demo",
+  
+  type: "output",
+  
+  initialize: function(el, width, height) {
+    // object we'll use for instance data
+    return {};
+  },
+
+  renderValue: function(el, x, instance) {
+    // access instance as necessary
+  },
+
+  resize: function(el, width, height, instance) { 
+    // access instance as necessary
+  }
+});
+```
+
+A real-life example of using instance data is in the [dygraphs](http://rstudio.github.io/dygraphs) widget, which uses the instance to store the actual Dygraph object for later manipulation. Here's the code for the dygraphs JavaScript binding that takes advantage of instance data: <https://github.com/rstudio/dygraphs/blob/master/inst/htmlwidgets/dygraphs.js>
+
 
 ### Creating Your Own Widgets
 
