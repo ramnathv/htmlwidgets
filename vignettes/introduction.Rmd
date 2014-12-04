@@ -219,7 +219,7 @@ HTML widgets can be rendered in a wide variety of contexts and can be resized at
 
 2) Widgets can implement a `resize` method on the JavaScript side to forward sizing behavior on to the underlying JavaScript libary.
 
-In the case of the **knob** widget, the default sizing policy works fine (i.e. treat the widget like an R plot) however dynamic sizing requires a custom `resize` method. The details of this aren't provided here (see the [Sizing](Sizing.Rmd) vignette for all of the details).
+In the case of the **knob** widget, the default sizing policy works fine (i.e. treat the widget like an R plot) however dynamic sizing requires a custom `resize` method. The details of this aren't provided here (see the [Sizing](sizing.Rmd) vignette for all of the details).
 
 #### Additional Options
 
