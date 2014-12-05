@@ -5,7 +5,7 @@ output:
   html_document:
     highlight: kate
     toc: true
-    toc_depth: 5
+    toc_depth: 4
     mathjax: null
 vignette: >
   %\VignetteIndexEntry{Sizing}
@@ -19,7 +19,7 @@ In the spirit of HTML widgets working just like plots in R, it's important that 
 
 This sizing mechanism is designed to address the following constraints that affect the natural size of a widget:
 
-- **The kind of widget it is.** Some widgets may only be designed to look good at small, fixed sizes (like [sparklines](https://github.com/htmlwidgets/sparkline) while other widgets may want every pixel that can be spared (like [network graphs](http://christophergandrud.github.io/d3Network/)).
+- **The kind of widget it is.** Some widgets may only be designed to look good at small, fixed sizes (like [sparklines](https://github.com/htmlwidgets/sparkline)) while other widgets may want every pixel that can be spared (like [network graphs](http://christophergandrud.github.io/d3Network/)).
 
 - **The context into which the widget is rendered.** While a given widget might look great at 960px by 480px in an R Markdown document, the same widget would look silly at that size in the RStudio Viewer pane, which is typically much smaller.
 
@@ -33,11 +33,25 @@ Widget sizing is handled in two steps:
 
 The default HTML widget sizing policy treats the widget with the same sizing semantics as an R plot. When printed at the R console the widget is displayed within the RStudio Viewer and sized to fill the Viewer pane (modulo any padding). When rendered inside an R Markdown document the widget is sized based on the default size of figures in the document.
 
-Note that for most widgets the default sizing behavior is fine and you won't need to create a custom sizing policy. If you need a slightly different behavior than the default you can also selectively override the default behavior by calling the `sizingPolicy` function and passing the result to `createWidget`. For example, here are some of the sizing policies used in the [networkD3]() package:
+Note that for most widgets the default sizing behavior is fine and you won't need to create a custom sizing policy. If you need a slightly different behavior than the default you can also selectively override the default behavior by calling the `sizingPolicy` function and passing the result to `createWidget`. For example:
+
+```r
+htmlwidgets::createWidget(
+  "sigma", 
+  x, 
+  width = width, 
+  height = height,
+  sizingPolicy = htmlwidgets::sizingPolicy(
+    viewer.padding = 0,
+    viewer.paneHeight = 500,
+    browser.fill = TRUE
+  )
+)
+```
 
 #### Examples
 
-The `simpleNetwork` widget eliminates padding (as d3 is already providing padding) and specifies that it wants to fill up as much space as possible when displayed in a standalone web browser:
+The [networkD3](http://christophergandrud.github.io/networkD3/) package uses custom sizing policies for all of it's widgets. The `simpleNetwork` widget eliminates padding (as d3 is already providing padding) and specifies that it wants to fill up as much space as possible when displayed in a standalone web browser:
 
 ```r
 sizingPolicy(padding = 0, browser.fill = TRUE)
@@ -47,11 +61,11 @@ The `sankeyNetwork` widget requires much more space than is afforded by the RStu
 
 ```r
 sizingPolicy(viewer.suppress = TRUE,
-               knitr.figure = FALSE,
-               browser.fill = TRUE,
-               browser.padding = 75,
-               knitr.defaultWidth = 800,
-               knitr.defaultHeight = 500)
+             knitr.figure = FALSE,
+             browser.fill = TRUE,
+             browser.padding = 75,
+             knitr.defaultWidth = 800,
+             knitr.defaultHeight = 500)
 ```
 
 #### Available Options

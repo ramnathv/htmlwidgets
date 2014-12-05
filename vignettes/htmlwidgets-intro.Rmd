@@ -18,7 +18,8 @@ vignette: >
 The **htmlwidgets** package provides a framework for easily creating R bindings to JavaScript libraries. Widgets created using the framework can be:
 
 * Used at the R console for data analysis just like conventional R plots.
-* Seamlessly embedded within [R Markdown](http://rmarkdown.rstudio.com) documents and [Shiny](http://shiny.rstudio.com) web applications.
+* Embedded within [R Markdown](http://rmarkdown.rstudio.com) documents
+* Incorporated into [Shiny](http://shiny.rstudio.com) web applications.
 * Saved as standalone web pages for ad-hoc sharing via email, Dropbox, etc.
 
 There are already several R packages based on **htmlwidgets**, including:
@@ -43,11 +44,27 @@ The philosophy of **htmlwidgets** is convention over configuration. By following
 
 HTML widgets are always hosted within an R package and must include all of the source code for their dependencies. This is to ensure that code which depends on widgets is fully reproducible (i.e. doesn't require an internet connection or the ongoing availability of an internet service to run).
 
-Below we'll walk through an example widget that wraps the [sigma.js](http://sigmajs.org) graph visualization library.
+### Creating a Widget
+
+#### Example: sigma.js
+
+To start with we'll walk through the creation of a simple widget that wraps the [sigma.js](http://sigmajs.org) graph visualization library. When we're done we'll be able to use it to display interactive visualiations of [GEXF](http://gexf.net) (Graph Exchange XML Format) data files. For example:
+
+```r
+library(sigma)
+data <- system.file("examples/ediaspora.gexf.xml", package = "sigma")
+sigma(data)
+```
+
+![knob](images/sigma.png)
+
+Note that the above is just an image of the visualizaton so it's not interactive. You can play with the interactive version by following the steps in the demo section below. 
+
+There is remarkably little code required to create this binding. Below we'll go through all of the components step-by-step.
 
 #### File Layout
 
-Let's assume that our widget is named **sigma** and is located within an R package of the same name. Our widget will read [GEXF](http://gexf.net) data files so we'll need to include both the base sigma.js library as well as it's GEXF plugin. Here are the files that we'll add to the package:
+Let's assume that our widget is named **sigma** and is located within an R package of the same name. Since our widget will read GEXF data files so we'll need to include both the base sigma.js library as well as it's GEXF plugin. Here are the files that we'll add to the package:
 
 ```text
 R/
@@ -64,7 +81,7 @@ inst/
 |   |   |   |   |-- sigma.parsers.gexf.min.js
 ```
 
-Note the convention that the JavaScript, YAML, and other dependencies are all contained within the `inst/htmlwidgets` directory.
+Note the convention that the JavaScript, YAML, and other dependencies are all contained within the `inst/htmlwidgets` directory (which will subsequently be installed into a package subdirectory named `htmlwidgets`).
 
 #### Dependencies
 
@@ -188,14 +205,12 @@ Our widget is now complete! If you want to test drive it without reproducing all
 devtools::install_github(c('ramnathv/htmlwidgets', 'jjallaire/sigma'))
 ```
 
-Let's try it out with some sample data included with the package:
+Here's the code to try it out with some sample data included with the package:
 
 ```r
 library(sigma)
 sigma(system.file("examples/ediaspora.gexf.xml", package = "sigma"))
 ```
-
-![knob](images/sigma.png)
 
 If you execute this code in the R console you'll see the widget displayed in the RStudio Viewer (or in an external browser if you aren't running RStudio). If you include it within an R Markdown document the widget will be embedded into the document.
 
@@ -237,13 +252,10 @@ When you want to create your own widget you can call the `scaffoldWidget` functi
 This method is highly recommended as it ensures that you get started with the right file structure. Here's an example that assumes you want to create a widget named 'mywidget' in a new package of the same name:
 
 ```r
-library(devtools)         
-library(htmlwidgets) 
-
-create("mywidget")            # create package using devtools
-setwd("mywidget")             # navigate to package dir
-scaffoldWidget("mywidget")    # create widget scaffolding
-install()                     # install the package so we can try it
+devtools::create("mywidget")               # create package using devtools
+setwd("mywidget")                          # navigate to package dir
+htmlwidgets::scaffoldWidget("mywidget")    # create widget scaffolding
+devtools::install()                        # install the package so we can try it
 ```
 
 This creates a simple widget that takes a single `text` argument and displays that text within the widgets HTML element. You can try it like this:
