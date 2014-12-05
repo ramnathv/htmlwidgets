@@ -17,7 +17,7 @@ In the spirit of HTML widgets working just like plots in R, it's important that 
 
 This sizing mechanism is designed to address the following constraints that affect the natural size of a widget:
 
-- **The kind of widget it is.** Some widgets may only be designed to look good at small, fixed sizes (like [sparklines](http://en.wikipedia.org/wiki/Sparkline)) while other widgets may want every pixel that can be spared (like [network graphs](http://christophergandrud.github.io/d3Network/)).
+- **The kind of widget it is.** Some widgets may only be designed to look good at small, fixed sizes (like [sparklines](https://github.com/htmlwidgets/sparkline) while other widgets may want every pixel that can be spared (like [network graphs](http://christophergandrud.github.io/d3Network/)).
 
 - **The context into which the widget is rendered.** While a given widget might look great at 960px by 480px in an R Markdown document, the same widget would look silly at that size in the RStudio Viewer pane, which is typically much smaller.
 
@@ -92,11 +92,11 @@ HTMLWidgets.widget({
   
   },
 
-  renderValue: function(el, x) {
+  renderValue: function(el, x, instance) {
     
   },
 
-  resize: function(el, width, height) { 
+  resize: function(el, width, height, instance) { 
   
   }
 });
@@ -106,62 +106,9 @@ What you do with the passed width and height is up to you and depends on the re-
 
 #### Examples
 
-##### jQuery Knob
-
-In the [introductory vignette](htmlwidgets-intro.Rmd) we built a wrapper for the [jQuery Knob](http://anthonyterrien.com/knob/) library. The knob library accepts width and height parameters at initialization time or anytime later in a call to `configure`. We use both of these code paths below to sync our knob's height with the height of the widget container. We also handle one other complexity: knobs like their width and height to be nearly equal (otherwise the bottom is clipped) so we use a helper function that ensures that the width and height are equal.
-
-```javascript
-HTMLWidgets.widget({
-  
-  name: "knob",
-  
-  type: "output",
-  
-  initialize: function(el, width, height) {
-    
-    // sizing options
-    var options = this.toSquare(width, height);
-    
-    // readOnly since this is a display widget
-    options.readOnly = true;
-    
-    // initialize the knob
-    $(el).knob(options);
-  },
-
-  renderValue: function(el, x) {
-    
-    // forward options to the knob
-    $(el).trigger("configure", x);
-    
-    // set the knob value and trigger a change event
-    $(el).val(x.value).trigger("change");
-    
-  },
-
-  resize: function(el, width, height) { 
-    
-    // size the knob as dictated by the enclosing widget's size
-    $(el).trigger("configure", this.toSquare(width, height));
-  
-  },
-  
-  // knob relies on being rendered with equal width
-  // and height -- this function ensures that the
-  // values are the same
-  toSquare: function(width, height) {
-    var size = Math.min(width, height);
-    return {
-      width: size,
-      height: size
-    };
-  }
-});
-```
-
 ##### dygraphs
 
-In the [dygraphs](http://rstudio.github.io/dygraphs) widget the implementation of re-sizing is much simpler since the **dygraphs** library includes a resize() method to automatically size the graph to it's enclosing HTML element:
+In the [dygraphs](http://rstudio.github.io/dygraphs) widget the implementation of re-sizing is relatively simple since the **dygraphs** library includes a resize() method to automatically size the graph to it's enclosing HTML element:
 
 ```javascript
 resize: function(el, width, height, instance) {

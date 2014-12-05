@@ -118,16 +118,13 @@ datatable(head(iris, 20), options = list(
 ))
 ```
 
-
-
-
 ### Custom Widget HTML
 
-Typically the HTML "housing" for a widget is just a `<div>` element, and this is correspondingly the default behavior for new widgets that don't specify otherwise. In the [introductory vignette](htmlwidgets-intro.Rmd) we built a wrapper for the [jQuery Knob](http://anthonyterrien.com/knob/) library. Since the knob widget uses an `<input>` element rather than a `<div>`, we need to write an R function `knob_html` which  provides us with the correct element type. Details on doing this are covered in the 
+Typically the HTML "housing" for a widget is just a `<div>` element, and this is correspondingly the default behavior for new widgets that don't specify otherwise. However, sometimes you need a different element type. For example, the [sparkline](https://github.com/htmlwidgets/sparkline) widget requries a `<span>` element so implements the following custom HTML generation function:
 
 ```r
-knob_html <- function(name, id, style, class, ...){
-  htmltools::tags$input(type = "text", class = class, id = id)
+sparkline_html <- function(id, style, class, ...){
+  tags$span(id = id, class = class)
 }
 ```
 
