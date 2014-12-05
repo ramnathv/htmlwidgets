@@ -131,10 +131,10 @@ HTMLWidgets.widget({
   if (edit) file.edit(file_)
 }
 
-#' Install bower package to inst/htmlwidgets/lib
-#'
-#' This function uses bower to install a javascript package along with
-#' its dependencies.
+# Install bower package to inst/htmlwidgets/lib
+#
+# This function uses bower to install a javascript package along with
+# its dependencies.
 installBowerPkg <- function(pkg){
   # check if bower is installed
   if (findBower() == ""){
@@ -143,19 +143,16 @@ installBowerPkg <- function(pkg){
       call. = FALSE
     )
   }
-
   #check if we are in the root directory of a package
   if (!file.exists('DESCRIPTION')){
     stop("You need to be in a package directory to run this!",
-         call. = F)
+      call. = F)
   }
-
   # set up .bowerrc to install packages to correct directory
   if (!file.exists('.bowerrc')){
     x = '{"directory": "inst/htmlwidgets/lib"}'
     cat(x, file = '.bowerrc')
   }
-
   # Install package
   message("Installing ", pkg, " using bower...", "\n\n")
   cmd <- sprintf('%s install %s', findBower(), pkg)
@@ -163,11 +160,11 @@ installBowerPkg <- function(pkg){
   message("... Done! installing ", pkg)
 }
 
-#' Try really hard to find bower in Windows
+# Try really hard to find bower in Windows
 findBower <- function(){
   # a slightly more robust finder of bower for windows
   # which does not require PATH environment variable to be set
-  bower_path = if(Sys.which("bower") == "") {
+  bowerPath = if(Sys.which("bower") == "") {
     # if it does not find Sys.which('bower')
     # also check APPDATA to see if found there
     if(identical(.Platform$OS.type,"windows")) {
@@ -176,17 +173,16 @@ findBower <- function(){
   } else {
     Sys.which("bower")
   }
-
-  return(bower_path)
+  return(bowerPath)
 }
 
-#' Read the bower.json file
+# Read the bower.json file
 readBower <- function(pkg, src = "inst/htmlwidgets/lib"){
   bower = RJSONIO::fromJSON(
     file.path(src, pkg, 'bower.json')
   )
   spec = list(
-    name = bower$name,
+    name =basename(bower$name),
     version = bower$version,
     src = paste0('htmlwidgets/lib/', pkg),
     script = bower$main[grepl('^.*\\.js$', bower$main)],
