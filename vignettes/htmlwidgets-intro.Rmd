@@ -101,10 +101,11 @@ We need to provide users with an R function that invokes our widget. Typically t
 ```r
 knob <- function(value, min, max, width = NULL, height = NULL) {
   
-  x <- list()
-  x$value <- value
-  x$min <- min
-  x$max <- max
+  x <- list(
+    value = value,
+    min = min,
+    max = max
+  )
   
   htmlwidgets::createWidget('knob', x, width = width, height = height)
 }
@@ -209,16 +210,17 @@ knob <- function(value, min, max, step = 1,
                  font = NULL, fgColor = NULL, bgColor = NULL,
                  width = NULL, height = NULL) {
   
-  x <- list()
-  x$value <- value
-  x$min <- min
-  x$max <- max
-  x$step <- step
-  x$angleOffset <- angleOffset
-  x$angleArc <- angleArc
-  x$font <- font
-  x$fgColor <- fgColor
-  x$bgColor <- bgColor
+  x <- list(
+    value = value,
+    min = min,
+    max = max,
+    step = step,
+    angleOffset = angleOffset,
+    angleArc = angleArc,
+    font = font,
+    fgColor = fgColor,
+    bgColor = bgColor
+  )
   
   htmlwidgets::createWidget('knob', x, width = width, height = height)
 }
