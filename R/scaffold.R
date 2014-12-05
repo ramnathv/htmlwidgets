@@ -34,32 +34,42 @@ addWidgetConstructor <- function(name, package, edit){
   tpl <- "#' <Add Title>
 #'
 #' <Add Description>
-#' @import htmltools
+#'
 #' @import htmlwidgets
+#'
 #' @export
-%s <- function(arg = 'Hello, World', ..., width, height){
-  x = list(arg = arg, ...)
+%s <- function(message, width = NULL, height = NULL) {
+
+  # forward options using x
+  x = list(
+    message = message
+  )
+
+  # create widget
   htmlwidgets::createWidget(
-   name = '%s',
-   x,
-   package = '%s'
+    name = '%s',
+    x,
+    width = width,
+    height = height,
+    package = '%s'
   )
 }
 
-#' Widget output function for use in Shiny App
+#' Widget output function for use in Shiny
 #'
-#' <TODO: Add default width and height for widget>
 #' @export
-%sOutput <- function(outputId, width, height){
+%sOutput <- function(outputId, width = '100%%', height = '400px'){
   shinyWidgetOutput(outputId, '%s', width, height, package = '%s')
 }
 
-#' Widget render function for use in Shiny App
+#' Widget render function for use in Shiny
+#'
 #' @export
 render%s <- function(expr, env = parent.frame(), quoted = FALSE) {
   if (!quoted) { expr <- substitute(expr) } # force quoted
   shinyRenderWidget(expr, %sOutput, env, quoted = TRUE)
-}"
+}
+"
 
   capName = function(name){
     paste0(toupper(substring(name, 1, 1)), substring(name, 2))
@@ -78,7 +88,7 @@ render%s <- function(expr, env = parent.frame(), quoted = FALSE) {
 }
 
 addWidgetYAML <- function(name, bower_pkg, edit){
-  tpl <- "# widget dependencies. uncomment to add
+  tpl <- "# (uncomment to add a dependency)
 # dependencies:
 #  - name:
 #    version:
@@ -105,20 +115,31 @@ addWidgetYAML <- function(name, bower_pkg, edit){
 }
 
 addWidgetJS <- function(name, edit){
-  tpl <- "// widget binding
-HTMLWidgets.widget({
+  tpl <- "HTMLWidgets.widget({
+
   name: '%s',
+
   type: 'output',
-  initialize: function(el, width, height){
+
+  initialize: function(el, width, height) {
+
+    return {
+      // TODO: add instance fields as required
+    }
 
   },
-  renderValue: function(el, data){
-    el.innerText = data.arg
+
+  renderValue: function(el, x, instance) {
+
+    el.innerText = x.message;
+
   },
-  resize: function(el, width, height) {
+
+  resize: function(el, width, height, instance) {
 
   }
-})
+
+});
 "
   if (!file.exists(file_ <- sprintf('inst/htmlwidgets/%s.js', name))){
     cat(sprintf(tpl, name), file = file_)
