@@ -200,7 +200,7 @@ readBower <- function(pkg, src = "inst/htmlwidgets/lib"){
 # Get YAML configuration for widget
 getConfig <- function(pkg, src = "inst/htmlwidgets/lib"){
   deps = readBower(pkg, src)$deps
-  all = c(pkg, names(deps))
+  all = c(names(deps),pkg)
   config = lapply(all, function(pkg){
     readBower(pkg, src = src)$spec
   })
