@@ -25,7 +25,6 @@ This vignette covers several aspects of creating widgets that not required by al
 
 * Generating custom HTML to enclose a widget (the default is a `<div>` but some libraries require a different element e.g. a `<span>`).
 
-* Dynamically attaching dependencies to widgets. This might be a data file that is only used for some instances of the widget (e.g. a map projection).
 
 ### Data Transformation
 
@@ -133,11 +132,6 @@ sparkline_html <- function(id, style, class, ...){
 Note that this function is looked up within the package implementing the widget by the convention `widgetname_html` so it need not be formally exported from your package or otherwise registered with **htmlwidgets**.
 
 Most widgets won't need a custom HTML function but if you need to generate custom HTML for your widget (e.g. you need an `<input>` or a `<span>` rather than a `<div>`) then you should use the **htmltools** package (as demonstrated by the code above).
-
-### Dynamic Dependencies
-
-
-**TODO**
 
 
 <script>
