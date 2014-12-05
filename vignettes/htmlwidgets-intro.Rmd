@@ -2,22 +2,16 @@
 title: "Introduction to HTML Widgets"
 date: "`r Sys.Date()`"
 output: 
-  rmarkdown::html_vignette:
+  html_document:
+    highlight: kate
     toc: true
     toc_depth: 4
+    mathjax: null
 vignette: >
   %\VignetteIndexEntry{Introduction}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
-
-<!---
-TODO:
-  - Docs on Dynamic Dependencies
-  - Incorporate scaffolding vignette
-  - Add links to rCharts2 and leaflet packages once they are public
-  - R CMD check with R-devel
--->
 
 ### Overview
 
@@ -55,7 +49,7 @@ Below we'll walk through an example widget that wraps the [sigma.js](http://sigm
 
 Let's assume that our widget is named **sigma** and is located within an R package of the same name. Our widget will read [GEXF](http://gexf.net) data files so we'll need to include both the base sigma.js library as well as it's GEXF plugin. Here are the files that we'll add to the package:
 
-```
+```text
 R/
 | sigma.R
 

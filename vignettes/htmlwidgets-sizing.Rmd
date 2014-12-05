@@ -2,9 +2,11 @@
 title: "HTML Widget Sizing"
 date: "`r Sys.Date()`"
 output: 
-  rmarkdown::html_vignette:
+  html_document:
+    highlight: kate
     toc: true
     toc_depth: 5
+    mathjax: null
 vignette: >
   %\VignetteIndexEntry{Sizing}
   %\VignetteEngine{knitr::rmarkdown}

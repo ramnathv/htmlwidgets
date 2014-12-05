@@ -2,9 +2,11 @@
 title: "HTML Widgets: Advanced Topics"
 date: "`r Sys.Date()`"
 output: 
-  rmarkdown::html_vignette:
+  html_document:
+    highlight: kate
     toc: true
     toc_depth: 4
+    mathjax: null
 vignette: >
   %\VignetteIndexEntry{Advanced}
   %\VignetteEngine{knitr::rmarkdown}
