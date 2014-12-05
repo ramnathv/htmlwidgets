@@ -37,11 +37,11 @@ addWidgetConstructor <- function(name, package, edit){
 #' @import htmltools
 #' @import htmlwidgets
 #' @export
-%s <- function(..., width, height){
-  params = list(...)
-  createWidget(
+%s <- function(arg = 'Hello, World', ..., width, height){
+  x = list(arg = arg, ...)
+  htmlwidgets::createWidget(
    name = '%s',
-   params,
+   x,
    package = '%s'
   )
 }
@@ -78,13 +78,13 @@ render%s <- function(expr, env = parent.frame(), quoted = FALSE) {
 }
 
 addWidgetYAML <- function(name, bower_pkg, edit){
-  tpl <- "# widget dependencies
-dependencies:
-  - name:
-    version:
-    src:
-    script:
-    stylesheet:
+  tpl <- "# widget dependencies. uncomment to add
+# dependencies:
+#  - name:
+#    version:
+#    src:
+#    script:
+#    stylesheet:
 "
   if (!file.exists('inst/htmlwidgets')){
     dir.create('inst/htmlwidgets')
@@ -113,6 +113,9 @@ HTMLWidgets.widget({
 
   },
   renderValue: function(el, data){
+    el.innerText = data.arg
+  },
+  resize: function(el, width, height) {
 
   }
 })
