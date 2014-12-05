@@ -14,7 +14,7 @@ There are already several R packages based on **htmlwidgets**, including:
 * [DT](http://rstudio.github.io/DT/) --- Tabular data via DataTables
 * [rthreejs](https://github.com/bwlewis/rthreejs) -- Interactive 3D graphics
 
-The package was created in collaboration by Ramnath Vaidyanathan, Joe Cheng, JJ Allaire, and Yihui Xie. We've all spent countless hours building bindings between R and the web, and were motivated to create a framework that made this as easy as possible for all R developers. 
+The package was created in collaboration by Ramnath Vaidyanathan, Joe Cheng, JJ Allaire, Yihui Xie, and Kenton Russell. We've all spent countless hours building bindings between R and the web, and were motivated to create a framework that made this as easy as possible for all R developers. 
 
 ### Getting Started
 
