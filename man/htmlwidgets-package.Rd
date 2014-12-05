@@ -1,6 +1,6 @@
 \docType{package}
 \name{htmlwidgets-package}
-\alias{htmlwdigets}
+\alias{htmlwidgets}
 \alias{htmlwidgets-package}
 \title{HTML Widgets for R}
 \description{
