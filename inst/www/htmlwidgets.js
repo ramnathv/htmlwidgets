@@ -194,18 +194,20 @@
         el.style.width = "100%";
         el.style.height = "100%";
       }
+
+      return {
+        getWidth: function() { return cel.offsetWidth; },
+        getHeight: function() { return cel.offsetHeight; }
+      };
+
     } else {
       el.style.width = px(sizing.width);
       el.style.height = px(sizing.height);
-    }
 
-    return {
-      getWidth: function() {
-        return cel.offsetWidth;
-      },
-      getHeight: function() {
-        return cel.offsetHeight;
-      }
+      return {
+        getWidth: function() { return el.offsetWidth; },
+        getHeight: function() { return el.offsetHeight; }
+      };
     }
   }
 
