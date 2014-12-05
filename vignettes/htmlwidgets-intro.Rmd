@@ -181,9 +181,9 @@ HTMLWidgets.widget({
 
 We provide a name and type for the widget and then implement two functions:
 
-1. The `initialize` function creates and/or attaches to DOM elements as required and returns on object containing the widget's instance data. In this case we create a new sigma element and pass it the `id` of the DOM element that hosts the widget on the page. We're going to need access to the sigma object later (to update it's data and settings) so we return it as the `sig` member of the widget's instance data.
+1. The `initialize` function creates and/or attaches to DOM elements as required and returns on object containing the widgets instance data. In this case we create a new sigma element and pass it the `id` of the DOM element that hosts the widget on the page. We're going to need access to the sigma object later (to update it's data and settings) so we return it as the `sig` member of the widgets instance data.
 
-2. The `renderValue` function actually pours our dynamic data and settings into the widget. Everything required to do the job is passed as a paramater to `renderValue`: the `x` parameter contains the widget data and settings and the `instance` parameter contains a reference to the sigma object we need to manipulate. We parse and update the GEXF data, apply the settings to the sigma object, and finally call `refresh` to reflect the new values on-screen.
+2. The `renderValue` function actually pours our dynamic data and settings into the widget. Everything required to do the job is passed as a parameter to `renderValue`: the `x` parameter contains the widget data and settings and the `instance` parameter contains a reference to the sigma object we need to manipulate. We parse and update the GEXF data, apply the settings to the sigma object, and finally call `refresh` to reflect the new values on-screen.
 
 
 #### Demo
@@ -240,33 +240,38 @@ When you want to create your own widget you can call the `scaffoldWidget` functi
 
 * If provided, take a [Bower](http://bower.io/) package name and automatically download the JavaScript library (and it's dependencies) and add the required entries to the .yaml file.
 
-This method is highly recommended as it ensures that you get started with the right structure. Here's how it works:
-
-1. First create an R package to house your widget
-
-2. Next, change to the working directory of your package and execute the following:
+This method is highly recommended as it ensures that you get started with the right file structure. Here's an example that assumes you want to create a widget named 'mywidget' in a new package of the same name:
 
 ```r
-> htmlwidgets::scaffoldWidget("mywidget") # add optional bower pkg name if appropriate
+library(devtools)         
+library(htmlwidgets) 
+
+create("mywidget")            # create package using devtools
+setwd("mywidget")             # navigate to package dir
+scaffoldWidget("mywidget")    # create widget scaffolding
+install()                     # install the package so we can try it
 ```
 
-Build the package and you'll have a simple working widget (that doesn't do anything yet). For this example you could invoke your widget at the R console as follows:
+This creates a simple widget that takes a single `text` argument and displays that text within the widgets HTML element. You can try it like this:
 
 ```r
-> mywidget()
+library(mywidget)
+mywidget("hello, world")
 ```
 
-Note that it has no parameters yet. Next you should study the API of the JavaScript library you are wrapping and map it as appropriate into the R and JavaScript bindings.
+This is the most minimal widget possible and doesn't yet include a JavaScript library to interface to (note that `scaffoldWidget` can optionally include JavaScript library dependencies via the `bowerPkg` argument). Before getting started with development you should review the introductory example above to make sure you understand the various components and also review the additional vignettes and examples linked to in the next section.
 
 #### Learning More
 
 ##### Vignettes
 
-There are additional vignettes which cover more advanced ground:
+There are additional vignettes that cover more advanced ground:
 
 * [HTML Widget Sizing](htmlwidgets-sizing.Rmd) explains custom sizing policies and when you might need to use them and describes implementing a `resize` method within JavaScript bindings.
 
 * [HTML Widgets: Advanced Topics](htmlwidgets-advanced.Rmd) describes framework features that support per-widget instance data, data transformations (e.g. converting a data frame into a d3 dataset), and providing widget options that are live JavaScript objects (e.g. function definitions).
+
+The Sizing vignette is particularly important as most JavaScript libraries require some additional interaction to keep their size synchronized with their containing element.
 
 ##### Examples
 

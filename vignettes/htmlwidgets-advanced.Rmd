@@ -120,7 +120,7 @@ datatable(head(iris, 20), options = list(
 
 ### Custom Widget HTML
 
-Typically the HTML "housing" for a widget is just a `<div>` element, and this is correspondingly the default behavior for new widgets that don't specify otherwise. However, sometimes you need a different element type. For example, the [sparkline](https://github.com/htmlwidgets/sparkline) widget requries a `<span>` element so implements the following custom HTML generation function:
+Typically the HTML "housing" for a widget is just a `<div>` element, and this is correspondingly the default behavior for new widgets that don't specify otherwise. However, sometimes you need a different element type. For example, the [sparkline](https://github.com/htmlwidgets/sparkline) widget requires a `<span>` element so implements the following custom HTML generation function:
 
 ```r
 sparkline_html <- function(id, style, class, ...){
