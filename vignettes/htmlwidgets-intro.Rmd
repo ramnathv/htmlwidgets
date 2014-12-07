@@ -81,7 +81,7 @@ inst/
 |   |   |   |   |-- sigma.parsers.gexf.min.js
 ```
 
-Note the convention that the JavaScript, YAML, and other dependencies are all contained within the `inst/htmlwidgets` directory (which will subsequently be installed into a package subdirectory named `htmlwidgets`).
+Note the convention that the JavaScript, YAML, and other dependencies are all contained within the `inst/htmlwidgets` directory (which will subsequently be installed into a package sub-directory named `htmlwidgets`).
 
 #### Dependencies
 
@@ -186,15 +186,26 @@ HTMLWidgets.widget({
         instance.sig.refresh();
       }
     );
+  },
+  
+  resize: function(el, width, height, instance) {
+    
+    // forward resize on to sigma renderers
+    for (var name in instance.sig.renderers)
+      instance.sig.renderers[name].resize(width, height);  
   }
 });
 ```
 
-We provide a name and type for the widget and then implement two functions:
+We provide a name and type for the widget and then implement three functions:
 
 1. The `initialize` function creates and/or attaches to DOM elements as required and returns on object containing the widgets instance data. In this case we create a new sigma element and pass it the `id` of the DOM element that hosts the widget on the page. We're going to need access to the sigma object later (to update it's data and settings) so we return it as the `sig` member of the widgets instance data.
 
 2. The `renderValue` function actually pours our dynamic data and settings into the widget. Everything required to do the job is passed as a parameter to `renderValue`: the `x` parameter contains the widget data and settings and the `instance` parameter contains a reference to the sigma object we need to manipulate. We parse and update the GEXF data, apply the settings to the sigma object, and finally call `refresh` to reflect the new values on-screen.
+
+3. The `resize` function is called whenever the element containing the widget is resized. In this case we forward the sizing information on to each of the underlying sigma renderers.
+
+All JavaScript libraries handle initialization, binding to DOM elements, dynamically updating data, and resizing slightly differently. Most of the work on the JavaScript side of creating widgets is mapping these three functions correctly onto the behavior of the underlying library.
 
 
 #### Demo
