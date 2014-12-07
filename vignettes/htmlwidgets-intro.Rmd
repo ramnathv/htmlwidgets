@@ -42,13 +42,13 @@ The philosophy of **htmlwidgets** is convention over configuration. By following
 
 3. **JavaScript Binding**. This is the JavaScript code that glues everything together, passing the data and options gathered in the R binding to the underlying JavaScript library.
 
-HTML widgets are always hosted within an R package and must include all of the source code for their dependencies. This is to ensure that code which depends on widgets is fully reproducible (i.e. doesn't require an internet connection or the ongoing availability of an internet service to run).
+HTML widgets are always hosted within an R package and should include all of the source code for their dependencies. This is to ensure that code which depends on widgets is fully reproducible (i.e. doesn't require an internet connection or the ongoing availability of an internet service to run).
 
 ### Creating a Widget
 
 #### Example: sigma.js
 
-To start with we'll walk through the creation of a simple widget that wraps the [sigma.js](http://sigmajs.org) graph visualization library. When we're done we'll be able to use it to display interactive visualiations of [GEXF](http://gexf.net) (Graph Exchange XML Format) data files. For example:
+To start with we'll walk through the creation of a simple widget that wraps the [sigma.js](http://sigmajs.org) graph visualization library. When we're done we'll be able to use it to display interactive visualizations of [GEXF](http://gexf.net) (Graph Exchange XML Format) data files. For example:
 
 ```r
 library(sigma)
@@ -58,13 +58,13 @@ sigma(data)
 
 ![knob](images/sigma.png)
 
-Note that the above is just an image of the visualizaton so it's not interactive. You can play with the interactive version by following the steps in the demo section below. 
+Note that the above is just an image of the visualization so it's not interactive. You can play with the interactive version by following the steps in the demo section below. 
 
 There is remarkably little code required to create this binding. Below we'll go through all of the components step-by-step.
 
 #### File Layout
 
-Let's assume that our widget is named **sigma** and is located within an R package of the same name. Since our widget will read GEXF data files so we'll need to include both the base sigma.js library as well as it's GEXF plugin. Here are the files that we'll add to the package:
+Let's assume that our widget is named **sigma** and is located within an R package of the same name. Our JavaScript binding source code file is named sigma.js. Since our widget will read GEXF data files so we'll need to include both the base sigma.min.js library as well as it's GEXF plugin. Here are the files that we'll add to the package:
 
 ```text
 R/
@@ -97,7 +97,7 @@ dependencies:
       - plugins/sigma.parsers.gexf.min.js
 ```
 
-Note that `src` refers to the directory that contains the library and `script` refers to specific JavaScript files. You can also add `stylesheet` entries and even `meta` or `head` entries. See the documentation on the `htmlDependency` function in the [**htmltools**](http://cran.r-project.org/web/packages/htmltools/index.html) package for additional details.
+The dependency `src` specification refers to the directory that contains the library and `script` refers to specific JavaScript files. If your library contains multiple JavaScript files specify each one on a line beginning with `-` as shown here. You can also add `stylesheet` entries and even `meta` or `head` entries. Other files like images and data files may be specified with `attachment` entries. Multiple dependencies may be specified in one YAML file. See the documentation on the `htmlDependency` function in the [**htmltools**](http://cran.r-project.org/web/packages/htmltools/index.html) package for additional details.
 
 #### R Binding
 
