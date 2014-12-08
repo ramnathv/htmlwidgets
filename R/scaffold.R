@@ -216,6 +216,11 @@ readBower <- function(pkg, src = "inst/htmlwidgets/lib"){
 
 # Get YAML configuration for widget
 getConfig <- function(pkg, src = "inst/htmlwidgets/lib"){
+  # handle bower when in github shorthand or with full git path
+  # by using basename and removing .git from basename
+  # see http://bower.io/#install-bower
+  # "A package can be a GitHub shorthand, a Git endpoint, a URL, and more."
+  pkg = gsub(basename(pkg),pattern="([.]*)(.git)",replacement="")
   deps = readBower(pkg, src)$deps
   all = c(names(deps),pkg)
   config = lapply(all, function(pkg){
