@@ -10,7 +10,7 @@
 
 
 
-<title></title>
+<title>Intelligent Sizing</title>
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -25,6 +25,31 @@
 <!-- Polyfill JS -->
 <script src="js/polyfill.js"></script>
 
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; background-color: #dddddd; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { font-weight: bold; }
+code > span.dt { color: #800000; }
+code > span.dv { color: #0000ff; }
+code > span.bn { color: #0000ff; }
+code > span.fl { color: #800080; }
+code > span.ch { color: #ff00ff; }
+code > span.st { color: #dd0000; }
+code > span.co { color: #808080; font-style: italic; }
+code > span.al { color: #00ff00; font-weight: bold; }
+code > span.fu { color: #000080; }
+code > span.er { color: #ff0000; font-weight: bold; }
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
 
 
 
@@ -47,7 +72,17 @@
     <ul class="nav nav-pills pull-right">
       <li role="presentation" id="nav-home"><a href="index.html">Home</a></li>
       <li role="presentation" id="nav-showcase"><a href="showcase_dygraphs.html">Showcase</a></li>
-      <li role="presentation" id="nav-develop"><a href="develop_intro.html">Develop</a></li>
+      <li role="presentation" id="nav-develop" class="dropdown">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
+      Develop <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu" role="menu">
+        <li role="presentation"><a href="develop_intro.html">Creating a Widget</a></li>
+        <li role="presentation"><a href="develop_sizing.html">Intelligent Sizing</a></li>
+        <li role="presentation"><a href="develop_advanced.html">Advanced Topics</a></li>
+    </ul>
+  </li>
+     
     </ul>
   </nav>
   <h3 class="text-muted">HTML Widgets for R</h3>
@@ -55,8 +90,8 @@
 
 <div class="showcase-header hidden">
 
-<div class="row-fluid">
-With just a couple of lines of R code you can create interactive graphics...
+<div class="row-fluid" id = "showcase-intro">
+HTML widgets work just like R plots except they produce interactive web visualations. A line or two of R code is all it takes to produce a D3 graphic or Leaflet map. HTML widgets can be used at the R console for data analysis, shared using RPubs or Dropbox, and even embedded in R Markdown reports and Shiny web applications. Here are a few of the widgets currently available:
 </div>
 
 <div class="row-fluid">
@@ -89,32 +124,207 @@ With just a couple of lines of R code you can create interactive graphics...
 
 <div class="develop-header hidden">
 
-<div class="row-fluid">
-
-<div class="col-md-4">
-<div class="list-group">
-<a href="develop_intro.html" class="list-group-item">
-<h5 class="list-group-item-heading">Intro</h5>
-<p class="list-group-item-text">Create your first widget</p>
-</a>
-<a href="develop_sizing.html" class="list-group-item">
-<h5 class="list-group-item-heading">Sizing</h5>
-<p class="list-group-item-text">Intelligent sizing for widgets</p>
-</a>
-<a href="develop_advanced.html" class="list-group-item">
-<h5 class="list-group-item-heading">Advanced</h5>
-<p class="list-group-item-text">More widget APIs</p>
-</a>
 </div>
 
+<div id="header">
+<h1 class="title">Intelligent Sizing</h1>
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#specifying-a-sizing-policy">Specifying a Sizing Policy</a><ul>
+<li><a href="#examples">Examples</a></li>
+<li><a href="#available-options">Available Options</a></li>
+</ul></li>
+<li><a href="#javascript-resize-method">JavaScript Resize Method</a><ul>
+<li><a href="#examples-1">Examples</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>In the spirit of HTML widgets working just like plots in R, it’s important that HTML widgets intelligently size themselves to their container, whether it be the RStudio Viewer, a figure in knitr, or a UI panel within a Shiny application. The <strong>htmlwidgets</strong> framework provides a rich mechanism for specifying the sizing behavior of widgets.</p>
+<p>This sizing mechanism is designed to address the following constraints that affect the natural size of a widget:</p>
+<ul>
+<li><p><strong>The kind of widget it is.</strong> Some widgets may only be designed to look good at small, fixed sizes (like <a href="https://github.com/htmlwidgets/sparkline">sparklines</a>) while other widgets may want every pixel that can be spared (like <a href="http://christophergandrud.github.io/d3Network/">network graphs</a>).</p></li>
+<li><p><strong>The context into which the widget is rendered.</strong> While a given widget might look great at 960px by 480px in an R Markdown document, the same widget would look silly at that size in the RStudio Viewer pane, which is typically much smaller.</p></li>
+</ul>
+<p>Widget sizing is handled in two steps:</p>
+<ol style="list-style-type: decimal">
+<li><p>First, a sizing policy is specified for the widget. This is done via the <code>sizingPolicy</code> argument to the <code>createWidget</code> function. Most widgets can accept the default sizing policy (or override only one or two aspects of it) and get satisfactory sizing behavior (see details below).</p></li>
+<li><p>The sizing policy is used by the framework to compute the correct width and height for a widget given where it is being rendered. This size information is then passed to the <code>initialize</code> and <code>resize</code> methods of the widgets JavaScript binding. It’s up to the widget to then forward this size information to the underlying JavaScript library.</p></li>
+</ol>
+</div>
+<div id="specifying-a-sizing-policy" class="section level2">
+<h2>Specifying a Sizing Policy</h2>
+<p>The default HTML widget sizing policy treats the widget with the same sizing semantics as an R plot. When printed at the R console the widget is displayed within the RStudio Viewer and sized to fill the Viewer pane (modulo any padding). When rendered inside an R Markdown document the widget is sized based on the default size of figures in the document.</p>
+<p>Note that for most widgets the default sizing behavior is fine and you won’t need to create a custom sizing policy. If you need a slightly different behavior than the default you can also selectively override the default behavior by calling the <code>sizingPolicy</code> function and passing the result to <code>createWidget</code>. For example:</p>
+<pre class="sourceCode r"><code class="sourceCode r">htmlwidgets::<span class="kw">createWidget</span>(
+  <span class="st">&quot;sigma&quot;</span>, 
+  x, 
+  <span class="dt">width =</span> width, 
+  <span class="dt">height =</span> height,
+  <span class="dt">sizingPolicy =</span> htmlwidgets::<span class="kw">sizingPolicy</span>(
+    <span class="dt">viewer.padding =</span> <span class="dv">0</span>,
+    <span class="dt">viewer.paneHeight =</span> <span class="dv">500</span>,
+    <span class="dt">browser.fill =</span> <span class="ot">TRUE</span>
+  )
+)</code></pre>
+<div id="examples" class="section level3">
+<h3>Examples</h3>
+<p>The <a href="http://christophergandrud.github.io/networkD3/">networkD3</a> package uses custom sizing policies for all of it’s widgets. The <code>simpleNetwork</code> widget eliminates padding (as d3 is already providing padding) and specifies that it wants to fill up as much space as possible when displayed in a standalone web browser:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sizingPolicy</span>(<span class="dt">padding =</span> <span class="dv">0</span>, <span class="dt">browser.fill =</span> <span class="ot">TRUE</span>)</code></pre>
+<p>The <code>sankeyNetwork</code> widget requires much more space than is afforded by the RStudio Viewer or a typical knitr figure so it disables those automatic sizing behaviors. It also provides a more reasonable default width and height for knitr documents:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sizingPolicy</span>(<span class="dt">viewer.suppress =</span> <span class="ot">TRUE</span>,
+             <span class="dt">knitr.figure =</span> <span class="ot">FALSE</span>,
+             <span class="dt">browser.fill =</span> <span class="ot">TRUE</span>,
+             <span class="dt">browser.padding =</span> <span class="dv">75</span>,
+             <span class="dt">knitr.defaultWidth =</span> <span class="dv">800</span>,
+             <span class="dt">knitr.defaultHeight =</span> <span class="dv">500</span>)</code></pre>
+</div>
+<div id="available-options" class="section level3">
+<h3>Available Options</h3>
+<p>Here are the various options that can be specified within a sizing policy:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Option</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>defaultWidth</strong></td>
+<td align="left">The default width used to display the widget. This parameter specifies the default width for viewing in all contexts (browser, viewer, and knitr) unless it is specifically overridden with e.g. browser.defaultWidth.</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>defaultHeight</strong></td>
+<td align="left">The default height used to display the widget. This parameter specifies the default height for viewing in all contexts (browser, viewer, and knitr) unless it is specifically overridden with e.g. browser.defaultHeight.</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>padding</strong></td>
+<td align="left">Padding around the widget (in pixels). This parameter specifies the padding for viewing in all contexts (browser and viewer) unless it is specifically overridden by e.g. browser.padding.</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>viewer.defaultWidth</strong></td>
+<td align="left">The default width used to display the widget within the RStudio Viewer.</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>viewer.defaultHeight</strong></td>
+<td align="left">The default height used to display the widget within the RStudio Viewer.</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>viewer.padding</strong></td>
+<td align="left">Padding around the widget when displayed in the RStudio Viewer (defaults to 15 pixels).</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>viewer.fill</strong></td>
+<td align="left">When displayed in the RStudio Viewer, automatically size the widget to the viewer dimensions (note that viewer.padding is still applied). Default to TRUE.</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>viewer.suppress</strong></td>
+<td align="left">Never display the widget within the RStudio Viewer (useful for widgets that require a large amount of space for rendering). Defaults to FALSE.</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>viewer.paneHeight</strong></td>
+<td align="left">Request that the RStudio Viewer be forced to a specific height when displaying this widget.</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>browser.defaultWidth</strong></td>
+<td align="left">The default width used to display the widget within a standalone web browser.</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>browser.defaultHeight</strong></td>
+<td align="left">The default height used to display the widget within a standalone web browser.</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>browser.padding</strong></td>
+<td align="left">Padding around the widget when displayed in a standalone browser (defaults to 40 pixels).</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>browser.fill</strong></td>
+<td align="left">When displayed in a standalone web browser, automatically size the widget to the browser dimensions (note that browser.padding is still applied). Defaults to FALSE.</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>knitr.defaultWidth</strong></td>
+<td align="left">The default width used to display the widget within documents generated by knitr (e.g. R Markdown).</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>knitr.defaultHeight</strong></td>
+<td align="left">The default height used to display the widget within documents generated by knitr (e.g. R Markdown).</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>knitr.figure</strong></td>
+<td align="left">Apply the default knitr fig.width and fig.height to the widget when it’s rendered within R Markdown documents. Defaults to TRUE.</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
+<div id="javascript-resize-method" class="section level2">
+<h2>JavaScript Resize Method</h2>
+<p>Specifying a sizing policy allows htmlwidgets to calculate the width and height of your widget based on where it’s being displayed. However, you still need to forward this sizing information on to the underlying JavaScript library you are creating a widget for.</p>
+<p>Every JavaScript library handles dynamic sizing a bit differently. Some do it automatically, some have a resize() call to force a layout, and some require that size be set only along with data and other options. Whatever the case, the <strong>htmlwidgets</strong> framework will pass the computed sizes to both your <code>initialize</code> function and <code>resize</code> function. Here’s an empty JavaScript binding that illustrates:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="ot">HTMLWidgets</span>.<span class="fu">widget</span>({
+  
+  <span class="dt">name</span>: <span class="st">&quot;demo&quot;</span>,
+  
+  <span class="dt">type</span>: <span class="st">&quot;output&quot;</span>,
+  
+  <span class="dt">initialize</span>: <span class="kw">function</span>(el, width, height) {
+  
+  },
 
-</div> <!-- showcase-header -->
+  <span class="dt">renderValue</span>: <span class="kw">function</span>(el, x, instance) {
+    
+  },
 
+  <span class="dt">resize</span>: <span class="kw">function</span>(el, width, height, instance) { 
+  
+  }
+});</code></pre>
+<p>What you do with the passed width and height is up to you and depends on the re-sizing semantics of the underlying JavaScript library you are creating a widget for. A couple of illustrative examples are included in the next section.</p>
+<div id="examples-1" class="section level3">
+<h3>Examples</h3>
+<div id="dygraphs" class="section level4">
+<h4>dygraphs</h4>
+<p>In the <a href="http://rstudio.github.io/dygraphs">dygraphs</a> widget the implementation of re-sizing is relatively simple since the <strong>dygraphs</strong> library includes a resize() method to automatically size the graph to it’s enclosing HTML element:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">resize: <span class="kw">function</span>(el, width, height, instance) {
+  <span class="kw">if</span> (<span class="ot">instance</span>.<span class="fu">dygraph</span>)
+    <span class="ot">instance</span>.<span class="ot">dygraph</span>.<span class="fu">resize</span>();
+}</code></pre>
+</div>
+<div id="forcenetwork" class="section level4">
+<h4>forceNetwork</h4>
+<p>In the <a href="http://christophergandrud.github.io/networkD3/#force">forceNetwork</a> widget, the passed width and height are applied to the <code>&lt;svg&gt;</code> element that hosts the d3 network visualization, as well as forwarded on to the underlying d3 force simulation object:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">initialize: <span class="kw">function</span>(el, width, height) {
 
+  <span class="ot">d3</span>.<span class="fu">select</span>(el).<span class="fu">append</span>(<span class="st">&quot;svg&quot;</span>)
+      .<span class="fu">attr</span>(<span class="st">&quot;width&quot;</span>, width)
+      .<span class="fu">attr</span>(<span class="st">&quot;height&quot;</span>, height);
 
-<p>Sizing</p>
+  <span class="kw">return</span> {
+    <span class="dt">force</span>: <span class="ot">d3</span>.<span class="ot">layout</span>.<span class="fu">force</span>();
+  }
+  
+},
+
+resize: <span class="kw">function</span>(el, width, height, instance) {
+
+  <span class="ot">d3</span>.<span class="fu">select</span>(el).<span class="fu">select</span>(<span class="st">&quot;svg&quot;</span>)
+      .<span class="fu">attr</span>(<span class="st">&quot;width&quot;</span>, width)
+      .<span class="fu">attr</span>(<span class="st">&quot;height&quot;</span>, height);
+
+  <span class="ot">instance</span>.<span class="ot">force</span>.<span class="fu">size</span>([width, height]).<span class="fu">resume</span>();
+  
+},</code></pre>
+<p>As you can see, re-sizing is handled in a wide variety of fashions in different JavaScript libraries. The <code>resize</code> method is intended to provide a flexible way to map the automatic sizing logic of <strong>htmlwidgets</strong> directly into the underlying library.</p>
+<p>A final note: you may have noticed the <code>instance</code> parameter passed to the resize method in the examples above. This is a special variable used to track instance specific widget data (the Dygraph object and the d3 force object, respectively). Utilizing per-widget instance data is covered in the <a href="htmlwidgets-advanced.Rmd">advanced topics</a> article.</p>
+</div>
+</div>
+</div>
 
 
 
@@ -146,6 +356,14 @@ $(document).ready(function () {
   // submenu navigation (used by showcase and develop)
   $('.list-group a[href="' + href + '"]').addClass('active');      
 });
+
+// hack to enable Rmd vignette cross references to work both on GitHub and
+// within built package vignettes
+(function () {
+  for (var links = document.links, numLinks = links.length, i=0; i<numLinks; i++)
+    links[i].href = links[i].href.replace(new RegExp("\\.Rmd$"), ".html")
+                                                            .split("/").pop();
+})();
 
 </script>
 

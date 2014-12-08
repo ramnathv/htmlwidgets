@@ -47,7 +47,17 @@
     <ul class="nav nav-pills pull-right">
       <li role="presentation" id="nav-home"><a href="index.html">Home</a></li>
       <li role="presentation" id="nav-showcase"><a href="showcase_dygraphs.html">Showcase</a></li>
-      <li role="presentation" id="nav-develop"><a href="develop_intro.html">Develop</a></li>
+      <li role="presentation" id="nav-develop" class="dropdown">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
+      Develop <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu" role="menu">
+        <li role="presentation"><a href="develop_intro.html">Creating a Widget</a></li>
+        <li role="presentation"><a href="develop_sizing.html">Intelligent Sizing</a></li>
+        <li role="presentation"><a href="develop_advanced.html">Advanced Topics</a></li>
+    </ul>
+  </li>
+     
     </ul>
   </nav>
   <h3 class="text-muted">HTML Widgets for R</h3>
@@ -55,8 +65,8 @@
 
 <div class="showcase-header hidden">
 
-<div class="row-fluid">
-With just a couple of lines of R code you can create interactive graphics...
+<div class="row-fluid" id = "showcase-intro">
+HTML widgets work just like R plots except they produce interactive web visualations. A line or two of R code is all it takes to produce a D3 graphic or Leaflet map. HTML widgets can be used at the R console for data analysis, shared using RPubs or Dropbox, and even embedded in R Markdown reports and Shiny web applications. Here are a few of the widgets currently available:
 </div>
 
 <div class="row-fluid">
@@ -89,28 +99,7 @@ With just a couple of lines of R code you can create interactive graphics...
 
 <div class="develop-header hidden">
 
-<div class="row-fluid">
-
-<div class="col-md-4">
-<div class="list-group">
-<a href="develop_intro.html" class="list-group-item">
-<h5 class="list-group-item-heading">Intro</h5>
-<p class="list-group-item-text">Create your first widget</p>
-</a>
-<a href="develop_sizing.html" class="list-group-item">
-<h5 class="list-group-item-heading">Sizing</h5>
-<p class="list-group-item-text">Intelligent sizing for widgets</p>
-</a>
-<a href="develop_advanced.html" class="list-group-item">
-<h5 class="list-group-item-heading">Advanced</h5>
-<p class="list-group-item-text">More widget APIs</p>
-</a>
 </div>
-
-</div>
-</div>
-
-</div> <!-- showcase-header -->
 
 
 
@@ -184,6 +173,14 @@ $(document).ready(function () {
   // submenu navigation (used by showcase and develop)
   $('.list-group a[href="' + href + '"]').addClass('active');      
 });
+
+// hack to enable Rmd vignette cross references to work both on GitHub and
+// within built package vignettes
+(function () {
+  for (var links = document.links, numLinks = links.length, i=0; i<numLinks; i++)
+    links[i].href = links[i].href.replace(new RegExp("\\.Rmd$"), ".html")
+                                                            .split("/").pop();
+})();
 
 </script>
 

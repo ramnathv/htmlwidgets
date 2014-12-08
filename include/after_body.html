@@ -29,4 +29,12 @@ $(document).ready(function () {
   $('.list-group a[href="' + href + '"]').addClass('active');      
 });
 
+// hack to enable Rmd vignette cross references to work both on GitHub and
+// within built package vignettes
+(function () {
+  for (var links = document.links, numLinks = links.length, i=0; i<numLinks; i++)
+    links[i].href = links[i].href.replace(new RegExp("\\.Rmd$"), ".html")
+                                                            .split("/").pop();
+})();
+
 </script>

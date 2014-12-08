@@ -10,7 +10,7 @@
 
 
 
-<title></title>
+<title>Advanced Topics</title>
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -25,6 +25,31 @@
 <!-- Polyfill JS -->
 <script src="js/polyfill.js"></script>
 
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; background-color: #dddddd; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { font-weight: bold; }
+code > span.dt { color: #800000; }
+code > span.dv { color: #0000ff; }
+code > span.bn { color: #0000ff; }
+code > span.fl { color: #800080; }
+code > span.ch { color: #ff00ff; }
+code > span.st { color: #dd0000; }
+code > span.co { color: #808080; font-style: italic; }
+code > span.al { color: #00ff00; font-weight: bold; }
+code > span.fu { color: #000080; }
+code > span.er { color: #ff0000; font-weight: bold; }
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
 
 
 
@@ -47,7 +72,17 @@
     <ul class="nav nav-pills pull-right">
       <li role="presentation" id="nav-home"><a href="index.html">Home</a></li>
       <li role="presentation" id="nav-showcase"><a href="showcase_dygraphs.html">Showcase</a></li>
-      <li role="presentation" id="nav-develop"><a href="develop_intro.html">Develop</a></li>
+      <li role="presentation" id="nav-develop" class="dropdown">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
+      Develop <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu" role="menu">
+        <li role="presentation"><a href="develop_intro.html">Creating a Widget</a></li>
+        <li role="presentation"><a href="develop_sizing.html">Intelligent Sizing</a></li>
+        <li role="presentation"><a href="develop_advanced.html">Advanced Topics</a></li>
+    </ul>
+  </li>
+     
     </ul>
   </nav>
   <h3 class="text-muted">HTML Widgets for R</h3>
@@ -55,8 +90,8 @@
 
 <div class="showcase-header hidden">
 
-<div class="row-fluid">
-With just a couple of lines of R code you can create interactive graphics...
+<div class="row-fluid" id = "showcase-intro">
+HTML widgets work just like R plots except they produce interactive web visualations. A line or two of R code is all it takes to produce a D3 graphic or Leaflet map. HTML widgets can be used at the R console for data analysis, shared using RPubs or Dropbox, and even embedded in R Markdown reports and Shiny web applications. Here are a few of the widgets currently available:
 </div>
 
 <div class="row-fluid">
@@ -89,32 +124,117 @@ With just a couple of lines of R code you can create interactive graphics...
 
 <div class="develop-header hidden">
 
-<div class="row-fluid">
-
-<div class="col-md-4">
-<div class="list-group">
-<a href="develop_intro.html" class="list-group-item">
-<h5 class="list-group-item-heading">Intro</h5>
-<p class="list-group-item-text">Create your first widget</p>
-</a>
-<a href="develop_sizing.html" class="list-group-item">
-<h5 class="list-group-item-heading">Sizing</h5>
-<p class="list-group-item-text">Intelligent sizing for widgets</p>
-</a>
-<a href="develop_advanced.html" class="list-group-item">
-<h5 class="list-group-item-heading">Advanced</h5>
-<p class="list-group-item-text">More widget APIs</p>
-</a>
 </div>
 
+<div id="header">
+<h1 class="title">Advanced Topics</h1>
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#data-transformation">Data Transformation</a><ul>
+<li><a href="#dataframetod3">dataframeToD3</a></li>
+<li><a href="#transposearray2d">transposeArray2D</a></li>
+</ul></li>
+<li><a href="#widget-instance-data">Widget Instance Data</a></li>
+<li><a href="#passing-javascript-functions">Passing JavaScript Functions</a></li>
+<li><a href="#custom-widget-html">Custom Widget HTML</a></li>
+</ul>
+</div>
+
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>This article covers several aspects of creating widgets that not required by all widgets, but are an essential part of getting bindings to certain types of JavaScript libraries to work properly. Topics covered include:</p>
+<ul>
+<li><p>Transforming JSON representations of R objects into representations required by JavaScript libraries (e.g. an R data frame to a d3 dataset).</p></li>
+<li><p>Tracking instance-specific widget data within JavaScript bindings.</p></li>
+<li><p>Passing JavaScript functions from R to JavaScript (e.g. a user provided formatting or drawing function)</p></li>
+<li><p>Generating custom HTML to enclose a widget (the default is a <code>&lt;div&gt;</code> but some libraries require a different element e.g. a <code>&lt;span&gt;</code>).</p></li>
+</ul>
+</div>
+<div id="data-transformation" class="section level2">
+<h2>Data Transformation</h2>
+<p>R objects passed as part of the <code>x</code> parameter to the <code>createWidget</code> function are transformed to JSON using the <code>RJSONIO::toJSON</code> function. However, sometimes this representation isn’t what’s required by the JavaScript library you are interfacing with.</p>
+<div id="dataframetod3" class="section level3">
+<h3>dataframeToD3</h3>
+<p>R data frames are represented in “long” form (an array of named vectors) whereas d3 typically requires “wide” form (an array of objects each of which includes all names and values). Since the R representation is much faster to transmit over the network, we allow RJSONIO to proceed with it’s default behavior and then transform the data in JavaScript using the <code>dataframeToD3</code> helper function.</p>
+<p>For example, the <a href="http://christophergandrud.github.io/networkD3/#simple">simpleNetwork</a> widget accepts a data frame containing network links on the R side, then transforms it to a d3 representation within the JavaScript <code>renderValue</code> function:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">renderValue: <span class="kw">function</span>(el, x, instance) {
+
+  <span class="co">// convert links data frame to d3 friendly format</span>
+  <span class="kw">var</span> links = <span class="ot">HTMLWidgets</span>.<span class="fu">dataframeToD3</span>(<span class="ot">x</span>.<span class="fu">links</span>);
+  
+  <span class="co">// ... use the links, etc ...</span>
+
+}</code></pre>
+</div>
+<div id="transposearray2d" class="section level3">
+<h3>transposeArray2D</h3>
+<p>Sometimes a 2-dimensional array requires a similar transposition. For this the <code>transposeArray2D</code> function is provided. For example, the <a href="http://rstudio.github.io/dygraphs">dygraphs</a> widget uses this function to transpose the “file” (data) argument it gets from the R side before passing it on to the dygraphs library:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">renderValue: <span class="kw">function</span>(el, x, instance) {
+   
+    <span class="co">// ... code excluded ...</span>
+    
+    <span class="co">// transpose array</span>
+    <span class="ot">attrs</span>.<span class="fu">file</span> = <span class="ot">HTMLWidgets</span>.<span class="fu">transposeArray2D</span>(<span class="ot">attrs</span>.<span class="fu">file</span>);
+    
+    <span class="co">// ... more code excluded ...</span>
+}</code></pre>
 </div>
 </div>
+<div id="widget-instance-data" class="section level2">
+<h2>Widget Instance Data</h2>
+<p>You may have noticed that the JavaScript binding for a widget consists of a set of JavaScript functions rather than a class which has it’s own instance data. Many widgets don’t require instance data, but if yours does (e.g. you need to save a JS library provided object, reference to a DOM element, or any other computed data) there is a mechanism available to do so.</p>
+<p>Here’s how it works: return an object from the <code>initialize</code> method and that object will subsequently be passed to the <code>renderValue</code> and <code>resize</code> methods. For example:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="ot">HTMLWidgets</span>.<span class="fu">widget</span>({
+  
+  <span class="dt">name</span>: <span class="st">&quot;demo&quot;</span>,
+  
+  <span class="dt">type</span>: <span class="st">&quot;output&quot;</span>,
+  
+  <span class="dt">initialize</span>: <span class="kw">function</span>(el, width, height) {
+    <span class="co">// object we&#39;ll use for instance data</span>
+    <span class="kw">return</span> {};
+  },
 
-</div> <!-- showcase-header -->
+  <span class="dt">renderValue</span>: <span class="kw">function</span>(el, x, instance) {
+    <span class="co">// access instance as necessary</span>
+  },
 
-
-
-<p>Advanced</p>
+  <span class="dt">resize</span>: <span class="kw">function</span>(el, width, height, instance) { 
+    <span class="co">// access instance as necessary</span>
+  }
+});</code></pre>
+<p>A real-life example of using instance data is in the <a href="http://rstudio.github.io/dygraphs">dygraphs</a> widget, which uses the instance to store the actual Dygraph object for later manipulation. Here’s the code for the dygraphs JavaScript binding that takes advantage of instance data: <a href="https://github.com/rstudio/dygraphs/blob/master/inst/htmlwidgets/dygraphs.js" class="uri">https://github.com/rstudio/dygraphs/blob/master/inst/htmlwidgets/dygraphs.js</a></p>
+</div>
+<div id="passing-javascript-functions" class="section level2">
+<h2>Passing JavaScript Functions</h2>
+<p>As you’d expect, character vectors passed from R to JavaScript are converted to JavaScript strings. However, what if you want to allow users to provide custom JavaScript functions for formatting, drawing, or event handling? For this case the <strong>htmlwidgets</strong> class includes a <code>JS</code> function that allows you to request that a character value be evaluated as JavaScript when it is received on the client.</p>
+<p>For example, the <a href="http://rstudio.github.io/dygraphs">dygraphs</a> widget includes a <code>dyCallbacks</code> function that allows the user to provide callback functions for a variety of contexts. These callbacks are “marked” as containing JavaScript so that they can be converted to actual JavaScript functions on the client:</p>
+<pre class="sourceCode r"><code class="sourceCode r">callbacks &lt;-<span class="st"> </span><span class="kw">list</span>()
+callbacks$clickCallback &lt;-<span class="st"> </span><span class="kw">JS</span>(clickCallback)
+callbacks$drawCallback &lt;-<span class="st"> </span><span class="kw">JS</span>(drawCallback)
+callbacks$highlightCallback &lt;-<span class="st"> </span><span class="kw">JS</span>(highlightCallback)
+callbacks$pointClickCallback &lt;-<span class="st"> </span><span class="kw">JS</span>(pointClickCallback)
+callbacks$underlayCallback &lt;-<span class="st"> </span><span class="kw">JS</span>(underlayCallback)</code></pre>
+<p>Another example is in the <a href="http://rstudio.github.io/DT">DT</a> (DataTables) widget, where users can specify an <code>initCallback</code> with JavaScript to execute after the table is loaded and initialized:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">datatable</span>(<span class="kw">head</span>(iris, <span class="dv">20</span>), <span class="dt">options =</span> <span class="kw">list</span>(
+  <span class="dt">initComplete =</span> <span class="kw">JS</span>(
+    <span class="st">&quot;function(settings, json) {&quot;</span>,
+    <span class="st">&quot;$(this.api().table().header()).css({&#39;background-color&#39;: &#39;#000&#39;, &#39;color&#39;: &#39;#fff&#39;});&quot;</span>,
+    <span class="st">&quot;}&quot;</span>)
+))</code></pre>
+</div>
+<div id="custom-widget-html" class="section level2">
+<h2>Custom Widget HTML</h2>
+<p>Typically the HTML “housing” for a widget is just a <code>&lt;div&gt;</code> element, and this is correspondingly the default behavior for new widgets that don’t specify otherwise. However, sometimes you need a different element type. For example, the <a href="https://github.com/htmlwidgets/sparkline">sparkline</a> widget requires a <code>&lt;span&gt;</code> element so implements the following custom HTML generation function:</p>
+<pre class="sourceCode r"><code class="sourceCode r">sparkline_html &lt;-<span class="st"> </span>function(id, style, class, ...){
+  tags$<span class="kw">span</span>(<span class="dt">id =</span> id, <span class="dt">class =</span> class)
+}</code></pre>
+<p>Note that this function is looked up within the package implementing the widget by the convention <code>widgetname_html</code> so it need not be formally exported from your package or otherwise registered with <strong>htmlwidgets</strong>.</p>
+<p>Most widgets won’t need a custom HTML function but if you need to generate custom HTML for your widget (e.g. you need an <code>&lt;input&gt;</code> or a <code>&lt;span&gt;</code> rather than a <code>&lt;div&gt;</code>) then you should use the <strong>htmltools</strong> package (as demonstrated by the code above).</p>
+</div>
 
 
 
@@ -146,6 +266,14 @@ $(document).ready(function () {
   // submenu navigation (used by showcase and develop)
   $('.list-group a[href="' + href + '"]').addClass('active');      
 });
+
+// hack to enable Rmd vignette cross references to work both on GitHub and
+// within built package vignettes
+(function () {
+  for (var links = document.links, numLinks = links.length, i=0; i<numLinks; i++)
+    links[i].href = links[i].href.replace(new RegExp("\\.Rmd$"), ".html")
+                                                            .split("/").pop();
+})();
 
 </script>
 

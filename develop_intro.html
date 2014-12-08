@@ -10,7 +10,7 @@
 
 
 
-<title></title>
+<title>Creating a Widget</title>
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -25,6 +25,31 @@
 <!-- Polyfill JS -->
 <script src="js/polyfill.js"></script>
 
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; background-color: #dddddd; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { font-weight: bold; }
+code > span.dt { color: #800000; }
+code > span.dv { color: #0000ff; }
+code > span.bn { color: #0000ff; }
+code > span.fl { color: #800080; }
+code > span.ch { color: #ff00ff; }
+code > span.st { color: #dd0000; }
+code > span.co { color: #808080; font-style: italic; }
+code > span.al { color: #00ff00; font-weight: bold; }
+code > span.fu { color: #000080; }
+code > span.er { color: #ff0000; font-weight: bold; }
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
 
 
 
@@ -47,7 +72,17 @@
     <ul class="nav nav-pills pull-right">
       <li role="presentation" id="nav-home"><a href="index.html">Home</a></li>
       <li role="presentation" id="nav-showcase"><a href="showcase_dygraphs.html">Showcase</a></li>
-      <li role="presentation" id="nav-develop"><a href="develop_intro.html">Develop</a></li>
+      <li role="presentation" id="nav-develop" class="dropdown">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
+      Develop <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu" role="menu">
+        <li role="presentation"><a href="develop_intro.html">Creating a Widget</a></li>
+        <li role="presentation"><a href="develop_sizing.html">Intelligent Sizing</a></li>
+        <li role="presentation"><a href="develop_advanced.html">Advanced Topics</a></li>
+    </ul>
+  </li>
+     
     </ul>
   </nav>
   <h3 class="text-muted">HTML Widgets for R</h3>
@@ -55,8 +90,8 @@
 
 <div class="showcase-header hidden">
 
-<div class="row-fluid">
-With just a couple of lines of R code you can create interactive graphics...
+<div class="row-fluid" id = "showcase-intro">
+HTML widgets work just like R plots except they produce interactive web visualations. A line or two of R code is all it takes to produce a D3 graphic or Leaflet map. HTML widgets can be used at the R console for data analysis, shared using RPubs or Dropbox, and even embedded in R Markdown reports and Shiny web applications. Here are a few of the widgets currently available:
 </div>
 
 <div class="row-fluid">
@@ -89,32 +124,254 @@ With just a couple of lines of R code you can create interactive graphics...
 
 <div class="develop-header hidden">
 
-<div class="row-fluid">
-
-<div class="col-md-4">
-<div class="list-group">
-<a href="develop_intro.html" class="list-group-item">
-<h5 class="list-group-item-heading">Intro</h5>
-<p class="list-group-item-text">Create your first widget</p>
-</a>
-<a href="develop_sizing.html" class="list-group-item">
-<h5 class="list-group-item-heading">Sizing</h5>
-<p class="list-group-item-text">Intelligent sizing for widgets</p>
-</a>
-<a href="develop_advanced.html" class="list-group-item">
-<h5 class="list-group-item-heading">Advanced</h5>
-<p class="list-group-item-text">More widget APIs</p>
-</a>
 </div>
 
+<div id="header">
+<h1 class="title">Creating a Widget</h1>
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#creating-a-widget">Creating a Widget</a><ul>
+<li><a href="#example-sigma.js">Example: sigma.js</a></li>
+<li><a href="#file-layout">File Layout</a></li>
+<li><a href="#dependencies">Dependencies</a></li>
+<li><a href="#r-binding">R Binding</a></li>
+<li><a href="#javascript-binding">JavaScript Binding</a></li>
+<li><a href="#demo">Demo</a></li>
+</ul></li>
+<li><a href="#creating-your-own-widgets">Creating Your Own Widgets</a><ul>
+<li><a href="#scaffolding">Scaffolding</a></li>
+<li><a href="#learning-more">Learning More</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>The <strong>htmlwidgets</strong> package provides a framework for easily creating R bindings to JavaScript libraries. Widgets created using the framework can be:</p>
+<ul>
+<li>Used at the R console for data analysis just like conventional R plots.</li>
+<li>Embedded within <a href="http://rmarkdown.rstudio.com">R Markdown</a> documents</li>
+<li>Incorporated into <a href="http://shiny.rstudio.com">Shiny</a> web applications.</li>
+<li>Saved as standalone web pages for ad-hoc sharing via email, Dropbox, etc.</li>
+</ul>
+<p>By following a small set of easy-to-follow conventions, it is possible to create HTML widgets with very little code. All widgets include the following components:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Dependencies</strong>. These are the JavaScript and CSS assets used by the widget (e.g. the library you are creating a wrapper for).</p></li>
+<li><p><strong>R Binding</strong>. This is the function that end users will call to provide input data to the widget as well as specify various options for how the widget should render. This also includes some short boilerplate functions required to use the widget within Shiny applications.</p></li>
+<li><p><strong>JavaScript Binding</strong>. This is the JavaScript code that glues everything together, passing the data and options gathered in the R binding to the underlying JavaScript library.</p></li>
+</ol>
+<p>HTML widgets are always hosted within an R package and should include all of the source code for their dependencies. This is to ensure that code which depends on widgets is fully reproducible (i.e. doesn’t require an internet connection or the ongoing availability of an internet service to run).</p>
+</div>
+<div id="creating-a-widget" class="section level2">
+<h2>Creating a Widget</h2>
+<div id="example-sigma.js" class="section level3">
+<h3>Example: sigma.js</h3>
+<p>To start with we’ll walk through the creation of a simple widget that wraps the <a href="http://sigmajs.org">sigma.js</a> graph visualization library. When we’re done we’ll be able to use it to display interactive visualizations of <a href="http://gexf.net">GEXF</a> (Graph Exchange XML Format) data files. For example:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(sigma)
+data &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;examples/ediaspora.gexf.xml&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;sigma&quot;</span>)
+<span class="kw">sigma</span>(data)</code></pre>
+<p><img src="images/sigma.png" alt="knob" /></p>
+<p>Note that the above is just an image of the visualization so it’s not interactive. You can play with the interactive version by following the steps in the demo section below.</p>
+<p>There is remarkably little code required to create this binding. Below we’ll go through all of the components step-by-step.</p>
+</div>
+<div id="file-layout" class="section level3">
+<h3>File Layout</h3>
+<p>Let’s assume that our widget is named <strong>sigma</strong> and is located within an R package of the same name. Our JavaScript binding source code file is named sigma.js. Since our widget will read GEXF data files we’ll also need to include both the base sigma.min.js library as well as it’s GEXF plugin. Here are the files that we’ll add to the package:</p>
+<pre class="text"><code>R/
+| sigma.R
+
+inst/
+|-- htmlwidgets/
+|   |-- sigma.js
+|   |-- sigma.yaml
+|   |-- lib/
+|   |   |-- sigma-1.0.3/
+|   |   |   |-- sigma.min.js
+|   |   |   |-- plugins/
+|   |   |   |   |-- sigma.parsers.gexf.min.js</code></pre>
+<p>Note the convention that the JavaScript, YAML, and other dependencies are all contained within the <code>inst/htmlwidgets</code> directory (which will subsequently be installed into a package sub-directory named <code>htmlwidgets</code>).</p>
+</div>
+<div id="dependencies" class="section level3">
+<h3>Dependencies</h3>
+<p>Dependencies are the JavaScript and CSS assets used by a widget. Dependencies are included within the <code>inst/htmlwidgets/lib</code> directory. Dependencies are specified using a YAML configuration file which uses the name of the widget as it’s base file name. Here’s what our <strong>sigma.yaml</strong> file looks like:</p>
+<pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="fu">dependencies:</span>
+  <span class="kw">-</span> <span class="fu">name:</span> sigma
+    <span class="fu">version:</span> 1.0.3
+    <span class="fu">src:</span> htmlwidgets/lib/sigma-1.0.3
+    <span class="fu">script:</span> 
+      <span class="kw">-</span> sigma.min.js
+      <span class="kw">-</span> plugins/sigma.parsers.gexf.min.js</code></pre>
+<p>The dependency <code>src</code> specification refers to the directory that contains the library and <code>script</code> refers to specific JavaScript files. If your library contains multiple JavaScript files specify each one on a line beginning with <code>-</code> as shown here. You can also add <code>stylesheet</code> entries and even <code>meta</code> or <code>head</code> entries. Multiple dependencies may be specified in one YAML file. See the documentation on the <code>htmlDependency</code> function in the <a href="http://cran.r-project.org/web/packages/htmltools/index.html"><strong>htmltools</strong></a> package for additional details.</p>
+</div>
+<div id="r-binding" class="section level3">
+<h3>R Binding</h3>
+<p>We need to provide users with an R function that invokes our widget. Typically this function will accept input data as well as various options that control the widgets display. Here’s the R function for <code>sigma</code>:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#&#39; @import htmlwidgets</span>
+<span class="co">#&#39; @export</span>
+sigma &lt;-<span class="st"> </span>function(gexf, <span class="dt">drawEdges =</span> <span class="ot">TRUE</span>, <span class="dt">drawNodes =</span> <span class="ot">TRUE</span>,
+                  <span class="dt">width =</span> <span class="ot">NULL</span>, <span class="dt">height =</span> <span class="ot">NULL</span>) {
+  
+  <span class="co"># read the gexf file</span>
+  data &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="kw">readLines</span>(gexf), <span class="dt">collapse=</span><span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
+  
+  <span class="co"># create a list that contains the settings</span>
+  settings &lt;-<span class="st"> </span><span class="kw">list</span>(
+    <span class="dt">drawEdges =</span> drawEdges,
+    <span class="dt">drawNodes =</span> drawNodes
+  )
+  
+  <span class="co"># pass the data and settings using &#39;x&#39;</span>
+  x &lt;-<span class="st"> </span><span class="kw">list</span>(
+    <span class="dt">data =</span> data,
+    <span class="dt">settings =</span> settings
+  )
+  
+  <span class="co"># create the widget</span>
+  htmlwidgets::<span class="kw">createWidget</span>(<span class="st">&quot;sigma&quot;</span>, x, <span class="dt">width =</span> width, <span class="dt">height =</span> height)
+}</code></pre>
+<p>The function takes two classes of input: the GEXF data file to render and some additional settings which control how it is rendered. This input is collected into a list named <code>x</code> which is then passed on to the <code>htmlwidgets::createWidget</code> function. This <code>x</code> variable will subsequently be made available to the JavaScript binding for sigma (this is described below). Any width or height parameter specified is also forwarded to the widget (widgets size themselves automatically by default so typically don’t require an explicit width or height).</p>
+<p>We want our sigma widget to also work in Shiny applications, so we add the following boilerplate Shiny output and render functions (these are always the same for all widgets):</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#&#39; @export</span>
+sigmaOutput &lt;-<span class="st"> </span>function(outputId, <span class="dt">width =</span> <span class="st">&quot;100%&quot;</span>, <span class="dt">height =</span> <span class="st">&quot;400px&quot;</span>) {
+  <span class="kw">shinyWidgetOutput</span>(outputId, <span class="st">&quot;sigma&quot;</span>, width, height, <span class="dt">package =</span> <span class="st">&quot;sigma&quot;</span>)
+}
+<span class="co">#&#39; @export</span>
+renderSigma &lt;-<span class="st"> </span>function(expr, <span class="dt">env =</span> <span class="kw">parent.frame</span>(), <span class="dt">quoted =</span> <span class="ot">FALSE</span>) {
+  if (!quoted) { expr &lt;-<span class="st"> </span><span class="kw">substitute</span>(expr) } <span class="co"># force quoted</span>
+  <span class="kw">shinyRenderWidget</span>(expr, sigmaOutput, env, <span class="dt">quoted =</span> <span class="ot">TRUE</span>)
+}</code></pre>
+</div>
+<div id="javascript-binding" class="section level3">
+<h3>JavaScript Binding</h3>
+<p>The third piece in the puzzle is the JavaScript required to activate the widget. By convention we’ll define our JavaScript binding in the file <code>inst/htmlwidgets/sigma.js</code>. Here is the full source code of the binding:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="ot">HTMLWidgets</span>.<span class="fu">widget</span>({
+
+  <span class="dt">name</span>: <span class="st">&quot;sigma&quot;</span>,
+  
+  <span class="dt">type</span>: <span class="st">&quot;output&quot;</span>,
+  
+  <span class="dt">initialize</span>: <span class="kw">function</span>(el, width, height) {
+   
+    <span class="co">// create our sigma object and bind it to the element</span>
+    <span class="kw">var</span> sig = <span class="kw">new</span> <span class="fu">sigma</span>(<span class="ot">el</span>.<span class="fu">id</span>);
+    
+    <span class="co">// return it as part of our instance data</span>
+    <span class="kw">return</span> {
+      <span class="dt">sig</span>: sig
+    };
+  },
+  
+  <span class="dt">renderValue</span>: <span class="kw">function</span>(el, x, instance) {
+      
+    <span class="co">// parse gexf data</span>
+    <span class="kw">var</span> parser = <span class="kw">new</span> <span class="fu">DOMParser</span>();
+    <span class="kw">var</span> data = <span class="ot">parser</span>.<span class="fu">parseFromString</span>(<span class="ot">x</span>.<span class="fu">data</span>, <span class="st">&quot;application/xml&quot;</span>);
+    
+    <span class="co">// apply settings</span>
+    <span class="kw">for</span> (<span class="kw">var</span> name <span class="kw">in</span> <span class="ot">x</span>.<span class="fu">settings</span>)
+      <span class="ot">instance</span>.<span class="ot">sig</span>.<span class="fu">settings</span>(name, <span class="ot">x</span>.<span class="fu">settings</span>[name]);
+    
+    <span class="co">// update the sigma instance</span>
+    <span class="ot">sigma</span>.<span class="ot">parsers</span>.<span class="fu">gexf</span>(
+      data,          <span class="co">// parsed gexf data</span>
+      <span class="ot">instance</span>.<span class="fu">sig</span>,  <span class="co">// sigma instance we created in initialize</span>
+      <span class="kw">function</span>() {
+        <span class="co">// need to call refresh to reflect new settings and data</span>
+        <span class="ot">instance</span>.<span class="ot">sig</span>.<span class="fu">refresh</span>();
+      }
+    );
+  },
+  
+  <span class="dt">resize</span>: <span class="kw">function</span>(el, width, height, instance) {
+    
+    <span class="co">// forward resize on to sigma renderers</span>
+    <span class="kw">for</span> (<span class="kw">var</span> name <span class="kw">in</span> <span class="ot">instance</span>.<span class="ot">sig</span>.<span class="fu">renderers</span>)
+      <span class="ot">instance</span>.<span class="ot">sig</span>.<span class="fu">renderers</span>[name].<span class="fu">resize</span>(width, height);  
+  }
+});</code></pre>
+<p>We provide a name and type for the widget and then implement three functions:</p>
+<ol style="list-style-type: decimal">
+<li><p>The <code>initialize</code> function creates and/or attaches to DOM elements as required and returns on object containing the widgets instance data. In this case we create a new sigma element and pass it the <code>id</code> of the DOM element that hosts the widget on the page. We’re going to need access to the sigma object later (to update it’s data and settings) so we return it as the <code>sig</code> member of the widgets instance data.</p></li>
+<li><p>The <code>renderValue</code> function actually pours our dynamic data and settings into the widget. Everything required to do the job is passed as a parameter to <code>renderValue</code>: the <code>x</code> parameter contains the widget data and settings and the <code>instance</code> parameter contains a reference to the sigma object we need to manipulate. We parse and update the GEXF data, apply the settings to the sigma object, and finally call <code>refresh</code> to reflect the new values on-screen.</p></li>
+<li><p>The <code>resize</code> function is called whenever the element containing the widget is resized. In this case we forward the sizing information on to each of the underlying sigma renderers.</p></li>
+</ol>
+<p>All JavaScript libraries handle initialization, binding to DOM elements, dynamically updating data, and resizing slightly differently. Most of the work on the JavaScript side of creating widgets is mapping these three functions correctly onto the behavior of the underlying library.</p>
+</div>
+<div id="demo" class="section level3">
+<h3>Demo</h3>
+<p>Our widget is now complete! If you want to test drive it without reproducing all of the code locally you can install it from GitHub as follows:</p>
+<pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="kw">c</span>(<span class="st">&#39;ramnathv/htmlwidgets&#39;</span>, <span class="st">&#39;jjallaire/sigma&#39;</span>))</code></pre>
+<p>Here’s the code to try it out with some sample data included with the package:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(sigma)
+<span class="kw">sigma</span>(<span class="kw">system.file</span>(<span class="st">&quot;examples/ediaspora.gexf.xml&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;sigma&quot;</span>))</code></pre>
+<p>If you execute this code in the R console you’ll see the widget displayed in the RStudio Viewer (or in an external browser if you aren’t running RStudio). If you include it within an R Markdown document the widget will be embedded into the document.</p>
+<p>We can also use the widget in a Shiny application:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
+<span class="kw">library</span>(sigma)
+
+gexf &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;examples/ediaspora.gexf.xml&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;sigma&quot;</span>)
+
+ui =<span class="st"> </span><span class="kw">shinyUI</span>(<span class="kw">fluidPage</span>(
+  <span class="kw">checkboxInput</span>(<span class="st">&quot;drawEdges&quot;</span>, <span class="st">&quot;Draw Edges&quot;</span>, <span class="dt">value =</span> <span class="ot">TRUE</span>),
+  <span class="kw">checkboxInput</span>(<span class="st">&quot;drawNodes&quot;</span>, <span class="st">&quot;Draw Nodes&quot;</span>, <span class="dt">value =</span> <span class="ot">TRUE</span>),
+  <span class="kw">sigmaOutput</span>(<span class="st">&#39;sigma&#39;</span>)
+))
+
+server =<span class="st"> </span>function(input, output) {
+  output$sigma &lt;-<span class="st"> </span><span class="kw">renderSigma</span>(
+    <span class="kw">sigma</span>(gexf, 
+          <span class="dt">drawEdges =</span> input$drawEdges, 
+          <span class="dt">drawNodes =</span> input$drawNodes)
+  )
+}
+
+<span class="kw">shinyApp</span>(<span class="dt">ui =</span> ui, <span class="dt">server =</span> server)</code></pre>
 </div>
 </div>
-
-</div> <!-- showcase-header -->
-
-
-
-<p>Intro</p>
+<div id="creating-your-own-widgets" class="section level2">
+<h2>Creating Your Own Widgets</h2>
+<div id="scaffolding" class="section level3">
+<h3>Scaffolding</h3>
+<p>When you want to create your own widget you can call the <code>scaffoldWidget</code> function to create the basic structure for your widget. This function will:</p>
+<ul>
+<li><p>Create the .R, .js, and .yaml files required for your widget;</p></li>
+<li><p>If provided, take a <a href="http://bower.io/">Bower</a> package name and automatically download the JavaScript library (and it’s dependencies) and add the required entries to the .yaml file.</p></li>
+</ul>
+<p>This method is highly recommended as it ensures that you get started with the right file structure. Here’s an example that assumes you want to create a widget named ‘mywidget’ in a new package of the same name:</p>
+<pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">create</span>(<span class="st">&quot;mywidget&quot;</span>)               <span class="co"># create package using devtools</span>
+<span class="kw">setwd</span>(<span class="st">&quot;mywidget&quot;</span>)                          <span class="co"># navigate to package dir</span>
+htmlwidgets::<span class="kw">scaffoldWidget</span>(<span class="st">&quot;mywidget&quot;</span>)    <span class="co"># create widget scaffolding</span>
+devtools::<span class="kw">install</span>()                        <span class="co"># install the package so we can try it</span></code></pre>
+<p>This creates a simple widget that takes a single <code>text</code> argument and displays that text within the widgets HTML element. You can try it like this:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mywidget)
+<span class="kw">mywidget</span>(<span class="st">&quot;hello, world&quot;</span>)</code></pre>
+<p>This is the most minimal widget possible and doesn’t yet include a JavaScript library to interface to (note that <code>scaffoldWidget</code> can optionally include JavaScript library dependencies via the <code>bowerPkg</code> argument). Before getting started with development you should review the introductory example above to make sure you understand the various components and also review the additional artciles and examples linked to in the next section.</p>
+</div>
+<div id="learning-more" class="section level3">
+<h3>Learning More</h3>
+<div id="additional-articles" class="section level4">
+<h4>Additional Articles</h4>
+<p>There are additional articles that cover more advanced ground:</p>
+<ul>
+<li><p><a href="develop_sizing.Rmd">HTML Widget Sizing</a> explains custom sizing policies and when you might need to use them and describes implementing a <code>resize</code> method within JavaScript bindings.</p></li>
+<li><p><a href="develop_advanced.Rmd">HTML Widgets: Advanced Topics</a> describes framework features that support per-widget instance data, data transformations (e.g. converting a data frame into a d3 dataset), and providing widget options that are live JavaScript objects (e.g. function definitions).</p></li>
+</ul>
+<p>The Sizing artcile is particularly important as most JavaScript libraries require some additional interaction to keep their size synchronized with their containing element.</p>
+</div>
+<div id="examples" class="section level4">
+<h4>Examples</h4>
+<p>Studying the code of other packages is a great way to learn more about creating widgets:</p>
+<ol style="list-style-type: decimal">
+<li><p>The <a href="https://github.com/christophergandrud/networkD3">networkD3</a> package illustrates creating a widget on top of <a href="http://d3js.org">D3</a>, using a custom sizing policy for a larger widget, and providing multiple widgets from a single package.</p></li>
+<li><p>The <a href="https://github.com/rstudio/dygraphs/">dygraphs</a> package illustrates using widget instance data, handling dynamic re-sizing, and using <a href="https://github.com/smbache/magrittr">magrittr</a> to decompose a large and flat JavaScript API into a more modular and pipeable R API.</p></li>
+<li><p>The <a href="https://github.com/htmlwidgets/sparkline">sparkline</a> package illustrates providing a custom HTML generation function (since sparklines must be housed in <code>&lt;span&gt;</code> rather than <code>&lt;div&gt;</code> elements).</p></li>
+</ol>
+</div>
+</div>
+</div>
 
 
 
@@ -146,6 +403,14 @@ $(document).ready(function () {
   // submenu navigation (used by showcase and develop)
   $('.list-group a[href="' + href + '"]').addClass('active');      
 });
+
+// hack to enable Rmd vignette cross references to work both on GitHub and
+// within built package vignettes
+(function () {
+  for (var links = document.links, numLinks = links.length, i=0; i<numLinks; i++)
+    links[i].href = links[i].href.replace(new RegExp("\\.Rmd$"), ".html")
+                                                            .split("/").pop();
+})();
 
 </script>
 
