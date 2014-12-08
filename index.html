@@ -14,13 +14,16 @@
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="libs/bootstrap-3.3.1/css/bootstrap.min.css" rel="stylesheet" />
+<link href="libs/bootstrap-3.3.1/css/cosmo.min.css" rel="stylesheet" />
 <script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
 <script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
 <script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
 
 <!-- Styles for this site -->
 <link href="css/styles.css" rel="stylesheet">
+
+<!-- Polyfill JS -->
+<script src="js/polyfill.js"></script>
 
 
 
@@ -39,21 +42,117 @@
 <div class="container-fluid main-container">
 
 
-
 <div class="header">
-  <h3 class="text-muted">HTML Widgets for R</h3>
   <nav>
     <ul class="nav nav-pills pull-right">
-      <li role="presentation"><a href="index.html">Home</a></li>
-      <li role="presentation"><a href="showcase.html">Showcase</a></li>
-      <li role="presentation"><a href="develop.html">Develop</a></li>
+      <li role="presentation" id="nav-home"><a href="index.html">Home</a></li>
+      <li role="presentation" id="nav-showcase"><a href="showcase_dygraphs.html">Showcase</a></li>
+      <li role="presentation" id="nav-develop"><a href="develop_intro.html">Develop</a></li>
     </ul>
   </nav>
+  <h3 class="text-muted">HTML Widgets for R</h3>
 </div>
 
+<div class="showcase-header hidden">
+
+<div class="row-fluid">
+With just a couple of lines of R code you can create interactive graphics...
+</div>
+
+<div class="row-fluid">
+
+<div class="col-md-4">
+<div class="list-group">
+<a href="showcase_dygraphs.html" class="list-group-item">
+<h5 class="list-group-item-heading">dygraphs</h5>
+<p class="list-group-item-text">Time series charting</p>
+</a>
+<a href="showcase_datatables.html" class="list-group-item">
+<h5 class="list-group-item-heading">DataTables</h5>
+<p class="list-group-item-text">Tabular data display</p>
+</a>
+<a href="showcase_leaflet.html" class="list-group-item">
+<h5 class="list-group-item-heading">Leaflet</h5>
+<p class="list-group-item-text">Geo-spatial mapping</p>
+</a>
+<a href="showcase_networkD3.html" class="list-group-item">
+<h5 class="list-group-item-heading">networkD3</h5>
+<p class="list-group-item-text">Graph data visualization</p>
+</a>
+</div>
+
+</div>
+</div>
+
+</div> <!-- showcase-header -->
 
 
-<p>This is the home page</p>
+<div class="develop-header hidden">
+
+<div class="row-fluid">
+
+<div class="col-md-4">
+<div class="list-group">
+<a href="develop_intro.html" class="list-group-item">
+<h5 class="list-group-item-heading">Intro</h5>
+<p class="list-group-item-text">Create your first widget</p>
+</a>
+<a href="develop_sizing.html" class="list-group-item">
+<h5 class="list-group-item-heading">Sizing</h5>
+<p class="list-group-item-text">Intelligent sizing for widgets</p>
+</a>
+<a href="develop_advanced.html" class="list-group-item">
+<h5 class="list-group-item-heading">Advanced</h5>
+<p class="list-group-item-text">More widget APIs</p>
+</a>
+</div>
+
+</div>
+</div>
+
+</div> <!-- showcase-header -->
+
+
+
+<div class="jumbotron">
+<div class="container">
+<h1>
+Hello, world!
+</h1>
+<p>
+…
+</p>
+<p>
+<a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+</p>
+</div>
+</div>
+<div class="container">
+
+<div class="row-fluid">
+<div class="col-md-6">
+<h2>
+Heading
+</h2>
+<p>
+Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
+</p>
+<p>
+<a class="btn btn-default" href="#" role="button">View details »</a>
+</p>
+</div>
+<div class="col-md-6">
+<h2>
+Heading
+</h2>
+<p>
+Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
+</p>
+<p>
+<a class="btn btn-default" href="#" role="button">View details »</a>
+</p>
+</div>
+</div>
 
 
 
@@ -61,15 +160,31 @@
 <script src="bootstrap/js/ie10-viewport-bug-workaround.js"></script>
 
 <script>
-// manage active state of toc based on current page
+// manage active state of headres and navigation based on current page
+
 $(document).ready(function () {
-    // active menu
-    href = window.location.pathname;
-    href = href.substr(href.lastIndexOf('/') + 1);
-    if (href == "")
-      href = "index.html";
-    $('a[href="' + href + '"]').parent().addClass('active');
+  
+  // compute name of page
+  href = window.location.pathname;
+  href = href.substr(href.lastIndexOf('/') + 1);
+  if (href == "")
+    href = "index.html";
+  
+  // main navigation and headers
+  if (href.startsWith("index")) {
+    $('#nav-home').addClass('active');
+  } else if (href.startsWith("showcase")) {
+    $('#nav-showcase').addClass('active');
+    $('.showcase-header').removeClass('hidden');
+  } else if (href.startsWith("develop")) {
+    $('#nav-develop').addClass('active');
+    $('.develop-header').removeClass('hidden');
+  }
+     
+  // submenu navigation (used by showcase and develop)
+  $('.list-group a[href="' + href + '"]').addClass('active');      
 });
+
 </script>
 
 </div>

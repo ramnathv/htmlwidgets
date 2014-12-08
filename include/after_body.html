@@ -4,13 +4,29 @@
 <script src="bootstrap/js/ie10-viewport-bug-workaround.js"></script>
 
 <script>
-// manage active state of toc based on current page
+// manage active state of headres and navigation based on current page
+
 $(document).ready(function () {
-    // active menu
-    href = window.location.pathname;
-    href = href.substr(href.lastIndexOf('/') + 1);
-    if (href == "")
-      href = "index.html";
-    $('a[href="' + href + '"]').parent().addClass('active');
+  
+  // compute name of page
+  href = window.location.pathname;
+  href = href.substr(href.lastIndexOf('/') + 1);
+  if (href == "")
+    href = "index.html";
+  
+  // main navigation and headers
+  if (href.startsWith("index")) {
+    $('#nav-home').addClass('active');
+  } else if (href.startsWith("showcase")) {
+    $('#nav-showcase').addClass('active');
+    $('.showcase-header').removeClass('hidden');
+  } else if (href.startsWith("develop")) {
+    $('#nav-develop').addClass('active');
+    $('.develop-header').removeClass('hidden');
+  }
+     
+  // submenu navigation (used by showcase and develop)
+  $('.list-group a[href="' + href + '"]').addClass('active');      
 });
+
 </script>

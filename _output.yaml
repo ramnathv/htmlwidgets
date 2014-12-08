@@ -2,6 +2,7 @@ html_document:
   fig_width: 6.5
   fig_height: 3.5
   self_contained: false
+  theme: cosmo
   highlight: kate
   mathjax: null
   lib_dir: libs
