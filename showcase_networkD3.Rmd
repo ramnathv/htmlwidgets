@@ -1,7 +1,7 @@
 
 ### networkD3
 
-[networkD3](http://christophergandrud.github.io/networkD3/) provides tools for creating D3 JavaScript network graphs from R. It supports force directed networks, Sankey diagrams, and Reingold-Tilford tree network diagrams.
+[networkD3](http://christophergandrud.github.io/networkD3/) provides tools for creating D3 JavaScript network graphs from R. It supports force directed networks, Sankey diagrams, and Reingold-Tilford tree network.
 
 ```{r, fig.height=5}
 library(networkD3)

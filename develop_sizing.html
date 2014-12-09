@@ -71,7 +71,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
   <nav>
     <ul class="nav nav-pills pull-right">
       <li role="presentation" id="nav-home"><a href="index.html">Home</a></li>
-      <li role="presentation" id="nav-showcase"><a href="showcase_dygraphs.html">Showcase</a></li>
+      <li role="presentation" id="nav-showcase"><a href="showcase_leaflet.html">Showcase</a></li>
       <li role="presentation" id="nav-develop" class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
       Develop <span class="caret"></span>
@@ -98,21 +98,21 @@ HTML widgets work just like R plots except they produce interactive web visualat
 
 <div class="col-md-4">
 <div class="list-group">
+<a href="showcase_leaflet.html" class="list-group-item bg-info">
+<h5 class="list-group-item-heading">Leaflet</h5>
+<p class="list-group-item-text">Geo-spatial mapping</p>
+</a>
 <a href="showcase_dygraphs.html" class="list-group-item">
 <h5 class="list-group-item-heading">dygraphs</h5>
 <p class="list-group-item-text">Time series charting</p>
 </a>
-<a href="showcase_datatables.html" class="list-group-item">
-<h5 class="list-group-item-heading">DataTables</h5>
-<p class="list-group-item-text">Tabular data display</p>
-</a>
-<a href="showcase_leaflet.html" class="list-group-item">
-<h5 class="list-group-item-heading">Leaflet</h5>
-<p class="list-group-item-text">Geo-spatial mapping</p>
-</a>
 <a href="showcase_networkD3.html" class="list-group-item">
 <h5 class="list-group-item-heading">networkD3</h5>
 <p class="list-group-item-text">Graph data visualization</p>
+</a>
+<a href="showcase_datatables.html" class="list-group-item">
+<h5 class="list-group-item-heading">DataTables</h5>
+<p class="list-group-item-text">Tabular data display</p>
 </a>
 <a href="showcase_threejs.html" class="list-group-item">
 <h5 class="list-group-item-heading">threejs</h5>
@@ -336,9 +336,6 @@ resize: <span class="kw">function</span>(el, width, height, instance) {
 
 
 </div> <!-- page-body -->
-
-<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<script src="bootstrap/js/ie10-viewport-bug-workaround.js"></script>
 
 <script>
 // manage active state of headres and navigation based on current page

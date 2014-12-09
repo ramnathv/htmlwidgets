@@ -1,4 +1,15 @@
 
+[Leaflet](https://github.com/rstudio/leaflet) is a JavaScript library for
+interactive maps.
 
-Leaflet
+```{r, include=FALSE}
+library(leaflet)
+```
+
+```{r}
+leaflet() %>% 
+  tileLayer() %>% 
+  setView(c(42.0285, -93.65), zoom = 17) %>% 
+  mapPopup(42.0285, -93.65, 'ISU Dept. of Statistics')
+```
 

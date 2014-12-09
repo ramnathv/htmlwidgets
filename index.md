@@ -22,7 +22,7 @@
 <div class="col-md-6">
 <h4>Widgets in Action</h4>
 <p>See how just a line or two of R code can be used to create interactive visualization with   Leafet (mapping), Dygraphs (time-series), networkD3 (graph visualization), and much more.</p>
-<p><a class="btn btn-info" href="showcase_dygraphs.html" role="button">See the Showcase &raquo;</a></p>
+<p><a class="btn btn-info" href="showcase_leaflet.html" role="button">See the Showcase &raquo;</a></p>
 </div>
 <div class="col-md-6">
 <h4>Creating Widgets</h4>
