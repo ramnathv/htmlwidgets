@@ -5,11 +5,8 @@
 
 Leaflet is a JavaScript library for interactive maps based on OpenStreetMap data.
 
-```{r, include=FALSE}
-library(leaflet)
-```
-
 ```{r}
+library(leaflet)
 leaflet() %>% 
   tileLayer() %>% 
   setView(c(42.0285, -93.65), zoom = 17) %>% 

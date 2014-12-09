@@ -3,7 +3,7 @@ html_document:
   fig_height: 3.5
   self_contained: false
   theme: cosmo
-  highlight: kate
+  highlight: textmate
   mathjax: null
   lib_dir: libs
   includes:

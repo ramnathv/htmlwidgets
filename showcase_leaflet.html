@@ -29,31 +29,23 @@
 <!-- Polyfill JS -->
 <script src="js/polyfill.js"></script>
 
-
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; background-color: #dddddd; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { font-weight: bold; }
-code > span.dt { color: #800000; }
-code > span.dv { color: #0000ff; }
-code > span.bn { color: #0000ff; }
-code > span.fl { color: #800080; }
-code > span.ch { color: #ff00ff; }
-code > span.st { color: #dd0000; }
-code > span.co { color: #808080; font-style: italic; }
-code > span.al { color: #00ff00; font-weight: bold; }
-code > span.fu { color: #000080; }
-code > span.er { color: #ff0000; font-weight: bold; }
-</style>
+<link rel="stylesheet"
+      href="libs/highlight/textmate.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
   }
 </style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
 
 
 
@@ -143,12 +135,13 @@ HTML widgets work just like R plots except they produce interactive web visualat
 <h3>Leaflet</h3>
 <p><a href="https://github.com/rstudio/leaflet" class="uri">https://github.com/rstudio/leaflet</a></p>
 <p>Leaflet is a JavaScript library for interactive maps based on OpenStreetMap data.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">leaflet</span>() %&gt;%<span class="st"> </span>
-<span class="st">  </span><span class="kw">tileLayer</span>() %&gt;%<span class="st"> </span>
-<span class="st">  </span><span class="kw">setView</span>(<span class="kw">c</span>(<span class="fl">42.0285</span>, -<span class="fl">93.65</span>), <span class="dt">zoom =</span> <span class="dv">17</span>) %&gt;%<span class="st"> </span>
-<span class="st">  </span><span class="kw">mapPopup</span>(<span class="fl">42.0285</span>, -<span class="fl">93.65</span>, <span class="st">&#39;ISU Dept. of Statistics&#39;</span>)</code></pre>
-<p><div id="htmlwidget-4177" style="width:576px;height:336px;" class="leaflet"></div>
-<script type="application/json" data-for="htmlwidget-4177">{ "x": {
+<pre class="r"><code>library(leaflet)
+leaflet() %&gt;% 
+  tileLayer() %&gt;% 
+  setView(c(42.0285, -93.65), zoom = 17) %&gt;% 
+  mapPopup(42.0285, -93.65, &#39;ISU Dept. of Statistics&#39;)</code></pre>
+<p><div id="htmlwidget-7450" style="width:576px;height:336px;" class="leaflet"></div>
+<script type="application/json" data-for="htmlwidget-7450">{ "x": {
  "mapId": null,
 "tileLayer": [
  {

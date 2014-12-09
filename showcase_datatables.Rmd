@@ -4,11 +4,7 @@
 
 DataTables displays R matrices or data frames as interactive HTML tables that support filtering, pagination, and sorting.
 
-```{r, include=FALSE}
-library(DT)
-```
-
-
 ```{r}
+library(DT)
 datatable(iris)
 ```

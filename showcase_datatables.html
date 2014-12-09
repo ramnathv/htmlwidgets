@@ -29,31 +29,23 @@
 <!-- Polyfill JS -->
 <script src="js/polyfill.js"></script>
 
-
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; background-color: #dddddd; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { font-weight: bold; }
-code > span.dt { color: #800000; }
-code > span.dv { color: #0000ff; }
-code > span.bn { color: #0000ff; }
-code > span.fl { color: #800080; }
-code > span.ch { color: #ff00ff; }
-code > span.st { color: #dd0000; }
-code > span.co { color: #808080; font-style: italic; }
-code > span.al { color: #00ff00; font-weight: bold; }
-code > span.fu { color: #000080; }
-code > span.er { color: #ff0000; font-weight: bold; }
-</style>
+<link rel="stylesheet"
+      href="libs/highlight/textmate.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
   }
 </style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
 
 
 
@@ -143,9 +135,10 @@ HTML widgets work just like R plots except they produce interactive web visualat
 <h3>DataTables</h3>
 <p><a href="http://rstudio.github.io/DT/" class="uri">http://rstudio.github.io/DT/</a></p>
 <p>DataTables displays R matrices or data frames as interactive HTML tables that support filtering, pagination, and sorting.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">datatable</span>(iris)</code></pre>
-<p><div id="htmlwidget-2130" style="width:100%;height:auto;" class="datatables"></div>
-<script type="application/json" data-for="htmlwidget-2130">{ "x": {
+<pre class="r"><code>library(DT)
+datatable(iris)</code></pre>
+<p><div id="htmlwidget-5429" style="width:100%;height:auto;" class="datatables"></div>
+<script type="application/json" data-for="htmlwidget-5429">{ "x": {
  "data": [
  [               5.1,               4.9,               4.7,               4.6,                 5,               5.4,               4.6,                 5,               4.4,               4.9,               5.4,               4.8,               4.8,               4.3,               5.8,               5.7,               5.4,               5.1,               5.7,               5.1,               5.4,               5.1,               4.6,               5.1,               4.8,                 5,                 5,               5.2,               5.2,               4.7,               4.8,               5.4,               5.2,               5.5,               4.9,                 5,               5.5,               4.9,               4.4,               5.1,                 5,               4.5,               4.4,                 5,               5.1,               4.8,               5.1,               4.6,               5.3,                 5,                 7,               6.4,               6.9,               5.5,               6.5,               5.7,               6.3,               4.9,               6.6,               5.2,                 5,               5.9,                 6,               6.1,               5.6,               6.7,               5.6,               5.8,               6.2,               5.6,               5.9,               6.1,               6.3,               6.1,               6.4,               6.6,               6.8,               6.7,                 6,               5.7,               5.5,               5.5,               5.8,                 6,               5.4,                 6,               6.7,               6.3,               5.6,               5.5,               5.5,               6.1,               5.8,                 5,               5.6,               5.7,               5.7,               6.2,               5.1,               5.7,               6.3,               5.8,               7.1,               6.3,               6.5,               7.6,               4.9,               7.3,               6.7,               7.2,               6.5,               6.4,               6.8,               5.7,               5.8,               6.4,               6.5,               7.7,               7.7,                 6,               6.9,               5.6,               7.7,               6.3,               6.7,               7.2,               6.2,               6.1,               6.4,               7.2,               7.4,               7.9,               6.4,               6.3,               6.1,               7.7,               6.3,               6.4,                 6,               6.9,               6.7,               6.9,               5.8,               6.8,               6.7,               6.7,               6.3,               6.5,               6.2,               5.9 ],
 [               3.5,                 3,               3.2,               3.1,               3.6,               3.9,               3.4,               3.4,               2.9,               3.1,               3.7,               3.4,                 3,                 3,                 4,               4.4,               3.9,               3.5,               3.8,               3.8,               3.4,               3.7,               3.6,               3.3,               3.4,                 3,               3.4,               3.5,               3.4,               3.2,               3.1,               3.4,               4.1,               4.2,               3.1,               3.2,               3.5,               3.6,                 3,               3.4,               3.5,               2.3,               3.2,               3.5,               3.8,                 3,               3.8,               3.2,               3.7,               3.3,               3.2,               3.2,               3.1,               2.3,               2.8,               2.8,               3.3,               2.4,               2.9,               2.7,                 2,                 3,               2.2,               2.9,               2.9,               3.1,                 3,               2.7,               2.2,               2.5,               3.2,               2.8,               2.5,               2.8,               2.9,                 3,               2.8,                 3,               2.9,               2.6,               2.4,               2.4,               2.7,               2.7,                 3,               3.4,               3.1,               2.3,                 3,               2.5,               2.6,                 3,               2.6,               2.3,               2.7,                 3,               2.9,               2.9,               2.5,               2.8,               3.3,               2.7,                 3,               2.9,                 3,                 3,               2.5,               2.9,               2.5,               3.6,               3.2,               2.7,                 3,               2.5,               2.8,               3.2,                 3,               3.8,               2.6,               2.2,               3.2,               2.8,               2.8,               2.7,               3.3,               3.2,               2.8,                 3,               2.8,                 3,               2.8,               3.8,               2.8,               2.8,               2.6,                 3,               3.4,               3.1,                 3,               3.1,               3.1,               3.1,               2.7,               3.2,               3.3,                 3,               2.5,                 3,               3.4,                 3 ],
