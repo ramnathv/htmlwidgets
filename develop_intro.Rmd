@@ -31,17 +31,15 @@ HTML widgets are always hosted within an R package and should include all of the
 
 To start with we'll walk through the creation of a simple widget that wraps the [sigma.js](http://sigmajs.org) graph visualization library. When we're done we'll be able to use it to display interactive visualizations of [GEXF](http://gexf.net) (Graph Exchange XML Format) data files. For example:
 
-```r
+```{r, fig.width=8}
 library(sigma)
 data <- system.file("examples/ediaspora.gexf.xml", package = "sigma")
 sigma(data)
 ```
 
-![knob](images/sigma.png)
-
 Note that the above is just an image of the visualization so it's not interactive. You can play with the interactive version by following the steps in the demo section below. 
 
-There is remarkably little code required to create this binding. Below we'll go through all of the components step-by-step.
+There is remarkably little code required to create this binding. Below we'll go through all of the components step-by-step. Then we'll describe how you can create your own widgets (including automatically generating basic scaffolding for all of the core components).
 
 ### File Layout
 
@@ -233,9 +231,23 @@ shinyApp(ui = ui, server = server)
 
 ## Creating Your Own Widgets
 
+### Requirements
+
+To implement a widget you need to create a new R package that in turn depends on the **htmlwidgets** package. You can install the package from CRAN as follows:
+
+```r
+install.packages("htmlwidgets")
+```
+
+While it's not strictly required, the step-by-step instructions below for getting started also make use of the **devtools** package which you can also install from CRAN:
+
+```r
+install.packages("devtools")
+```
+
 ### Scaffolding
 
-When you want to create your own widget you can call the `scaffoldWidget` function to create the basic structure for your widget. This function will:
+To create a new widget you can call the `scaffoldWidget` function to generate the basic structure for your widget. This function will:
 
 * Create the .R, .js, and .yaml files required for your widget;
 
@@ -281,4 +293,7 @@ Studying the code of other packages is a great way to learn more about creating 
 
 3. The [sparkline](https://github.com/htmlwidgets/sparkline) package illustrates  providing a custom HTML generation function (since sparklines must be housed in `<span>` rather than `<div>` elements).
  
+#### Questions and Issues
+
+If you have questions about developing widgets or run into problems during development please don't hesitate to [post an issue](https://github.com/ramnathv/htmlwidgets/issues) on the project's GitHub repository.
 
