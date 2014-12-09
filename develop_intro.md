@@ -265,9 +265,9 @@ This is the most minimal widget possible and doesn't yet include a JavaScript li
 
 There are additional articles that cover more advanced ground:
 
-* [HTML Widget Sizing](develop_sizing.Rmd) explains custom sizing policies and when you might need to use them and describes implementing a `resize` method within JavaScript bindings.
+* [HTML Widget Sizing](develop_sizing.html) explains custom sizing policies and when you might need to use them and describes implementing a `resize` method within JavaScript bindings.
 
-* [HTML Widgets: Advanced Topics](develop_advanced.Rmd) describes framework features that support per-widget instance data, data transformations (e.g. converting a data frame into a d3 dataset), and providing widget options that are live JavaScript objects (e.g. function definitions).
+* [HTML Widgets: Advanced Topics](develop_advanced.html) describes framework features that support per-widget instance data, data transformations (e.g. converting a data frame into a d3 dataset), and providing widget options that are live JavaScript objects (e.g. function definitions).
 
 The Sizing artcile is particularly important as most JavaScript libraries require some additional interaction to keep their size synchronized with their containing element.
 

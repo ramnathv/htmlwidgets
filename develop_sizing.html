@@ -85,7 +85,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
      
     </ul>
   </nav>
-  <h3>htmlwidgets for R</h3>
+  <h3><strong><span class="text-primary">htmlwidgets for R</span></strong></h3>
 </div>
 
 <div class="showcase-header hidden">
@@ -328,12 +328,17 @@ resize: <span class="kw">function</span>(el, width, height, instance) {
   
 },</code></pre>
 <p>As you can see, re-sizing is handled in a wide variety of fashions in different JavaScript libraries. The <code>resize</code> method is intended to provide a flexible way to map the automatic sizing logic of <strong>htmlwidgets</strong> directly into the underlying library.</p>
-<p>A final note: you may have noticed the <code>instance</code> parameter passed to the resize method in the examples above. This is a special variable used to track instance specific widget data (the Dygraph object and the d3 force object, respectively). Utilizing per-widget instance data is covered in the <a href="htmlwidgets-advanced.Rmd">advanced topics</a> article.</p>
+<p>A final note: you may have noticed the <code>instance</code> parameter passed to the resize method in the examples above. This is a special variable used to track instance specific widget data (the Dygraph object and the d3 force object, respectively). Utilizing per-widget instance data is covered in the <a href="develop-advanced.html">advanced topics</a> article.</p>
 </div>
 </div>
 </div>
 
 
+<div class="row-fluid">
+<div class="footer text-muted">
+  Copyright (c) 2014 Ramnath Vaidyanathan, Kenton Russell, and RStudio, Inc.
+</div>
+</div>
 
 </div> <!-- page-body -->
 
@@ -362,14 +367,6 @@ $(document).ready(function () {
   // submenu navigation (used by showcase and develop)
   $('.list-group a[href="' + href + '"]').addClass('active');      
 });
-
-// hack to enable Rmd vignette cross references to work both on GitHub and
-// within built package vignettes
-(function () {
-  for (var links = document.links, numLinks = links.length, i=0; i<numLinks; i++)
-    links[i].href = links[i].href.replace(new RegExp("\\.Rmd$"), ".html")
-                                                            .split("/").pop();
-})();
 
 </script>
 

@@ -7,7 +7,7 @@
 <div class="col-md-6">
 <p>Bringing the best of JavaScript data visualization to R</p>
 <ul>
-<li>Use JavaScript visualization libraries for exploratory data analysis in R.</li>
+<li>Use JavaScript visualization libraries at the R console just like plots.</li>
 <li>Embed widgets in R Markdown documents and Shiny web applications.</li>
 <li>Develop new widgets using a framework that seamlessly bridges R and JavaScript.</li>
 </ul>
@@ -73,6 +73,7 @@
 <p><a class="btn btn-success" href="#" role="button">Develop a Widget &raquo;</a></p>
 </div>
 </div>
+
 
 
 

@@ -89,7 +89,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
      
     </ul>
   </nav>
-  <h3>htmlwidgets for R</h3>
+  <h3><strong><span class="text-primary">htmlwidgets for R</span></strong></h3>
 </div>
 
 <div class="showcase-header hidden">
@@ -141,11 +141,12 @@ HTML widgets work just like R plots except they produce interactive web visualat
 
 <div id="dygraphs" class="section level3">
 <h3>Dygraphs</h3>
-<p><a href="http://rstudio.github.io/dygraphs">Dygraphs</a> provides rich facilities for charting time-series data in R and includes support for many interactive featues including series/point highlighting, zooming, and panning.</p>
+<p><a href="http://rstudio.github.io/dygraphs" class="uri">http://rstudio.github.io/dygraphs</a></p>
+<p>Dygraphs provides rich facilities for charting time-series data in R and includes support for many interactive featues including series/point highlighting, zooming, and panning.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dygraph</span>(nhtemp, <span class="dt">main =</span> <span class="st">&quot;New Haven Temperatures&quot;</span>) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">dyRangeSelector</span>(<span class="dt">dateWindow =</span> <span class="kw">c</span>(<span class="st">&quot;1920-01-01&quot;</span>, <span class="st">&quot;1960-01-01&quot;</span>))</code></pre>
-<p><div id="htmlwidget-4887" style="width:576px;height:336px;" class="dygraphs"></div>
-<script type="application/json" data-for="htmlwidget-4887">{ "x": {
+<p><div id="htmlwidget-8501" style="width:576px;height:336px;" class="dygraphs"></div>
+<script type="application/json" data-for="htmlwidget-8501">{ "x": {
  "attrs": {
  "title": "New Haven Temperatures",
 "labels": [ "year", "V1" ],
@@ -174,6 +175,11 @@ HTML widgets work just like R plots except they produce interactive web visualat
 </div>
 
 
+<div class="row-fluid">
+<div class="footer text-muted">
+  Copyright (c) 2014 Ramnath Vaidyanathan, Kenton Russell, and RStudio, Inc.
+</div>
+</div>
 
 </div> <!-- page-body -->
 
@@ -202,14 +208,6 @@ $(document).ready(function () {
   // submenu navigation (used by showcase and develop)
   $('.list-group a[href="' + href + '"]').addClass('active');      
 });
-
-// hack to enable Rmd vignette cross references to work both on GitHub and
-// within built package vignettes
-(function () {
-  for (var links = document.links, numLinks = links.length, i=0; i<numLinks; i++)
-    links[i].href = links[i].href.replace(new RegExp("\\.Rmd$"), ".html")
-                                                            .split("/").pop();
-})();
 
 </script>
 

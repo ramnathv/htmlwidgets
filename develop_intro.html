@@ -85,7 +85,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
      
     </ul>
   </nav>
-  <h3>htmlwidgets for R</h3>
+  <h3><strong><span class="text-primary">htmlwidgets for R</span></strong></h3>
 </div>
 
 <div class="showcase-header hidden">
@@ -363,8 +363,8 @@ devtools::<span class="kw">install</span>()                        <span class="
 <h4>Additional Articles</h4>
 <p>There are additional articles that cover more advanced ground:</p>
 <ul>
-<li><p><a href="develop_sizing.Rmd">HTML Widget Sizing</a> explains custom sizing policies and when you might need to use them and describes implementing a <code>resize</code> method within JavaScript bindings.</p></li>
-<li><p><a href="develop_advanced.Rmd">HTML Widgets: Advanced Topics</a> describes framework features that support per-widget instance data, data transformations (e.g. converting a data frame into a d3 dataset), and providing widget options that are live JavaScript objects (e.g. function definitions).</p></li>
+<li><p><a href="develop_sizing.html">HTML Widget Sizing</a> explains custom sizing policies and when you might need to use them and describes implementing a <code>resize</code> method within JavaScript bindings.</p></li>
+<li><p><a href="develop_advanced.html">HTML Widgets: Advanced Topics</a> describes framework features that support per-widget instance data, data transformations (e.g. converting a data frame into a d3 dataset), and providing widget options that are live JavaScript objects (e.g. function definitions).</p></li>
 </ul>
 <p>The Sizing artcile is particularly important as most JavaScript libraries require some additional interaction to keep their size synchronized with their containing element.</p>
 </div>
@@ -381,6 +381,11 @@ devtools::<span class="kw">install</span>()                        <span class="
 </div>
 
 
+<div class="row-fluid">
+<div class="footer text-muted">
+  Copyright (c) 2014 Ramnath Vaidyanathan, Kenton Russell, and RStudio, Inc.
+</div>
+</div>
 
 </div> <!-- page-body -->
 
@@ -409,14 +414,6 @@ $(document).ready(function () {
   // submenu navigation (used by showcase and develop)
   $('.list-group a[href="' + href + '"]').addClass('active');      
 });
-
-// hack to enable Rmd vignette cross references to work both on GitHub and
-// within built package vignettes
-(function () {
-  for (var links = document.links, numLinks = links.length, i=0; i<numLinks; i++)
-    links[i].href = links[i].href.replace(new RegExp("\\.Rmd$"), ".html")
-                                                            .split("/").pop();
-})();
 
 </script>
 

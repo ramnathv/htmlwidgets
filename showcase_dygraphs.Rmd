@@ -1,6 +1,8 @@
 
 ### Dygraphs
-[Dygraphs](http://rstudio.github.io/dygraphs) provides rich facilities for charting time-series data in R and includes support for many interactive featues including series/point highlighting, zooming, and panning.
+<http://rstudio.github.io/dygraphs>
+
+Dygraphs provides rich facilities for charting time-series data in R and includes support for many interactive featues including series/point highlighting, zooming, and panning.
 
 ```{r, include=FALSE}
 library(dygraphs)
