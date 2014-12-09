@@ -3,25 +3,31 @@
 <div class="jumbotron">
 
 <div class="container">
-<h1>Hello, world!</h1>
-<p>...</p>
-<p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
-</div>
 
-</div>
+<div class="col-md-6">
+<p>Bringing the best of JavaScript data visualization to R</p>
+<ul>
+<li>Use JavaScript visualization libraries for exploratory data analysis in R.</li>
+<li>Embed widgets in R Markdown documents and Shiny web applications.</li>
+<li>Develop new widgets using a framework that seamlessly bridges R and JavaScript.</li>
+</ul>
+</div> <!-- col-md-5 -->
+
+</div> <!-- container -->
+</div> <!-- jumbotron -->
 
 <div class="container">
 
 <div class="row-fluid">
 <div class="col-md-6">
-<h2>Heading</h2>
-<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-<p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+
+<p>See how just a line or two of R code can be used to create interactive visualization with   Leafet (mapping), Dygraphs (time-series), networkD3 (graph visualization), and much more.</p>
+<p><a class="btn btn-primary" href="showcase_dygraphs.html" role="button">See the Showcase &raquo;</a></p>
 </div>
 <div class="col-md-6">
-<h2>Heading</h2>
-<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-<p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+
+<p>Learn how to create an R binding for your favorite JavaScript library and enable use of it in the R console, in R Markdown documents, and in Shiny web applications.</p>
+<p><a class="btn btn-success" href="#" role="button">Develop a Widget &raquo;</a></p>
 </div>
 </div>
 

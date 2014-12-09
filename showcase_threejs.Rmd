@@ -1,0 +1,14 @@
+
+
+### threejs
+[threejs](http://bwlewis.github.io/rthreejs/) includes a 3D scatterplot and 3D globe. Both components use WebGL when available and fall back to Canvas if necessary.
+
+```{r}
+library(threejs)
+z <- seq(-10, 10, 0.01)
+x <- cos(z)
+y <- sin(z)
+scatterplot3.js(x,y,z)
+```
+
+
