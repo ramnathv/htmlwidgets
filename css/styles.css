@@ -20,3 +20,7 @@
 .jumbotron {
   margin-top: 30px;
 }
+
+.carousel-control.left, .carousel-control.right {
+  background-image: none
+}

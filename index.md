@@ -11,7 +11,50 @@
 <li>Embed widgets in R Markdown documents and Shiny web applications.</li>
 <li>Develop new widgets using a framework that seamlessly bridges R and JavaScript.</li>
 </ul>
-</div> <!-- col-md-5 -->
+</div> <!-- col-md-6 -->
+
+<div class="col-md-6">
+
+<div id="widget-carousel" class="carousel slide" data-ride="carousel">
+<!-- Indicators -->
+<ol class="carousel-indicators">
+  <li data-target="#widget-carousel" data-slide-to="0" class="active"></li>
+  <li data-target="#widget-carousel" data-slide-to="1"></li>
+  <li data-target="#widget-carousel" data-slide-to="2"></li>
+</ol>
+
+<!-- Wrapper for slides -->
+<div class="carousel-inner" role="listbox">
+<div class="item active">
+  <img src="images/carousel-leaflet.png">
+  <div class="carousel-caption">
+  </div>
+</div>
+<div class="item">
+  <img src="images/carousel-dygraphs.png">
+  <div class="carousel-caption">
+  </div>
+</div>
+<div class="item">
+  <img src="images/carousel-networkD3.png">
+  <div class="carousel-caption">
+  </div>
+</div>
+</div>
+
+<!-- Controls -->
+<a class="left carousel-control" href="#widget-carousel" role="button" data-slide="prev">
+  <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+  <span class="sr-only">Previous</span>
+</a>
+<a class="right carousel-control" href="#widget-carousel" role="button" data-slide="next">
+  <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+  <span class="sr-only">Next</span>
+</a>
+</div>
+
+</div> <!-- col-md-6 -->
+
 
 </div> <!-- container -->
 </div> <!-- jumbotron -->
