@@ -1,5 +1,7 @@
 
 
+</div> <!-- page-body -->
+
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="bootstrap/js/ie10-viewport-bug-workaround.js"></script>
 
@@ -19,6 +21,7 @@ $(document).ready(function () {
     $('#nav-home').addClass('active');
   } else if (href.startsWith("showcase")) {
     $('#nav-showcase').addClass('active');
+    $("#page-body").detach().appendTo('#showcase-body');
     $('.showcase-header').removeClass('hidden');
   } else if (href.startsWith("develop")) {
     $('#nav-develop').addClass('active');

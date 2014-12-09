@@ -89,18 +89,28 @@ HTML widgets work just like R plots except they produce interactive web visualat
 <h5 class="list-group-item-heading">networkD3</h5>
 <p class="list-group-item-text">Graph data visualization</p>
 </a>
-</div>
 
-</div>
-</div>
+</div> <!-- list-group -->
+
+</div> <!-- col-md-4 -->
+
+<div class="col-md-8" id="showcase-body">
+
+</div> <!-- col-md-8 -->
+
+</div> <!-- row-fluid -->
 
 </div> <!-- showcase-header -->
+
+<div id="page-body">
 
 
 
 <p>Leaflet</p>
 
 
+
+</div> <!-- page-body -->
 
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="bootstrap/js/ie10-viewport-bug-workaround.js"></script>
@@ -121,6 +131,7 @@ $(document).ready(function () {
     $('#nav-home').addClass('active');
   } else if (href.startsWith("showcase")) {
     $('#nav-showcase').addClass('active');
+    $("#page-body").detach().appendTo('#showcase-body');
     $('.showcase-header').removeClass('hidden');
   } else if (href.startsWith("develop")) {
     $('#nav-develop').addClass('active');

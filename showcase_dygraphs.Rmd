@@ -2,10 +2,12 @@
 ### Dygraphs
 [Dygraphs](http://rstudio.github.io/dygraphs) provides rich facilities for charting time-series data in R and includes support for many interactive featues including series/point highlighting, zooming, and panning.
 
-```{r}
+```{r, include=FALSE}
 library(dygraphs)
-lungDeaths <- cbind(mdeaths, fdeaths)
-dygraph(lungDeaths) %>% 
-  dyRangeSelector()
 ```
 
+
+```{r}
+dygraph(nhtemp, main = "New Haven Temperatures") %>% 
+  dyRangeSelector(dateWindow = c("1920-01-01", "1960-01-01"))
+```

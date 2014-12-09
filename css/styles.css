@@ -7,10 +7,15 @@
   margin-bottom: 30px;
 }
 
+#showcase-body h3 {
+  margin-top: 0px;
+}
+
 .header h3 {
   padding-top: 12px;
   margin-bottom: 40px;
 }
+
 
 .jumbotron {
   margin-top: 30px;
