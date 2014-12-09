@@ -13,7 +13,7 @@ which this widget is based. If you specify this parameter then bower will
 be used to automatically download the widget's source code and dependencies
 and add them to the widget's YAML.}
 
-\item{edit}{Automatially open the widget's JavaScript source file after
+\item{edit}{Automatically open the widget's JavaScript source file after
   creating the scaffolding.}
 }
 \description{

@@ -152,7 +152,7 @@ widget_data <- function(x, id, ...){
 #'@param package Package where the widget is defined (defaults to the widget
 #'  name).
 #'@param dependencies Additional widget HTML dependencies (over and above those
-#'  defined in the widget YAML). This is useful for dynamic depenencies that
+#'  defined in the widget YAML). This is useful for dynamic dependencies that
 #'  only exist when selected widget options are enabled (e.g. sets of map tiles
 #'  or projections).
 #'@param elementId Use an explicit element ID for the widget (rather than an
@@ -161,7 +161,7 @@ widget_data <- function(x, id, ...){
 #'
 #'@details
 #'
-#'For additionals details on developing widgets:
+#'For additional details on developing widgets:
 #'
 #'\code{vignette("htmlwidgets-intro")}
 #'

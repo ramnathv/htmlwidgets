@@ -24,7 +24,7 @@ parameter specifies the default height for viewing in all contexts
 
 \item{padding}{Padding around the widget (in pixels). This parameter
 specifies the padding for viewing in all contexts (browser and viewer)
-unless it is specifically overrriden by e.g. \code{browser.padding}.}
+unless it is specifically overriden by e.g. \code{browser.padding}.}
 
 \item{viewer.defaultWidth}{The default width used to display the widget
 within the RStudio Viewer.}
@@ -96,7 +96,7 @@ You also might need to change the default behavior if you widget already
 incorporates padding. In this case you might specify \code{viewer.padding =
 0}.
 
-For additionals details on widget sizing:
+For additional details on widget sizing:
 
 \code{vignette("htmlwidgets-sizing")}
 }

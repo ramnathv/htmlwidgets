@@ -33,7 +33,7 @@ or a Shiny output binding). These options can be specified by calling the
 name).}
 
 \item{dependencies}{Additional widget HTML dependencies (over and above those
-defined in the widget YAML). This is useful for dynamic depenencies that
+defined in the widget YAML). This is useful for dynamic dependencies that
 only exist when selected widget options are enabled (e.g. sets of map tiles
 or projections).}
 
@@ -51,7 +51,7 @@ Create an HTML widget based on widget YAML and JavaScript contained within the
 specified package.
 }
 \details{
-For additionals details on developing widgets:
+For additional details on developing widgets:
 
 \code{vignette("htmlwidgets-intro")}
 }

@@ -7,7 +7,7 @@
 #'   which this widget is based. If you specify this parameter then bower will
 #'   be used to automatically download the widget's source code and dependencies
 #'   and add them to the widget's YAML.
-#' @param edit Automatially open the widget's JavaScript source file after
+#' @param edit Automatically open the widget's JavaScript source file after
 #'   creating the scaffolding.
 #'
 #' @note This function must be executed from the root directory of the package
