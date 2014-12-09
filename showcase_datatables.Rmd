@@ -1,4 +1,13 @@
 
+### DataTables
 
-DataTables
+[DataTables](http://rstudio.github.io/DT/) displays R matrices or data frames as interactive HTML tables that support filtering, pagination, and sorting.
 
+```{r, include=FALSE}
+library(DT)
+```
+
+
+```{r}
+datatable(iris)
+```
