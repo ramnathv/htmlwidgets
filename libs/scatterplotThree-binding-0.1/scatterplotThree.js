@@ -251,10 +251,9 @@ function scatter(el, x, object)
   function animate()
   {
     requestAnimationFrame(animate);
-    a = a + 1;
 // Reduce CPU load
-    if(a % 3 ==0) render();
-    if(a>100) a = 0;
+    a = (a + 1) % 3;
+    if(a==0) render();
   }
   animate();
 
