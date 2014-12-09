@@ -30,5 +30,12 @@ footer {
   margin-bottom: 100px;
 }
 
+input[type="search"]  { 
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  -khtml-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border: solid 1px LightGray;
+}
 
 
