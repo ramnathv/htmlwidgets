@@ -8,7 +8,7 @@ output:
 
 ## Overview
 
-The **htmlwidgets** package provides a framework for easily creating R bindings to JavaScript libraries. Widgets created using the framework can be:
+The **[htmlwidgets](http://cran.rstudio.com/web/packages/htmlwidgets/index.html)** package provides a framework for creating R bindings to JavaScript libraries. HTML Widgets can be:
 
 * Used at the R console for data analysis just like conventional R plots.
 * Embedded within [R Markdown](http://rmarkdown.rstudio.com) documents
@@ -194,7 +194,7 @@ All JavaScript libraries handle initialization, binding to DOM elements, dynamic
 Our widget is now complete! If you want to test drive it without reproducing all of the code locally you can install it from GitHub as follows:
 
 ```r
-devtools::install_github(c('ramnathv/htmlwidgets', 'jjallaire/sigma'))
+devtools::install_github('jjallaire/sigma')
 ```
 
 Here's the code to try it out with some sample data included with the package:

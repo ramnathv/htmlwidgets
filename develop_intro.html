@@ -85,7 +85,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
      
     </ul>
   </nav>
-  <h3><strong><span class="text-primary">htmlwidgets for R</span></strong></h3>
+  <h3><strong>htmlwidgets for R</strong></h3>
 </div>
 
 <div class="showcase-header hidden">
@@ -157,7 +157,7 @@ HTML widgets work just like R plots except they produce interactive web visualat
 
 <div id="overview" class="section level2">
 <h2>Overview</h2>
-<p>The <strong>htmlwidgets</strong> package provides a framework for easily creating R bindings to JavaScript libraries. Widgets created using the framework can be:</p>
+<p>The <strong><a href="http://cran.rstudio.com/web/packages/htmlwidgets/index.html">htmlwidgets</a></strong> package provides a framework for creating R bindings to JavaScript libraries. HTML Widgets can be:</p>
 <ul>
 <li>Used at the R console for data analysis just like conventional R plots.</li>
 <li>Embedded within <a href="http://rmarkdown.rstudio.com">R Markdown</a> documents</li>
@@ -310,7 +310,7 @@ renderSigma &lt;-<span class="st"> </span>function(expr, <span class="dt">env =<
 <div id="demo" class="section level3">
 <h3>Demo</h3>
 <p>Our widget is now complete! If you want to test drive it without reproducing all of the code locally you can install it from GitHub as follows:</p>
-<pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="kw">c</span>(<span class="st">&#39;ramnathv/htmlwidgets&#39;</span>, <span class="st">&#39;jjallaire/sigma&#39;</span>))</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">&#39;jjallaire/sigma&#39;</span>)</code></pre>
 <p>Here’s the code to try it out with some sample data included with the package:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(sigma)
 <span class="kw">sigma</span>(<span class="kw">system.file</span>(<span class="st">&quot;examples/ediaspora.gexf.xml&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;sigma&quot;</span>))</code></pre>
@@ -381,11 +381,6 @@ devtools::<span class="kw">install</span>()                        <span class="
 </div>
 
 
-<div class="row-fluid">
-<div class="footer text-muted">
-  Copyright (c) 2014 Ramnath Vaidyanathan, Kenton Russell, and RStudio, Inc.
-</div>
-</div>
 
 </div> <!-- page-body -->
 
