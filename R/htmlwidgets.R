@@ -209,7 +209,7 @@ createWidget <- function(name,
 #' @param package Package containing widget (defaults to \code{name})
 #' @param outputFunction Shiny output function corresponding to this render
 #'   function.
-#' @param expr An expression that generates a networkD3 graph
+#' @param expr An expression that generates an HTML widget
 #' @param env The environment in which to evaluate \code{expr}.
 #' @param quoted Is \code{expr} a quoted expression (with \code{quote()})? This
 #'   is useful if you want to save an expression in a variable.

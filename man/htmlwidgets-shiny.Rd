@@ -20,7 +20,7 @@ string and have \code{"px"} appended.}
 
 \item{package}{Package containing widget (defaults to \code{name})}
 
-\item{expr}{An expression that generates a networkD3 graph}
+\item{expr}{An expression that generates an HTML widget}
 
 \item{outputFunction}{Shiny output function corresponding to this render
 function.}
