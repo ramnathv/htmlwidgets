@@ -222,8 +222,6 @@ createWidget <- function(name,
 #'   the same for all widgets (see example below).
 #'
 #' @examples
-#' \dontrun{
-#'
 #' # shiny output binding for a widget named 'foo'
 #' fooOutput <- function(outputId, width = "100%", height = "400px") {
 #'   htmlwidgets::shinyWidgetOutput(outputId, "foo", width, height)
@@ -234,8 +232,6 @@ createWidget <- function(name,
 #'   if (!quoted) { expr <- substitute(expr) } # force quoted
 #'   htmlwidgets::shinyRenderWidget(expr, fooOutput, env, quoted = TRUE)
 #' }
-#' }
-#'
 #' @name htmlwidgets-shiny
 #'
 #' @export
