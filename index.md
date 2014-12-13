@@ -16,7 +16,7 @@
 <div class="col-md-6">
 
 <div id="widget-carousel" class="carousel slide" 
- data-ride="carousel" data-interval="3000">
+ data-ride="carousel" data-interval="4000">
 <!-- Indicators -->
 <ol class="carousel-indicators">
   <li data-target="#widget-carousel" data-slide-to="0" class="active"></li>
