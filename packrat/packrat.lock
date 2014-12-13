@@ -1,0 +1,279 @@
+PackratFormat: 1.4
+PackratVersion: 0.4.1.1
+RVersion: 3.1.2
+Repos: CRAN=http://cran.rstudio.com
+
+Package: base64
+Source: CRAN
+Version: 1.1
+Hash: 62b3aa7d31c6cf90818e02006e539b35
+
+Package: bitops
+Source: CRAN
+Version: 1.0-6
+Hash: cb26464a8321628636b547518994c931
+
+Package: caTools
+Source: CRAN
+Version: 1.17
+Hash: e350bf43b27772012b530ccdf2e34f4d
+Requires: bitops
+
+Package: colorspace
+Source: CRAN
+Version: 1.2-4
+Hash: b775bd08a10f968fef582304b7c3ab9c
+
+Package: dichromat
+Source: CRAN
+Version: 2.0-0
+Hash: 42be2136555fa4b6167605df56d8cd7c
+
+Package: digest
+Source: CRAN
+Version: 0.6.4
+Hash: e4bf0e79b15a352510aff0de905d31e2
+
+Package: DT
+Source: github
+Version: 0.0.3
+Hash: 03f08307e6b7e165e1d571d43e39057afa1f4269
+Requires: htmltools, htmlwidgets, magrittr
+GithubRepo: DT
+GithubUsername: rstudio
+GithubRef: master
+GithubSha1: 03f08307e6b7e165e1d571d43e39057afa1f4269
+
+Package: dygraphs
+Source: github
+Version: 0.2
+Hash: e8a9dccd613eb7f1cb8dccb9bb25d953f5eceb27
+Requires: htmlwidgets, magrittr, xts, zoo
+GithubRepo: dygraphs
+GithubUsername: rstudio
+GithubRef: master
+GithubSha1: e8a9dccd613eb7f1cb8dccb9bb25d953f5eceb27
+
+Package: evaluate
+Source: CRAN
+Version: 0.5.5
+Hash: 20881970e590ee68de97a468694db7b0
+Requires: stringr
+
+Package: formatR
+Source: CRAN
+Version: 1.0
+Hash: a90c211d7df7e61a72b8ab6c99c2e848
+
+Package: highr
+Source: CRAN
+Version: 0.4
+Hash: 8c77cca8556e1501621b4a5ccb7999bd
+
+Package: htmltools
+Source: github
+Version: 0.2.6
+Hash: e8e627a83aae8b0a418a53dd94b5e2da92ac765a
+Requires: digest
+GithubRepo: htmltools
+GithubUsername: rstudio
+GithubRef: master
+GithubSha1: e8e627a83aae8b0a418a53dd94b5e2da92ac765a
+
+Package: htmlwidgets
+Source: github
+Version: 0.3.2
+Hash: 4162ad661a92ea7dd9e34635eeec9cdd34af8e10
+Requires: htmltools, RJSONIO, yaml
+GithubRepo: htmlwidgets
+GithubUsername: ramnathv
+GithubRef: master
+GithubSha1: 4162ad661a92ea7dd9e34635eeec9cdd34af8e10
+
+Package: httpuv
+Source: CRAN
+Version: 1.3.2
+Hash: a4fdba39cdde0cd89fd06337835f735b
+Requires: Rcpp
+
+Package: knitr
+Source: github
+Version: 1.8.4
+Hash: a7eb3d850d3019ef14d8dff0b26b4561e3e4be5f
+Requires: digest, evaluate, formatR, highr, markdown, stringr
+GithubRepo: knitr
+GithubUsername: yihui
+GithubRef: master
+GithubSha1: a7eb3d850d3019ef14d8dff0b26b4561e3e4be5f
+
+Package: labeling
+Source: CRAN
+Version: 0.2
+Hash: 25f63495dfb737e67bd75fc1eb58ff2c
+
+Package: leaflet
+Source: github
+Version: 0.0.4
+Hash: 45aac97fe0ab44cd3206ed87a0969bbe3a4221fc
+Requires: htmltools, htmlwidgets, magrittr, RColorBrewer, scales
+GithubRepo: leaflet
+GithubUsername: rstudio
+GithubRef: feature/color-funcs
+GithubSha1: 45aac97fe0ab44cd3206ed87a0969bbe3a4221fc
+
+Package: magrittr
+Source: CRAN
+Version: 1.0.1
+Hash: 576e5bf21e3801499cebc27af6ad1627
+
+Package: markdown
+Source: CRAN
+Version: 0.7.4
+Hash: 01d7f71ed6e3d9b1c17ba51cff91be72
+Requires: mime
+
+Package: mime
+Source: CRAN
+Version: 0.2
+Hash: 9179db921fcb2e5be44e217042ed06bc
+
+Package: munsell
+Source: CRAN
+Version: 0.4.2
+Hash: fa8af6d040041439b249351e9d16ae9a
+Requires: colorspace
+
+Package: networkD3
+Source: github
+Version: 0.1
+Hash: dac68822b8360aaf0eb106b8942b8c8010a24d32
+Requires: htmlwidgets, plyr, rjson
+GithubRepo: networkD3
+GithubUsername: christophergandrud
+GithubRef: master
+GithubSha1: dac68822b8360aaf0eb106b8942b8c8010a24d32
+
+Package: packrat
+Source: CRAN
+Version: 0.4.1-1
+Hash: 5716097644904b9c1b4be2692de16005
+
+Package: plyr
+Source: CRAN
+Version: 1.8.1
+Hash: be21bad411e628f810a92212e17b5be7
+Requires: Rcpp
+
+Package: R6
+Source: CRAN
+Version: 2.0.1
+Hash: 9a3ac4e5fd8059af0fc5156bcb019bbc
+
+Package: RColorBrewer
+Source: CRAN
+Version: 1.0-5
+Hash: 6a849b729bec970204ca88b96906adbc
+
+Package: Rcpp
+Source: CRAN
+Version: 0.11.2
+Hash: ef2b1a5e45d1461bd720e4ebbe48e601
+
+Package: rgl
+Source: CRAN
+Version: 0.95.1158
+Hash: c99e8b2fce9e69517ff2b27f6338f5a8
+
+Package: rjson
+Source: CRAN
+Version: 0.2.15
+Hash: f78059fac4af154bfe46bf547ae12be9
+
+Package: RJSONIO
+Source: CRAN
+Version: 1.2-0.2
+Hash: f4aea783dfb279b89a0d735727fb46c5
+
+Package: rmarkdown
+Source: github
+Version: 0.3.13
+Hash: 4fb5ef8f1ef14063b682189ae584b49a839362c5
+Requires: caTools, htmltools, knitr, yaml
+GithubRepo: rmarkdown
+GithubUsername: rstudio
+GithubRef: master
+GithubSha1: 4fb5ef8f1ef14063b682189ae584b49a839362c5
+
+Package: scales
+Source: CRAN
+Version: 0.2.4
+Hash: b8b1af97bd07818605223060386b00dd
+Requires: dichromat, labeling, munsell, plyr, RColorBrewer
+
+Package: shiny
+Source: CRAN
+Version: 0.10.2.2
+Hash: 298d386816696b92d9e251f5ddcf1a25
+Requires: digest, htmltools, httpuv, mime, R6, RJSONIO, xtable
+
+Package: sigma
+Source: github
+Version: 1.0
+Hash: 99cd9848a8a4cc597cf10b954fb2de3e3204eb65
+Requires: htmlwidgets
+GithubRepo: sigma
+GithubUsername: jjallaire
+GithubRef: master
+GithubSha1: 99cd9848a8a4cc597cf10b954fb2de3e3204eb65
+
+Package: stringr
+Source: CRAN
+Version: 0.6.2
+Hash: cdde0cfa0f52cffeaca23a11a3899779
+
+Package: testit
+Source: CRAN
+Version: 0.3
+Hash: bed1a0d361d2efefbe445aac2774b256
+
+Package: testthat
+Source: CRAN
+Version: 0.9.1
+Hash: 8b05e97c7401ae4f8b5dfbaa44cfcf20
+Requires: digest
+
+Package: threejs
+Source: github
+Version: 0.1
+Hash: a3c1753479d63597cc2344970f8039065f2b4726
+Requires: base64, htmlwidgets, plyr, rjson
+GithubRepo: rthreejs
+GithubUsername: bwlewis
+GithubRef: master
+GithubSha1: a3c1753479d63597cc2344970f8039065f2b4726
+
+Package: XML
+Source: CRAN
+Version: 3.98-1.1
+Hash: 13746d37588e7083349177d6e8234864
+
+Package: xtable
+Source: CRAN
+Version: 1.7-4
+Hash: 7b30b5ca6c7ae80c4f916502e3ad0237
+
+Package: xts
+Source: CRAN
+Version: 0.9-7
+Hash: be4b6faab98ec342c7aa497a903d7b43
+Requires: zoo
+
+Package: yaml
+Source: CRAN
+Version: 2.1.11
+Hash: ba7120787d803a7c0aebf4518a873947
+
+Package: zoo
+Source: CRAN
+Version: 1.7-11
+Hash: a412b124ff249b078d9cd870de913c90

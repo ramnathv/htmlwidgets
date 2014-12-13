@@ -3,3 +3,5 @@
 .RData
 .DS_Store
 geog495.RData
+packrat/lib*/
+packrat/src/*

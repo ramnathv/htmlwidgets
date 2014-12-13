@@ -136,13 +136,15 @@ HTML widgets work just like R plots except they produce interactive web visualat
 
 <div id="leaflet" class="section level3">
 <h3>Leaflet</h3>
-<p><a href="https://github.com/rstudio/leaflet" class="uri">https://github.com/rstudio/leaflet</a></p>
+<p><a href="https://github.com/rstudio/leaflet">https://github.com/rstudio/leaflet</a></p>
 <p>Leaflet is a JavaScript library for interactive maps based on OpenStreetMap data.</p>
 <pre class="r"><code>library(leaflet)
 
 # Example from http://geog.uoregon.edu/geogr/topics/maps01.html
-load(&#39;geog495.RData&#39;)
-pal &lt;- colorQuantile(&quot;YlOrRd&quot;, NULL, n = 8)
+load(&#39;geog495.RData&#39;)</code></pre>
+<pre><code>## Warning: namespace &#39;rasterVis&#39; is not available and has been replaced
+## by .GlobalEnv when processing object &#39;plt&#39;</code></pre>
+<pre class="r"><code>pal &lt;- colorQuantile(&quot;YlOrRd&quot;, NULL, n = 8)
 
 leaflet(orcounty.shp) %&gt;%
   addTiles() %&gt;%
