@@ -7,7 +7,7 @@
   .benefits {
     z-index: 1;
   }
-  .benefits ui {
+  .benefits ul {
     margin-bottom: 24px;
   }
   .benefits li {
