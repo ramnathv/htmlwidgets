@@ -22,6 +22,7 @@
 <link href="libs/dygraphs-1.0.1/dygraph.css" rel="stylesheet" />
 <script src="libs/dygraphs-1.0.1/dygraph-combined.js"></script>
 <script src="libs/dygraphs-binding-0.2/dygraphs.js"></script>
+<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
 
 <!-- Styles for this site -->
 <link href="css/styles.css" rel="stylesheet">
@@ -62,6 +63,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 </style>
 <div class="container-fluid main-container">
 
+<!--html_preserve-->
 
 <a href="https://github.com/ramnathv/htmlwidgets"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
 
@@ -72,71 +74,73 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
       <li role="presentation" id="nav-home"><a href="index.html">Home</a></li>
       <li role="presentation" id="nav-showcase"><a href="showcase_leaflet.html">Showcase</a></li>
       <li role="presentation" id="nav-develop" class="dropdown">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
-      Develop <span class="caret"></span>
-    </a>
-    <ul class="dropdown-menu" role="menu">
-        <li role="presentation"><a href="develop_intro.html">Creating a Widget</a></li>
-        <li role="presentation"><a href="develop_sizing.html">Intelligent Sizing</a></li>
-        <li role="presentation"><a href="develop_advanced.html">Advanced Topics</a></li>
-    </ul>
-  </li>
-     
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
+          Develop <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+          <li role="presentation"><a href="develop_intro.html">Creating a Widget</a></li>
+          <li role="presentation"><a href="develop_sizing.html">Intelligent Sizing</a></li>
+          <li role="presentation"><a href="develop_advanced.html">Advanced Topics</a></li>
+        </ul>
+      </li>
+
     </ul>
   </nav>
-  <h3><strong>htmlwidgets for R</strong></h3>
+  <h3><strong>htmlwidgets</strong> for R</h3>
 </div>
 
 <div class="showcase-header hidden">
 
-<div class="row-fluid" id = "showcase-intro">
-HTML widgets work just like R plots except they produce interactive web visualations. A line or two of R code is all it takes to produce a D3 graphic or Leaflet map. HTML widgets can be used at the R console for data analysis, shared using RPubs or Dropbox, and even embedded in R Markdown reports and Shiny web applications. Here are a few of the widgets currently available:
-</div>
+  <div id = "showcase-intro">
+    HTML widgets work just like R plots except they produce interactive web visualations. A line or two of R code is all it takes to produce a D3 graphic or Leaflet map. HTML widgets can be used at the R console for data analysis, shared using RPubs or Dropbox, and even embedded in R Markdown reports and Shiny web applications. Here are a few of the widgets currently available:
+  </div>
 
-<div class="row-fluid">
+  <div class="row">
 
-<div class="col-md-4">
-<div class="list-group">
-<a href="showcase_leaflet.html" class="list-group-item">
-<h5 class="list-group-item-heading">Leaflet</h5>
-<p class="list-group-item-text">Geo-spatial mapping</p>
-</a>
-<a href="showcase_dygraphs.html" class="list-group-item">
-<h5 class="list-group-item-heading">dygraphs</h5>
-<p class="list-group-item-text">Time series charting</p>
-</a>
-<a href="showcase_networkD3.html" class="list-group-item">
-<h5 class="list-group-item-heading">networkD3</h5>
-<p class="list-group-item-text">Graph data visualization</p>
-</a>
-<a href="showcase_datatables.html" class="list-group-item">
-<h5 class="list-group-item-heading">DataTables</h5>
-<p class="list-group-item-text">Tabular data display</p>
-</a>
-<a href="showcase_threejs.html" class="list-group-item">
-<h5 class="list-group-item-heading">threejs</h5>
-<p class="list-group-item-text">3D scatterplots and globes</p>
-</a>
+    <div class="col-md-4">
+      <div class="list-group">
+        <a href="showcase_leaflet.html" class="list-group-item">
+          <h5 class="list-group-item-heading">Leaflet</h5>
+          <p class="list-group-item-text">Geo-spatial mapping</p>
+        </a>
+        <a href="showcase_dygraphs.html" class="list-group-item">
+          <h5 class="list-group-item-heading">dygraphs</h5>
+          <p class="list-group-item-text">Time series charting</p>
+        </a>
+        <a href="showcase_networkD3.html" class="list-group-item">
+          <h5 class="list-group-item-heading">networkD3</h5>
+          <p class="list-group-item-text">Graph data visualization</p>
+        </a>
+        <a href="showcase_datatables.html" class="list-group-item">
+          <h5 class="list-group-item-heading">DataTables</h5>
+          <p class="list-group-item-text">Tabular data display</p>
+        </a>
+        <a href="showcase_threejs.html" class="list-group-item">
+          <h5 class="list-group-item-heading">threejs</h5>
+          <p class="list-group-item-text">3D scatterplots and globes</p>
+        </a>
 
-</div> <!-- list-group -->
+      </div> <!-- list-group -->
 
-</div> <!-- col-md-4 -->
+    </div> <!-- col-md-4 -->
 
-<div class="col-md-8" id="showcase-body">
+    <div class="col-md-8" id="showcase-body">
 
-</div> <!-- col-md-8 -->
+    </div> <!-- col-md-8 -->
 
-</div> <!-- row-fluid -->
+  </div> <!-- row -->
 
 </div> <!-- showcase-header -->
 
 <div id="page-body">
 
+<!--/html_preserve-->
+
 
 
 <div id="dygraphs" class="section level3">
 <h3>Dygraphs</h3>
-<p><a href="http://rstudio.github.io/dygraphs" class="uri">http://rstudio.github.io/dygraphs</a></p>
+<p><a href="http://rstudio.github.io/dygraphs">http://rstudio.github.io/dygraphs</a></p>
 <p>Dygraphs provides rich facilities for charting time-series data in R and includes support for many interactive featues including series/point highlighting, zooming, and panning.</p>
 <pre class="r"><code>library(dygraphs)
 dygraph(nhtemp, main = &quot;New Haven Temperatures&quot;) %&gt;% 
