@@ -24,6 +24,13 @@ Source: CRAN
 Version: 1.2-4
 Hash: b775bd08a10f968fef582304b7c3ab9c
 
+Package: devtools
+Source: CRAN
+Version: 1.6.1
+Hash: e3096b832604a7a36ff0a6455e5cdddc
+Requires: digest, evaluate, httr, jsonlite, memoise, RCurl, rstudioapi,
+    whisker
+
 Package: dichromat
 Source: CRAN
 Version: 2.0-0
@@ -47,12 +54,12 @@ GithubSha1: 03f08307e6b7e165e1d571d43e39057afa1f4269
 Package: dygraphs
 Source: github
 Version: 0.2
-Hash: e8a9dccd613eb7f1cb8dccb9bb25d953f5eceb27
+Hash: b273ee118a33b395058e14cdff4e88a838132d6c
 Requires: htmlwidgets, magrittr, xts, zoo
 GithubRepo: dygraphs
 GithubUsername: rstudio
 GithubRef: master
-GithubSha1: e8a9dccd613eb7f1cb8dccb9bb25d953f5eceb27
+GithubSha1: b273ee118a33b395058e14cdff4e88a838132d6c
 
 Package: evaluate
 Source: CRAN
@@ -71,30 +78,33 @@ Version: 0.4
 Hash: 8c77cca8556e1501621b4a5ccb7999bd
 
 Package: htmltools
-Source: github
+Source: CRAN
 Version: 0.2.6
-Hash: e8e627a83aae8b0a418a53dd94b5e2da92ac765a
+Hash: 2c87108d130de261ac3c468d3316ae42
 Requires: digest
-GithubRepo: htmltools
-GithubUsername: rstudio
-GithubRef: master
-GithubSha1: e8e627a83aae8b0a418a53dd94b5e2da92ac765a
 
 Package: htmlwidgets
-Source: github
+Source: CRAN
 Version: 0.3.2
-Hash: 4162ad661a92ea7dd9e34635eeec9cdd34af8e10
+Hash: fc11f8e19515931be78ec6860e5f89d4
 Requires: htmltools, RJSONIO, yaml
-GithubRepo: htmlwidgets
-GithubUsername: ramnathv
-GithubRef: master
-GithubSha1: 4162ad661a92ea7dd9e34635eeec9cdd34af8e10
 
 Package: httpuv
 Source: CRAN
 Version: 1.3.2
 Hash: a4fdba39cdde0cd89fd06337835f735b
 Requires: Rcpp
+
+Package: httr
+Source: CRAN
+Version: 0.5
+Hash: 68a70bdd16fb949a12e4fda7f31def00
+Requires: digest, jsonlite, RCurl, stringr
+
+Package: jsonlite
+Source: CRAN
+Version: 0.9.14
+Hash: 1e949c7f0f926734e2ff498eddb2309a
 
 Package: knitr
 Source: github
@@ -113,24 +123,35 @@ Hash: 25f63495dfb737e67bd75fc1eb58ff2c
 
 Package: leaflet
 Source: github
-Version: 0.0.4
-Hash: 45aac97fe0ab44cd3206ed87a0969bbe3a4221fc
+Version: 0.0.5
+Hash: 656fcf3838cb087f96a776c4879fd1db8d261ea1
 Requires: htmltools, htmlwidgets, magrittr, RColorBrewer, scales
 GithubRepo: leaflet
 GithubUsername: rstudio
-GithubRef: feature/color-funcs
-GithubSha1: 45aac97fe0ab44cd3206ed87a0969bbe3a4221fc
+GithubRef: master
+GithubSha1: 656fcf3838cb087f96a776c4879fd1db8d261ea1
 
 Package: magrittr
 Source: CRAN
 Version: 1.0.1
 Hash: 576e5bf21e3801499cebc27af6ad1627
 
+Package: maps
+Source: CRAN
+Version: 2.3-9
+Hash: 236a24fa187bb1f3a1694f2915597c5e
+
 Package: markdown
 Source: CRAN
 Version: 0.7.4
 Hash: 01d7f71ed6e3d9b1c17ba51cff91be72
 Requires: mime
+
+Package: memoise
+Source: CRAN
+Version: 0.2.1
+Hash: fc52fa39dfd216c44d64812ff31b1c67
+Requires: digest
 
 Package: mime
 Source: CRAN
@@ -179,6 +200,12 @@ Source: CRAN
 Version: 0.11.2
 Hash: ef2b1a5e45d1461bd720e4ebbe48e601
 
+Package: RCurl
+Source: CRAN
+Version: 1.95-4.5
+Hash: 1187c1ea73013abf25f362a7e6da1046
+Requires: bitops
+
 Package: rgl
 Source: CRAN
 Version: 0.95.1158
@@ -191,8 +218,8 @@ Hash: f78059fac4af154bfe46bf547ae12be9
 
 Package: RJSONIO
 Source: CRAN
-Version: 1.2-0.2
-Hash: f4aea783dfb279b89a0d735727fb46c5
+Version: 1.3-0
+Hash: 8b1341dfd547c90ed4b3365d5aa46a7b
 
 Package: rmarkdown
 Source: github
@@ -203,6 +230,11 @@ GithubRepo: rmarkdown
 GithubUsername: rstudio
 GithubRef: master
 GithubSha1: 4fb5ef8f1ef14063b682189ae584b49a839362c5
+
+Package: rstudioapi
+Source: CRAN
+Version: 0.1
+Hash: 5bd4449a873ec652a05c932312dcf04b
 
 Package: scales
 Source: CRAN
@@ -252,6 +284,11 @@ GithubUsername: bwlewis
 GithubRef: master
 GithubSha1: a3c1753479d63597cc2344970f8039065f2b4726
 
+Package: whisker
+Source: CRAN
+Version: 0.3-2
+Hash: 186ab2937fec1694c8a63009a2389c4e
+
 Package: XML
 Source: CRAN
 Version: 3.98-1.1
@@ -270,8 +307,8 @@ Requires: zoo
 
 Package: yaml
 Source: CRAN
-Version: 2.1.11
-Hash: ba7120787d803a7c0aebf4518a873947
+Version: 2.1.13
+Hash: e5d041c001f6d641fd009c1f6ef7d831
 
 Package: zoo
 Source: CRAN
