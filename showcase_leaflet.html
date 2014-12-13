@@ -148,8 +148,8 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 load(&#39;geog495.RData&#39;)
 pal &lt;- colorQuantile(&quot;YlOrRd&quot;, NULL, n = 8)
 
-leaflet(orcounty.shp) %&gt;% addTiles() %&gt;%
-  addCircleMarkers(data = orstationc, color = ~pal(tann))</code></pre>
+leaflet(orstationc) %&gt;% addTiles() %&gt;%
+  addCircleMarkers(color = ~pal(tann))</code></pre>
 <p><div id="htmlwidget-246" style="width:576px;height:336px;" class="leaflet"></div>
 <script type="application/json" data-for="htmlwidget-246">{ "x": {
  "mapId": null,

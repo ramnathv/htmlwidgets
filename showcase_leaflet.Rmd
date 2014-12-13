@@ -12,6 +12,6 @@ library(leaflet)
 load('geog495.RData')
 pal <- colorQuantile("YlOrRd", NULL, n = 8)
 
-leaflet(orcounty.shp) %>% addTiles() %>%
-  addCircleMarkers(data = orstationc, color = ~pal(tann))
+leaflet(orstationc) %>% addTiles() %>%
+  addCircleMarkers(color = ~pal(tann))
 ```
