@@ -8,6 +8,7 @@ The **htmlwidgets** package provides a framework for easily creating R bindings 
 
 There are already several R packages based on **htmlwidgets**, including:
 
+* [leaflet](https://github.com/rstudio/leaflet) -- Interactive maps with OpenStreetMap
 * [dygraphs](http://rstudio.github.io/dygraphs/) --- Interactive time series visualization
 * [networkD3](http://christophergandrud.github.io/networkD3/) --- Network visualization with D3
 * [sparkline](https://github.com/htmlwidgets/sparkline) --- Small inline charts
@@ -18,7 +19,13 @@ The package was created in collaboration by Ramnath Vaidyanathan, Joe Cheng, JJ 
 
 ### Getting Started
 
-If you know R and a bit of JavaScript it's very straightforward to create your own widgets. You can install the **htmlwidgets** package from GitHub:
+If you know R and a bit of JavaScript it's very straightforward to create your own widgets. You can install the **htmlwidgets** package from CRAN:
+
+```r
+install.packages("htmlwidgets")
+```
+
+You can alternatively install the development version of **htmlwidgets** from GitHub as follows:
 
 ```r
 devtools::install_github('ramnathv/htmlwidgets')
