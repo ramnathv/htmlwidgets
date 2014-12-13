@@ -8,7 +8,7 @@ Leaflet is a JavaScript library for interactive maps based on OpenStreetMap data
 ```{r message=FALSE}
 library(leaflet)
 
-# http://geog.uoregon.edu/GeogR/data/Rdata/geog495.RData
+# Example from http://geog.uoregon.edu/geogr/topics/maps01.html
 load('geog495.RData')
 pal <- colorQuantile("YlOrRd", NULL, n = 8)
 
