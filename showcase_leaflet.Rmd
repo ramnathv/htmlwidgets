@@ -5,11 +5,14 @@
 
 Leaflet is a JavaScript library for interactive maps based on OpenStreetMap data.
 
-```{r}
+```{r message=FALSE}
 library(leaflet)
-leaflet() %>% 
-  tileLayer() %>% 
-  setView(c(42.0285, -93.65), zoom = 17) %>% 
-  mapPopup(42.0285, -93.65, 'ISU Dept. of Statistics')
-```
 
+# http://geog.uoregon.edu/GeogR/data/Rdata/geog495.RData
+load('geog495.RData')
+pal <- colorQuantile("YlOrRd", NULL, n = 8)
+
+leaflet(orcounty.shp) %>%
+  addTiles() %>%
+  addCircleMarkers(data = orstationc, color = ~pal(tann))
+```
