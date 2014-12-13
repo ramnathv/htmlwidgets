@@ -3,7 +3,7 @@
 
 <https://github.com/rstudio/leaflet>
 
-Leaflet is a JavaScript library for interactive maps based on OpenStreetMap data.
+Leaflet is a JavaScript library for creating dynamic maps that support panning and zooming, with various annotations like markers, polygons, and popups.
 
 ```{r message=FALSE,warning=FALSE}
 library(leaflet)
