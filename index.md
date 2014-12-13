@@ -15,7 +15,8 @@
 
 <div class="col-md-6">
 
-<div id="widget-carousel" class="carousel slide" data-ride="carousel">
+<div id="widget-carousel" class="carousel slide" 
+ data-ride="carousel" data-interval="3000">
 <!-- Indicators -->
 <ol class="carousel-indicators">
   <li data-target="#widget-carousel" data-slide-to="0" class="active"></li>
@@ -62,12 +63,12 @@
 <div class="container">
 
 <div class="row-fluid">
-<div class="col-md-6">
+<div class="col-md-5">
 <h4>Widgets in Action</h4>
-<p>See how just a line or two of R code can be used to create interactive visualization with   Leafet (mapping), Dygraphs (time-series), networkD3 (graph visualization), and much more.</p>
+<p>See how just a line or two of R code can be used to create interactive visualization with   Leafet (mapping), Dygraphs (time-series), networkD3 (graph visualization) and more.</p>
 <p><a class="btn btn-info" href="showcase_leaflet.html" role="button">See the Showcase &raquo;</a></p>
 </div>
-<div class="col-md-6">
+<div class="col-md-5 col-md-offset-1">
 <h4>Creating Widgets</h4>
 <p>Learn how to create an R binding for your favorite JavaScript library and enable use of it in the R console, in R Markdown documents, and in Shiny web applications.</p>
 <p><a class="btn btn-success" href="#" role="button">Develop a Widget &raquo;</a></p>
