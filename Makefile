@@ -8,10 +8,10 @@ all: clean html
 html: $(HTML_FILES)
 
 %.html: %.Rmd
-	R --vanilla --slave -e "set.seed(100);rmarkdown::render('$<')"
+	R --slave -e "set.seed(100);rmarkdown::render('$<')"
 
 %.html: %.md
-	R --vanilla --slave -e "set.seed(100);rmarkdown::render('$<')"
+	R --slave -e "set.seed(100);rmarkdown::render('$<')"
 
 showcase_leaflet.html: geog495.RData
 
