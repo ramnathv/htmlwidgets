@@ -67,7 +67,7 @@
 
       <div class="col-sm-8">
 
-        <img class="main-screenshot" src="images/rmarkdown.2x.png"/>
+        <img class="main-screenshot" src="images/rconsole.2x.png"/>
 
         <div class="hide">
           <div id="widget-carousel" class="carousel slide" data-ride="carousel">
