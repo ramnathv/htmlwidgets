@@ -55,17 +55,17 @@
   <div class="container-fluid main-container">
     <div class="row">
 
-      <div class="col-sm-4 benefits">
+      <div class="col-sm-5 benefits">
         <div class="visible-md-block">&nbsp;</div>
         <h4>Bring the best of JavaScript data visualization to R</h4>
         <ul>
-          <li>Use JavaScript visualization libraries <strong>at the R console</strong>, just like plots.</li>
-          <li>Embed widgets in <strong>R Markdown</strong> documents and <strong>Shiny</strong> web applications.</li>
-          <li><strong>Develop new widgets</strong> using a framework that seamlessly bridges R and JavaScript.</li>
+          <li>Use JavaScript visualization libraries <strong>at the R console</strong>, just like plots</li>
+          <li>Embed widgets in <strong>R Markdown</strong> documents and <strong>Shiny</strong> web applications</li>
+          <li><strong>Develop new widgets</strong> using a framework that seamlessly bridges R and JavaScript</li>
         </ul>
       </div>
 
-      <div class="col-sm-8">
+      <div class="col-sm-7">
 
         <img class="main-screenshot" src="images/rconsole.2x.png"/>
 
@@ -117,9 +117,9 @@
 </div> <!-- jumbotron -->
 
 <div class="container-fluid main-container below-lead">
-  <h3>Widgets in Action</h3>
+  <h3>Widgets in action</h3>
   <div class="row">
-    <div class="col-sm-8">
+    <div class="col-sm-9">
       <div class="row showcase-teaser">
         <div class="col-xs-6 col-sm-3">
           <a href="showcase_leaflet.html"><img src="images/carousel-leaflet.png"/></a>
@@ -137,21 +137,21 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-sm-8">
+    <div class="col-sm-9">
       <p>See how just a line or two of R code can be used to create interactive visualization with   Leafet (mapping), Dygraphs (time-series), networkD3 (graph visualization), and much more.</p>
     </div>
-    <div class="col-sm-4">
-      <p><a class="btn btn-info" href="showcase_leaflet.html" role="button">See the Showcase &raquo;</a></p>
+    <div class="col-sm-3">
+      <p><a class="btn btn-info" href="showcase_leaflet.html" role="button">See the showcase &raquo;</a></p>
     </div>
   </div>
   <hr/>
-  <h3>Creating Widgets</h3>
+  <h3>Creating widgets</h3>
   <div class="row">
-    <div class="col-sm-8">
+    <div class="col-sm-9">
       <p>Learn how to create an R binding for your favorite JavaScript library and enable use of it in the R console, in R Markdown documents, and in Shiny web applications.</p>
     </div>
-    <div class="col-sm-4">
-      <p><a class="btn btn-success" href="#" role="button">Develop a Widget &raquo;</a></p>
+    <div class="col-sm-3">
+      <p><a class="btn btn-success" href="#" role="button">Develop a widget &raquo;</a></p>
     </div>
   </div>
 </div>

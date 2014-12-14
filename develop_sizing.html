@@ -10,7 +10,7 @@
 
 
 
-<title>Intelligent Sizing</title>
+<title>Intelligent sizing</title>
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -82,9 +82,9 @@ code > span.er { color: #ff0000; font-weight: bold; }
           Develop <span class="caret"></span>
         </a>
         <ul class="dropdown-menu" role="menu">
-          <li role="presentation"><a href="develop_intro.html">Creating a Widget</a></li>
-          <li role="presentation"><a href="develop_sizing.html">Intelligent Sizing</a></li>
-          <li role="presentation"><a href="develop_advanced.html">Advanced Topics</a></li>
+          <li role="presentation"><a href="develop_intro.html">Creating a widget</a></li>
+          <li role="presentation"><a href="develop_sizing.html">Intelligent sizing</a></li>
+          <li role="presentation"><a href="develop_advanced.html">Advanced topics</a></li>
         </ul>
       </li>
 
@@ -141,17 +141,17 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <!--/html_preserve-->
 
 <div id="header">
-<h1 class="title">Intelligent Sizing</h1>
+<h1 class="title">Intelligent sizing</h1>
 </div>
 
 <div id="TOC">
 <ul>
 <li><a href="#overview">Overview</a></li>
-<li><a href="#specifying-a-sizing-policy">Specifying a Sizing Policy</a><ul>
+<li><a href="#specifying-a-sizing-policy">Specifying a sizing policy</a><ul>
 <li><a href="#examples">Examples</a></li>
-<li><a href="#available-options">Available Options</a></li>
+<li><a href="#available-options">Available options</a></li>
 </ul></li>
-<li><a href="#javascript-resize-method">JavaScript Resize Method</a><ul>
+<li><a href="#javascript-resize-method">JavaScript resize method</a><ul>
 <li><a href="#examples-1">Examples</a></li>
 </ul></li>
 </ul>
@@ -172,7 +172,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </ol>
 </div>
 <div id="specifying-a-sizing-policy" class="section level2">
-<h2>Specifying a Sizing Policy</h2>
+<h2>Specifying a sizing policy</h2>
 <p>The default HTML widget sizing policy treats the widget with the same sizing semantics as an R plot. When printed at the R console the widget is displayed within the RStudio Viewer and sized to fill the Viewer pane (modulo any padding). When rendered inside an R Markdown document the widget is sized based on the default size of figures in the document.</p>
 <p>Note that for most widgets the default sizing behavior is fine and you won’t need to create a custom sizing policy. If you need a slightly different behavior than the default you can also selectively override the default behavior by calling the <code>sizingPolicy</code> function and passing the result to <code>createWidget</code>. For example:</p>
 <pre class="sourceCode r"><code class="sourceCode r">htmlwidgets::<span class="kw">createWidget</span>(
@@ -199,7 +199,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
              <span class="dt">knitr.defaultHeight =</span> <span class="dv">500</span>)</code></pre>
 </div>
 <div id="available-options" class="section level3">
-<h3>Available Options</h3>
+<h3>Available options</h3>
 <p>Here are the various options that can be specified within a sizing policy:</p>
 <table>
 <thead>
@@ -278,7 +278,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </div>
 </div>
 <div id="javascript-resize-method" class="section level2">
-<h2>JavaScript Resize Method</h2>
+<h2>JavaScript resize method</h2>
 <p>Specifying a sizing policy allows htmlwidgets to calculate the width and height of your widget based on where it’s being displayed. However, you still need to forward this sizing information on to the underlying JavaScript library you are creating a widget for.</p>
 <p>Every JavaScript library handles dynamic sizing a bit differently. Some do it automatically, some have a resize() call to force a layout, and some require that size be set only along with data and other options. Whatever the case, the <strong>htmlwidgets</strong> framework will pass the computed sizes to both your <code>initialize</code> function and <code>resize</code> function. Here’s an empty JavaScript binding that illustrates:</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="ot">HTMLWidgets</span>.<span class="fu">widget</span>({

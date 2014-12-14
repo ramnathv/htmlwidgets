@@ -10,7 +10,7 @@
 
 
 
-<title>Advanced Topics</title>
+<title>Advanced topics</title>
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -82,9 +82,9 @@ code > span.er { color: #ff0000; font-weight: bold; }
           Develop <span class="caret"></span>
         </a>
         <ul class="dropdown-menu" role="menu">
-          <li role="presentation"><a href="develop_intro.html">Creating a Widget</a></li>
-          <li role="presentation"><a href="develop_sizing.html">Intelligent Sizing</a></li>
-          <li role="presentation"><a href="develop_advanced.html">Advanced Topics</a></li>
+          <li role="presentation"><a href="develop_intro.html">Creating a widget</a></li>
+          <li role="presentation"><a href="develop_sizing.html">Intelligent sizing</a></li>
+          <li role="presentation"><a href="develop_advanced.html">Advanced topics</a></li>
         </ul>
       </li>
 
@@ -141,19 +141,19 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <!--/html_preserve-->
 
 <div id="header">
-<h1 class="title">Advanced Topics</h1>
+<h1 class="title">Advanced topics</h1>
 </div>
 
 <div id="TOC">
 <ul>
 <li><a href="#overview">Overview</a></li>
-<li><a href="#data-transformation">Data Transformation</a><ul>
+<li><a href="#data-transformation">Data transformation</a><ul>
 <li><a href="#dataframetod3">dataframeToD3</a></li>
 <li><a href="#transposearray2d">transposeArray2D</a></li>
 </ul></li>
-<li><a href="#widget-instance-data">Widget Instance Data</a></li>
-<li><a href="#passing-javascript-functions">Passing JavaScript Functions</a></li>
-<li><a href="#custom-widget-html">Custom Widget HTML</a></li>
+<li><a href="#widget-instance-data">Widget instance data</a></li>
+<li><a href="#passing-javascript-functions">Passing JavaScript functions</a></li>
+<li><a href="#custom-widget-html">Custom widget HTML</a></li>
 </ul>
 </div>
 
@@ -168,7 +168,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </ul>
 </div>
 <div id="data-transformation" class="section level2">
-<h2>Data Transformation</h2>
+<h2>Data transformation</h2>
 <p>R objects passed as part of the <code>x</code> parameter to the <code>createWidget</code> function are transformed to JSON using the <code>RJSONIO::toJSON</code> function. However, sometimes this representation isn’t what’s required by the JavaScript library you are interfacing with.</p>
 <div id="dataframetod3" class="section level3">
 <h3>dataframeToD3</h3>
@@ -198,7 +198,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </div>
 </div>
 <div id="widget-instance-data" class="section level2">
-<h2>Widget Instance Data</h2>
+<h2>Widget instance data</h2>
 <p>You may have noticed that the JavaScript binding for a widget consists of a set of JavaScript functions rather than a class which has it’s own instance data. Many widgets don’t require instance data, but if yours does (e.g. you need to save a JS library provided object, reference to a DOM element, or any other computed data) there is a mechanism available to do so.</p>
 <p>Here’s how it works: return an object from the <code>initialize</code> method and that object will subsequently be passed to the <code>renderValue</code> and <code>resize</code> methods. For example:</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="ot">HTMLWidgets</span>.<span class="fu">widget</span>({
@@ -220,10 +220,10 @@ code > span.er { color: #ff0000; font-weight: bold; }
     <span class="co">// access instance as necessary</span>
   }
 });</code></pre>
-<p>A real-life example of using instance data is in the <a href="http://rstudio.github.io/dygraphs">dygraphs</a> widget, which uses the instance to store the actual Dygraph object for later manipulation. Here’s the code for the dygraphs JavaScript binding that takes advantage of instance data: <a href="https://github.com/rstudio/dygraphs/blob/master/inst/htmlwidgets/dygraphs.js" class="uri">https://github.com/rstudio/dygraphs/blob/master/inst/htmlwidgets/dygraphs.js</a></p>
+<p>A real-life example of using instance data is in the <a href="http://rstudio.github.io/dygraphs">dygraphs</a> widget, which uses the instance to store the actual Dygraph object for later manipulation. Here’s the code for the dygraphs JavaScript binding that takes advantage of instance data: <a href="https://github.com/rstudio/dygraphs/blob/master/inst/htmlwidgets/dygraphs.js">https://github.com/rstudio/dygraphs/blob/master/inst/htmlwidgets/dygraphs.js</a></p>
 </div>
 <div id="passing-javascript-functions" class="section level2">
-<h2>Passing JavaScript Functions</h2>
+<h2>Passing JavaScript functions</h2>
 <p>As you’d expect, character vectors passed from R to JavaScript are converted to JavaScript strings. However, what if you want to allow users to provide custom JavaScript functions for formatting, drawing, or event handling? For this case the <strong>htmlwidgets</strong> class includes a <code>JS</code> function that allows you to request that a character value be evaluated as JavaScript when it is received on the client.</p>
 <p>For example, the <a href="http://rstudio.github.io/dygraphs">dygraphs</a> widget includes a <code>dyCallbacks</code> function that allows the user to provide callback functions for a variety of contexts. These callbacks are “marked” as containing JavaScript so that they can be converted to actual JavaScript functions on the client:</p>
 <pre class="sourceCode r"><code class="sourceCode r">callbacks &lt;-<span class="st"> </span><span class="kw">list</span>()
@@ -241,7 +241,7 @@ callbacks$underlayCallback &lt;-<span class="st"> </span><span class="kw">JS</sp
 ))</code></pre>
 </div>
 <div id="custom-widget-html" class="section level2">
-<h2>Custom Widget HTML</h2>
+<h2>Custom widget HTML</h2>
 <p>Typically the HTML “housing” for a widget is just a <code>&lt;div&gt;</code> element, and this is correspondingly the default behavior for new widgets that don’t specify otherwise. However, sometimes you need a different element type. For example, the <a href="https://github.com/htmlwidgets/sparkline">sparkline</a> widget requires a <code>&lt;span&gt;</code> element so implements the following custom HTML generation function:</p>
 <pre class="sourceCode r"><code class="sourceCode r">sparkline_html &lt;-<span class="st"> </span>function(id, style, class, ...){
   tags$<span class="kw">span</span>(<span class="dt">id =</span> id, <span class="dt">class =</span> class)

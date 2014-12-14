@@ -1,5 +1,5 @@
 ---
-title: Advanced Topics
+title: Advanced topics
 output:
   html_document:
     toc: true
@@ -20,7 +20,7 @@ This article covers several aspects of creating widgets that not required by all
 * Generating custom HTML to enclose a widget (the default is a `<div>` but some libraries require a different element e.g. a `<span>`).
 
 
-## Data Transformation
+## Data transformation
 
 R objects passed as part of the `x` parameter to the `createWidget` function are transformed to JSON using the `RJSONIO::toJSON` function. However, sometimes this representation isn't what's required by the JavaScript library you are interfacing with. 
 
@@ -57,7 +57,7 @@ renderValue: function(el, x, instance) {
 }
 ```
 
-## Widget Instance Data
+## Widget instance data
 
 You may have noticed that the JavaScript binding for a widget consists of a set of JavaScript functions rather than a class which has it's own instance data. Many widgets don't require instance data, but if yours does (e.g. you need to save a JS library provided object, reference to a DOM element, or any other computed data) there is a mechanism available to do so.
 
@@ -87,7 +87,7 @@ HTMLWidgets.widget({
 
 A real-life example of using instance data is in the [dygraphs](http://rstudio.github.io/dygraphs) widget, which uses the instance to store the actual Dygraph object for later manipulation. Here's the code for the dygraphs JavaScript binding that takes advantage of instance data: <https://github.com/rstudio/dygraphs/blob/master/inst/htmlwidgets/dygraphs.js>
 
-## Passing JavaScript Functions
+## Passing JavaScript functions
 
 As you'd expect, character vectors passed from R to JavaScript are converted to JavaScript strings. However, what if you want to allow users to provide custom JavaScript functions for formatting, drawing, or event handling? For this case the **htmlwidgets** class includes a `JS` function that allows you to request that a character value be evaluated as JavaScript when it is received on the client.
 
@@ -113,7 +113,7 @@ datatable(head(iris, 20), options = list(
 ))
 ```
 
-## Custom Widget HTML
+## Custom widget HTML
 
 Typically the HTML "housing" for a widget is just a `<div>` element, and this is correspondingly the default behavior for new widgets that don't specify otherwise. However, sometimes you need a different element type. For example, the [sparkline](https://github.com/htmlwidgets/sparkline) widget requires a `<span>` element so implements the following custom HTML generation function:
 
