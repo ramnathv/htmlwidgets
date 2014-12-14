@@ -143,12 +143,9 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <p><a href="https://github.com/rstudio/leaflet" class="uri">https://github.com/rstudio/leaflet</a></p>
 <p>Leaflet is a JavaScript library for creating dynamic maps that support panning and zooming, with various annotations like markers, polygons, and popups.</p>
 <pre class="r"><code>library(leaflet)
-
-# Example from http://geog.uoregon.edu/geogr/topics/maps01.html
-load(&#39;geog495.RData&#39;)
 pal &lt;- colorQuantile(&quot;YlOrRd&quot;, NULL, n = 8)
-
-leaflet(orstationc) %&gt;% addTiles() %&gt;%
+leaflet(orstationc) %&gt;% 
+  addTiles() %&gt;%
   addCircleMarkers(color = ~pal(tann))</code></pre>
 <p><div id="htmlwidget-246" style="width:576px;height:336px;" class="leaflet"></div>
 <script type="application/json" data-for="htmlwidget-246">{ "x": {

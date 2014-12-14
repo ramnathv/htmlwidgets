@@ -5,13 +5,15 @@
 
 Leaflet is a JavaScript library for creating dynamic maps that support panning and zooming, with various annotations like markers, polygons, and popups.
 
-```{r message=FALSE,warning=FALSE}
-library(leaflet)
-
+```{r, include=FALSE}
 # Example from http://geog.uoregon.edu/geogr/topics/maps01.html
 load('geog495.RData')
-pal <- colorQuantile("YlOrRd", NULL, n = 8)
+```
 
-leaflet(orstationc) %>% addTiles() %>%
+```{r message=FALSE,warning=FALSE}
+library(leaflet)
+pal <- colorQuantile("YlOrRd", NULL, n = 8)
+leaflet(orstationc) %>% 
+  addTiles() %>%
   addCircleMarkers(color = ~pal(tann))
 ```
