@@ -38,4 +38,6 @@ input[type="search"]  {
   border: solid 1px LightGray;
 }
 
-
+.html-widget-static-bound {
+  width: 100% !important;
+}

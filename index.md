@@ -4,31 +4,34 @@
 </div> <!--container-fluid main-container-->
 
 <style type="text/css">
+  .jumbotron {
+    margin-top: 0;
+  }
   .benefits {
     z-index: 1;
   }
+  .benefits h4 {
+    font-weight: 600;
+    font-size: 22px;
+  }
   .benefits ul {
+    padding-left: 0;
+    list-style: none outside none;
     margin-bottom: 24px;
+    font-weight: 200;
+    font-size: 18px;
   }
   .benefits li {
     margin-bottom: 12px;
   }
   .benefits li strong {
-    font-weight: 600;
+    font-weight: 400;
   }
 
-  /* Phones only */
   img.main-screenshot {
     position: relative;
     width: 100%;
-  }
-  @media (min-width: @screen-sm-min) {
-    /* Everything else */
-    img.main-screenshot {
-      top: -16px;
-      left: 16px;
-      margin-bottom: -36px;
-    }
+    box-shadow: 0 10px 30px 6px #BBB;
   }
 
   .showcase-teaser img {
@@ -36,14 +39,13 @@
     border: 1px solid #CCC;
     margin-bottom: 16px;
   }
-  h3, .benefits h3 {
-    font-size: 16pt;
-    font-weight: 600;
-  }
   .below-lead h3 {
     margin-top: 24pt;
   }
-  p {
+  .below-lead h3:first-child {
+    margin-top: 0;
+  }
+  .below-lead p {
     font-size: 14pt;
     font-weight: 200;
   }
@@ -54,7 +56,8 @@
     <div class="row">
 
       <div class="col-sm-4 benefits">
-        <h3>Bring the best of JavaScript data visualization to R</h3>
+        <div class="visible-md-block">&nbsp;</div>
+        <h4>Bring the best of JavaScript data visualization to R</h4>
         <ul>
           <li>Use JavaScript visualization libraries <strong>at the R console</strong>, just like plots.</li>
           <li>Embed widgets in <strong>R Markdown</strong> documents and <strong>Shiny</strong> web applications.</li>
@@ -64,7 +67,7 @@
 
       <div class="col-sm-8">
 
-        <img class="main-screenshot" src="images/rconsole.2x.png"/>
+        <img class="main-screenshot" src="images/rmarkdown.2x.png"/>
 
         <div class="hide">
           <div id="widget-carousel" class="carousel slide" data-ride="carousel">
@@ -128,7 +131,7 @@
           <a href="showcase_networkD3.html"><img src="images/carousel-networkD3.png"/></a>
         </div>
         <div class="col-xs-6 col-sm-3">
-          <a href="showcase_threejs.html"><img src="images/carousel-leaflet.png"/></a>
+          <a href="showcase_threejs.html"><img src="images/carousel-threejs.png"/></a>
         </div>
       </div>
     </div>
