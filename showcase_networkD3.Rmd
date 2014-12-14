@@ -2,12 +2,11 @@
 ### networkD3
 <http://christophergandrud.github.io/networkD3/>
 
-networkD3 provides tools for creating D3 JavaScript network graphs from R. It supports force directed networks, Sankey diagrams, and Reingold-Tilford tree network.
+networkD3 provides tools for creating D3 JavaScript network graphs from R.
 
 ```{r, fig.height=5}
 library(networkD3)
-data(MisLinks)
-data(MisNodes)
+data(MisLinks, MisNodes)
 forceNetwork(Links = MisLinks, Nodes = MisNodes, Source = "source",
              Target = "target", Value = "value", NodeID = "name",
              Group = "group", opacity = 0.4)
