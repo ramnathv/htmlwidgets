@@ -30,11 +30,13 @@ HTML widgets are always hosted within an R package and should include all of the
 
 To start with we'll walk through the creation of a simple widget that wraps the [sigma.js](http://sigmajs.org) graph visualization library. When we're done we'll be able to use it to display interactive visualizations of [GEXF](http://gexf.net) (Graph Exchange XML Format) data files. For example:
 
-```{r, fig.width=8}
+```{r, eval=FALSE}
 library(sigma)
 data <- system.file("examples/ediaspora.gexf.xml", package = "sigma")
 sigma(data)
 ```
+
+![sigma](images/sigma.png)
 
 Note that the above is just an image of the visualization so it's not interactive. You can play with the interactive version by following the steps in the demo section below. 
 
