@@ -35,6 +35,8 @@ title: "htmlwidgets for R"
   img.main-screenshot {
     position: relative;
     width: 100%;
+  }
+  #widget-carousel {
     box-shadow: 0 10px 30px 6px #BBB;
   }
 
@@ -53,14 +55,35 @@ title: "htmlwidgets for R"
     font-size: 14pt;
     font-weight: 200;
   }
+
+  .pagination {
+    display: table;
+    margin: 9px auto;
+  }
+  .pagination>li.active>a, .pagination>li.active>a:hover, .pagination>li.active>a:focus {
+    color: #333;
+  }
+  .pagination>li>a {
+    color: rgb(50, 140, 240);
+    background-color: transparent !important;
+    border-color: transparent !important;
+    text-shadow: 1px 1px 3px rgba(140, 140, 140, 0.2);
+  }
 </style>
+<script>
+$(document).on("slide.bs.carousel", "#widget-carousel", function(e) {
+  $(".pagination li.active").removeClass("active");
+  var i = +$(e.relatedTarget).data("slide");
+  $($(".pagination li")[i]).addClass("active");
+});
+</script>
 
 <div class="jumbotron">
   <div class="container-fluid main-container">
     <div class="row">
 
       <div class="col-sm-5 benefits">
-        <div class="visible-md-block">&nbsp;</div>
+        <div class="hidden-xs">&nbsp;</div>
         <h4>Bring the best of JavaScript data visualization to R</h4>
         <ul>
           <li>Use JavaScript visualization libraries <strong>at the R console</strong>, just like plots</li>
@@ -70,48 +93,51 @@ title: "htmlwidgets for R"
       </div>
 
       <div class="col-sm-7">
+        <div id="widget-carousel" class="carousel slide" data-ride="carousel" data-pause="">
+          <!-- Indicators -->
+          <ol class="carousel-indicators hide">
+            <li data-target="#widget-carousel" data-slide-to="0" class="active"></li>
+            <li data-target="#widget-carousel" data-slide-to="1"></li>
+            <li data-target="#widget-carousel" data-slide-to="2"></li>
+          </ol>
 
-        <img class="main-screenshot" src="images/rconsole.2x.png"/>
-
-        <div class="hide">
-          <div id="widget-carousel" class="carousel slide" data-ride="carousel">
-            <!-- Indicators -->
-            <ol class="carousel-indicators">
-              <li data-target="#widget-carousel" data-slide-to="0" class="active"></li>
-              <li data-target="#widget-carousel" data-slide-to="1"></li>
-              <li data-target="#widget-carousel" data-slide-to="2"></li>
-            </ol>
-
-            <!-- Wrapper for slides -->
-            <div class="carousel-inner" role="listbox">
-              <div class="item active">
-                <img src="images/carousel-leaflet.png">
-                <div class="carousel-caption">
-                </div>
-              </div>
-              <div class="item">
-                <img src="images/carousel-dygraphs.png">
-                <div class="carousel-caption">
-                </div>
-              </div>
-              <div class="item">
-                <img src="images/carousel-networkD3.png">
-                <div class="carousel-caption">
-                </div>
+          <!-- Wrapper for slides -->
+          <div class="carousel-inner" role="listbox">
+            <div class="item active" data-slide="0">
+              <img class="main-screenshot" src="images/rconsole.2x.png">
+              <div class="carousel-caption">
               </div>
             </div>
-
-            <!-- Controls -->
-            <a class="left carousel-control" href="#widget-carousel" role="button" data-slide="prev">
-              <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-              <span class="sr-only">Previous</span>
-            </a>
-            <a class="right carousel-control" href="#widget-carousel" role="button" data-slide="next">
-              <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-              <span class="sr-only">Next</span>
-            </a>
+            <div class="item" data-slide="1">
+              <img src="images/rmarkdown.2x.png">
+              <div class="carousel-caption">
+              </div>
+            </div>
+            <div class="item" data-slide="2">
+              <img src="images/shiny.2x.jpg">
+              <div class="carousel-caption">
+              </div>
+            </div>
           </div>
+
+          <!-- Controls -->
+          <!--
+          <a class="left carousel-control" href="#widget-carousel" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="right carousel-control" href="#widget-carousel" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+          -->
         </div>
+
+        <ul class="pagination">
+          <li class="active"><a href="javascript:void" data-target="#widget-carousel" data-slide-to="0">R Console</a></li>
+          <li><a href="javascript:void" data-target="#widget-carousel" data-slide-to="1">R Markdown</a></li>
+          <li><a href="javascript:void" data-target="#widget-carousel" data-slide-to="2">Shiny</a></li>
+        </ul>
 
       </div>
 
