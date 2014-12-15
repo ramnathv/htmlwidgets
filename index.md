@@ -151,7 +151,7 @@
       <p>Learn how to create an R binding for your favorite JavaScript library and enable use of it in the R console, in R Markdown documents, and in Shiny web applications.</p>
     </div>
     <div class="col-sm-3">
-      <p><a class="btn btn-success" href="#" role="button">Develop a widget &raquo;</a></p>
+      <p><a class="btn btn-success" href="develop_intro.html" role="button">Develop a widget &raquo;</a></p>
     </div>
   </div>
 </div>
