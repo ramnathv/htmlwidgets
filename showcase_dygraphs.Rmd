@@ -1,3 +1,6 @@
+---
+title: "htmlwidgets: dygraphs"
+---
 
 ### Dygraphs
 <http://rstudio.github.io/dygraphs>

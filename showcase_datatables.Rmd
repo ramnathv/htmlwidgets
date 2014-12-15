@@ -1,3 +1,7 @@
+---
+title: "htmlwidgets: DataTables"
+---
+
 
 ### DataTables
 <http://rstudio.github.io/DT/>

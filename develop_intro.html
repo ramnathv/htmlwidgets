@@ -420,10 +420,12 @@ $(document).ready(function () {
   // main navigation and headers
   if (href.startsWith("index")) {
     $('#nav-home').addClass('active');
+    $('.title').addClass('hidden');
   } else if (href.startsWith("showcase")) {
     $('#nav-showcase').addClass('active');
     $("#page-body").detach().appendTo('#showcase-body');
     $('.showcase-header').removeClass('hidden');
+    $('.title').addClass('hidden');
   } else if (href.startsWith("develop")) {
     $('#nav-develop').addClass('active');
   }

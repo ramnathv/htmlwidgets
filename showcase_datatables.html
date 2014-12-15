@@ -10,7 +10,7 @@
 
 
 
-<title></title>
+<title>htmlwidgets: DataTables</title>
 
 <script src="libs/jquery-1.11.1/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -136,6 +136,9 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 <!--/html_preserve-->
 
+<div id="header">
+<h1 class="title">htmlwidgets: DataTables</h1>
+</div>
 
 
 <div id="datatables" class="section level3">
@@ -195,10 +198,12 @@ $(document).ready(function () {
   // main navigation and headers
   if (href.startsWith("index")) {
     $('#nav-home').addClass('active');
+    $('.title').addClass('hidden');
   } else if (href.startsWith("showcase")) {
     $('#nav-showcase').addClass('active');
     $("#page-body").detach().appendTo('#showcase-body');
     $('.showcase-header').removeClass('hidden');
+    $('.title').addClass('hidden');
   } else if (href.startsWith("develop")) {
     $('#nav-develop').addClass('active');
   }

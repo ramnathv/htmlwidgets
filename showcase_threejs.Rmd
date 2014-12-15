@@ -1,3 +1,6 @@
+---
+title: "htmlwidgets: threejs"
+---
 
 ### threejs
 <http://bwlewis.github.io/rthreejs/>

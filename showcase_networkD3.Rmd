@@ -1,3 +1,6 @@
+---
+title: "htmlwidgets: networkD3"
+---
 
 ### networkD3
 <http://christophergandrud.github.io/networkD3/>

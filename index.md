@@ -1,3 +1,7 @@
+---
+title: "htmlwidgets for R"
+---
+
 <!--html_preserve-->
 
 </div> <!--page-body-->
