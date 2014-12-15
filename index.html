@@ -195,14 +195,15 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
     display: table;
     margin: 9px auto;
   }
-  .pagination>li.active>a, .pagination>li.active>a:hover, .pagination>li.active>a:focus {
-    color: #333;
-  }
   .pagination>li>a {
-    color: rgb(50, 140, 240);
+    color: rgb(50, 140, 240) !important;
     background-color: transparent !important;
     border-color: transparent !important;
     text-shadow: 1px 1px 3px rgba(140, 140, 140, 0.2);
+  }
+  .pagination>li.active>a, .pagination>li.active>a:hover, .pagination>li.active>a:focus {
+    color: #FFF !important;
+    background-color: #2780e3 !important;
   }
 </style>
 <script>
@@ -268,7 +269,7 @@ $(document).on("slide.bs.carousel", "#widget-carousel", function(e) {
           -->
         </div>
 
-        <ul class="pagination">
+        <ul class="pagination pagination-sm">
           <li class="active"><a href="javascript:void" data-target="#widget-carousel" data-slide-to="0">At the R console</a></li>
           <li><a href="javascript:void" data-target="#widget-carousel" data-slide-to="1">In R Markdown docs</a></li>
           <li><a href="javascript:void" data-target="#widget-carousel" data-slide-to="2">In Shiny apps</a></li>
