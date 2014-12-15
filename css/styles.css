@@ -1,11 +1,14 @@
-
-.header h3 {
-  padding-top: 12px;
-  margin-bottom: 40px;  
+.header {
+  margin-top: 18px;
 }
 
-.jumbotron {
-  margin-top: 30px;
+.header h3 {
+  padding-top: 10px;
+  margin-top: 0;
+}
+
+.header nav.navbar {
+  margin-bottom: 12px;
 }
 
 .carousel-control.left, .carousel-control.right {
@@ -22,6 +25,18 @@
 
 #nav-develop {
   margin-right: 65px;
+}
+
+#github {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+}
+#github img {
+  width: 28px;
+  height: 28px;
 }
 
 footer {
