@@ -62,7 +62,7 @@ title: "htmlwidgets for R"
     z-index: 1;
   }
   .pagination>li>a {
-    color: rgb(50, 140, 240) !important;
+    color: #333 !important;
     background-color: transparent !important;
     border-color: transparent !important;
     text-shadow: 1px 1px 3px rgba(140, 140, 140, 0.2);
