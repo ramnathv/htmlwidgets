@@ -59,6 +59,7 @@ title: "htmlwidgets for R"
   .pagination {
     display: table;
     margin: 9px auto;
+    z-index: 1;
   }
   .pagination>li>a {
     color: rgb(50, 140, 240) !important;
