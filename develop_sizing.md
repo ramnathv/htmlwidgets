@@ -1,5 +1,5 @@
 ---
-title: Intelligent sizing
+title: Widget sizing
 output:
   html_document:
     toc: true

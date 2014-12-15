@@ -26,9 +26,7 @@ By following a small set of easy-to-follow conventions, it is possible to create
 
 HTML widgets are always hosted within an R package and should include all of the source code for their dependencies. This is to ensure that code which depends on widgets is fully reproducible (i.e. doesn't require an internet connection or the ongoing availability of an internet service to run).
 
-## Creating a widget
-
-### Example: sigma.js
+## Example (sigma.js)
 
 To start with we'll walk through the creation of a simple widget that wraps the [sigma.js](http://sigmajs.org) graph visualization library. When we're done we'll be able to use it to display interactive visualizations of [GEXF](http://gexf.net) (Graph Exchange XML Format) data files. For example:
 
