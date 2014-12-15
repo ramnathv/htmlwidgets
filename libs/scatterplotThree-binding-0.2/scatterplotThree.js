@@ -1,4 +1,4 @@
-/* s3d.js
+/* scatterplotThree.js
  * A set of example Javascript functions that support a threejs-based 3d
  * scatterplot in R, geared for use with the htmlwidgets and shiny packages.
  */
@@ -10,16 +10,26 @@ HTMLWidgets.widget(
 
   initialize: function(el, width, height)
   {
-    var r = renderer(el, width, height);
+    var r = {width:width, height:height};
     return r;
   },
 
-  resize: function(el, width, height, renderer)
+  resize: function(el, width, height, obj)
   {
+// We rely on three global variables here:
+// renderer, scene, and camera.
+    renderer.clear();
+    renderer.setSize(parseInt(width), parseInt(height));
+    camera.lookAt(scene.position);
+    renderer.render(scene, camera);
   },
 
-  renderValue: function(el, x, renderer)
+  renderValue: function(el, x, obj)
   {
+// Note that renderer is a global variable. It's accessed by resize above.
+// We need to defer creating the renderer because our choice of rendering
+// method is defined in x.
+    renderer = render_init(el, obj.width, obj.height, x.options.renderer);
 // parse the JSON string from R
     x.data = JSON.parse(x.data);
     scatter(el, x, renderer);
@@ -27,23 +37,22 @@ HTMLWidgets.widget(
 })
 
 
-function renderer(el, width, height)
+function render_init(el, width, height, choice)
 {
   var r;
-// I prefer the way the canvas program looks, so we always use the
-// canvas renderer here. Change this to use WebGL (but then you'll also
-// want to change the way the points are drawn below).
-//  if(Detector.webgl)
-//  {
-//    r = new THREE.WebGLRenderer({antialias: true});
-//    GL=true;
-//  } else
-//  {
+  if(choice=="webgl-buffered") choice = "webgl";
+  if(Detector.webgl && (choice=="auto" || choice=="webgl"))
+  {
+    r = new THREE.WebGLRenderer({antialias: true});
+    GL=true;
+  } else
+  {
     r = new THREE.CanvasRenderer();
     GL=false;
-//  }
+  }
   r.setSize(parseInt(width), parseInt(height));
   r.setClearColor("white");
+  d3.select(el).node().innerHTML="";
   d3.select(el).node().appendChild(r.domElement);
   return r;
 }
@@ -51,9 +60,10 @@ function renderer(el, width, height)
 // x.options list of options including:
 // x.options.labels  3 element list of axis labels
 // x.options.grid true/false draw xz grid (requires xtick.length==ztick.length)
-// x.options.stroke (optional) stroke color
+// x.options.stroke (optional) stroke color (canvas renderer only)
 // x.options.color (optional) either a single color or a vector of colors
 // x.options.size (optional) either a single size or a vector of sizes
+// x.options.renderer, one of "auto" "canvas" "webgl" or "webgl-buffered"
 // x.options 
 //   xtick:[0,0.5,1]
 //   xticklab:["1","2","3"]
@@ -63,19 +73,23 @@ function renderer(el, width, height)
 //   zticklab:["-1","0","1"]
 //   NOTE: ticks must be in [0,1].
 // x.data JSON 3-column data matrix. Data are assumed to be already
-// scaled in a unit box (that is, all coordinates are assumed to lie in the
-// interval [0,1]).
+//   scaled in a unit box (that is, all coordinates are assumed to lie in the
+//   interval [0,1]).
+// x.pch.img is an encoded image dataURI used by the WebGL PointCloud renderer only
+
 function scatter(el, x, object)
 {
-  var camera = new THREE.PerspectiveCamera(45, object.domElement.width/object.domElement.height, 1, 100000);
+  camera = new THREE.PerspectiveCamera(38, object.domElement.width/object.domElement.height, 1, 10000);
   camera.position.z = 2;
-  camera.position.x = 2.75;
+  camera.position.x = 2.55;
   camera.position.y = 1.25;
 
-  var scene = new THREE.Scene();
+  scene = new THREE.Scene();
   var group = new THREE.Object3D();
   scene.add( group );
-// program for drawing a point
+
+
+// program for drawing a Canvas point
   var program = function ( context )
   {
     context.beginPath();
@@ -89,28 +103,98 @@ function scatter(el, x, object)
     context.fill();
   };
 // add the points
-  var col = new THREE.Color("steelblue");
-  var scale = 0.05;
-  for ( var i = 0; i < x.data.length; i++ )
+  var j;
+  if(GL)
   {
-    if(x.options.color)
+    if(x.options.renderer=="webgl-buffered")
     {
-      if(Array.isArray(x.options.color)) col = new THREE.Color(x.options.color[i]);
-      else col = new THREE.Color(x.options.color);
-    }
-    if(x.options.size)
+      var geometry = new THREE.BufferGeometry();
+      var positions = new Float32Array( x.data.length );
+      var colors = new Float32Array( x.data.length );
+      var col = new THREE.Color("steelblue");
+      var scale = 0.07;
+      if(x.options.size && !Array.isArray(x.options.size)) scale = 0.07 * x.options.size;
+      for ( var i = 0; i < x.data.length; i++ )
+      {
+        positions[i] = x.data[i];
+      }
+      for(var i=0;i<x.data.length/3;i++)
+      {
+        j = i*3;
+        if(x.options.color)
+        {
+          if(Array.isArray(x.options.color)) col = new THREE.Color(x.options.color[i]);
+          else col = new THREE.Color(x.options.color);
+        }
+        colors[j] = col.r;
+        colors[j+1] = col.g;
+        colors[j+2] = col.b;
+      }
+      geometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
+      geometry.addAttribute( 'color', new THREE.BufferAttribute( colors, 3 ) );
+      geometry.computeBoundingSphere();
+      var pcmaterial = new THREE.PointCloudMaterial( { size: scale, vertexColors: THREE.VertexColors } );
+      var particleSystem = new THREE.PointCloud( geometry, pcmaterial );
+      group.add( particleSystem );
+    } else
     {
-      if(Array.isArray(x.options.size)) scale = 0.03*x.options.size[i];
-      else scale = 0.03*x.options.size;
+      var img = document.createElement("img");
+      img.src = x.pch.img;
+      tex = new THREE.Texture();
+      tex.image = img;
+      tex.needsUpdate = true;
+      var geometry = new THREE.Geometry();
+      var colors = [];
+      var col = new THREE.Color("steelblue");
+      var scale = 0.1;
+      if(x.options.size && !Array.isArray(x.options.size)) scale = 0.1 * x.options.size;
+      for ( var i = 0; i < x.data.length/3; i++ )
+      {
+        j = i*3;
+        if(x.options.color)
+        {
+          if(Array.isArray(x.options.color)) col = new THREE.Color(x.options.color[i]);
+          else col = new THREE.Color(x.options.color);
+        }
+        colors[i] = col;
+        var vertex = new THREE.Vector3();
+        vertex.x = x.data[j];
+        vertex.y = x.data[j+1];
+        vertex.z = x.data[j+2];
+        geometry.vertices.push( vertex );
+      }
+      geometry.colors = colors;
+      var pcmaterial = new THREE.PointCloudMaterial( {map:tex, size: scale, vertexColors: THREE.VertexColors, transparent: true,  opacity: 0.9} );
+      var particles = new THREE.PointCloud( geometry, pcmaterial );
+      particles.sortParticles = true;
+      group.add(particles);
     }
-    var material = new THREE.SpriteCanvasMaterial( {
-        color: col, program: program , opacity:0.9} );
-    var particle = new THREE.Sprite( material );
-    particle.position.x = x.data[i][0];
-    particle.position.y = x.data[i][1];
-    particle.position.z = x.data[i][2];
-    particle.scale.x = particle.scale.y = scale;
-    group.add( particle );
+  }
+  else {
+    var col = new THREE.Color("steelblue");
+    var scale = 0.03;
+    for ( var i = 0; i < x.data.length/3; i++ )
+    {
+      j = i*3;
+      if(x.options.color)
+      {
+        if(Array.isArray(x.options.color)) col = new THREE.Color(x.options.color[i]);
+        else col = new THREE.Color(x.options.color);
+      }
+      if(x.options.size)
+      {
+        if(Array.isArray(x.options.size)) scale = 0.03*x.options.size[i];
+        else scale = 0.03*x.options.size;
+      }
+      var material = new THREE.SpriteCanvasMaterial( {
+          color: col, program: program , opacity:0.9} );
+      var particle = new THREE.Sprite( material );
+      particle.position.x = x.data[j];
+      particle.position.y = x.data[j+1];
+      particle.position.z = x.data[j+2];
+      particle.scale.x = particle.scale.y = scale;
+      group.add( particle );
+    }
   }
 
 // helper function to add text to object
@@ -223,6 +307,7 @@ function scatter(el, x, object)
     camera.fov -= event.wheelDeltaY * 0.02;
     camera.fov = Math.max( Math.min( camera.fov, fovMAX ), fovMIN );
     camera.projectionMatrix = new THREE.Matrix4().makePerspective(camera.fov,  object.domElement.width/object.domElement.height, camera.near, camera.far);
+    render();
   }
   el.onmousewheel = function(ev) {ev.preventDefault();};
   el.addEventListener('DOMMouseScroll', mousewheel, true);
@@ -238,23 +323,17 @@ function scatter(el, x, object)
       camera.position.y += 0.05*dy;
       sx += dx;
       sy += dy;
+      render();
     }
   };
 
-  var a = 1;
   function render()
   { 
     object.clear();
     camera.lookAt(scene.position);
     object.render(scene, camera);
   }
-  function animate()
-  {
-    requestAnimationFrame(animate);
-// Reduce CPU load
-    a = (a + 1) % 3;
-    if(a==0) render();
-  }
-  animate();
 
-};
+  render();
+// See the note about rendering in the globe.js widget.
+}

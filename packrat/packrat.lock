@@ -276,13 +276,13 @@ Requires: digest
 
 Package: threejs
 Source: github
-Version: 0.1
-Hash: a3c1753479d63597cc2344970f8039065f2b4726
+Version: 0.2
+Hash: 22b8c7d1eab8a960c6b60c6d84ddd85e22129920
 Requires: base64, htmlwidgets, plyr, rjson
 GithubRepo: rthreejs
 GithubUsername: bwlewis
 GithubRef: master
-GithubSha1: a3c1753479d63597cc2344970f8039065f2b4726
+GithubSha1: 22b8c7d1eab8a960c6b60c6d84ddd85e22129920
 
 Package: whisker
 Source: CRAN
