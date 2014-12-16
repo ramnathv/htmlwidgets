@@ -58,11 +58,12 @@ title: "htmlwidgets for R"
 
   .pagination {
     display: table;
-    margin: 9px auto;
+    margin: 15px auto;
     z-index: 1;
   }
   .pagination>li>a {
     color: #333 !important;
+    padding: 0px 12px;
     background-color: transparent !important;
     border-color: transparent !important;
     text-shadow: 1px 1px 3px rgba(140, 140, 140, 0.2);
