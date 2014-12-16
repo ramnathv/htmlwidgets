@@ -29,10 +29,11 @@
 
 #github {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 3px;
+  right: 3px;
   width: 28px;
   height: 28px;
+  opacity: 0.3;
 }
 #github img {
   width: 28px;
