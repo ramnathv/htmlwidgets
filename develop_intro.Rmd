@@ -36,7 +36,7 @@ data <- system.file("examples/ediaspora.gexf.xml", package = "sigma")
 sigma(data)
 ```
 
-![sigma](images/sigma.png)
+<img src="images/sigma.png" alt="sigma" data-toggle="tooltip" data-placement="right" title="" data-original-title="Note this is just an image of the visualization so it's not interactive. You can play with the interactive version by following the steps in the demo section below." onload="$(this).tooltip()">
 
 Note that the above is just an image of the visualization so it's not interactive. You can play with the interactive version by following the steps in the demo section below. 
 
