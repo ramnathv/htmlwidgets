@@ -181,7 +181,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(sigma)
 data &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;examples/ediaspora.gexf.xml&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;sigma&quot;</span>)
 <span class="kw">sigma</span>(data)</code></pre>
-<p><img src="images/sigma.png" alt="sigma" /></p>
+<p><img src="images/sigma.png" alt="sigma" data-toggle="tooltip" data-placement="right" title="" data-original-title="Note this is just an image of the visualization so it's not interactive. You can play with the interactive version by following the steps in the demo section below." onload="$(this).tooltip()"></p>
 <p>Note that the above is just an image of the visualization so it’s not interactive. You can play with the interactive version by following the steps in the demo section below.</p>
 <p>There is remarkably little code required to create this binding. Below we’ll go through all of the components step-by-step. Then we’ll describe how you can create your own widgets (including automatically generating basic scaffolding for all of the core components).</p>
 <div id="file-layout" class="section level3">
@@ -362,7 +362,7 @@ devtools::<span class="kw">install</span>()                        <span class="
 <p>This creates a simple widget that takes a single <code>text</code> argument and displays that text within the widgets HTML element. You can try it like this:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mywidget)
 <span class="kw">mywidget</span>(<span class="st">&quot;hello, world&quot;</span>)</code></pre>
-<p>This is the most minimal widget possible and doesn’t yet include a JavaScript library to interface to (note that <code>scaffoldWidget</code> can optionally include JavaScript library dependencies via the <code>bowerPkg</code> argument). Before getting started with development you should review the introductory example above to make sure you understand the various components and also review the additional artciles and examples linked to in the next section.</p>
+<p>This is the most minimal widget possible and doesn’t yet include a JavaScript library to interface to (note that <code>scaffoldWidget</code> can optionally include JavaScript library dependencies via the <code>bowerPkg</code> argument). Before getting started with development you should review the introductory example above to make sure you understand the various components and also review the additional articles and examples linked to in the next section.</p>
 </div>
 <div id="learning-more" class="section level3">
 <h3>Learning more</h3>
