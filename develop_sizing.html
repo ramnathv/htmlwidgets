@@ -184,7 +184,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 )</code></pre>
 <div id="examples" class="section level3">
 <h3>Examples</h3>
-<p>The <a href="http://christophergandrud.github.io/networkD3/">networkD3</a> package uses custom sizing policies for all of it’s widgets. The <code>simpleNetwork</code> widget eliminates padding (as d3 is already providing padding) and specifies that it wants to fill up as much space as possible when displayed in a standalone web browser:</p>
+<p>The <a href="http://christophergandrud.github.io/networkD3/">networkD3</a> package uses custom sizing policies for all of its widgets. The <code>simpleNetwork</code> widget eliminates padding (as d3 is already providing padding) and specifies that it wants to fill up as much space as possible when displayed in a standalone web browser:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sizingPolicy</span>(<span class="dt">padding =</span> <span class="dv">0</span>, <span class="dt">browser.fill =</span> <span class="ot">TRUE</span>)</code></pre>
 <p>The <code>sankeyNetwork</code> widget requires much more space than is afforded by the RStudio Viewer or a typical knitr figure so it disables those automatic sizing behaviors. It also provides a more reasonable default width and height for knitr documents:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sizingPolicy</span>(<span class="dt">viewer.suppress =</span> <span class="ot">TRUE</span>,

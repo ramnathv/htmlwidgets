@@ -44,7 +44,7 @@ There is remarkably little code required to create this binding. Below we'll go 
 
 ### File layout
 
-Let's assume that our widget is named **sigma** and is located within an R package of the same name. Our JavaScript binding source code file is named sigma.js. Since our widget will read GEXF data files we'll also need to include both the base sigma.min.js library as well as it's GEXF plugin. Here are the files that we'll add to the package:
+Let's assume that our widget is named **sigma** and is located within an R package of the same name. Our JavaScript binding source code file is named sigma.js. Since our widget will read GEXF data files we'll also need to include both the base sigma.min.js library as well as its GEXF plugin. Here are the files that we'll add to the package:
 
 ```text
 R/
@@ -65,7 +65,7 @@ Note the convention that the JavaScript, YAML, and other dependencies are all co
 
 ### Dependencies
 
-Dependencies are the JavaScript and CSS assets used by a widget. Dependencies are included within the `inst/htmlwidgets/lib` directory. Dependencies are specified using a YAML configuration file which uses the name of the widget as it's base file name. Here's what our **sigma.yaml** file looks like:
+Dependencies are the JavaScript and CSS assets used by a widget. Dependencies are included within the `inst/htmlwidgets/lib` directory. Dependencies are specified using a YAML configuration file which uses the name of the widget as its base file name. Here's what our **sigma.yaml** file looks like:
 
 ```yaml
 dependencies:
@@ -81,7 +81,7 @@ The dependency `src` specification refers to the directory that contains the lib
 
 ### R binding
 
-We need to provide users with an R function that invokes our widget. Typically this function will accept input data as well as various options that control the widgets display. Here's the R function for `sigma`:
+We need to provide users with an R function that invokes our widget. Typically this function will accept input data as well as various options that control the widget's display. Here's the R function for `sigma`:
 
 ```r
 #' @import htmlwidgets
@@ -179,7 +179,7 @@ HTMLWidgets.widget({
 
 We provide a name and type for the widget and then implement three functions:
 
-1. The `initialize` function creates and/or attaches to DOM elements as required and returns on object containing the widgets instance data. In this case we create a new sigma element and pass it the `id` of the DOM element that hosts the widget on the page. We're going to need access to the sigma object later (to update it's data and settings) so we return it as the `sig` member of the widgets instance data.
+1. The `initialize` function creates and/or attaches to DOM elements as required and returns on object containing the widget's instance data. In this case we create a new sigma element and pass it the `id` of the DOM element that hosts the widget on the page. We're going to need access to the sigma object later (to update it's data and settings) so we return it as the `sig` member of the widgets instance data.
 
 2. The `renderValue` function actually pours our dynamic data and settings into the widget. Everything required to do the job is passed as a parameter to `renderValue`: the `x` parameter contains the widget data and settings and the `instance` parameter contains a reference to the sigma object we need to manipulate. We parse and update the GEXF data, apply the settings to the sigma object, and finally call `refresh` to reflect the new values on-screen.
 
@@ -252,7 +252,7 @@ To create a new widget you can call the `scaffoldWidget` function to generate th
 
 * Create the .R, .js, and .yaml files required for your widget;
 
-* If provided, take a [Bower](http://bower.io/) package name and automatically download the JavaScript library (and it's dependencies) and add the required entries to the .yaml file.
+* If provided, take a [Bower](http://bower.io/) package name and automatically download the JavaScript library (and its dependencies) and add the required entries to the .yaml file.
 
 This method is highly recommended as it ensures that you get started with the right file structure. Here's an example that assumes you want to create a widget named 'mywidget' in a new package of the same name:
 
@@ -282,7 +282,7 @@ There are additional articles that cover more advanced ground:
 
 * [HTML Widgets: Advanced Topics](develop_advanced.html) describes framework features that support per-widget instance data, data transformations (e.g. converting a data frame into a d3 dataset), and providing widget options that are live JavaScript objects (e.g. function definitions).
 
-The Sizing artcile is particularly important as most JavaScript libraries require some additional interaction to keep their size synchronized with their containing element.
+The Sizing article is particularly important as most JavaScript libraries require some additional interaction to keep their size synchronized with their containing element.
 
 #### Examples
 

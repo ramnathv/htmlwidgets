@@ -45,7 +45,7 @@ htmlwidgets::createWidget(
 
 ### Examples
 
-The [networkD3](http://christophergandrud.github.io/networkD3/) package uses custom sizing policies for all of it's widgets. The `simpleNetwork` widget eliminates padding (as d3 is already providing padding) and specifies that it wants to fill up as much space as possible when displayed in a standalone web browser:
+The [networkD3](http://christophergandrud.github.io/networkD3/) package uses custom sizing policies for all of its widgets. The `simpleNetwork` widget eliminates padding (as d3 is already providing padding) and specifies that it wants to fill up as much space as possible when displayed in a standalone web browser:
 
 ```r
 sizingPolicy(padding = 0, browser.fill = TRUE)

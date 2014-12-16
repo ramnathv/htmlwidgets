@@ -186,7 +186,7 @@ data &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span cla
 <p>There is remarkably little code required to create this binding. Below we’ll go through all of the components step-by-step. Then we’ll describe how you can create your own widgets (including automatically generating basic scaffolding for all of the core components).</p>
 <div id="file-layout" class="section level3">
 <h3>File layout</h3>
-<p>Let’s assume that our widget is named <strong>sigma</strong> and is located within an R package of the same name. Our JavaScript binding source code file is named sigma.js. Since our widget will read GEXF data files we’ll also need to include both the base sigma.min.js library as well as it’s GEXF plugin. Here are the files that we’ll add to the package:</p>
+<p>Let’s assume that our widget is named <strong>sigma</strong> and is located within an R package of the same name. Our JavaScript binding source code file is named sigma.js. Since our widget will read GEXF data files we’ll also need to include both the base sigma.min.js library as well as its GEXF plugin. Here are the files that we’ll add to the package:</p>
 <pre class="text"><code>R/
 | sigma.R
 
@@ -203,7 +203,7 @@ inst/
 </div>
 <div id="dependencies" class="section level3">
 <h3>Dependencies</h3>
-<p>Dependencies are the JavaScript and CSS assets used by a widget. Dependencies are included within the <code>inst/htmlwidgets/lib</code> directory. Dependencies are specified using a YAML configuration file which uses the name of the widget as it’s base file name. Here’s what our <strong>sigma.yaml</strong> file looks like:</p>
+<p>Dependencies are the JavaScript and CSS assets used by a widget. Dependencies are included within the <code>inst/htmlwidgets/lib</code> directory. Dependencies are specified using a YAML configuration file which uses the name of the widget as its base file name. Here’s what our <strong>sigma.yaml</strong> file looks like:</p>
 <pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="fu">dependencies:</span>
   <span class="kw">-</span> <span class="fu">name:</span> sigma
     <span class="fu">version:</span> 1.0.3
@@ -215,7 +215,7 @@ inst/
 </div>
 <div id="r-binding" class="section level3">
 <h3>R binding</h3>
-<p>We need to provide users with an R function that invokes our widget. Typically this function will accept input data as well as various options that control the widgets display. Here’s the R function for <code>sigma</code>:</p>
+<p>We need to provide users with an R function that invokes our widget. Typically this function will accept input data as well as various options that control the widget’s display. Here’s the R function for <code>sigma</code>:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co">#&#39; @import htmlwidgets</span>
 <span class="co">#&#39; @export</span>
 sigma &lt;-<span class="st"> </span>function(gexf, <span class="dt">drawEdges =</span> <span class="ot">TRUE</span>, <span class="dt">drawNodes =</span> <span class="ot">TRUE</span>,
@@ -301,7 +301,7 @@ renderSigma &lt;-<span class="st"> </span>function(expr, <span class="dt">env =<
 });</code></pre>
 <p>We provide a name and type for the widget and then implement three functions:</p>
 <ol style="list-style-type: decimal">
-<li><p>The <code>initialize</code> function creates and/or attaches to DOM elements as required and returns on object containing the widgets instance data. In this case we create a new sigma element and pass it the <code>id</code> of the DOM element that hosts the widget on the page. We’re going to need access to the sigma object later (to update it’s data and settings) so we return it as the <code>sig</code> member of the widgets instance data.</p></li>
+<li><p>The <code>initialize</code> function creates and/or attaches to DOM elements as required and returns on object containing the widget’s instance data. In this case we create a new sigma element and pass it the <code>id</code> of the DOM element that hosts the widget on the page. We’re going to need access to the sigma object later (to update it’s data and settings) so we return it as the <code>sig</code> member of the widgets instance data.</p></li>
 <li><p>The <code>renderValue</code> function actually pours our dynamic data and settings into the widget. Everything required to do the job is passed as a parameter to <code>renderValue</code>: the <code>x</code> parameter contains the widget data and settings and the <code>instance</code> parameter contains a reference to the sigma object we need to manipulate. We parse and update the GEXF data, apply the settings to the sigma object, and finally call <code>refresh</code> to reflect the new values on-screen.</p></li>
 <li><p>The <code>resize</code> function is called whenever the element containing the widget is resized. In this case we forward the sizing information on to each of the underlying sigma renderers.</p></li>
 </ol>
@@ -352,7 +352,7 @@ server =<span class="st"> </span>function(input, output) {
 <p>To create a new widget you can call the <code>scaffoldWidget</code> function to generate the basic structure for your widget. This function will:</p>
 <ul>
 <li><p>Create the .R, .js, and .yaml files required for your widget;</p></li>
-<li><p>If provided, take a <a href="http://bower.io/">Bower</a> package name and automatically download the JavaScript library (and it’s dependencies) and add the required entries to the .yaml file.</p></li>
+<li><p>If provided, take a <a href="http://bower.io/">Bower</a> package name and automatically download the JavaScript library (and its dependencies) and add the required entries to the .yaml file.</p></li>
 </ul>
 <p>This method is highly recommended as it ensures that you get started with the right file structure. Here’s an example that assumes you want to create a widget named ‘mywidget’ in a new package of the same name:</p>
 <pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">create</span>(<span class="st">&quot;mywidget&quot;</span>)               <span class="co"># create package using devtools</span>
@@ -373,7 +373,7 @@ devtools::<span class="kw">install</span>()                        <span class="
 <li><p><a href="develop_sizing.html">HTML Widget Sizing</a> explains custom sizing policies and when you might need to use them and describes implementing a <code>resize</code> method within JavaScript bindings.</p></li>
 <li><p><a href="develop_advanced.html">HTML Widgets: Advanced Topics</a> describes framework features that support per-widget instance data, data transformations (e.g. converting a data frame into a d3 dataset), and providing widget options that are live JavaScript objects (e.g. function definitions).</p></li>
 </ul>
-<p>The Sizing artcile is particularly important as most JavaScript libraries require some additional interaction to keep their size synchronized with their containing element.</p>
+<p>The Sizing article is particularly important as most JavaScript libraries require some additional interaction to keep their size synchronized with their containing element.</p>
 </div>
 <div id="examples" class="section level4">
 <h4>Examples</h4>
