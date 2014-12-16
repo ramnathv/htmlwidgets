@@ -270,7 +270,7 @@ library(mywidget)
 mywidget("hello, world")
 ```
 
-This is the most minimal widget possible and doesn't yet include a JavaScript library to interface to (note that `scaffoldWidget` can optionally include JavaScript library dependencies via the `bowerPkg` argument). Before getting started with development you should review the introductory example above to make sure you understand the various components and also review the additional artciles and examples linked to in the next section.
+This is the most minimal widget possible and doesn't yet include a JavaScript library to interface to (note that `scaffoldWidget` can optionally include JavaScript library dependencies via the `bowerPkg` argument). Before getting started with development you should review the introductory example above to make sure you understand the various components and also review the additional articles and examples linked to in the next section.
 
 ### Learning more
 
