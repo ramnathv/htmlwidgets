@@ -58,19 +58,28 @@ title: "htmlwidgets for R"
 
   .pagination {
     display: table;
-    margin: 15px auto;
+    margin: 0 auto;
     z-index: 1;
   }
   .pagination>li>a {
+    display: inline-block;
     color: #333 !important;
-    padding: 0px 12px;
+    padding: 2px 0;
+    margin-left: 12px !important;
+    margin-right: 12px !important;
     background-color: transparent !important;
     border-color: transparent !important;
     text-shadow: 1px 1px 3px rgba(140, 140, 140, 0.2);
   }
-  .pagination>li.active>a, .pagination>li.active>a:hover, .pagination>li.active>a:focus {
-    color: #FFF !important;
-    background-color: #2780e3 !important;
+  .pagination>li>a .bullet {
+    display: block;
+    width: 100%;
+    text-align: center;
+    visibility: hidden;
+    color: #676767;
+  }
+  .pagination>li.active>a .bullet {
+    visibility: visible;
   }
 </style>
 <script>
@@ -137,9 +146,9 @@ $(document).on("slide.bs.carousel", "#widget-carousel", function(e) {
         </div>
 
         <ul class="pagination pagination-sm">
-          <li class="active"><a href="javascript:void" data-target="#widget-carousel" data-slide-to="0">At the R console</a></li>
-          <li><a href="javascript:void" data-target="#widget-carousel" data-slide-to="1">In R Markdown docs</a></li>
-          <li><a href="javascript:void" data-target="#widget-carousel" data-slide-to="2">In Shiny apps</a></li>
+          <li class="active"><a href="javascript:void" data-target="#widget-carousel" data-slide-to="0"><span class="bullet">&#x25bc;</span>At the R console</a></li>
+          <li><a href="javascript:void" data-target="#widget-carousel" data-slide-to="1"><span class="bullet">&#x25bc;</span>In R Markdown docs</a></li>
+          <li><a href="javascript:void" data-target="#widget-carousel" data-slide-to="2"><span class="bullet">&#x25bc;</span>In Shiny apps</a></li>
         </ul>
 
       </div>
