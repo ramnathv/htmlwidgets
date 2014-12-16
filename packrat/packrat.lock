@@ -223,13 +223,13 @@ Hash: 8b1341dfd547c90ed4b3365d5aa46a7b
 
 Package: rmarkdown
 Source: github
-Version: 0.3.13
-Hash: 4fb5ef8f1ef14063b682189ae584b49a839362c5
+Version: 0.4.1
+Hash: 0e6009d50f4a38b71c4e75825d1c8823c2cf7703
 Requires: caTools, htmltools, knitr, yaml
 GithubRepo: rmarkdown
 GithubUsername: rstudio
 GithubRef: master
-GithubSha1: 4fb5ef8f1ef14063b682189ae584b49a839362c5
+GithubSha1: 0e6009d50f4a38b71c4e75825d1c8823c2cf7703
 
 Package: rstudioapi
 Source: CRAN
