@@ -158,5 +158,5 @@ resize: function(el, width, height, instance) {
 As you can see, re-sizing is handled in a wide variety of fashions in different JavaScript libraries. The `resize` method is intended to provide a flexible way to map the automatic sizing logic of **htmlwidgets** directly into the underlying library.
 
 A final note: you may have noticed the `instance` parameter passed to the resize method in the examples above. This is a special variable used to track instance specific widget data (the Dygraph object and the d3 force object, respectively). Utilizing per-widget instance data is covered in the 
-[advanced topics](develop-advanced.html) article.
+[advanced topics](develop_advanced.html) article.
 
