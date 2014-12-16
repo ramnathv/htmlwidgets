@@ -24,20 +24,7 @@
 }
 
 #nav-develop {
-  margin-right: 65px;
-}
-
-#github {
-  position: absolute;
-  top: 3px;
-  right: 3px;
-  width: 28px;
-  height: 28px;
-  opacity: 0.3;
-}
-#github img {
-  width: 28px;
-  height: 28px;
+  margin-right: 0px;
 }
 
 footer {
