@@ -3,7 +3,7 @@ title: "htmlwidgets: threejs"
 ---
 
 ### threejs
-<http://bwlewis.github.io/rthreejs/>
+<https://github.com/bwlewis/rthreejs>
 
 threejs includes a 3D scatterplot and 3D globe (you can directly manipulate the scatterplot below with the mouse).
 
