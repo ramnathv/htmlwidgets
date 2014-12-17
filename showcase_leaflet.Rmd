@@ -4,7 +4,7 @@ title: "htmlwidgets: leaflet"
 
 ### Leaflet
 
-<https://github.com/rstudio/leaflet>
+<http://rstudio.github.com/leaflet/>
 
 Leaflet is a JavaScript library for creating dynamic maps that support panning and zooming along with various annotations like markers, polygons, and popups.
 
