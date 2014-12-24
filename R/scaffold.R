@@ -157,8 +157,10 @@ addWidgetJS <- function(name, edit){
 # This function uses bower to install a javascript package along with
 # its dependencies.
 installBowerPkg <- function(pkg){
+  bowerPath = findBower()
+
   # check if bower is installed
-  if (findBower() == ""){
+  if (is.null(bowerPath) || bowerPath == ""){
     stop(
       "Please install bower from http://bower.io",
       call. = FALSE
