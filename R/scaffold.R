@@ -185,15 +185,16 @@ installBowerPkg <- function(pkg){
 findBower <- function(){
   # a slightly more robust finder of bower for windows
   # which does not require PATH environment variable to be set
-  bowerPath = if(Sys.which("bower") == "") {
+
+  # try to find the easy case
+  bowerPath = Sys.which("bower")
+
+  if(bowerPath == "" && identical(.Platform$OS.type,"windows")) {
     # if it does not find Sys.which('bower')
-    # also check APPDATA to see if found there
-    if(identical(.Platform$OS.type,"windows")) {
-      Sys.which(file.path(Sys.getenv("APPDATA"),"npm","bower."))
-    }
-  } else {
-    Sys.which("bower")
+    # also check APPDATA if Windows to see if found there
+    bowerPath = Sys.which(file.path(Sys.getenv("APPDATA"),"npm","bower."))
   }
+
   return(bowerPath)
 }
 
