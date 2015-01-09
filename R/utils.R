@@ -122,3 +122,39 @@ shouldEval <- function(options) {
 }
 # JSEvals(list(list(foo.bar=JS("hi"), baz.qux="bye"))) == "0.foo\\.bar"
 
+#' Render widget as an iframe
+#'
+#' This function allows a widget to be embedded in an Rmd document as an iframe.
+#' This is especially useful when there is potential for conflicts between
+#' assets on the parent page and those used by the widget.
+#'
+#' @inheritParams saveWidget
+#' @param width width of iframe
+#' @param height height of iframe
+#' @param border-width width of the borders. default is 0px
+#' @param ... css styles to add to the iframe
+#' @export
+as.iframe <- function(widget, file = NULL, selfcontained = TRUE,
+    libdir = NULL, width = '100%', height = 500, `border-width` = '0px', ...){
+  if (is.null(file)){
+    file <- basename(tempfile(fileext = '.html'))
+  }
+  htmlwidgets::saveWidget(widget,
+    file = file, selfcontained = selfcontained, libdir = libdir
+  )
+  styles = list(`border-width` = `border-width`, ...)
+  style = paste(paste(names(styles), styles, sep = ':'), collapse = ';')
+  content <- if (selfcontained){
+    list(
+      srcdoc = paste(readLines(file), collapse = '\n'),
+      width = width, height = height, style = style
+    )
+  } else {
+    list(
+      src = file,
+      width = width, height = height, style = style
+    )
+  }
+  do.call(htmltools::tags$iframe, content)
+}
+
