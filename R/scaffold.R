@@ -206,8 +206,12 @@ readBower <- function(pkg, src = "inst/htmlwidgets/lib"){
     name = basename(bower$name),
     version = bower$version,
     src = paste0('htmlwidgets/lib/', pkg),
-    script = bower$main[grepl('^.*\\.js$', bower$main)],
-    style = bower$main[grepl('^.*\\.css$', bower$main)]
+    script = getMinified(
+      bower$main[grepl('^.*\\.js$', bower$main)], basename(bower$name)
+    ),
+    style = getMinified(
+      bower$main[grepl('^.*\\.css$', bower$main)], basename(bower$name)
+    )
   )
   deps = bower$dependencies
   spec = Filter(function(x) length(x) != 0, spec)
@@ -222,4 +226,18 @@ getConfig <- function(pkg, src = "inst/htmlwidgets/lib"){
     readBower(pkg, src = src)$spec
   })
   yaml::as.yaml(list(dependencies = config))
+}
+
+# Replace dependency with minified version if it exists
+getMinified <- function(x, name, src = 'inst/htmlwidgets/lib'){
+  xFile = file.path(src, name, x)
+  ext = tools:::file_ext(xFile)
+  minFile = paste0(tools::file_path_sans_ext(xFile), '.min.', ext)
+  sapply(seq_along(x), function(i){
+    if (file.exists(minFile[i])) {
+      file.path(dirname(x[i]), basename(minFile[i]))
+    } else {
+      x[i]
+    }
+  })
 }
