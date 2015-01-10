@@ -149,16 +149,16 @@ as.iframe <- function(widget, file = NULL, selfcontained = TRUE,
     ";"
   )
   content <- if (selfcontained){
+    on.exit(unlink(file), add = TRUE)
     list(
       srcdoc = paste(readLines(file), collapse = '\n'),
       width = width, height = height, style = style
     )
-    on.exit(unlink(file), add = TRUE)
   } else {
     list(
       src = file,
       width = width, height = height, style = style
     )
   }
-  do.call(htmltools::tags$iframe, list(quote(content)))
+  do.call(htmltools::tags$iframe, content)
 }
