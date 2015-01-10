@@ -159,6 +159,10 @@ as.iframe <- function(widget, file = NULL, selfcontained = TRUE,
       width = width, height = height, style = style
     )
   }
+<<<<<<< HEAD
   do.call(htmltools::tags$iframe, list(quote(content)))
+=======
+  do.call(htmltools::tags$iframe, list(quote(content))))
+>>>>>>> FETCH_HEAD
 }
 
