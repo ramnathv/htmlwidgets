@@ -160,5 +160,5 @@ as.iframe <- function(widget, file = NULL, selfcontained = TRUE,
       width = width, height = height, style = style
     )
   }
-  do.call(htmltools::tags$iframe, content)
+  htmltools::tag('iframe', content)
 }
