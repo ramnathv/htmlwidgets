@@ -132,7 +132,7 @@ shouldEval <- function(options) {
 #' @param width width of iframe
 #' @param height height of iframe
 #' @param border-width width of the borders. default is 0px
-#' @param ... css styles to add to the iframe
+#' @param ... css tag attributes to add to the iframe
 #' @export
 as.iframe <- function(widget, file = NULL, selfcontained = TRUE,
     libdir = NULL, width = '100%', height = 500, `border-width` = '0px', ...){
@@ -143,18 +143,22 @@ as.iframe <- function(widget, file = NULL, selfcontained = TRUE,
     file = file, selfcontained = selfcontained, libdir = libdir
   )
   styles = list(`border-width` = `border-width`, ...)
-  style = paste(paste(names(styles), styles, sep = ':'), collapse = ';')
+  style = paste(
+    paste(paste(names(styles), styles, sep = ':'), collapse = ';'),
+    ";"
+  )
   content <- if (selfcontained){
     list(
       srcdoc = paste(readLines(file), collapse = '\n'),
       width = width, height = height, style = style
     )
+    on.exit(unlink(file), add = TRUE)
   } else {
     list(
       src = file,
       width = width, height = height, style = style
     )
   }
-  do.call(htmltools::tags$iframe, content)
+  do.call(htmltools::tags$iframe, list(quote(content))))
 }
 
