@@ -1,0 +1,17 @@
+---
+title: "htmlwidgets: MetricsGraphics"
+---
+
+### MetricsGraphics
+<http://hrbrmstr.github.io/metricsgraphics/>
+
+MetricsGraphics enables easy creation of D3 scatterplots, line charts, and histograms.
+
+```{r, message=FALSE}
+library(metricsgraphics)
+mjs_plot(mtcars, x=wt, y=mpg) %>%
+  mjs_point(color_accessor=carb, size_accessor=carb) %>%
+  mjs_labs(x="Weight of Car", y="Miles per Gallon")
+```
+
+

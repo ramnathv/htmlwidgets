@@ -153,6 +153,16 @@ Version: 0.2.1
 Hash: fc52fa39dfd216c44d64812ff31b1c67
 Requires: digest
 
+Package: metricsgraphics
+Source: github
+Version: 0.4.1
+Hash: 6358939a969bfd9faaf92295304dfc4e88013732
+Requires: htmltools, htmlwidgets, magrittr
+GithubRepo: metricsgraphics
+GithubUsername: hrbrmstr
+GithubRef: master
+GithubSha1: 6358939a969bfd9faaf92295304dfc4e88013732
+
 Package: mime
 Source: CRAN
 Version: 0.2
