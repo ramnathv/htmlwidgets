@@ -13,6 +13,16 @@ GithubSha1: 03f08307e6b7e165e1d571d43e39057afa1f4269
 Hash: 03f08307e6b7e165e1d571d43e39057afa1f4269
 Requires: htmltools, htmlwidgets, magrittr
 
+Package: DiagrammeR
+Source: github
+Version: 0.4
+GithubRepo: DiagrammeR
+GithubUsername: rich-iannone
+GithubRef: master
+GithubSha1: 4b08887320181a9fd71ec84b51e6ede2e1654f73
+Hash: 4b08887320181a9fd71ec84b51e6ede2e1654f73
+Requires: htmlwidgets, rstudioapi
+
 Package: R6
 Source: CRAN
 Version: 2.0.1
@@ -241,19 +251,15 @@ Version: 0.2.15
 Hash: f78059fac4af154bfe46bf547ae12be9
 
 Package: rmarkdown
-Source: github
-Version: 0.4.1
-GithubRepo: rmarkdown
-GithubUsername: rstudio
-GithubRef: master
-GithubSha1: 0e6009d50f4a38b71c4e75825d1c8823c2cf7703
-Hash: 0e6009d50f4a38b71c4e75825d1c8823c2cf7703
+Source: CRAN
+Version: 0.5.1
+Hash: 2d87f70c12c5558c50c4b3587fc6f499
 Requires: caTools, htmltools, knitr, yaml
 
 Package: rstudioapi
 Source: CRAN
-Version: 0.1
-Hash: 5bd4449a873ec652a05c932312dcf04b
+Version: 0.2
+Hash: aa27b6b62b335717db16cb1de6336860
 
 Package: scales
 Source: CRAN

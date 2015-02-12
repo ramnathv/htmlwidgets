@@ -1,0 +1,21 @@
+---
+title: "htmlwidgets: DiagrammeR"
+---
+
+### DiagrammeR
+<http://rich-iannone.github.io/DiagrammeR/>
+
+A tool for creating diagrams and flowcharts using Graphviz and Mermaid.
+
+```{r, message=FALSE, fig.height=2.5}
+library(DiagrammeR)
+mermaid("
+  graph LR
+  A(Rounded)-->B[Rectangular]
+  B-->C{A Rhombus}
+  C-->D[Rectangle One]
+  C-->E[Rectangle Two]
+")
+```
+
+
