@@ -19,11 +19,9 @@
 <script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
 <script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
 <script src="libs/htmlwidgets-0.3.2/htmlwidgets.js"></script>
-<script src="libs/d3-3.3.8/d3.min.js"></script>
-<script src="libs/dagre-0.4.0/dagre-d3.min.js"></script>
-<script src="libs/mermaid-0.3.0/dist/mermaid.slim.min.js"></script>
+<script src="libs/viz-0.3/viz.js"></script>
 <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="libs/DiagrammeR-binding-0.4/DiagrammeR.js"></script>
+<script src="libs/grViz-binding-0.4/grViz.js"></script>
 
 <!-- Styles for this site -->
 <link href="css/styles.css" rel="stylesheet">
@@ -160,16 +158,19 @@ img {
 <p><a href="http://rich-iannone.github.io/DiagrammeR/" class="uri">http://rich-iannone.github.io/DiagrammeR/</a></p>
 <p>A tool for creating diagrams and flowcharts using Graphviz and Mermaid.</p>
 <pre class="r"><code>library(DiagrammeR)
-mermaid(&quot;
-  graph LR
-  A(Rounded)--&gt;B[Rectangular]
-  B--&gt;C{A Rhombus}
-  C--&gt;D[Rectangle One]
-  C--&gt;E[Rectangle Two]
-&quot;)</code></pre>
-<p><div id="htmlwidget-3078" style="width:576px;height:240px;" class="DiagrammeR"></div>
+grViz(&quot;
+  digraph {
+    layout = twopi
+    node [shape = circle]
+    A -&gt; {B C D} 
+  }&quot;)</code></pre>
+<p><div id="htmlwidget-3078" style="width:576px;height:240px;" class="grViz"></div>
 <script type="application/json" data-for="htmlwidget-3078">{ "x": {
- "diagram": "\n  graph LR\n  A(Rounded)-->B[Rectangular]\n  B-->C{A Rhombus}\n  C-->D[Rectangle One]\n  C-->E[Rectangle Two]\n" 
+ "diagram": "\n  digraph {\n    layout = twopi\n    node [shape = circle]\n    A -> {B C D} \n  }",
+"config": {
+ "engine": "dot",
+"options": null 
+} 
 },"evals": [  ] }</script></p>
 </div>
 

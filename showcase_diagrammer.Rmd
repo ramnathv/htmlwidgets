@@ -9,13 +9,12 @@ A tool for creating diagrams and flowcharts using Graphviz and Mermaid.
 
 ```{r, message=FALSE, fig.height=2.5}
 library(DiagrammeR)
-mermaid("
-  graph LR
-  A(Rounded)-->B[Rectangular]
-  B-->C{A Rhombus}
-  C-->D[Rectangle One]
-  C-->E[Rectangle Two]
-")
+grViz("
+  digraph {
+    layout = twopi
+    node [shape = circle]
+    A -> {B C D} 
+  }")
 ```
 
 
