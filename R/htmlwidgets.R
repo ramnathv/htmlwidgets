@@ -89,9 +89,10 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
       )
     }
   )
+  attachments = attachmentDeps(x$x)
   html <- htmltools::attachDependencies(html,
     c(widget_dependencies(class(x)[1], attr(x, 'package')),
-      x$dependencies)
+      x$dependencies, attachments$deps)
   )
 
   htmltools::browsable(html)
@@ -123,8 +124,9 @@ widget_dependencies <- function(name, package){
 # to be picked up by htmlwidgets.js for static rendering.
 widget_data <- function(x, id, ...){
   evals <- JSEvals(x$x)
+  attachments = attachmentDeps(x$x)$attachments
   tags$script(type="application/json", `data-for` = id,
-    HTML(toJSON(list(x = x$x, evals = evals), collapse = "", digits = 16))
+    HTML(toJSON(list(x = x$x, evals = evals, attachments = attachments), collapse = "", digits = 16))
   )
 }
 
@@ -271,12 +273,14 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
     }
     x <- .subset2(instance, "x")
     deps <- .subset2(instance, "dependencies")
+    attachments = attachmentDeps(x)
+    deps = c(deps, attachments$deps)
     deps <- lapply(
       htmltools::resolveDependencies(deps),
       shiny::createWebDependency
     )
     evals = JSEvals(x)
-    list(x = x, evals = evals, deps = deps)
+    list(x = x, evals = evals, deps = deps, attachments = attachments$attachments)
   }
 
   # mark it with the output function so we can use it in Rmd files
