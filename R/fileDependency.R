@@ -12,6 +12,9 @@ fileDependency <- function(filename, version = '0.0.1'){
 #' Mark a string as an attachment
 #' @export
 attachment <- function(x){
+  if (!file.exists(x)){
+    stop("The attachment ", x, " does not exist")
+  }
   structure(normalizePath(x), class = unique(c("ATTACHMENT", oldClass(x))))
 }
 
