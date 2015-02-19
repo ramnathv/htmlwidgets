@@ -12,14 +12,14 @@ fileDependency <- function(filename, version = '0.0.1'){
 #' Mark a string as an attachment
 #' @export
 attachment <- function(x){
-  if (!file.exists(x)){
-    stop("The attachment ", x, " does not exist")
-  }
-  structure(normalizePath(x), class = unique(c("ATTACHMENT", oldClass(x))))
+  structure(
+    normalizePath(x, mustWork = TRUE),
+    class = unique(c("ATTACHMENT", oldClass(x)))
+  )
 }
 
 attachmentDeps <- function(list) {
-  attachments = rapply(list, function(y){y}, classes = 'ATTACHMENT')
+  attachments = rapply(list, identity, classes = 'ATTACHMENT')
   deps = lapply(attachments, fileDependency)
   attachments = lapply(as.list(attachments), function(x){
     basename(tools::file_path_sans_ext(x))
