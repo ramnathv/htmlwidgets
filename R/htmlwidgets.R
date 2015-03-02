@@ -85,7 +85,7 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
     widget_data(x, id, digits=x$digits),
     if (!is.null(sizeInfo$runtime)) {
       tags$script(type="application/htmlwidget-sizing", `data-for` = id,
-        toJSON(sizeInfo$runtime, collapse="", digits = x$digits)
+        toJSON(sizeInfo$runtime, collapse="", digits = 16)
       )
     }
   )
