@@ -376,6 +376,7 @@
       overrideMethod(shinyBinding, "renderValue", function(superfunc) {
         return function(el, data) {
           // Resolve strings marked as javascript literals to objects
+          if (!(data.evals instanceof Array)) data.evals = [data.evals];
           for (var i = 0; data.evals && i < data.evals.length; i++) {
             window.HTMLWidgets.evaluateStringMember(data.x, data.evals[i]);
           }
@@ -469,6 +470,7 @@
         if (scriptData) {
           var data = JSON.parse(scriptData.textContent || scriptData.text);
           // Resolve strings marked as javascript literals to objects
+          if (!(data.evals instanceof Array)) data.evals = [data.evals];
           for (var k = 0; data.evals && k < data.evals.length; k++) {
             window.HTMLWidgets.evaluateStringMember(data.x, data.evals[k]);
           }
