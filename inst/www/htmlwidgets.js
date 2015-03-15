@@ -469,8 +469,8 @@
         if (scriptData) {
           var data = JSON.parse(scriptData.textContent || scriptData.text);
           // Resolve strings marked as javascript literals to objects
-          for (var i = 0; data.evals && i < data.evals.length; i++) {
-            window.HTMLWidgets.evaluateStringMember(data.x, data.evals[i]);
+          for (var k = 0; data.evals && k < data.evals.length; k++) {
+            window.HTMLWidgets.evaluateStringMember(data.x, data.evals[k]);
           }
           binding.renderValue(el, data.x, initResult);
         }
