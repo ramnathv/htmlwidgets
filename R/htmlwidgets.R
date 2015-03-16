@@ -1,5 +1,5 @@
 #' @export
-print.htmlwidget <- function(x, ...) {
+print.htmlwidget <- function(x, ..., view = interactive()) {
 
   # if we have a viewer then forward viewer pane height (if any)
   viewer <- getOption("viewer")
@@ -23,15 +23,15 @@ print.htmlwidget <- function(x, ...) {
   }
 
   # call html_print with the viewer
-  html_print(htmltools::as.tags(x, standalone=TRUE), viewer = viewerFunc)
+  html_print(htmltools::as.tags(x, standalone=TRUE), viewer = if (view) viewerFunc)
 
   # return value
   invisible(x)
 }
 
 #' @export
-print.suppress_viewer <- function(x, ...) {
-  html_print(htmltools::as.tags(x, standalone=TRUE), viewer = browseURL)
+print.suppress_viewer <- function(x, ..., view = interactive()) {
+  html_print(htmltools::as.tags(x, standalone=TRUE), viewer = if (view) browseURL)
   invisible(x)
 }
 
