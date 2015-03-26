@@ -231,7 +231,7 @@ getConfig <- function(pkg, src = "inst/htmlwidgets/lib"){
 # Replace dependency with minified version if it exists
 getMinified <- function(x, name, src = 'inst/htmlwidgets/lib'){
   xFile = file.path(src, name, x)
-  ext = tools:::file_ext(xFile)
+  ext = tools::file_ext(xFile)
   minFile = paste0(tools::file_path_sans_ext(xFile), '.min.', ext)
   sapply(seq_along(x), function(i){
     if (file.exists(minFile[i])) {
