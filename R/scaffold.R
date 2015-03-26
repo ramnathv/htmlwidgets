@@ -199,7 +199,7 @@ findBower <- function(){
 
 # Read the bower.json file
 readBower <- function(pkg, src = "inst/htmlwidgets/lib"){
-  bower = RJSONIO::fromJSON(
+  bower = jsonlite::fromJSON(
     file.path(src, pkg, 'bower.json')
   )
   spec = list(

@@ -85,7 +85,7 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
     widget_data(x, id),
     if (!is.null(sizeInfo$runtime)) {
       tags$script(type="application/htmlwidget-sizing", `data-for` = id,
-        toJSON(sizeInfo$runtime, digits = 16)
+        toJSON(sizeInfo$runtime)
       )
     }
   )
@@ -121,7 +121,6 @@ widget_dependencies <- function(name, package){
 
 # Generates a <script type="application/json"> tag with the JSON-encoded data,
 # to be picked up by htmlwidgets.js for static rendering.
-#' @importFrom jsonlite toJSON
 widget_data <- function(x, id, ...){
   payload <- createPayload(x)
   args <- c(payload, attr(x$x, 'TOJSON_ARGS'))

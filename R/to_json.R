@@ -20,7 +20,7 @@ to_json = function(df, orient = "columns", json = TRUE){
     values = do.call('zip_vectors_', setNames(dl, NULL))
   )
   if (json){
-    dl = RJSONIO::toJSON(dl, digits = 16)
+    dl = toJSON(dl, digits = 16)
   }
   return(dl)
 }
