@@ -13,7 +13,7 @@ files used to implement the widget)}
 
 \item{x}{Widget instance data (underlying data to render and options that
 govern how it's rendered). This value will be converted to JSON using
-\code{\link[RJSONIO:toJSON]{RJSONIO::toJSON}} and made available to the
+\code{\link[jsonlite]{toJSON}} and made available to the
 widget's JavaScript \code{renderValue} function.}
 
 \item{width}{Fixed width for widget (in css units). The default is
