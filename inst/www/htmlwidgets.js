@@ -399,6 +399,7 @@
             }
           }
           Shiny.renderDependencies(data.deps);
+          resolveAttachmentUrls(data)
           superfunc(el, data.x, elementData(el, "init_result"));
         };
       });
@@ -474,6 +475,7 @@
           for (var k = 0; data.evals && k < data.evals.length; k++) {
             window.HTMLWidgets.evaluateStringMember(data.x, data.evals[k]);
           }
+          resolveAttachmentUrls(data)
           binding.renderValue(el, data.x, initResult);
         }
       }
@@ -567,6 +569,34 @@
       results.push(currentResult);
     }
     return results;
+  }
+  // Set value of a property that is nested deep
+  // var dat = {a: {b: {c: 2}}}
+  // setDeepProperty(dat, "a.b", {d: 10})
+  // {a: {b: {d: 10}}}
+  function setDeepProperty(obj, path, value){
+    var path = path.split(".")
+    //var path = splitWithEscape(path, '.', '\\')
+    var path2 = path.slice(0, path.length - 1)
+    var x = path2.reduce(function(prev, cur){
+      return prev[cur]
+    }, obj)
+    if (typeof value === 'undefined'){
+      console.log('undefined')
+      return x[path[path.length - 1]]
+    } else {
+      x[path[path.length - 1]] = value
+    }
+  }
+  // Resolve attachment urls
+  function resolveAttachmentUrls(data){
+    if (data.attachments){
+      Object.keys(data.attachments).map(function(k){
+        setDeepProperty(data.x, k,
+            HTMLWidgets.getAttachmentUrl(data.attachments[k], 1)
+        )
+      })
+    }
   }
   // Function authored by Yihui/JJ Allaire
   window.HTMLWidgets.evaluateStringMember = function(o, member) {
