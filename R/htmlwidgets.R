@@ -279,7 +279,7 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
       htmltools::resolveDependencies(deps),
       shiny::createWebDependency
     )
-    payload = modifyList(createPayload(instance), list(deps = deps))
+    payload = c(createPayload(instance), list(deps = deps))
   }
 
   # mark it with the output function so we can use it in Rmd files
@@ -290,6 +290,7 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
 createPayload <- function(instance){
   if (!is.null(instance$preRenderHook)){
     instance <- instance$preRenderHook(instance)
+    instance$preRenderHook <- NULL
   }
   x <- .subset2(instance, "x")
   evals = JSEvals(x)
