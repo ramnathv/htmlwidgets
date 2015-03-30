@@ -158,8 +158,9 @@ widget_data <- function(x, id, ...){
 #'@param elementId Use an explicit element ID for the widget (rather than an
 #'  automatically generated one). Useful if you have other JavaScript that needs
 #'  to explicitly discover and interact with a specific widget instance.
-#'@param preRenderHook A function to be run on the widget payload x, prior to
-#'  rendering.
+#'@param preRenderHook A function to be run on the widget, just prior to
+#'  rendering. It accepts the entire widget object as input, and should return
+#'  a modified widget object.
 #'
 #'@details
 #'
