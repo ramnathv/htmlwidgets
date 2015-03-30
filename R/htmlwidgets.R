@@ -287,10 +287,10 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
 
 # Helper function to create payload
 createPayload <- function(instance){
-  x <- .subset2(instance, "x")
   if (!is.null(instance$preRenderHook)){
-    x <- instance$preRenderHook(x)
+    instance <- instance$preRenderHook(instance)
   }
+  x <- .subset2(instance, "x")
   evals = JSEvals(x)
   list(x = x, evals = evals)
 }
