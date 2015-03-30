@@ -82,7 +82,7 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
         height = sizeInfo$height
       )
     ),
-    widget_data(x, id),
+    widget_data(x, id, digits=x$digits),
     if (!is.null(sizeInfo$runtime)) {
       tags$script(type="application/htmlwidget-sizing", `data-for` = id,
         toJSON(sizeInfo$runtime, collapse="", digits = 16)
@@ -121,10 +121,10 @@ widget_dependencies <- function(name, package){
 
 # Generates a <script type="application/json"> tag with the JSON-encoded data,
 # to be picked up by htmlwidgets.js for static rendering.
-widget_data <- function(x, id, ...){
+widget_data <- function(x, id, digits=16, ...){
   evals <- JSEvals(x$x)
   tags$script(type="application/json", `data-for` = id,
-    HTML(toJSON(list(x = x$x, evals = evals), collapse = "", digits = 16))
+    HTML(toJSON(list(x = x$x, evals = evals), collapse = "", digits = digits))
   )
 }
 
@@ -158,6 +158,7 @@ widget_data <- function(x, id, ...){
 #'@param elementId Use an explicit element ID for the widget (rather than an
 #'  automatically generated one). Useful if you have other JavaScript that needs
 #'  to explicitly discover and interact with a specific widget instance.
+#'@param digits Number of significant digits to use for the widget data.
 #'
 #'@details
 #'
@@ -177,7 +178,8 @@ createWidget <- function(name,
                          sizingPolicy = htmlwidgets::sizingPolicy(),
                          package = name,
                          dependencies = NULL,
-                         elementId = NULL) {
+                         elementId = NULL,
+                         digits=16) {
   # Turn single dependency object into list of dependencies, if necessary
   if (inherits(dependencies, "html_dependency"))
     dependencies <- list(dependencies)
@@ -187,7 +189,8 @@ createWidget <- function(name,
          height = height,
          sizingPolicy = sizingPolicy,
          dependencies = dependencies,
-         elementId = elementId),
+         elementId = elementId,
+         digits=digits),
     class = c(name,
               if (sizingPolicy$viewer$suppress) "suppress_viewer",
               "htmlwidget"),
@@ -282,4 +285,3 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
   # mark it with the output function so we can use it in Rmd files
   shiny::markRenderFunction(outputFunction, renderFunc)
 }
-
