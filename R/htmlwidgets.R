@@ -122,6 +122,9 @@ widget_dependencies <- function(name, package){
 # Generates a <script type="application/json"> tag with the JSON-encoded data,
 # to be picked up by htmlwidgets.js for static rendering.
 widget_data <- function(x, id, ...){
+  if (!is.null(x$preRenderHook)){
+    x$x = x$preRenderHook(x$x)
+  }
   evals <- JSEvals(x$x)
   tags$script(type="application/json", `data-for` = id,
     HTML(toJSON(list(x = x$x, evals = evals), collapse = "", digits = 16))
@@ -158,6 +161,8 @@ widget_data <- function(x, id, ...){
 #'@param elementId Use an explicit element ID for the widget (rather than an
 #'  automatically generated one). Useful if you have other JavaScript that needs
 #'  to explicitly discover and interact with a specific widget instance.
+#'@param preRenderHook A function to be run on the widget payload x, prior to
+#'  rendering.
 #'
 #'@details
 #'
@@ -177,7 +182,8 @@ createWidget <- function(name,
                          sizingPolicy = htmlwidgets::sizingPolicy(),
                          package = name,
                          dependencies = NULL,
-                         elementId = NULL) {
+                         elementId = NULL,
+                         preRenderHook = NULL) {
   # Turn single dependency object into list of dependencies, if necessary
   if (inherits(dependencies, "html_dependency"))
     dependencies <- list(dependencies)
@@ -187,7 +193,8 @@ createWidget <- function(name,
          height = height,
          sizingPolicy = sizingPolicy,
          dependencies = dependencies,
-         elementId = elementId),
+         elementId = elementId,
+         preRenderHook = preRenderHook),
     class = c(name,
               if (sizingPolicy$viewer$suppress) "suppress_viewer",
               "htmlwidget"),
@@ -270,6 +277,9 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
       )
     }
     x <- .subset2(instance, "x")
+    if (!is.null(instance$preRenderHook)){
+      x <- instance$preRenderHook(x)
+    }
     deps <- .subset2(instance, "dependencies")
     deps <- lapply(
       htmltools::resolveDependencies(deps),
