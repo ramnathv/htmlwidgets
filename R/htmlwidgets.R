@@ -122,12 +122,9 @@ widget_dependencies <- function(name, package){
 # Generates a <script type="application/json"> tag with the JSON-encoded data,
 # to be picked up by htmlwidgets.js for static rendering.
 widget_data <- function(x, id, ...){
-  if (!is.null(x$preRenderHook)){
-    x$x = x$preRenderHook(x$x)
-  }
-  evals <- JSEvals(x$x)
+  payload <- createPayload(x)
   tags$script(type="application/json", `data-for` = id,
-    HTML(toJSON(list(x = x$x, evals = evals), collapse = "", digits = 16))
+    HTML(toJSON(payload, collapse = "", digits = 16))
   )
 }
 
@@ -276,20 +273,25 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
         instance$elementId, "\"; Shiny doesn't use them"
       )
     }
-    x <- .subset2(instance, "x")
-    if (!is.null(instance$preRenderHook)){
-      x <- instance$preRenderHook(x)
-    }
     deps <- .subset2(instance, "dependencies")
     deps <- lapply(
       htmltools::resolveDependencies(deps),
       shiny::createWebDependency
     )
-    evals = JSEvals(x)
-    list(x = x, evals = evals, deps = deps)
+    payload = modifyList(createPayload(instance), list(deps = deps))
   }
 
   # mark it with the output function so we can use it in Rmd files
   shiny::markRenderFunction(outputFunction, renderFunc)
+}
+
+# Helper function to create payload
+createPayload <- function(instance){
+  x <- .subset2(instance, "x")
+  if (!is.null(instance$preRenderHook)){
+    x <- instance$preRenderHook(x)
+  }
+  evals = JSEvals(x)
+  list(x = x, evals = evals)
 }
 
