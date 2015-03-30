@@ -422,14 +422,14 @@
     if (!scheduleStaticRenderTimerId) {
       scheduleStaticRenderTimerId = setTimeout(function() {
         scheduleStaticRenderTimerId = null;
-        staticRender();
+        window.HTMLWidgets.staticRender();
       }, 1);
     }
   }
 
   // Render static widgets after the document finishes loading
   // Statically render all elements that are of this widget's class
-  function staticRender() {
+  window.HTMLWidgets.staticRender = function() {
     var bindings = window.HTMLWidgets.widgets || [];
     for (var i = 0; i < bindings.length; i++) {
       var binding = bindings[i];
@@ -484,13 +484,13 @@
   if (document.addEventListener) {
     document.addEventListener("DOMContentLoaded", function() {
       document.removeEventListener("DOMContentLoaded", arguments.callee, false);
-      staticRender();
+      window.HTMLWidgets.staticRender();
     }, false);
   } else if (document.attachEvent) {
     document.attachEvent("onreadystatechange", function() {
       if (document.readyState === "complete") {
         document.detachEvent("onreadystatechange", arguments.callee);
-        staticRender();
+        window.HTMLWidgets.staticRender();
       }
     });
   }
