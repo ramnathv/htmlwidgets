@@ -122,9 +122,9 @@ widget_dependencies <- function(name, package){
 # Generates a <script type="application/json"> tag with the JSON-encoded data,
 # to be picked up by htmlwidgets.js for static rendering.
 widget_data <- function(x, id, ...){
-  evals <- JSEvals(x$x)
+  payload <- createPayload(x)
   tags$script(type="application/json", `data-for` = id,
-    HTML(toJSON(list(x = x$x, evals = evals), collapse = "", digits = 16))
+    HTML(toJSON(payload, collapse = "", digits = 16))
   )
 }
 
@@ -158,6 +158,9 @@ widget_data <- function(x, id, ...){
 #'@param elementId Use an explicit element ID for the widget (rather than an
 #'  automatically generated one). Useful if you have other JavaScript that needs
 #'  to explicitly discover and interact with a specific widget instance.
+#'@param preRenderHook A function to be run on the widget, just prior to
+#'  rendering. It accepts the entire widget object as input, and should return
+#'  a modified widget object.
 #'
 #'@details
 #'
@@ -177,7 +180,8 @@ createWidget <- function(name,
                          sizingPolicy = htmlwidgets::sizingPolicy(),
                          package = name,
                          dependencies = NULL,
-                         elementId = NULL) {
+                         elementId = NULL,
+                         preRenderHook = NULL) {
   # Turn single dependency object into list of dependencies, if necessary
   if (inherits(dependencies, "html_dependency"))
     dependencies <- list(dependencies)
@@ -187,7 +191,8 @@ createWidget <- function(name,
          height = height,
          sizingPolicy = sizingPolicy,
          dependencies = dependencies,
-         elementId = elementId),
+         elementId = elementId,
+         preRenderHook = preRenderHook),
     class = c(name,
               if (sizingPolicy$viewer$suppress) "suppress_viewer",
               "htmlwidget"),
@@ -269,17 +274,26 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
         instance$elementId, "\"; Shiny doesn't use them"
       )
     }
-    x <- .subset2(instance, "x")
     deps <- .subset2(instance, "dependencies")
     deps <- lapply(
       htmltools::resolveDependencies(deps),
       shiny::createWebDependency
     )
-    evals = JSEvals(x)
-    list(x = x, evals = evals, deps = deps)
+    payload = c(createPayload(instance), list(deps = deps))
   }
 
   # mark it with the output function so we can use it in Rmd files
   shiny::markRenderFunction(outputFunction, renderFunc)
+}
+
+# Helper function to create payload
+createPayload <- function(instance){
+  if (!is.null(instance$preRenderHook)){
+    instance <- instance$preRenderHook(instance)
+    instance$preRenderHook <- NULL
+  }
+  x <- .subset2(instance, "x")
+  evals = JSEvals(x)
+  list(x = x, evals = evals)
 }
 
