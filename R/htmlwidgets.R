@@ -123,7 +123,7 @@ widget_dependencies <- function(name, package){
 # to be picked up by htmlwidgets.js for static rendering.
 widget_data <- function(x, id, ...){
   payload <- createPayload(x)
-  args <- c(payload, attr(x$x, 'TOJSON_ARGS'))
+  args <- c(list(x = payload), attr(x$x, 'TOJSON_ARGS'))
   tags$script(type="application/json", `data-for` = id,
     HTML(do.call(toJSON, args))
   )
