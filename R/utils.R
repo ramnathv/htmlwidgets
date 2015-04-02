@@ -2,14 +2,12 @@
 toJSON <- function(
   x, ...,  dataframe = "columns", null = "null", na = "null", auto_unbox = TRUE,
   digits = getOption("shiny.json.digits", 16), use_signif = TRUE, force = TRUE,
-  POSIXt = "ISO8601", UTC = TRUE, rownames = FALSE, keep_vec_names = TRUE,
-  pretty = TRUE
+  POSIXt = "ISO8601", UTC = TRUE, rownames = FALSE, keep_vec_names = TRUE
 ) {
   jsonlite::toJSON(
     I(x), dataframe = dataframe, null = null, na = na, auto_unbox = auto_unbox,
     digits = digits, use_signif = use_signif, force = force, POSIXt = POSIXt,
-    UTC = UTC, rownames = rownames, keep_vec_names = keep_vec_names,
-    pretty = pretty, ...
+    UTC = UTC, rownames = rownames, keep_vec_names = keep_vec_names, ...
   )
 }
 
@@ -18,7 +16,6 @@ if (requireNamespace('shiny')) local({
     toJSON2 <- getFromNamespace('toJSON', 'shiny')
     args2 <- formals(toJSON2)
     args1 <- formals(toJSON)
-    args1$pretty <- NULL  # shiny does not have pretty = TRUE for now
     if (!identical(args1, args2)) {
       warning('Check shiny:::toJSON and make sure htmlwidgets:::toJSON is in sync')
     }
