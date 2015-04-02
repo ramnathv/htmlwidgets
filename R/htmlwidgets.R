@@ -124,7 +124,6 @@ widget_dependencies <- function(name, package){
 widget_data <- function(x, id, ...){
   payload <- createPayload(x)
   args <- c(payload, attr(x$x, 'TOJSON_ARGS'))
-  if (is.null(args$digits)) args$digits <- 16
   tags$script(type="application/json", `data-for` = id,
     HTML(do.call(toJSON, args))
   )
