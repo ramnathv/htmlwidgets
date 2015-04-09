@@ -7,7 +7,8 @@ toJSON <- function(
   jsonlite::toJSON(
     I(x), dataframe = dataframe, null = null, na = na, auto_unbox = auto_unbox,
     digits = digits, use_signif = use_signif, force = force, POSIXt = POSIXt,
-    UTC = UTC, rownames = rownames, keep_vec_names = keep_vec_names, ...
+    UTC = UTC, rownames = rownames, keep_vec_names = keep_vec_names,
+    json_verbatim = json_verbatim, ...
   )
 }
 
