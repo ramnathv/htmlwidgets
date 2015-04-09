@@ -25,10 +25,11 @@ if (requireNamespace('shiny')) local({
 })
 
 toJSON <- function(x) {
+  if (!is.list(x) || !('x' %in% names(x))) return(toJSON2(x))
   func <- attr(x$x, 'TOJSON_FUNC', exact = TRUE)
   args <- c(list(x = x), attr(x$x, 'TOJSON_ARGS', exact = TRUE))
   if (!is.function(func)) func = toJSON2
-  do.call(func, args)
+  if (length(args) == 0) func(x) else do.call(func, args)
 }
 
 getDependency <- function(name, package = name){
