@@ -1,8 +1,9 @@
 # Copied from shiny 0.11.1.9003
-toJSON <- function(
+toJSON2 <- function(
   x, ...,  dataframe = "columns", null = "null", na = "null", auto_unbox = TRUE,
   digits = getOption("shiny.json.digits", 16), use_signif = TRUE, force = TRUE,
-  POSIXt = "ISO8601", UTC = TRUE, rownames = FALSE, keep_vec_names = TRUE
+  POSIXt = "ISO8601", UTC = TRUE, rownames = FALSE, keep_vec_names = TRUE,
+  json_verbatim = TRUE
 ) {
   jsonlite::toJSON(
     I(x), dataframe = dataframe, null = null, na = na, auto_unbox = auto_unbox,
@@ -14,7 +15,7 @@ toJSON <- function(
 
 if (requireNamespace('shiny')) local({
   tryCatch({
-    toJSON2 <- getFromNamespace('toJSON', 'shiny')
+    toJSON <- getFromNamespace('toJSON', 'shiny')
     args2 <- formals(toJSON2)
     args1 <- formals(toJSON)
     if (!identical(args1, args2)) {
@@ -22,6 +23,13 @@ if (requireNamespace('shiny')) local({
     }
   })
 })
+
+toJSON <- function(x) {
+  func <- attr(x$x, 'TOJSON_FUNC', exact = TRUE)
+  args <- c(list(x = x), attr(x$x, 'TOJSON_ARGS', exact = TRUE))
+  if (!is.function(func)) func = toJSON2
+  do.call(func, args)
+}
 
 getDependency <- function(name, package = name){
   config = sprintf("htmlwidgets/%s.yaml", name)
