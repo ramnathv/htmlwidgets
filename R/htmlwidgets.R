@@ -122,10 +122,8 @@ widget_dependencies <- function(name, package){
 # Generates a <script type="application/json"> tag with the JSON-encoded data,
 # to be picked up by htmlwidgets.js for static rendering.
 widget_data <- function(x, id, ...){
-  payload <- createPayload(x)
-  args <- c(list(x = payload), attr(x$x, 'TOJSON_ARGS'))
   tags$script(type="application/json", `data-for` = id,
-    HTML(do.call(toJSON, args))
+    HTML(toJSON(createPayload(x)))
   )
 }
 
@@ -280,7 +278,8 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
       htmltools::resolveDependencies(deps),
       shiny::createWebDependency
     )
-    payload = c(createPayload(instance), list(deps = deps))
+    payload <- c(createPayload(instance), list(deps = deps))
+    toJSON(payload)
   }
 
   # mark it with the output function so we can use it in Rmd files
