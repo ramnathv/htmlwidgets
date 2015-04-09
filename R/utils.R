@@ -29,7 +29,9 @@ toJSON <- function(x) {
   func <- attr(x$x, 'TOJSON_FUNC', exact = TRUE)
   args <- c(list(x = x), attr(x$x, 'TOJSON_ARGS', exact = TRUE))
   if (!is.function(func)) func = toJSON2
-  if (length(args) == 0) func(x) else do.call(func, args)
+  res <- if (length(args) == 0) func(x) else do.call(func, args)
+  # make sure shiny:::toJSON() does not encode it again
+  structure(res, class = 'json')
 }
 
 getDependency <- function(name, package = name){
