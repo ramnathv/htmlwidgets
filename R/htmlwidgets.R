@@ -294,7 +294,6 @@ createPayload <- function(instance){
     instance$preRenderHook <- NULL
   }
   x <- .subset2(instance, "x")
-  evals = JSEvals(x)
-  list(x = x, evals = evals)
+  list(x = x, evals = JSEvals(x))
 }
 
