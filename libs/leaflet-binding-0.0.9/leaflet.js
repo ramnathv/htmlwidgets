@@ -189,7 +189,7 @@ var dataframe = (function() {
 
   LayerStore.prototype.keys = function() {
     var keys = [];
-    for (key in this._layers) {
+    for (var key in this._layers) {
       if (this._layers.hasOwnProperty(key))
         keys.push(key);
     }
@@ -210,6 +210,20 @@ var dataframe = (function() {
     };
   }
 
+  // Send updated bounds back to app. Takes a leaflet event object as input.
+  function updateBounds(map) {
+    var id = map.getContainer().id;
+    var bounds = map.getBounds();
+
+    Shiny.onInputChange(id + '_bounds', {
+      north: bounds.getNorthEast().lat,
+      east: bounds.getNorthEast().lng,
+      south: bounds.getSouthWest().lat,
+      west: bounds.getSouthWest().lng
+    });
+    Shiny.onInputChange(id + '_zoom', map.getZoom());
+  }
+
   var methods = {};
 
   methods.setView = function(center, zoom, options) {
@@ -222,20 +236,19 @@ var dataframe = (function() {
     ]);
   };
 
-  methods.popup = function(lat, lng, content, layerId, options) {
+  methods.popup = function(lat, lng, popup, layerId, options) {
     var df = dataframe.create()
       .col('lat', lat)
       .col('lng', lng)
-      .col('content', content)
+      .col('popup', popup)
       .col('layerId', layerId)
       .cbind(options);
 
-    // only one popup
     for (var i = 0; i < df.nrow(); i++) {
       (function() {
         var popup = L.popup(df.get(i))
                      .setLatLng([df.get(i, 'lat'), df.get(i, 'lng')])
-                     .setContent(df.get(i, 'content'));
+                     .setContent(df.get(i, 'popup'));
         var thisId = df.get(i, 'layerId');
         this.popups.add(popup, thisId);
         popup.on('click', mouseHandler(this.id, thisId, 'popup_click'), this);
@@ -254,14 +267,15 @@ var dataframe = (function() {
   };
 
   methods.tileLayer = function(urlTemplate, options) {
-    L.tileLayer(urlTemplate, options).addTo(this);
+    this.tiles.add(L.tileLayer(urlTemplate, options));
   };
 
-  methods.marker = function(lat, lng, layerId, options) {
+  methods.marker = function(lat, lng, layerId, options, popup) {
     var df = dataframe.create()
       .col('lat', lat)
       .col('lng', lng)
       .col('layerId', layerId)
+      .col('popup', popup)
       .cbind(options);
 
     for (var i = 0; i < df.nrow(); i++) {
@@ -269,6 +283,8 @@ var dataframe = (function() {
         var marker = L.marker([df.get(i, 'lat'), df.get(i, 'lng')], df.get(i));
         var thisId = df.get(i, 'layerId');
         this.markers.add(marker, thisId);
+        var popup = df.get(i, 'popup');
+        if (popup !== null) marker.bindPopup(popup);
         marker.on('click', mouseHandler(this.id, thisId, 'marker_click'), this);
         marker.on('mouseover', mouseHandler(this.id, thisId, 'marker_mouseover'), this);
         marker.on('mouseout', mouseHandler(this.id, thisId, 'marker_mouseout'), this);
@@ -276,12 +292,13 @@ var dataframe = (function() {
     }
   };
 
-  methods.circle = function(lat, lng, radius, layerId, options) {
+  methods.circle = function(lat, lng, radius, layerId, options, popup) {
     var df = dataframe.create()
       .col('lat', lat)
       .col('lng', lng)
       .col('radius', radius)
       .col('layerId', layerId)
+      .col('popup', popup)
       .cbind(options);
 
     for (var i = 0; i < df.nrow(); i++) {
@@ -289,6 +306,8 @@ var dataframe = (function() {
         var circle = L.circle([df.get(i, 'lat'), df.get(i, 'lng')], df.get(i, 'radius'), df.get(i));
         var thisId = df.get(i, 'layerId');
         this.shapes.add(circle, thisId);
+        var popup = df.get(i, 'popup');
+        if (popup !== null) circle.bindPopup(popup);
         circle.on('click', mouseHandler(this.id, thisId, 'shape_click'), this);
         circle.on('mouseover', mouseHandler(this.id, thisId, 'shape_mouseover'), this);
         circle.on('mouseout', mouseHandler(this.id, thisId, 'shape_mouseout'), this);
@@ -296,12 +315,13 @@ var dataframe = (function() {
     }
   };
 
-  methods.circleMarker = function(lat, lng, radius, layerId, options) {
+  methods.circleMarker = function(lat, lng, radius, layerId, options, popup) {
     var df = dataframe.create()
       .col('lat', lat)
       .col('lng', lng)
       .col('radius', radius)
       .col('layerId', layerId)
+      .col('popup', popup)
       .cbind(options);
 
     for (var i = 0; i < df.nrow(); i++) {
@@ -309,6 +329,8 @@ var dataframe = (function() {
         var circle = L.circleMarker([df.get(i, 'lat'), df.get(i, 'lng')], df.get(i));
         var thisId = df.get(i, 'layerId');
         this.markers.add(circle, thisId);
+        var popup = df.get(i, 'popup');
+        if (popup !== null) circle.bindPopup(popup);
         circle.on('click', mouseHandler(this.id, thisId, 'marker_click'), this);
         circle.on('mouseover', mouseHandler(this.id, thisId, 'marker_mouseover'), this);
         circle.on('mouseout', mouseHandler(this.id, thisId, 'marker_mouseout'), this);
@@ -320,10 +342,11 @@ var dataframe = (function() {
    * @param lat Array of arrays of latitude coordinates for polylines
    * @param lng Array of arrays of longitude coordinates for polylines
    */
-  methods.polyline = function(polygons, layerId, options) {
+  methods.polyline = function(polygons, layerId, options, popup) {
     var df = dataframe.create()
       .col('shapes', polygons)
       .col('layerId', layerId)
+      .col('popup', popup)
       .cbind(options);
 
     for (var i = 0; i < df.nrow(); i++) {
@@ -333,6 +356,8 @@ var dataframe = (function() {
         var polyline = L.polyline(shape, df.get(i));
         var thisId = df.get(i, 'layerId');
         this.shapes.add(polyline, thisId);
+        var popup = df.get(i, 'popup');
+        if (popup !== null) polyline.bindPopup(popup);
         polyline.on('click', mouseHandler(this.id, thisId, 'shape_click'), this);
         polyline.on('mouseover', mouseHandler(this.id, thisId, 'shape_mouseover'), this);
         polyline.on('mouseout', mouseHandler(this.id, thisId, 'shape_mouseout'), this);
@@ -356,13 +381,14 @@ var dataframe = (function() {
     this.shapes.clear();
   };
 
-  methods.rectangle = function(lat1, lng1, lat2, lng2, layerId, options) {
+  methods.rectangle = function(lat1, lng1, lat2, lng2, layerId, options, popup) {
     var df = dataframe.create()
       .col('lat1', lat1)
       .col('lng1', lng1)
       .col('lat2', lat2)
       .col('lng2', lng2)
       .col('layerId', layerId)
+      .col('popup', popup)
       .cbind(options);
 
     for (var i = 0; i < df.nrow(); i++) {
@@ -374,6 +400,8 @@ var dataframe = (function() {
           df.get(i));
         var thisId = df.get(i, 'layerId');
         this.shapes.add(rect, thisId);
+        var popup = df.get(i, 'popup');
+        if (popup !== null) rect.bindPopup(popup);
         rect.on('click', mouseHandler(this.id, thisId, 'shape_click'), this);
         rect.on('mouseover', mouseHandler(this.id, thisId, 'shape_mouseover'), this);
         rect.on('mouseout', mouseHandler(this.id, thisId, 'shape_mouseout'), this);
@@ -385,10 +413,11 @@ var dataframe = (function() {
    * @param lat Array of arrays of latitude coordinates for polygons
    * @param lng Array of arrays of longitude coordinates for polygons
    */
-  methods.polygon = function(polygons, layerId, options) {
+  methods.polygon = function(polygons, layerId, options, popup) {
     var df = dataframe.create()
       .col('shapes', polygons)
       .col('layerId', layerId)
+      .col('popup', popup)
       .cbind(options);
 
     for (var i = 0; i < df.nrow(); i++) {
@@ -400,6 +429,8 @@ var dataframe = (function() {
         var polygon = L.polygon(shapes, df.get(i));
         var thisId = df.get(i, 'layerId');
         this.shapes.add(polygon, thisId);
+        var popup = df.get(i, 'popup');
+        if (popup !== null) polygon.bindPopup(popup);
         polygon.on('click', mouseHandler(this.id, thisId, 'shape_click'), this);
         polygon.on('mouseover', mouseHandler(this.id, thisId, 'shape_mouseover'), this);
         polygon.on('mouseout', mouseHandler(this.id, thisId, 'shape_mouseout'), this);
@@ -428,6 +459,8 @@ var dataframe = (function() {
           featureId: feature.id,
           properties: feature.properties
         };
+        var popup = feature.properties.popup;
+        if (typeof popup !== 'undefined' && popup !== null) layer.bindPopup(popup);
         layer.on("click", mouseHandler(self.id, layerId, "geojson_click", extraInfo), this);
         layer.on("mouseover", mouseHandler(self.id, layerId, "geojson_mouseover", extraInfo), this);
         layer.on("mouseout", mouseHandler(self.id, layerId, "geojson_mouseout", extraInfo), this);
@@ -442,17 +475,50 @@ var dataframe = (function() {
     initialize: function(el, width, height) {
       // hard-coding center/zoom here for a non-empty initial view, since there
       // is no way for htmlwidgets to pass initial params to initialize()
-      return L.map(el, {
+      var map = L.map(el, {
         center: [51.505, -0.09],
         zoom: 13
       });
+
+      // Store some state in the map object
+      map.leafletr = {
+        hasRendered: false
+      };
+
+      if (!HTMLWidgets.shinyMode) return map;
+
+      // When the map is clicked, send the coordinates back to the app
+      map.on('click', function(e) {
+        var id = e.target.getContainer().id;
+
+        Shiny.onInputChange(id + '_click', {
+          lat: e.latlng.lat,
+          lng: e.latlng.lng,
+          '.nonce': Math.random() // Force reactivity if lat/lng hasn't changed
+        });
+      });
+
+      map.on('moveend', function(e) { updateBounds(e.target); });
+
+      return map;
     },
     renderValue: function(el, data, map) {
+      // Merge data options into defaults
+      var options = $.extend({ zoomToLimits: "always" }, data.options);
 
-      map.markers = new LayerStore(map);
-      map.shapes = new LayerStore(map);
-      map.popups = new LayerStore(map);
-      map.geojson = new LayerStore(map);
+      if (!map.markers) {
+        map.markers = new LayerStore(map);
+        map.shapes = new LayerStore(map);
+        map.popups = new LayerStore(map);
+        map.geojson = new LayerStore(map);
+        map.tiles = new LayerStore(map);
+      } else {
+        map.markers.clear();
+        map.shapes.clear();
+        map.popups.clear();
+        map.geojson.clear();
+        map.tiles.clear();
+      }
 
       var explicitView = false;
       if (data.setView) {
@@ -463,7 +529,15 @@ var dataframe = (function() {
         explicitView = true;
         methods.fitBounds.apply(map, data.fitBounds);
       }
-      if (!explicitView) {
+
+      // Returns true if the zoomToLimits option says that the map should be
+      // zoomed to map elements.
+      function needsZoom() {
+        return options.zoomToLimits === "always" ||
+               (options.zoomToLimits === "first" && !map.leafletr.hasRendered);
+      }
+
+      if (!explicitView && needsZoom()) {
         if (data.limits) {
           // Use the natural limits of what's being drawn on the map
           // If the size of the bounding box is 0, leaflet gets all weird
@@ -491,36 +565,14 @@ var dataframe = (function() {
           methods[call.method].apply(map, call.args);
       }
 
-      var id = data.mapId;
-      if (id === null) return;
-      maps[id] = map;
+      map.leafletr.hasRendered = true;
 
       if (!HTMLWidgets.shinyMode) return;
 
-      // When the map is clicked, send the coordinates back to the app
-      map.on('click', function(e) {
-        Shiny.onInputChange(id + '_click', {
-          lat: e.latlng.lat,
-          lng: e.latlng.lng,
-          '.nonce': Math.random() // Force reactivity if lat/lng hasn't changed
-        });
-      });
+      var id = this.getId(el);
+      maps[id] = map;
 
-      // Send bounds info back to the app
-      function updateBounds() {
-        var bounds = map.getBounds();
-        Shiny.onInputChange(id + '_bounds', {
-          north: bounds.getNorthEast().lat,
-          east: bounds.getNorthEast().lng,
-          south: bounds.getSouthWest().lat,
-          west: bounds.getSouthWest().lng
-        });
-        Shiny.onInputChange(id + '_zoom', map.getZoom());
-      }
-      setTimeout(updateBounds, 1);
-
-      map.on('moveend', updateBounds);
-
+      setTimeout(function() { updateBounds(map); }, 1);
     },
     resize: function(el, width, height, data) {
 
