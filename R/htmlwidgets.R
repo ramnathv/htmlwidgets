@@ -127,51 +127,47 @@ widget_data <- function(x, id, ...){
   )
 }
 
-#'Create an HTML Widget
+#' Create an HTML Widget
 #'
-#'Create an HTML widget based on widget YAML and JavaScript contained within the
-#'specified package.
+#' Create an HTML widget based on widget YAML and JavaScript contained within
+#' the specified package.
 #'
-#'@param name Widget name (should match the base name of the YAML and JavaScript
-#'  files used to implement the widget)
-#'@param x Widget instance data (underlying data to render and options that
-#'  govern how it's rendered). This value will be converted to JSON using
-#'  \code{\link[jsonlite]{toJSON}} and made available to the
-#'  widget's JavaScript \code{renderValue} function.
-#'@param width Fixed width for widget (in css units). The default is
-#'  \code{NULL}, which results in intelligent automatic sizing based on the
-#'  widget's container.
-#'@param height Fixed height for widget (in css units). The default is
-#'  \code{NULL}, which results in intelligent automatic sizing based on the
-#'  widget's container.
-#'@param sizingPolicy Options that govern how the widget is sized in various
-#'  containers (e.g. a standalone browser, the RStudio Viewer, a knitr figure,
-#'  or a Shiny output binding). These options can be specified by calling the
-#'  \code{\link{sizingPolicy}} function.
-#'@param package Package where the widget is defined (defaults to the widget
-#'  name).
-#'@param dependencies Additional widget HTML dependencies (over and above those
-#'  defined in the widget YAML). This is useful for dynamic dependencies that
-#'  only exist when selected widget options are enabled (e.g. sets of map tiles
-#'  or projections).
-#'@param elementId Use an explicit element ID for the widget (rather than an
-#'  automatically generated one). Useful if you have other JavaScript that needs
-#'  to explicitly discover and interact with a specific widget instance.
-#'@param preRenderHook A function to be run on the widget, just prior to
-#'  rendering. It accepts the entire widget object as input, and should return
-#'  a modified widget object.
+#' For additional details on developing widgets, see package vignettes:
+#' \code{vignette("htmlwidgets-intro", package = "htmlwidgets")}.
 #'
-#'@details
+#' @param name Widget name (should match the base name of the YAML and
+#'   JavaScript files used to implement the widget)
+#' @param x Widget instance data (underlying data to render and options that
+#'   govern how it's rendered). This value will be converted to JSON using
+#'   \code{\link[jsonlite]{toJSON}} and made available to the widget's
+#'   JavaScript \code{renderValue} function.
+#' @param width Fixed width for widget (in css units). The default is
+#'   \code{NULL}, which results in intelligent automatic sizing based on the
+#'   widget's container.
+#' @param height Fixed height for widget (in css units). The default is
+#'   \code{NULL}, which results in intelligent automatic sizing based on the
+#'   widget's container.
+#' @param sizingPolicy Options that govern how the widget is sized in various
+#'   containers (e.g. a standalone browser, the RStudio Viewer, a knitr figure,
+#'   or a Shiny output binding). These options can be specified by calling the
+#'   \code{\link{sizingPolicy}} function.
+#' @param package Package where the widget is defined (defaults to the widget
+#'   name).
+#' @param dependencies Additional widget HTML dependencies (over and above those
+#'   defined in the widget YAML). This is useful for dynamic dependencies that
+#'   only exist when selected widget options are enabled (e.g. sets of map tiles
+#'   or projections).
+#' @param elementId Use an explicit element ID for the widget (rather than an
+#'   automatically generated one). Useful if you have other JavaScript that
+#'   needs to explicitly discover and interact with a specific widget instance.
+#' @param preRenderHook A function to be run on the widget, just prior to
+#'   rendering. It accepts the entire widget object as input, and should return
+#'   a modified widget object.
 #'
-#'For additional details on developing widgets:
-#'
-#'\code{vignette("htmlwidgets-intro")}
-#'
-#'@return An object of class \code{htmlwidget} that will intelligently print
-#'  itself into HTML in a variety of contexts including the R console, within R
-#'  Markdown documents, and within Shiny output bindings.
-#'
-#'@export
+#' @return An object of class \code{htmlwidget} that will intelligently print
+#'   itself into HTML in a variety of contexts including the R console, within R
+#'   Markdown documents, and within Shiny output bindings.
+#' @export
 createWidget <- function(name,
                          x,
                          width = NULL,
