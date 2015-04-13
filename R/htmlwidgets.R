@@ -85,7 +85,7 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
     widget_data(x, id),
     if (!is.null(sizeInfo$runtime)) {
       tags$script(type="application/htmlwidget-sizing", `data-for` = id,
-        toJSON(sizeInfo$runtime, collapse="", digits = 16)
+        toJSON(sizeInfo$runtime)
       )
     }
   )
@@ -122,9 +122,8 @@ widget_dependencies <- function(name, package){
 # Generates a <script type="application/json"> tag with the JSON-encoded data,
 # to be picked up by htmlwidgets.js for static rendering.
 widget_data <- function(x, id, ...){
-  payload <- createPayload(x)
   tags$script(type="application/json", `data-for` = id,
-    HTML(toJSON(payload, collapse = "", digits = 16))
+    HTML(toJSON(createPayload(x)))
   )
 }
 
@@ -137,7 +136,7 @@ widget_data <- function(x, id, ...){
 #'  files used to implement the widget)
 #'@param x Widget instance data (underlying data to render and options that
 #'  govern how it's rendered). This value will be converted to JSON using
-#'  \code{\link[RJSONIO:toJSON]{RJSONIO::toJSON}} and made available to the
+#'  \code{\link[jsonlite]{toJSON}} and made available to the
 #'  widget's JavaScript \code{renderValue} function.
 #'@param width Fixed width for widget (in css units). The default is
 #'  \code{NULL}, which results in intelligent automatic sizing based on the
@@ -279,7 +278,8 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
       htmltools::resolveDependencies(deps),
       shiny::createWebDependency
     )
-    payload = c(createPayload(instance), list(deps = deps))
+    payload <- c(createPayload(instance), list(deps = deps))
+    toJSON(payload)
   }
 
   # mark it with the output function so we can use it in Rmd files
@@ -293,7 +293,6 @@ createPayload <- function(instance){
     instance$preRenderHook <- NULL
   }
   x <- .subset2(instance, "x")
-  evals = JSEvals(x)
-  list(x = x, evals = evals)
+  list(x = x, evals = JSEvals(x))
 }
 

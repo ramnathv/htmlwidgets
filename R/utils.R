@@ -1,3 +1,37 @@
+# Copied from shiny 0.11.1.9003
+toJSON2 <- function(
+  x, ...,  dataframe = "columns", null = "null", na = "null", auto_unbox = TRUE,
+  digits = getOption("shiny.json.digits", 16), use_signif = TRUE, force = TRUE,
+  POSIXt = "ISO8601", UTC = TRUE, rownames = FALSE, keep_vec_names = TRUE
+) {
+  jsonlite::toJSON(
+    I(x), dataframe = dataframe, null = null, na = na, auto_unbox = auto_unbox,
+    digits = digits, use_signif = use_signif, force = force, POSIXt = POSIXt,
+    UTC = UTC, rownames = rownames, keep_vec_names = keep_vec_names,
+    json_verbatim = TRUE, ...
+  )
+}
+
+if (requireNamespace('shiny')) local({
+  tryCatch({
+    toJSON <- getFromNamespace('toJSON', 'shiny')
+    args2 <- formals(toJSON2)
+    args1 <- formals(toJSON)
+    if (!identical(args1, args2)) {
+      warning('Check shiny:::toJSON and make sure htmlwidgets:::toJSON is in sync')
+    }
+  })
+})
+
+toJSON <- function(x) {
+  if (!is.list(x) || !('x' %in% names(x))) return(toJSON2(x))
+  func <- attr(x$x, 'TOJSON_FUNC', exact = TRUE)
+  args <- c(list(x = x), attr(x$x, 'TOJSON_ARGS', exact = TRUE))
+  if (!is.function(func)) func = toJSON2
+  res <- if (length(args) == 0) func(x) else do.call(func, args)
+  # make sure shiny:::toJSON() does not encode it again
+  structure(res, class = 'json')
+}
 
 getDependency <- function(name, package = name){
   config = sprintf("htmlwidgets/%s.yaml", name)
@@ -95,7 +129,7 @@ JS <- function(...) {
 # @author Yihui Xie
 JSEvals <- function(list) {
   evals <- names(which(unlist(shouldEval(list))))
-  I(evals)  # need I() to prevent RJSONIO::toJSON() from converting it to scalar
+  I(evals)  # need I() to prevent toJSON() from converting it to scalar
 }
 
 #' JSON elements that are character with the class JS_EVAL will be evaluated
