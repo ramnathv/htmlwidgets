@@ -1,7 +1,7 @@
 Package: htmlwidgets
 Type: Package
 Title: HTML Widgets for R
-Version: 0.3.2
+Version: 0.3.3
 Date: 2014-12-03
 Author: Ramnath Vaidyanathan, Joe Cheng, JJ Allaire, Yihui Xie,
     Kenton Russell
