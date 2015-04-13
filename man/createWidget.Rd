@@ -8,13 +8,13 @@ createWidget(name, x, width = NULL, height = NULL,
   dependencies = NULL, elementId = NULL, preRenderHook = NULL)
 }
 \arguments{
-\item{name}{Widget name (should match the base name of the YAML and JavaScript
-files used to implement the widget)}
+\item{name}{Widget name (should match the base name of the YAML and
+JavaScript files used to implement the widget)}
 
 \item{x}{Widget instance data (underlying data to render and options that
 govern how it's rendered). This value will be converted to JSON using
-\code{\link[jsonlite]{toJSON}} and made available to the
-widget's JavaScript \code{renderValue} function.}
+\code{\link[jsonlite]{toJSON}} and made available to the widget's
+JavaScript \code{renderValue} function.}
 
 \item{width}{Fixed width for widget (in css units). The default is
 \code{NULL}, which results in intelligent automatic sizing based on the
@@ -38,25 +38,24 @@ only exist when selected widget options are enabled (e.g. sets of map tiles
 or projections).}
 
 \item{elementId}{Use an explicit element ID for the widget (rather than an
-automatically generated one). Useful if you have other JavaScript that needs
-to explicitly discover and interact with a specific widget instance.}
+automatically generated one). Useful if you have other JavaScript that
+needs to explicitly discover and interact with a specific widget instance.}
 
 \item{preRenderHook}{A function to be run on the widget, just prior to
- rendering. It accepts the entire widget object as input, and should return
- a modified widget object.}
+  rendering. It accepts the entire widget object as input, and should return
+  a modified widget object.}
 }
 \value{
 An object of class \code{htmlwidget} that will intelligently print
- itself into HTML in a variety of contexts including the R console, within R
- Markdown documents, and within Shiny output bindings.
+  itself into HTML in a variety of contexts including the R console, within R
+  Markdown documents, and within Shiny output bindings.
 }
 \description{
-Create an HTML widget based on widget YAML and JavaScript contained within the
-specified package.
+Create an HTML widget based on widget YAML and JavaScript contained within
+the specified package.
 }
 \details{
-For additional details on developing widgets:
-
-\code{vignette("htmlwidgets-intro")}
+For additional details on developing widgets, see package vignettes:
+\code{vignette("htmlwidgets-intro", package = "htmlwidgets")}.
 }
 
