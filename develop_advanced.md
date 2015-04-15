@@ -9,7 +9,7 @@ output:
 
 ## Overview
 
-This article covers several aspects of creating widgets that not required by all widgets, but are an essential part of getting bindings to certain types of JavaScript libraries to work properly. Topics covered include:
+This article covers several aspects of creating widgets that are not required by all widgets, but are an essential part of getting bindings to certain types of JavaScript libraries to work properly. Topics covered include:
 
 * Transforming JSON representations of R objects into representations required by JavaScript libraries (e.g. an R data frame to a d3 dataset).
 
