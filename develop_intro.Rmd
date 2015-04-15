@@ -196,6 +196,8 @@ Our widget is now complete! If you want to test drive it without reproducing all
 devtools::install_github('jjallaire/sigma')
 ```
 
+You can also download the [ediaspora.gexf.xml](https://github.com/jjallaire/sigma/raw/master/inst/examples/ediaspora.gexf.xml) file and place it in the directory `inst/htmlwidgets/examples`.
+
 Here's the code to try it out with some sample data included with the package:
 
 ```r
