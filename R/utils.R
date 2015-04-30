@@ -26,9 +26,9 @@ if (requireNamespace('shiny')) local({
 toJSON <- function(x) {
   if (!is.list(x) || !('x' %in% names(x))) return(toJSON2(x))
   func <- attr(x$x, 'TOJSON_FUNC', exact = TRUE)
-  args <- c(list(x = x), attr(x$x, 'TOJSON_ARGS', exact = TRUE))
+  args <- attr(x$x, 'TOJSON_ARGS', exact = TRUE)
   if (!is.function(func)) func = toJSON2
-  res <- if (length(args) == 0) func(x) else do.call(func, args)
+  res <- if (length(args) == 0) func(x) else do.call(func, c(list(x = x), args))
   # make sure shiny:::toJSON() does not encode it again
   structure(res, class = 'json')
 }
