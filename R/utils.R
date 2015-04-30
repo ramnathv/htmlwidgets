@@ -28,6 +28,7 @@ toJSON <- function(x) {
   func <- attr(x$x, 'TOJSON_FUNC', exact = TRUE)
   args <- attr(x$x, 'TOJSON_ARGS', exact = TRUE)
   if (!is.function(func)) func = toJSON2
+  if (length(args) == 0) args <- getOption('htmlwidgets.TOJSON_ARGS')
   res <- if (length(args) == 0) func(x) else do.call(func, c(list(x = x), args))
   # make sure shiny:::toJSON() does not encode it again
   structure(res, class = 'json')
