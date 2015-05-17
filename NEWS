@@ -1,0 +1,19 @@
+htmlwidgets 0.4
+-----------------------------------------------------------------------
+
+* Use minified files while scaffolding widget wherever available
+
+* Suppress viewing widgets in non-interactive R sessions by default
+
+* Export the HTMLWidgets.staticRender function
+
+* Add a preRenderHook for widgets
+
+* Use jsonlite rather than RJSONIO for JSON serialization
+
+* Call widget.resize in more situations
+
+htmlwidgets 0.3.2
+-----------------------------------------------------------------------
+
+* Initial release to CRAN
