@@ -121,6 +121,12 @@ You may find it necessary to customize the JSON serialization of widget data whe
     }
     ```
 
+    You can also use a global option `htmlwidgets.TOJSON_ARGS` to customize the JSON serializer arguments for all widgets in the current R session, e.g.
+
+    ```{r eval=FALSE}
+    options(htmlwidgets.TOJSON_ARGS = list(digits = 7, pretty = TRUE))
+    ```
+
 1. If you do not want to use **jsonlite**, you can completely override the serializer function by attaching an attribute `TOJSON_FUNC` to the widget data, e.g.
 
     ```{r eval=FALSE}
