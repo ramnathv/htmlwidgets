@@ -292,7 +292,7 @@ checkShinyVersion <- function(error = TRUE) {
   v <- gsub(r, '\\1', x)
   f <- if (error) stop else packageStartupMessage
   if (utils::packageVersion('shiny') < v)
-    f("You have to upgrade the 'shiny' package to (at least) version ", v)
+    f("Please upgrade the 'shiny' package to (at least) version ", v)
 }
 
 # Helper function to create payload
