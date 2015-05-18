@@ -20,6 +20,9 @@ registerMethods <- function(methods) {
 }
 
 .onLoad <- function(...) {
+  # warn if the version of shiny is lower than what was specified in DESCRIPTION
+  checkShinyVersion(error = FALSE)
+
   # htmlwidgets provides methods for knitr::knit_print, but knitr isn't a Depends or
   # Imports of htmltools, only an Enhances. Therefore, the NAMESPACE file has to
   # declare it as an export, not an S3method. That means that R will only know to

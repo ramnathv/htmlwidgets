@@ -237,6 +237,7 @@ createWidget <- function(name,
 #' @export
 shinyWidgetOutput <- function(outputId, name, width, height, package = name) {
 
+  checkShinyVersion()
   # generate html
   html <- htmltools::tagList(
     widget_html(name, package, id = outputId,
@@ -258,6 +259,7 @@ shinyWidgetOutput <- function(outputId, name, width, height, package = name) {
 #' @export
 shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
 
+  checkShinyVersion()
   # generate a function for the expression
   func <- shiny::exprToFunction(expr, env, quoted)
 
@@ -280,6 +282,16 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
 
   # mark it with the output function so we can use it in Rmd files
   shiny::markRenderFunction(outputFunction, renderFunc)
+}
+
+checkShinyVersion <- function(error = TRUE) {
+  x <- packageDescription('htmlwidgets', fields = 'Enhances')
+  r <- '^.*?shiny \\(>= ([0-9.]+)\\).*$'
+  if (is.na(x) || length(grep(r, x)) == 0) return()
+  v <- gsub(r, '\\1', x)
+  f <- if (error) stop else packageStartupMessage
+  if (packageVersion('shiny') < v)
+    f("You have to upgrade the 'shiny' package to (at least) version ", v)
 }
 
 # Helper function to create payload
