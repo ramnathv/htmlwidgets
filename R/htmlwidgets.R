@@ -285,12 +285,12 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
 }
 
 checkShinyVersion <- function(error = TRUE) {
-  x <- packageDescription('htmlwidgets', fields = 'Enhances')
+  x <- utils::packageDescription('htmlwidgets', fields = 'Enhances')
   r <- '^.*?shiny \\(>= ([0-9.]+)\\).*$'
   if (is.na(x) || length(grep(r, x)) == 0 || system.file('shiny') == '') return()
   v <- gsub(r, '\\1', x)
   f <- if (error) stop else packageStartupMessage
-  if (packageVersion('shiny') < v)
+  if (utils::packageVersion('shiny') < v)
     f("You have to upgrade the 'shiny' package to (at least) version ", v)
 }
 
