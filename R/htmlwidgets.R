@@ -1,32 +1,29 @@
 #' @export
 print.htmlwidget <- function(x, ..., view = interactive()) {
-
-  # if we have a viewer then forward viewer pane height (if any)
-  viewer <- getOption("viewer")
-  if (!is.null(viewer)) {
-    viewerFunc <- function(url) {
-
-      # get the requested pane height (it defaults to NULL)
-      paneHeight <- x$sizingPolicy$viewer$paneHeight
-
-      # convert maximize to -1 for compatibility with older versions of rstudio
-      # (newer versions convert 'maximize' to -1 interally, older versions
-      # will simply ignore the height if it's less than zero)
-      if (identical(paneHeight, "maximize"))
-        paneHeight <- -1
-
-      # call the viewer
-      viewer(url, height = paneHeight)
-    }
-  } else {
-    viewerFunc <- utils::browseURL
-  }
-
   # call html_print with the viewer
-  html_print(htmltools::as.tags(x, standalone=TRUE), viewer = if (view) viewerFunc)
+  html_print(htmltools::as.tags(x, standalone=TRUE), viewer = if (view) viewerFunc(x))
 
   # return value
   invisible(x)
+}
+
+viewerFunc <- function(x) {
+  # if we have a viewer then forward viewer pane height (if any)
+  viewer <- getOption("viewer")
+
+  if (is.null(viewer)) utils::browseURL else function(url) {
+    # get the requested pane height (it defaults to NULL)
+    paneHeight <- x$sizingPolicy$viewer$paneHeight
+
+    # convert maximize to -1 for compatibility with older versions of rstudio
+    # (newer versions convert 'maximize' to -1 interally, older versions will
+    # simply ignore the height if it's less than zero)
+    if (identical(paneHeight, "maximize"))
+      paneHeight <- -1
+
+    # call the viewer
+    viewer(url, height = paneHeight)
+  }
 }
 
 #' @export
