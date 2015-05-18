@@ -116,6 +116,35 @@ addHook <- function(x, hookName, jsCode) {
 }
 
 
+#' Widget lists
+#'
+#' Combine multiple HTML widgets into a list, and all widgets will be rendered
+#' on the same page when the widget list is printed.
+#' @param ... HTML widget objects created by \code{createWidget()} or widget
+#'   packages, and (optionally) HTML elements created from \pkg{htmltools}
+#' @export
+widgetList <- function(...) {
+  as.widgetList(list(...))
+}
+
+#' @param x a list to be coerced to a widget list
+#' @rdname widgetList
+#' @export
+as.widgetList <- function(x) {
+  if (!is.list(x)) stop("'x' must be a list")
+  for (i in seq_along(x)) {
+    if (!inherits(x[[i]], c('htmlwidget', 'html', 'shiny.tag', 'shiny.tag.list')))
+      stop("The element ", i, " in 'x' is not an HTML widget or tag")
+  }
+  structure(x, class = 'widgetList')
+}
+
+#' @export
+print.widgetList <- function(x, ..., view = interactive()) {
+  html_print(lapply(x, as.tags), viewer = if (view) viewerFunc(list()))
+  invisible(x)
+}
+
 toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
 
   sizeInfo <- resolveSizing(x, x$sizingPolicy, standalone = standalone, knitrOptions = knitrOptions)
