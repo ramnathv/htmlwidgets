@@ -10,6 +10,8 @@ x = readLines(f)
 for (i in seq_along(v1)) {
   x = gsub(v1[i], v2[i], x, fixed = TRUE)
 }
+# a fix for metricsgraphics
+x = gsub('jquery/dist/jquery.min.js', 'jquery/jquery.min.js', x, fixed = TRUE)
 # delete lower versions of libraries, and only use higher versions
 i = duplicated(v2)
 unlink(c(v1[i], v2), recursive = TRUE)
