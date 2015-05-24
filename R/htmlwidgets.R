@@ -129,9 +129,9 @@ widget_data <- function(x, id, ...){
   # repro for the bug this gsub fixes is to have the string "</script>" appear
   # anywhere in the data/metadata of a widget--you will get a syntax error
   # instead of a properly rendered widget.
-  tags$script(type="application/json", `data-for` = id,
-    HTML(gsub("<", "\\\\u003c", toJSON(createPayload(x))))
-  )
+  payload <- toJSON(createPayload(x))
+  payload <- gsub("</(script)>", "\\\\u003c/\\1>", payload, ignore.case = TRUE)
+  tags$script(type = "application/json", `data-for` = id, HTML(payload))
 }
 
 #' Create an HTML Widget
