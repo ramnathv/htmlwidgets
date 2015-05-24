@@ -1,5 +1,5 @@
 .mg-chart-title {
-    margin-left: 20px;
+    margin-left: 35px;
 }
 
 a,
@@ -119,13 +119,6 @@ html {
     margin: 60px 0 30px 0;
     height: 79px;
     width: 400px;
-}
-
-.mg-missing {
-    background-image: url(../images/missing-data.png);
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: 90% 90%;
 }
 
 p {

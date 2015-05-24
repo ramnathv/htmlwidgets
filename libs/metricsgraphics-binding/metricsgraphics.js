@@ -30,8 +30,13 @@ HTMLWidgets.widget({
 
     wide = null;
 
-    if (params.geom == "histogram") {
-      wide = params.data;
+    if (params.geom == "hist") {
+
+      if (params.binned == false) {
+         wide = params.data;
+         console.log(params);
+      }
+
     } else {
 
       wide = HTMLWidgets.dataframeToD3(params.data);
@@ -92,78 +97,124 @@ HTMLWidgets.widget({
 
     if (params.xax_format == "comma") xax_format = mjs_comma ;
 
-    // convert date string to Date object
-    MG.data_graphic({
+    dbg = params;
 
-        data: wide,
-        target: '#' + el.id,
-        xax_format: xax_format,
+    if (params.geom == "bar") {
 
-        x_axis: params.x_axis,
-        y_axis: params.y_axis,
+        MG.data_graphic({
 
-        interpolate: params.interpolate,
-        decimals: params.decimals,
-        format: params.format,
+            data: wide,
 
-        color_type: params.color_type,
-        color_range: params.color_range,
-        point_size: params.point_size,
-        size_range: params.size_range,
+            x_accessor: params.x_accessor,
+            y_accessor: params.y_accessor,
 
-        markers: params.markers,
-        baselines: params.baselines,
+            baseline_accessor:params.x_accessor,
+            predictor_accessor:params.x_accessor,
 
-        show_rollover_text: params.show_rollover_text,
+            chart_type: 'bar',
+            height: height,
+            width: width,
+            bottom: params.bottom,
+            top: params.top,
+            right: params.right,
+            left: params.left,
+            buffer: params.buffer,
+            target: '#bar1',
+            animate_on_load: params.animate_on_load,
+            x_axis: params.x_axis,
 
-        y_scale_type: params.y_scale_type,
+            target: '#' + el.id
 
-        chart_type: params.chart_type,
-        x_accessor: params.x_accessor,
-        y_accessor: params.y_accessor,
-        color_accessor: params.color_accessor,
-        size_accessor: params.size_accessor,
+        });
 
-        show_rollover_text: params.show_rollover_text,
+    } else {
 
-        legend: params.legend,
-        legend_target: params.legend_target,
+      mg_params = {
 
-        bar_margin: params.bar_margin,
-        binned: params.binned,
-        bins: params.bins,
+          data: wide,
+          target: '#' + el.id,
+          xax_format: xax_format,
 
-        linked: params.linked,
+          x_axis: params.x_axis,
+          y_axis: params.y_axis,
 
-        height: height,
-        width: width,
-        bottom: params.bottom,
-        top: params.top,
-        right: params.right,
-        left: params.left,
-        buffer: params.buffer,
+          aggregate_rollover: true,
 
-        area: params.area,
-        animate_on_load: params.animate_on_load,
-        y_rug: params.y_rug,
-        x_rug: params.x_rug,
+          baseline_accessor: params.baseline_accessor,
+          predictor_accessor: params.predictor_accessor,
 
-        min_x: params.min_x,
-        max_x: params.max_x,
-        min_y: params.min_y,
-        max_y: params.max_y,
+          bar_margin: params.bar_margin,
+          binnned: params.binned,
+          bins: params.bins,
 
-        yax_count: params.yax_count,
-        xax_count: params.xax_count,
+          interpolate: params.interpolate,
+          decimals: params.decimals,
+          format: params.format,
 
-        least_squares: params.least_squares,
+          color_type: params.color_type,
+          color_range: params.color_range,
+          point_size: params.point_size,
+          size_range: params.size_range,
 
-        x_label: params.x_label,
-        y_label: params.y_label,
-        title: params.title,
-        description: params.description
+          markers: params.markers,
+          baselines: params.baselines,
 
-    });
+          show_rollover_text: params.show_rollover_text,
+
+          y_scale_type: params.y_scale_type,
+          y_extended_ticks: params.y_extended_ticks,
+          x_extended_ticks: params.x_extended_ticks,
+
+          chart_type: params.chart_type,
+          x_accessor: params.x_accessor,
+          y_accessor: params.y_accessor,
+          color_accessor: params.color_accessor,
+          size_accessor: params.size_accessor,
+
+          show_rollover_text: params.show_rollover_text,
+
+          legend: params.legend,
+          legend_target: params.legend_target,
+
+          linked: params.linked,
+
+          height: height,
+          width: width,
+          bottom: params.bottom,
+          top: params.top,
+          right: params.right,
+          left: params.left,
+          buffer: params.buffer,
+
+          area: params.area,
+          animate_on_load: params.animate_on_load,
+          y_rug: params.y_rug,
+          x_rug: params.x_rug,
+
+          min_x: params.min_x,
+          max_x: params.max_x,
+          min_y: params.min_y,
+          max_y: params.max_y,
+
+          yax_count: params.yax_count,
+          xax_count: params.xax_count,
+
+          least_squares: params.least_squares,
+
+          x_label: params.x_label,
+          y_label: params.y_label,
+          title: params.title,
+          description: params.description
+
+      }
+
+      if (typeof(params.mouseover) != "undefined") {
+        mg_params.mouseover = params.mouseover;
+      }
+
+      MG.data_graphic(mg_params);
+
+    }
 
   },
 

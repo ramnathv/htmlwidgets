@@ -49,6 +49,17 @@
     return target;
   }
 
+  // IE8 doesn't support Array.forEach.
+  function forEach(values, callback, thisArg) {
+    if (values.forEach) {
+      values.forEach(callback, thisArg);
+    } else {
+      for (var i = 0; i < values.length; i++) {
+        callback.call(thisArg, values[i], i, values);
+      }
+    }
+  }
+
   // Replaces the specified method with the return value of funcSource.
   //
   // Note that funcSource should not BE the new method, it should be a function
@@ -376,6 +387,7 @@
       overrideMethod(shinyBinding, "renderValue", function(superfunc) {
         return function(el, data) {
           // Resolve strings marked as javascript literals to objects
+          if (!(data.evals instanceof Array)) data.evals = [data.evals];
           for (var i = 0; data.evals && i < data.evals.length; i++) {
             window.HTMLWidgets.evaluateStringMember(data.x, data.evals[i]);
           }
@@ -421,24 +433,22 @@
     if (!scheduleStaticRenderTimerId) {
       scheduleStaticRenderTimerId = setTimeout(function() {
         scheduleStaticRenderTimerId = null;
-        staticRender();
+        window.HTMLWidgets.staticRender();
       }, 1);
     }
   }
 
   // Render static widgets after the document finishes loading
   // Statically render all elements that are of this widget's class
-  function staticRender() {
+  window.HTMLWidgets.staticRender = function() {
     var bindings = window.HTMLWidgets.widgets || [];
-    for (var i = 0; i < bindings.length; i++) {
-      var binding = bindings[i];
+    forEach(bindings, function(binding) {
       var matches = binding.find(document.documentElement);
-      for (var j = 0; j < matches.length; j++) {
-        var el = matches[j];
+      forEach(matches, function(el) {
         var sizeObj = initSizing(el, binding);
 
         if (hasClass(el, "html-widget-static-bound"))
-          continue;
+          return;
         el.className = el.className + " html-widget-static-bound";
 
         var initResult;
@@ -451,7 +461,7 @@
 
         if (binding.resize) {
           var lastSize = {};
-          on(window, "resize", function(e) {
+          var resizeHandler = function(e) {
             var size = {
               w: sizeObj ? sizeObj.getWidth() : el.offsetWidth,
               h: sizeObj ? sizeObj.getHeight() : el.offsetHeight
@@ -462,33 +472,62 @@
               return;
             lastSize = size;
             binding.resize(el, size.w, size.h, initResult);
-          });
+          };
+
+          on(window, "resize", resizeHandler);
+
+          // This is needed for cases where we're running in a Shiny
+          // app, but the widget itself is not a Shiny output, but
+          // rather a simple static widget. One example of this is
+          // an rmarkdown document that has runtime:shiny and widget
+          // that isn't in a render function. Shiny only knows to
+          // call resize handlers for Shiny outputs, not for static
+          // widgets, so we do it ourselves.
+          if (window.jQuery) {
+            window.jQuery(document).on("shown", resizeHandler);
+            window.jQuery(document).on("hidden", resizeHandler);
+          }
+
+          // This is needed for the specific case of ioslides, which
+          // flips slides between display:none and display:block.
+          // Ideally we would not have to have ioslide-specific code
+          // here, but rather have ioslides raise a generic event,
+          // but the rmarkdown package just went to CRAN so the
+          // window to getting that fixed may be long.
+          if (window.addEventListener) {
+            // It's OK to limit this to window.addEventListener
+            // browsers because ioslides itself only supports
+            // such browsers.
+            on(document, "slideenter", resizeHandler);
+            on(document, "slideleave", resizeHandler);
+          }
         }
 
         var scriptData = document.querySelector("script[data-for='" + el.id + "'][type='application/json']");
         if (scriptData) {
           var data = JSON.parse(scriptData.textContent || scriptData.text);
           // Resolve strings marked as javascript literals to objects
-          for (var i = 0; data.evals && i < data.evals.length; i++) {
-            window.HTMLWidgets.evaluateStringMember(data.x, data.evals[i]);
+          if (!(data.evals instanceof Array)) data.evals = [data.evals];
+          for (var k = 0; data.evals && k < data.evals.length; k++) {
+            window.HTMLWidgets.evaluateStringMember(data.x, data.evals[k]);
           }
           binding.renderValue(el, data.x, initResult);
         }
-      }
-    }
+      });
+    });
   }
 
   // Wait until after the document has loaded to render the widgets.
   if (document.addEventListener) {
     document.addEventListener("DOMContentLoaded", function() {
       document.removeEventListener("DOMContentLoaded", arguments.callee, false);
-      staticRender();
+      window.HTMLWidgets.staticRender();
     }, false);
   } else if (document.attachEvent) {
     document.attachEvent("onreadystatechange", function() {
       if (document.readyState === "complete") {
         document.detachEvent("onreadystatechange", arguments.callee);
-        staticRender();
+        window.HTMLWidgets.staticRender();
       }
     });
   }

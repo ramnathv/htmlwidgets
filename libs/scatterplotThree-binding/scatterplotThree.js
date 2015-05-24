@@ -29,8 +29,6 @@ HTMLWidgets.widget(
   {
     stuff.renderer = render_init(el, stuff.width, stuff.height, x.options.renderer, x.options.labelmargin);
     if(x.bg) stuff.renderer.setClearColor(new THREE.Color(x.bg));
-// parse the JSON string from R
-    x.data = JSON.parse(x.data);
     scatter(el, x, stuff);
   }
 })
@@ -258,7 +256,7 @@ function scatter(el, x, obj)
       else if(axis==2){a1=0; b1=length; c1=ticks[j];a2=0;b2=-length;c2=ticks[j]; a3=-0.08; b3=-0.05; c3=ticks[j];}
       tick.vertices.push(v(a1,b1,c1),v(a2,b2,c2));
       if(ticklabels)
-        addText(group, parseFloat(ticklabels[j]).toFixed(1), 0.5, a3, b3, c3, tickColor);
+        addText(group, ticklabels[j], 0.5, a3, b3, c3, tickColor);
       var tl = new THREE.Line(tick, new THREE.LineBasicMaterial({color: tickColor, linewidth: thickness}));
       tl.type=THREE.Lines;
       group.add(tl);

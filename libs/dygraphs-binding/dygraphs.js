@@ -94,6 +94,15 @@ HTMLWidgets.widget({
     // if there is no existing instance perform one-time initialization
     if (!instance.dygraph) {
       
+      // subscribe to custom shown event (fired by ioslides to trigger
+      // shiny reactivity but we can use it as well). this is necessary
+      // because if a dygraph starts out as display:none it has height
+      // and width == 0 and this doesn't change when it becomes visible
+      $(el).closest('slide').on('shown', function() {
+        if (instance.dygraph)
+          instance.dygraph.resize();  
+      });
+      
       // add default font for viewer mode
       if (this.queryVar("viewer_pane") === "1")
         document.body.style.fontFamily = "Arial, sans-serif";
@@ -120,7 +129,7 @@ HTMLWidgets.widget({
           attrs.dateWindow = instance.dygraph.xAxisRange();
       
         // remove it from groups if it's there
-        if (x.group !== null && this.groups[x.group] !== null) {
+        if (x.group != null && this.groups[x.group] != null) {
           var index = this.groups[x.group].indexOf(instance.dygraph);
           if (index != -1)
             this.groups[x.group].splice(index, 1);
@@ -134,7 +143,7 @@ HTMLWidgets.widget({
     // create the instance and add it to it's group (if any)
     instance.dygraph = new Dygraph(el, attrs.file, attrs);
     instance.dygraph.userDateWindow = attrs.dateWindow;
-    if (x.group !== null)
+    if (x.group != null)
       this.groups[x.group].push(instance.dygraph);
     
     // set annotations
@@ -357,7 +366,7 @@ HTMLWidgets.widget({
       }
       
       // record in group if necessary
-      if (x.group !== null && thiz.groups[x.group] !== null) {
+      if (x.group != null && thiz.groups[x.group] != null) {
         var group = thiz.groups[x.group];
         for(var i = 0; i<group.length; i++)
           group[i].userDateWindow = me.userDateWindow;
