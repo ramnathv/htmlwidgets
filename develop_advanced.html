@@ -160,8 +160,9 @@ img {
 <ul>
 <li><a href="#overview">Overview</a></li>
 <li><a href="#data-transformation">Data transformation</a><ul>
-<li><a href="#dataframetod3">dataframeToD3</a></li>
-<li><a href="#transposearray2d">transposeArray2D</a></li>
+<li><a href="#htmlwidgets.dataframetod3">HTMLWidgets.dataframeToD3()</a></li>
+<li><a href="#htmlwidgets.transposearray2d">HTMLWidgets.transposeArray2D()</a></li>
+<li><a href="#custom-json-serializer">Custom JSON serializer</a></li>
 </ul></li>
 <li><a href="#widget-instance-data">Widget instance data</a></li>
 <li><a href="#passing-javascript-functions">Passing JavaScript functions</a></li>
@@ -181,11 +182,43 @@ img {
 </div>
 <div id="data-transformation" class="section level2">
 <h2>Data transformation</h2>
-<p>R objects passed as part of the <code>x</code> parameter to the <code>createWidget</code> function are transformed to JSON using the <code>RJSONIO::toJSON</code> function. However, sometimes this representation isn’t what’s required by the JavaScript library you are interfacing with.</p>
-<div id="dataframetod3" class="section level3">
-<h3>dataframeToD3</h3>
-<p>R data frames are represented in “long” form (an array of named vectors) whereas d3 typically requires “wide” form (an array of objects each of which includes all names and values). Since the R representation is much faster to transmit over the network, we allow RJSONIO to proceed with it’s default behavior and then transform the data in JavaScript using the <code>dataframeToD3</code> helper function.</p>
-<p>For example, the <a href="http://christophergandrud.github.io/networkD3/#simple">simpleNetwork</a> widget accepts a data frame containing network links on the R side, then transforms it to a d3 representation within the JavaScript <code>renderValue</code> function:</p>
+<p>R objects passed as part of the <code>x</code> parameter to the <code>createWidget()</code> function are transformed to JSON using the internal function <code>htmlwidgets:::toJSON()</code><a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>, which is basically a wrapper function of <code>jsonlite::toJSON()</code> by default. However, sometimes this representation is not what is required by the JavaScript library you are interfacing with. There are two JavaScript functions that you can use to transform the JSON data.</p>
+<div id="htmlwidgets.dataframetod3" class="section level3">
+<h3>HTMLWidgets.dataframeToD3()</h3>
+<p>R data frames are represented in “long” form (an array of named vectors) whereas d3 typically requires “wide” form (an array of objects each of which includes all names and values). Since the R representation is smaller in size and much faster to transmit over the network, we create the long-form representation of R data, and then transform the data in JavaScript using the <code>dataframeToD3()</code> helper function.</p>
+<p>Here is an example of the long-form representation of an R data frame:</p>
+<pre><code>{
+  &quot;Sepal.Length&quot;: [5.1, 4.9, 4.7],
+  &quot;Sepal.Width&quot;: [3.5, 3, 3.2],
+  &quot;Petal.Length&quot;: [1.4, 1.4, 1.3],
+  &quot;Petal.Width&quot;: [0.2, 0.2, 0.2],
+  &quot;Species&quot;: [&quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;]
+} </code></pre>
+<p>After we apply <code>HTMLWidgets.dataframeToD3()</code>, it will become:</p>
+<pre><code>[
+  {
+    &quot;Sepal.Length&quot;: 5.1,
+    &quot;Sepal.Width&quot;: 3.5,
+    &quot;Petal.Length&quot;: 1.4,
+    &quot;Petal.Width&quot;: 0.2,
+    &quot;Species&quot;: &quot;setosa&quot;
+  },
+  {
+    &quot;Sepal.Length&quot;: 4.9,
+    &quot;Sepal.Width&quot;: 3,
+    &quot;Petal.Length&quot;: 1.4,
+    &quot;Petal.Width&quot;: 0.2,
+    &quot;Species&quot;: &quot;setosa&quot;
+  },
+  {
+    &quot;Sepal.Length&quot;: 4.7,
+    &quot;Sepal.Width&quot;: 3.2,
+    &quot;Petal.Length&quot;: 1.3,
+    &quot;Petal.Width&quot;: 0.2,
+    &quot;Species&quot;: &quot;setosa&quot;
+  }
+] </code></pre>
+<p>As a real example, the <a href="http://christophergandrud.github.io/networkD3/#simple">simpleNetwork</a> widget accepts a data frame containing network links on the R side, then transforms it to a d3 representation within the JavaScript <code>renderValue</code> function:</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">renderValue: <span class="kw">function</span>(el, x, instance) {
 
   <span class="co">// convert links data frame to d3 friendly format</span>
@@ -195,9 +228,28 @@ img {
 
 }</code></pre>
 </div>
-<div id="transposearray2d" class="section level3">
-<h3>transposeArray2D</h3>
-<p>Sometimes a 2-dimensional array requires a similar transposition. For this the <code>transposeArray2D</code> function is provided. For example, the <a href="http://rstudio.github.io/dygraphs">dygraphs</a> widget uses this function to transpose the “file” (data) argument it gets from the R side before passing it on to the dygraphs library:</p>
+<div id="htmlwidgets.transposearray2d" class="section level3">
+<h3>HTMLWidgets.transposeArray2D()</h3>
+<p>Sometimes a 2-dimensional array requires a similar transposition. For this the <code>transposeArray2D()</code> function is provided. Here is an example array:</p>
+<pre><code>[
+  [5.1, 4.9, 4.7, 4.6, 5, 5.4, 4.6, 5],
+  [3.5, 3, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4],
+  [1.4, 1.4, 1.3, 1.5, 1.4, 1.7, 1.4, 1.5],
+  [0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2],
+  [&quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;]
+] </code></pre>
+<p><code>HTMLWidgets.transposeArray2D()</code> can transpose it to:</p>
+<pre><code>[
+  [5.1, 3.5, 1.4, 0.2, &quot;setosa&quot;],
+  [4.9, 3, 1.4, 0.2, &quot;setosa&quot;],
+  [4.7, 3.2, 1.3, 0.2, &quot;setosa&quot;],
+  [4.6, 3.1, 1.5, 0.2, &quot;setosa&quot;],
+  [5, 3.6, 1.4, 0.2, &quot;setosa&quot;],
+  [5.4, 3.9, 1.7, 0.4, &quot;setosa&quot;],
+  [4.6, 3.4, 1.4, 0.3, &quot;setosa&quot;],
+  [5, 3.4, 1.5, 0.2, &quot;setosa&quot;]
+] </code></pre>
+<p>As a real example, the <a href="http://rstudio.github.io/dygraphs">dygraphs</a> widget uses this function to transpose the “file” (data) argument it gets from the R side before passing it on to the dygraphs library:</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">renderValue: <span class="kw">function</span>(el, x, instance) {
    
     <span class="co">// ... code excluded ...</span>
@@ -208,11 +260,57 @@ img {
     <span class="co">// ... more code excluded ...</span>
 }</code></pre>
 </div>
+<div id="custom-json-serializer" class="section level3">
+<h3>Custom JSON serializer</h3>
+<p>You may find it necessary to customize the JSON serialization of widget data when the default serializer in <strong>htmlwidgets</strong> does not work in the way you have expected. For widget package authors, there are two levels of customization for the JSON serialization: you can either customize the default values of arguments for <code>jsonlite::toJSON()</code>, or just customize the whole function.</p>
+<ol style="list-style-type: decimal">
+<li><p><code>jsonlite::toJSON()</code> has a lot of arguments, and we have already changed some of its default values. Below is the JSON serializer we use in <strong>htmlwidgets</strong> at the moment:</p>
+<pre class="sourceCode r"><code class="sourceCode r">function (x, ..., <span class="dt">dataframe =</span> <span class="st">&quot;columns&quot;</span>, <span class="dt">null =</span> <span class="st">&quot;null&quot;</span>, <span class="dt">na =</span> <span class="st">&quot;null&quot;</span>, 
+    <span class="dt">auto_unbox =</span> <span class="ot">TRUE</span>, <span class="dt">digits =</span> <span class="kw">getOption</span>(<span class="st">&quot;shiny.json.digits&quot;</span>, 
+        <span class="dv">16</span>), <span class="dt">use_signif =</span> <span class="ot">TRUE</span>, <span class="dt">force =</span> <span class="ot">TRUE</span>, <span class="dt">POSIXt =</span> <span class="st">&quot;ISO8601&quot;</span>, 
+    <span class="dt">UTC =</span> <span class="ot">TRUE</span>, <span class="dt">rownames =</span> <span class="ot">FALSE</span>, <span class="dt">keep_vec_names =</span> <span class="ot">TRUE</span>) 
+{
+    jsonlite::<span class="kw">toJSON</span>(<span class="kw">I</span>(x), <span class="dt">dataframe =</span> dataframe, <span class="dt">null =</span> null, 
+        <span class="dt">na =</span> na, <span class="dt">auto_unbox =</span> auto_unbox, <span class="dt">digits =</span> digits, <span class="dt">use_signif =</span> use_signif, 
+        <span class="dt">force =</span> force, <span class="dt">POSIXt =</span> POSIXt, <span class="dt">UTC =</span> UTC, <span class="dt">rownames =</span> rownames, 
+        <span class="dt">keep_vec_names =</span> keep_vec_names, <span class="dt">json_verbatim =</span> <span class="ot">TRUE</span>, 
+        ...)
+}</code></pre>
+<p>For example, we convert data frames to JSON by columns instead of rows (the latter is <code>jsonlite::toJSON</code>’s default). If you want to change the default values of any arguments, you can attach an attribute <code>TOJSON_ARGS</code> to the widget data to be passed to <code>createWidget()</code>, e.g.</p>
+<pre class="sourceCode r"><code class="sourceCode r">fooWidget &lt;-<span class="st"> </span>function(data, name, ...) {
+  <span class="co"># ... process the data ...</span>
+  params &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">foo =</span> data, <span class="dt">bar =</span> <span class="ot">TRUE</span>)
+  <span class="co"># customize toJSON() argument values</span>
+  <span class="kw">attr</span>(params, <span class="st">&#39;TOJSON_ARGS&#39;</span>) &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">digits =</span> <span class="dv">7</span>, <span class="dt">na =</span> <span class="st">&#39;string&#39;</span>)
+  htmlwidgets::<span class="kw">createWidget</span>(name, <span class="dt">x =</span> params, ...)
+}</code></pre>
+<p>We changed the default value of <code>digits</code> from 16 to 7, and <code>na</code> from <code>null</code> to <code>string</code> in the above example. It is up to you, the package author, whether you want to expose such customization to users. For example, you can leave an extra argument in your widget function so that users can customize the behavior of the JSON serializer:</p>
+<pre class="sourceCode r"><code class="sourceCode r">fooWidget &lt;-<span class="st"> </span>function(data, name, ..., <span class="dt">JSONArgs =</span> <span class="kw">list</span>(<span class="dt">digits =</span> <span class="dv">7</span>)) {
+  <span class="co"># ... process the data ...</span>
+  params &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">foo =</span> data, <span class="dt">bar =</span> <span class="ot">TRUE</span>)
+  <span class="co"># customize toJSON() argument values</span>
+  <span class="kw">attr</span>(params, <span class="st">&#39;TOJSON_ARGS&#39;</span>) &lt;-<span class="st"> </span>JSONArgs
+  htmlwidgets::<span class="kw">createWidget</span>(name, <span class="dt">x =</span> params, ...)
+}</code></pre>
+<p>You can also use a global option <code>htmlwidgets.TOJSON_ARGS</code> to customize the JSON serializer arguments for all widgets in the current R session, e.g.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">options</span>(<span class="dt">htmlwidgets.TOJSON_ARGS =</span> <span class="kw">list</span>(<span class="dt">digits =</span> <span class="dv">7</span>, <span class="dt">pretty =</span> <span class="ot">TRUE</span>))</code></pre></li>
+<li><p>If you do not want to use <strong>jsonlite</strong>, you can completely override the serializer function by attaching an attribute <code>TOJSON_FUNC</code> to the widget data, e.g.</p>
+<pre class="sourceCode r"><code class="sourceCode r">fooWidget &lt;-<span class="st"> </span>function(data, name, ...) {
+  <span class="co"># ... process the data ...</span>
+  params &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">foo =</span> data, <span class="dt">bar =</span> <span class="ot">TRUE</span>)
+  <span class="co"># customize the JSON serializer</span>
+  <span class="kw">attr</span>(params, <span class="st">&#39;TOJSON_FUNC&#39;</span>) &lt;-<span class="st"> </span>MY_OWN_JSON_FUNCTION
+  htmlwidgets::<span class="kw">createWidget</span>(name, <span class="dt">x =</span> params, ...)
+}</code></pre>
+<p>Here <code>MY_OWN_JSON_FUNCTION</code> can be an arbitrary R function that converts R objects to JSON. If you have also specified the <code>TOJSON_ARGS</code> attribute, it will be passed to your custom JSON function as well.</p></li>
+</ol>
+<p>Note these features about custom JSON serializers require the <strong>shiny</strong> version to be greater than 0.11.1 if you render the widgets in Shiny apps.</p>
+</div>
 </div>
 <div id="widget-instance-data" class="section level2">
 <h2>Widget instance data</h2>
-<p>You may have noticed that the JavaScript binding for a widget consists of a set of JavaScript functions rather than a class which has it’s own instance data. Many widgets don’t require instance data, but if yours does (e.g. you need to save a JS library provided object, reference to a DOM element, or any other computed data) there is a mechanism available to do so.</p>
-<p>Here’s how it works: return an object from the <code>initialize</code> method and that object will subsequently be passed to the <code>renderValue</code> and <code>resize</code> methods. For example:</p>
+<p>You may have noticed that the JavaScript binding for a widget consists of a set of JavaScript functions rather than a class which has its own instance data. Many widgets do not require instance data, but if yours does (e.g. you need to save a JS library provided object, reference to a DOM element, or any other computed data) there is a mechanism available to do so.</p>
+<p>Here is how it works: return an object from the <code>initialize</code> method and that object will subsequently be passed to the <code>renderValue</code> and <code>resize</code> methods. For example:</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="ot">HTMLWidgets</span>.<span class="fu">widget</span>({
   
   <span class="dt">name</span>: <span class="st">&quot;demo&quot;</span>,
@@ -232,18 +330,19 @@ img {
     <span class="co">// access instance as necessary</span>
   }
 });</code></pre>
-<p>A real-life example of using instance data is in the <a href="http://rstudio.github.io/dygraphs">dygraphs</a> widget, which uses the instance to store the actual Dygraph object for later manipulation. Here’s the code for the dygraphs JavaScript binding that takes advantage of instance data: <a href="https://github.com/rstudio/dygraphs/blob/master/inst/htmlwidgets/dygraphs.js" class="uri">https://github.com/rstudio/dygraphs/blob/master/inst/htmlwidgets/dygraphs.js</a></p>
+<p>A real-life example of using instance data is in the <a href="http://rstudio.github.io/dygraphs">dygraphs</a> widget, which uses the instance to store the actual Dygraph object for later manipulation. You can see <a href="https://github.com/rstudio/dygraphs/blob/master/inst/htmlwidgets/dygraphs.js">the code</a> for the dygraphs JavaScript binding that takes advantage of instance data.</p>
 </div>
 <div id="passing-javascript-functions" class="section level2">
 <h2>Passing JavaScript functions</h2>
-<p>As you’d expect, character vectors passed from R to JavaScript are converted to JavaScript strings. However, what if you want to allow users to provide custom JavaScript functions for formatting, drawing, or event handling? For this case the <strong>htmlwidgets</strong> class includes a <code>JS</code> function that allows you to request that a character value be evaluated as JavaScript when it is received on the client.</p>
+<p>As you would expect, character vectors passed from R to JavaScript are converted to JavaScript strings. However, what if you want to allow users to provide custom JavaScript functions for formatting, drawing, or event handling? For this case, the <strong>htmlwidgets</strong> package includes a <code>JS()</code> function that allows you to request that a character value is evaluated as JavaScript when it is received on the client.</p>
 <p>For example, the <a href="http://rstudio.github.io/dygraphs">dygraphs</a> widget includes a <code>dyCallbacks</code> function that allows the user to provide callback functions for a variety of contexts. These callbacks are “marked” as containing JavaScript so that they can be converted to actual JavaScript functions on the client:</p>
-<pre class="sourceCode r"><code class="sourceCode r">callbacks &lt;-<span class="st"> </span><span class="kw">list</span>()
-callbacks$clickCallback &lt;-<span class="st"> </span><span class="kw">JS</span>(clickCallback)
-callbacks$drawCallback &lt;-<span class="st"> </span><span class="kw">JS</span>(drawCallback)
-callbacks$highlightCallback &lt;-<span class="st"> </span><span class="kw">JS</span>(highlightCallback)
-callbacks$pointClickCallback &lt;-<span class="st"> </span><span class="kw">JS</span>(pointClickCallback)
-callbacks$underlayCallback &lt;-<span class="st"> </span><span class="kw">JS</span>(underlayCallback)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">callbacks &lt;-<span class="st"> </span><span class="kw">list</span>(
+  <span class="dt">clickCallback =</span> <span class="kw">JS</span>(clickCallback)
+  <span class="dt">drawCallback =</span> <span class="kw">JS</span>(drawCallback)
+  <span class="dt">highlightCallback =</span> <span class="kw">JS</span>(highlightCallback)
+  <span class="dt">pointClickCallback =</span> <span class="kw">JS</span>(pointClickCallback)
+  <span class="dt">underlayCallback =</span> <span class="kw">JS</span>(underlayCallback)
+)</code></pre>
 <p>Another example is in the <a href="http://rstudio.github.io/DT">DT</a> (DataTables) widget, where users can specify an <code>initCallback</code> with JavaScript to execute after the table is loaded and initialized:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">datatable</span>(<span class="kw">head</span>(iris, <span class="dv">20</span>), <span class="dt">options =</span> <span class="kw">list</span>(
   <span class="dt">initComplete =</span> <span class="kw">JS</span>(
@@ -251,6 +350,7 @@ callbacks$underlayCallback &lt;-<span class="st"> </span><span class="kw">JS</sp
     <span class="st">&quot;$(this.api().table().header()).css({&#39;background-color&#39;: &#39;#000&#39;, &#39;color&#39;: &#39;#fff&#39;});&quot;</span>,
     <span class="st">&quot;}&quot;</span>)
 ))</code></pre>
+<p>If multiple arguments are passed to <code>JS()</code> (as in the above example), they will be concatenated into a single string separated by <code>\n</code>.</p>
 </div>
 <div id="custom-widget-html" class="section level2">
 <h2>Custom widget HTML</h2>
@@ -260,6 +360,12 @@ callbacks$underlayCallback &lt;-<span class="st"> </span><span class="kw">JS</sp
 }</code></pre>
 <p>Note that this function is looked up within the package implementing the widget by the convention <code>widgetname_html</code> so it need not be formally exported from your package or otherwise registered with <strong>htmlwidgets</strong>.</p>
 <p>Most widgets won’t need a custom HTML function but if you need to generate custom HTML for your widget (e.g. you need an <code>&lt;input&gt;</code> or a <code>&lt;span&gt;</code> rather than a <code>&lt;div&gt;</code>) then you should use the <strong>htmltools</strong> package (as demonstrated by the code above).</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>N.B. It is not exported from <strong>htmlwidgets</strong>, so you are not supposed to call this function directly.<a href="#fnref1">↩</a></p></li>
+</ol>
 </div>
 
 
