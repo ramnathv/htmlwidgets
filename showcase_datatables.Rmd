@@ -10,5 +10,5 @@ DataTables displays R matrices or data frames as interactive HTML tables that su
 
 ```{r}
 library(DT)
-datatable(iris, options = list(iDisplayLength = 5))
+datatable(iris, options = list(pageLength = 5))
 ```

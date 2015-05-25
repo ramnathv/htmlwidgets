@@ -159,7 +159,7 @@ img {
 <p><a href="http://rstudio.github.io/DT/" class="uri">http://rstudio.github.io/DT/</a></p>
 <p>DataTables displays R matrices or data frames as interactive HTML tables that support filtering, pagination, and sorting.</p>
 <pre class="r"><code>library(DT)
-datatable(iris, options = list(iDisplayLength = 5))</code></pre>
+datatable(iris, options = list(pageLength = 5))</code></pre>
 <p><div id="htmlwidget-3078" style="width:100%;height:auto;" class="datatables"></div>
 <script type="application/json" data-for="htmlwidget-3078">{
   "x": {
@@ -173,7 +173,7 @@ datatable(iris, options = list(iDisplayLength = 5))</code></pre>
     ],
     "container": "<table class=\"display\">\n  <thead>\n    <tr>\n      <th> </th>\n      <th>Sepal.Length</th>\n      <th>Sepal.Width</th>\n      <th>Petal.Length</th>\n      <th>Petal.Width</th>\n      <th>Species</th>\n    </tr>\n  </thead>\n</table>",
     "options": {
-      "iDisplayLength": 5,
+      "pageLength": 5,
       "columnDefs": [
         {
           "className": "dt-right",
@@ -186,7 +186,8 @@ datatable(iris, options = list(iDisplayLength = 5))</code></pre>
       ],
       "order": [],
       "autoWidth": false,
-      "orderClasses": false
+      "orderClasses": false,
+      "lengthMenu": [5, 10, 25, 50, 100]
     },
     "callback": "function(table) {\nreturn table;\n}",
     "filter": "none"
