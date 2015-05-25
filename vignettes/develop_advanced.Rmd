@@ -13,9 +13,9 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-### Advanced Topics
+## Overview
 
-This vignette covers several aspects of creating widgets that not required by all widgets, but are an essential part of getting bindings to certain types of JavaScript libraries to work properly. Topics covered include:
+This article covers several aspects of creating widgets that are not required by all widgets, but are an essential part of getting bindings to certain types of JavaScript libraries to work properly. Topics covered include:
 
 * Transforming JSON representations of R objects into representations required by JavaScript libraries (e.g. an R data frame to a d3 dataset).
 
@@ -26,11 +26,11 @@ This vignette covers several aspects of creating widgets that not required by al
 * Generating custom HTML to enclose a widget (the default is a `<div>` but some libraries require a different element e.g. a `<span>`).
 
 
-### Data Transformation
+## Data transformation
 
 R objects passed as part of the `x` parameter to the `createWidget()` function are transformed to JSON using the internal function `htmlwidgets:::toJSON()`^[N.B. It is not exported from **htmlwidgets**, so you are not supposed to call this function directly.], which is basically a wrapper function of `jsonlite::toJSON()` by default. However, sometimes this representation is not what is required by the JavaScript library you are interfacing with. There are two JavaScript functions that you can use to transform the JSON data.
 
-#### HTMLWidgets.dataframeToD3()
+### HTMLWidgets.dataframeToD3()
 
 R data frames are represented in "long" form (an array of named vectors) whereas d3 typically requires "wide" form (an array of objects each of which includes all names and values). Since the R representation is smaller in size and much faster to transmit over the network, we create the long-form representation of R data, and then transform the data in JavaScript using the `dataframeToD3()` helper function. 
 
@@ -60,7 +60,7 @@ renderValue: function(el, x, instance) {
 }
 ```
 
-#### HTMLWidgets.transposeArray2D()
+### HTMLWidgets.transposeArray2D()
 
 Sometimes a 2-dimensional array requires a similar transposition. For this the `transposeArray2D()` function is provided. Here is an example array:
 
@@ -88,7 +88,7 @@ renderValue: function(el, x, instance) {
 }
 ```
 
-#### Custom JSON Serializer
+### Custom JSON serializer
 
 You may find it necessary to customize the JSON serialization of widget data when the default serializer in **htmlwidgets** does not work in the way you have expected. For widget package authors, there are two levels of customization for the JSON serialization: you can either customize the default values of arguments for `jsonlite::toJSON()`, or just customize the whole function.
 
@@ -143,7 +143,7 @@ You may find it necessary to customize the JSON serialization of widget data whe
 
 Note these features about custom JSON serializers require the **shiny** version to be greater than 0.11.1 if you render the widgets in Shiny apps.
 
-### Widget Instance Data
+## Widget instance data
 
 You may have noticed that the JavaScript binding for a widget consists of a set of JavaScript functions rather than a class which has its own instance data. Many widgets do not require instance data, but if yours does (e.g. you need to save a JS library provided object, reference to a DOM element, or any other computed data) there is a mechanism available to do so.
 
@@ -173,7 +173,7 @@ HTMLWidgets.widget({
 
 A real-life example of using instance data is in the [dygraphs](http://rstudio.github.io/dygraphs) widget, which uses the instance to store the actual Dygraph object for later manipulation. You can see [the code](https://github.com/rstudio/dygraphs/blob/master/inst/htmlwidgets/dygraphs.js) for the dygraphs JavaScript binding that takes advantage of instance data.
 
-### Passing JavaScript Functions
+## Passing JavaScript functions
 
 As you would expect, character vectors passed from R to JavaScript are converted to JavaScript strings. However, what if you want to allow users to provide custom JavaScript functions for formatting, drawing, or event handling? For this case, the **htmlwidgets** package includes a `JS()` function that allows you to request that a character value is evaluated as JavaScript when it is received on the client.
 
@@ -202,7 +202,7 @@ datatable(head(iris, 20), options = list(
 
 If multiple arguments are passed to `JS()` (as in the above example), they will be concatenated into a single string separated by `\n`.
 
-### Custom Widget HTML
+## Custom widget HTML
 
 Typically the HTML "housing" for a widget is just a `<div>` element, and this is correspondingly the default behavior for new widgets that don't specify otherwise. However, sometimes you need a different element type. For example, the [sparkline](https://github.com/htmlwidgets/sparkline) widget requires a `<span>` element so implements the following custom HTML generation function:
 
@@ -215,19 +215,4 @@ sparkline_html <- function(id, style, class, ...){
 Note that this function is looked up within the package implementing the widget by the convention `widgetname_html` so it need not be formally exported from your package or otherwise registered with **htmlwidgets**.
 
 Most widgets won't need a custom HTML function but if you need to generate custom HTML for your widget (e.g. you need an `<input>` or a `<span>` rather than a `<div>`) then you should use the **htmltools** package (as demonstrated by the code above).
-
-
-<script>
-// hack to enable Rmd vignette cross references to work both on GitHub and
-// within built package vignettes
-(function () {
-  for (var links = document.links, numLinks = links.length, i=0; i<numLinks; i++)
-    links[i].href = links[i].href.replace(new RegExp("\\.Rmd$"), ".html")
-                                                            .split("/").pop();
-})();
-</script>
-
-
-
-
 

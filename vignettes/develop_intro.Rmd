@@ -13,58 +13,44 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-### Overview
+## Overview
 
-The **htmlwidgets** package provides a framework for easily creating R bindings to JavaScript libraries. Widgets created using the framework can be:
+The **[htmlwidgets](http://cran.rstudio.com/web/packages/htmlwidgets/index.html)** package provides a framework for creating R bindings to JavaScript libraries. HTML Widgets can be:
 
 * Used at the R console for data analysis just like conventional R plots.
 * Embedded within [R Markdown](http://rmarkdown.rstudio.com) documents
 * Incorporated into [Shiny](http://shiny.rstudio.com) web applications.
 * Saved as standalone web pages for ad-hoc sharing via email, Dropbox, etc.
 
-There are already several R packages based on **htmlwidgets**, including:
-
-* [dygraphs](http://rstudio.github.io/dygraphs/) --- Interactive time series visualization
-* [networkD3](http://christophergandrud.github.io/networkD3/) --- Network visualization with D3
-* [sparkline](https://github.com/htmlwidgets/sparkline) --- Small inline charts
-* [DT](http://rstudio.github.io/DT/) --- Tabular data via DataTables
-* [rthreejs](https://github.com/bwlewis/rthreejs) -- Interactive 3D graphics
-
-The package was created in collaboration by Ramnath Vaidyanathan, Joe Cheng, JJ Allaire, and Yihui Xie. We've all spent countless hours building bindings between R and the web, and were motivated to create a framework that made this as easy as possible for all R developers. 
-
-### Widget Basics
-
-The philosophy of **htmlwidgets** is convention over configuration. By following a small set of easy-to-follow conventions, it is possible to create HTML widgets with very little code. All widgets include the following components:
+By following a small set of easy-to-follow conventions, it is possible to create HTML widgets with very little code. All widgets include the following components:
 
 1. **Dependencies**. These are the JavaScript and CSS assets used by the widget (e.g. the library you are creating a wrapper for).
 
-3. **R Binding**. This is the function that end users will call to provide input data to the widget as well as specify various options for how the widget should render. This also includes some short boilerplate functions required to use the widget within Shiny applications.
+3. **R binding**. This is the function that end users will call to provide input data to the widget as well as specify various options for how the widget should render. This also includes some short boilerplate functions required to use the widget within Shiny applications.
 
-3. **JavaScript Binding**. This is the JavaScript code that glues everything together, passing the data and options gathered in the R binding to the underlying JavaScript library.
+3. **JavaScript binding**. This is the JavaScript code that glues everything together, passing the data and options gathered in the R binding to the underlying JavaScript library.
 
 HTML widgets are always hosted within an R package and should include all of the source code for their dependencies. This is to ensure that code which depends on widgets is fully reproducible (i.e. doesn't require an internet connection or the ongoing availability of an internet service to run).
 
-### Creating a Widget
-
-#### Example: sigma.js
+## Example (sigma.js)
 
 To start with we'll walk through the creation of a simple widget that wraps the [sigma.js](http://sigmajs.org) graph visualization library. When we're done we'll be able to use it to display interactive visualizations of [GEXF](http://gexf.net) (Graph Exchange XML Format) data files. For example:
 
-```r
+```{r, eval=FALSE}
 library(sigma)
 data <- system.file("examples/ediaspora.gexf.xml", package = "sigma")
 sigma(data)
 ```
 
-![knob](images/sigma.png)
+<img src="images/sigma.png" alt="sigma" data-toggle="tooltip" data-placement="right" title="" data-original-title="Note this is just an image of the visualization so it's not interactive. You can play with the interactive version by following the steps in the demo section below." onload="$(this).tooltip()">
 
 Note that the above is just an image of the visualization so it's not interactive. You can play with the interactive version by following the steps in the demo section below. 
 
-There is remarkably little code required to create this binding. Below we'll go through all of the components step-by-step.
+There is remarkably little code required to create this binding. Below we'll go through all of the components step-by-step. Then we'll describe how you can create your own widgets (including automatically generating basic scaffolding for all of the core components).
 
-#### File Layout
+### File layout
 
-Let's assume that our widget is named **sigma** and is located within an R package of the same name. Our JavaScript binding source code file is named sigma.js. Since our widget will read GEXF data files we'll also need to include both the base sigma.min.js library as well as it's GEXF plugin. Here are the files that we'll add to the package:
+Let's assume that our widget is named **sigma** and is located within an R package of the same name. Our JavaScript binding source code file is named sigma.js. Since our widget will read GEXF data files we'll also need to include both the base sigma.min.js library as well as its GEXF plugin. Here are the files that we'll add to the package:
 
 ```text
 R/
@@ -83,9 +69,9 @@ inst/
 
 Note the convention that the JavaScript, YAML, and other dependencies are all contained within the `inst/htmlwidgets` directory (which will subsequently be installed into a package sub-directory named `htmlwidgets`).
 
-#### Dependencies
+### Dependencies
 
-Dependencies are the JavaScript and CSS assets used by a widget. Dependencies are included within the `inst/htmlwidgets/lib` directory. Dependencies are specified using a YAML configuration file which uses the name of the widget as it's base file name. Here's what our **sigma.yaml** file looks like:
+Dependencies are the JavaScript and CSS assets used by a widget. Dependencies are included within the `inst/htmlwidgets/lib` directory. Dependencies are specified using a YAML configuration file which uses the name of the widget as its base file name. Here's what our **sigma.yaml** file looks like:
 
 ```yaml
 dependencies:
@@ -99,9 +85,9 @@ dependencies:
 
 The dependency `src` specification refers to the directory that contains the library and `script` refers to specific JavaScript files. If your library contains multiple JavaScript files specify each one on a line beginning with `-` as shown here. You can also add `stylesheet` entries and even `meta` or `head` entries. Multiple dependencies may be specified in one YAML file. See the documentation on the `htmlDependency` function in the [**htmltools**](http://cran.r-project.org/web/packages/htmltools/index.html) package for additional details.
 
-#### R Binding
+### R binding
 
-We need to provide users with an R function that invokes our widget. Typically this function will accept input data as well as various options that control the widgets display. Here's the R function for `sigma`:
+We need to provide users with an R function that invokes our widget. Typically this function will accept input data as well as various options that control the widget's display. Here's the R function for `sigma`:
 
 ```r
 #' @import htmlwidgets
@@ -145,7 +131,7 @@ renderSigma <- function(expr, env = parent.frame(), quoted = FALSE) {
 }
 ```
 
-#### JavaScript Binding
+### JavaScript binding
 
 The third piece in the puzzle is the JavaScript required to activate the widget. By convention we'll define our JavaScript binding in the file `inst/htmlwidgets/sigma.js`. Here is the full source code of the binding:
 
@@ -199,7 +185,7 @@ HTMLWidgets.widget({
 
 We provide a name and type for the widget and then implement three functions:
 
-1. The `initialize` function creates and/or attaches to DOM elements as required and returns on object containing the widgets instance data. In this case we create a new sigma element and pass it the `id` of the DOM element that hosts the widget on the page. We're going to need access to the sigma object later (to update it's data and settings) so we return it as the `sig` member of the widgets instance data.
+1. The `initialize` function creates and/or attaches to DOM elements as required and returns on object containing the widget's instance data. In this case we create a new sigma element and pass it the `id` of the DOM element that hosts the widget on the page. We're going to need access to the sigma object later (to update it's data and settings) so we return it as the `sig` member of the widgets instance data.
 
 2. The `renderValue` function actually pours our dynamic data and settings into the widget. Everything required to do the job is passed as a parameter to `renderValue`: the `x` parameter contains the widget data and settings and the `instance` parameter contains a reference to the sigma object we need to manipulate. We parse and update the GEXF data, apply the settings to the sigma object, and finally call `refresh` to reflect the new values on-screen.
 
@@ -208,13 +194,15 @@ We provide a name and type for the widget and then implement three functions:
 All JavaScript libraries handle initialization, binding to DOM elements, dynamically updating data, and resizing slightly differently. Most of the work on the JavaScript side of creating widgets is mapping these three functions correctly onto the behavior of the underlying library.
 
 
-#### Demo
+### Demo
 
 Our widget is now complete! If you want to test drive it without reproducing all of the code locally you can install it from GitHub as follows:
 
 ```r
-devtools::install_github(c('ramnathv/htmlwidgets', 'jjallaire/sigma'))
+devtools::install_github('jjallaire/sigma')
 ```
+
+You can also download the [ediaspora.gexf.xml](https://github.com/jjallaire/sigma/raw/master/inst/examples/ediaspora.gexf.xml) file and place it in the directory `inst/htmlwidgets/examples`.
 
 Here's the code to try it out with some sample data included with the package:
 
@@ -250,15 +238,29 @@ server = function(input, output) {
 shinyApp(ui = ui, server = server)
 ```
 
-### Creating Your Own Widgets
+## Creating your own widgets
 
-#### Scaffolding
+### Requirements
 
-When you want to create your own widget you can call the `scaffoldWidget` function to create the basic structure for your widget. This function will:
+To implement a widget you need to create a new R package that in turn depends on the **htmlwidgets** package. You can install the package from CRAN as follows:
+
+```r
+install.packages("htmlwidgets")
+```
+
+While it's not strictly required, the step-by-step instructions below for getting started also make use of the **devtools** package which you can also install from CRAN:
+
+```r
+install.packages("devtools")
+```
+
+### Scaffolding
+
+To create a new widget you can call the `scaffoldWidget` function to generate the basic structure for your widget. This function will:
 
 * Create the .R, .js, and .yaml files required for your widget;
 
-* If provided, take a [Bower](http://bower.io/) package name and automatically download the JavaScript library (and it's dependencies) and add the required entries to the .yaml file.
+* If provided, take a [Bower](http://bower.io/) package name and automatically download the JavaScript library (and its dependencies) and add the required entries to the .yaml file.
 
 This method is highly recommended as it ensures that you get started with the right file structure. Here's an example that assumes you want to create a widget named 'mywidget' in a new package of the same name:
 
@@ -276,21 +278,21 @@ library(mywidget)
 mywidget("hello, world")
 ```
 
-This is the most minimal widget possible and doesn't yet include a JavaScript library to interface to (note that `scaffoldWidget` can optionally include JavaScript library dependencies via the `bowerPkg` argument). Before getting started with development you should review the introductory example above to make sure you understand the various components and also review the additional vignettes and examples linked to in the next section.
+This is the most minimal widget possible and doesn't yet include a JavaScript library to interface to (note that `scaffoldWidget` can optionally include JavaScript library dependencies via the `bowerPkg` argument). Before getting started with development you should review the introductory example above to make sure you understand the various components and also review the additional articles and examples linked to in the next section.
 
-#### Learning More
+### Learning more
 
-##### Vignettes
+#### Additional articles
 
-There are additional vignettes that cover more advanced ground:
+There are additional articles that cover more advanced ground:
 
-* [HTML Widget Sizing](htmlwidgets-sizing.Rmd) explains custom sizing policies and when you might need to use them and describes implementing a `resize` method within JavaScript bindings.
+* [HTML Widget Sizing](develop_sizing.html) explains custom sizing policies and when you might need to use them and describes implementing a `resize` method within JavaScript bindings.
 
-* [HTML Widgets: Advanced Topics](htmlwidgets-advanced.Rmd) describes framework features that support per-widget instance data, data transformations (e.g. converting a data frame into a d3 dataset), and providing widget options that are live JavaScript objects (e.g. function definitions).
+* [HTML Widgets: Advanced Topics](develop_advanced.html) describes framework features that support per-widget instance data, data transformations (e.g. converting a data frame into a d3 dataset), and providing widget options that are live JavaScript objects (e.g. function definitions).
 
-The Sizing vignette is particularly important as most JavaScript libraries require some additional interaction to keep their size synchronized with their containing element.
+The Sizing article is particularly important as most JavaScript libraries require some additional interaction to keep their size synchronized with their containing element.
 
-##### Examples
+#### Examples
 
 Studying the code of other packages is a great way to learn more about creating widgets:
 
@@ -300,16 +302,7 @@ Studying the code of other packages is a great way to learn more about creating 
 
 3. The [sparkline](https://github.com/htmlwidgets/sparkline) package illustrates  providing a custom HTML generation function (since sparklines must be housed in `<span>` rather than `<div>` elements).
  
-<script>
-// hack to enable Rmd vignette cross references to work both on GitHub and
-// within built package vignettes
-(function () {
-  for (var links = document.links, numLinks = links.length, i=0; i<numLinks; i++)
-    links[i].href = links[i].href.replace(new RegExp("\\.Rmd$"), ".html")
-                                                            .split("/").pop();
-})();
-</script>
+#### Questions and issues
 
-
-
+If you have questions about developing widgets or run into problems during development please don't hesitate to [post an issue](https://github.com/ramnathv/htmlwidgets/issues) on the project's GitHub repository.
 
