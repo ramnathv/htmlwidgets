@@ -12,17 +12,17 @@
 
 <title>htmlwidgets: leaflet</title>
 
-<script src="libs/jquery-1.11.1/jquery.min.js"></script>
+<script src="libs/jquery/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="libs/bootstrap-3.3.1/css/cosmo.min.css" rel="stylesheet" />
-<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
-<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
-<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
-<script src="libs/htmlwidgets-0.3.2/htmlwidgets.js"></script>
-<link href="libs/leaflet-0.7.3/leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet-0.7.3/leaflet.js"></script>
-<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
-<script src="libs/leaflet-binding-0.0.9/leaflet.js"></script>
+<link href="libs/bootstrap/css/cosmo.min.css" rel="stylesheet" />
+<script src="libs/bootstrap/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap/shim/respond.min.js"></script>
+<script src="libs/htmlwidgets/htmlwidgets.js"></script>
+<link href="libs/leaflet/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet/leaflet.js"></script>
+<link href="libs/leafletfix/leafletfix.css" rel="stylesheet" />
+<script src="libs/leaflet-binding/leaflet.js"></script>
 
 <!-- Styles for this site -->
 <link href="css/styles.css" rel="stylesheet">
@@ -163,66 +163,70 @@ pal &lt;- colorQuantile(&quot;YlOrRd&quot;, NULL, n = 8)
 leaflet(orstationc) %&gt;% 
   addTiles() %&gt;%
   addCircleMarkers(color = ~pal(tann))</code></pre>
-<p><div id="htmlwidget-246" style="width:576px;height:336px;" class="leaflet"></div>
-<script type="application/json" data-for="htmlwidget-246">{ "x": {
- "calls": [
- {
- "method": "tileLayer",
-"args": [
- "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-{
- "minZoom":                 0,
-"maxZoom":                18,
-"maxNativeZoom": null,
-"tileSize":               256,
-"subdomains": "abc",
-"errorTileUrl": "",
-"tms": false,
-"continuousWorld": false,
-"noWrap": false,
-"zoomOffset":                 0,
-"zoomReverse": false,
-"opacity":                 1,
-"zIndex": null,
-"unloadInvisibleTiles": null,
-"updateWhenIdle": null,
-"detectRetina": false,
-"reuseTiles": false,
-"attribution": "&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>" 
-} 
-] 
-},
-{
- "method": "circleMarker",
-"args": [
- [            44.917,            45.717,            42.217,             46.15,            44.833,            44.783,            43.117,            44.067,            43.917,            45.633,             42.05,            43.583,            42.833,            43.233,            45.417,              46.1,            45.217,            45.233,            44.633,            43.783,            43.717,              42.9,            44.933,            43.783,            43.667,             45.45,            45.567,              43.6,            45.433,            45.267,            44.117,            44.117,            45.533,                45,              42.4,            42.433,            44.517,            44.883,             42.55,             45.45,             45.35,            45.817,            45.683,             44.35,              45.2,              42.2,            45.317,            42.183,              44.1,            44.633,            43.983,            43.283,            45.233,            42.367,            44.583,            45.467,            45.967,            45.483,            44.633,            43.417,            43.867,              44.4,             44.05,             45.35,            45.033,             43.65,              42.7,            45.683,            45.483,              45.6,            42.883,             44.35,            42.733,            44.267,            44.267,              43.7,            44.767,            42.967,              43.2,            42.333,            44.917,            45.983,             44.15,            42.617,            44.867,            43.483,              44.8,            45.117,             45.45,            45.217,            43.983,            43.683 ],
-[          -120.717,            -120.2,          -122.717,          -123.883,          -117.817,          -117.833,          -124.383,          -121.317,          -118.167,           -121.95,          -124.283,           -119.05,          -124.567,          -121.783,           -123.25,          -123.283,            -123.9,          -120.183,            -123.2,          -123.067,           -123.05,          -122.133,          -123.317,          -122.967,          -123.317,          -121.133,          -117.917,          -123.583,          -117.267,          -122.317,          -123.217,            -123.3,            -123.1,          -120.217,          -124.417,          -123.317,          -120.933,          -117.117,           -119.65,           -122.15,           -119.55,          -119.283,          -121.517,          -117.267,            -120.7,          -121.783,          -118.083,           -120.35,          -122.683,          -121.133,          -117.017,          -118.833,          -123.183,          -122.867,          -121.183,           -120.35,          -118.433,          -120.717,           -124.05,           -124.25,              -117,          -120.433,          -116.967,            -122.6,          -123.933,           -117.25,          -120.533,           -118.85,          -118.817,            -122.6,          -124.067,            -120.9,          -122.517,          -121.217,           -121.15,          -124.117,          -117.167,           -123.35,           -123.35,          -120.883,          -123.017,          -123.917,          -118.967,          -123.367,           -122.65,          -119.683,          -122.767,          -122.067,          -123.867,          -117.883,           -117.25,          -121.683 ],
-               10,
-null,
-{
- "lineCap": null,
-"lineJoin": null,
-"clickable": true,
-"pointerEvents": null,
-"className": "",
-"stroke": true,
-"color": [ "#FECD6A", "#800026", "#EA2820", "#FDA245", "#FFFFCC", "#FEEA9A", "#FC6931", "#FFFFCC", "#FECD6A", "#C20324", "#800026", "#FEEA9A", "#FDA245", "#FFFFCC", "#FDA245", "#FC6931", "#EA2820", "#FECD6A", "#EA2820", "#EA2820", "#EA2820", "#FFFFCC", "#EA2820", "#FC6931", "#800026", "#FECD6A", "#FECD6A", "#800026", "#FFFFCC", "#EA2820", "#C20324", "#C20324", "#C20324", "#FECD6A", "#C20324", "#800026", "#FFFFCC", "#FEEA9A", "#FFFFCC", "#FC6931", "#FDA245", "#C20324", "#FDA245", "#800026", "#FECD6A", "#FECD6A", "#FDA245", "#FEEA9A", "#C20324", "#FECD6A", "#FC6931", "#FEEA9A", "#EA2820", "#800026", "#FEEA9A", "#EA2820", "#800026", "#FECD6A", "#FDA245", "#C20324", "#FC6931", "#FFFFCC", "#EA2820", "#800026", "#FDA245", "#EA2820", "#FECD6A", "#C20324", "#FC6931", "#800026", "#800026", "#FEEA9A", "#FDA245", "#FECD6A", "#FEEA9A", "#C20324", "#FC6931", "#800026", "#800026", "#FFFFCC", "#EA2820", "#EA2820", "#FFFFCC", "#FECD6A", "#FECD6A", "#FFFFCC", "#C20324", "#FDA245", "#FDA245", "#FECD6A", "#FC6931", "#FFFFCC" ],
-"weight":                 5,
-"opacity":               0.5,
-"fill": true,
-"fillColor": [ "#FECD6A", "#800026", "#EA2820", "#FDA245", "#FFFFCC", "#FEEA9A", "#FC6931", "#FFFFCC", "#FECD6A", "#C20324", "#800026", "#FEEA9A", "#FDA245", "#FFFFCC", "#FDA245", "#FC6931", "#EA2820", "#FECD6A", "#EA2820", "#EA2820", "#EA2820", "#FFFFCC", "#EA2820", "#FC6931", "#800026", "#FECD6A", "#FECD6A", "#800026", "#FFFFCC", "#EA2820", "#C20324", "#C20324", "#C20324", "#FECD6A", "#C20324", "#800026", "#FFFFCC", "#FEEA9A", "#FFFFCC", "#FC6931", "#FDA245", "#C20324", "#FDA245", "#800026", "#FECD6A", "#FECD6A", "#FDA245", "#FEEA9A", "#C20324", "#FECD6A", "#FC6931", "#FEEA9A", "#EA2820", "#800026", "#FEEA9A", "#EA2820", "#800026", "#FECD6A", "#FDA245", "#C20324", "#FC6931", "#FFFFCC", "#EA2820", "#800026", "#FDA245", "#EA2820", "#FECD6A", "#C20324", "#FC6931", "#800026", "#800026", "#FEEA9A", "#FDA245", "#FECD6A", "#FEEA9A", "#C20324", "#FC6931", "#800026", "#800026", "#FFFFCC", "#EA2820", "#EA2820", "#FFFFCC", "#FECD6A", "#FECD6A", "#FFFFCC", "#C20324", "#FDA245", "#FDA245", "#FECD6A", "#FC6931", "#FFFFCC" ],
-"fillOpacity":               0.2,
-"dashArray": null 
-},
-null 
-] 
-} 
-],
-"limits": {
- "lat": [             42.05,             46.15 ],
-"lng": [          -124.567,          -116.967 ] 
-} 
-},"evals": [  ] }</script></p>
+<p><div id="htmlwidget-9264" style="width:576px;height:336px;" class="leaflet"></div>
+<script type="application/json" data-for="htmlwidget-9264">{
+  "x": {
+    "calls": [
+      {
+        "method": "addTiles",
+        "args": [
+          "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+          null,
+          {
+            "minZoom": 0,
+            "maxZoom": 18,
+            "maxNativeZoom": null,
+            "tileSize": 256,
+            "subdomains": "abc",
+            "errorTileUrl": "",
+            "tms": false,
+            "continuousWorld": false,
+            "noWrap": false,
+            "zoomOffset": 0,
+            "zoomReverse": false,
+            "opacity": 1,
+            "zIndex": null,
+            "unloadInvisibleTiles": null,
+            "updateWhenIdle": null,
+            "detectRetina": false,
+            "reuseTiles": false,
+            "attribution": "&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>"
+          }
+        ]
+      },
+      {
+        "method": "addCircleMarkers",
+        "args": [
+          [44.917, 45.717, 42.217, 46.15, 44.833, 44.783, 43.117, 44.067, 43.917, 45.633, 42.05, 43.583, 42.833, 43.233, 45.417, 46.1, 45.217, 45.233, 44.633, 43.783, 43.717, 42.9, 44.933, 43.783, 43.667, 45.45, 45.567, 43.6, 45.433, 45.267, 44.117, 44.117, 45.533, 45, 42.4, 42.433, 44.517, 44.883, 42.55, 45.45, 45.35, 45.817, 45.683, 44.35, 45.2, 42.2, 45.317, 42.183, 44.1, 44.633, 43.983, 43.283, 45.233, 42.367, 44.583, 45.467, 45.967, 45.483, 44.633, 43.417, 43.867, 44.4, 44.05, 45.35, 45.033, 43.65, 42.7, 45.683, 45.483, 45.6, 42.883, 44.35, 42.733, 44.267, 44.267, 43.7, 44.767, 42.967, 43.2, 42.333, 44.917, 45.983, 44.15, 42.617, 44.867, 43.483, 44.8, 45.117, 45.45, 45.217, 43.983, 43.683],
+          [-120.717, -120.2, -122.717, -123.883, -117.817, -117.833, -124.383, -121.317, -118.167, -121.95, -124.283, -119.05, -124.567, -121.783, -123.25, -123.283, -123.9, -120.183, -123.2, -123.067, -123.05, -122.133, -123.317, -122.967, -123.317, -121.133, -117.917, -123.583, -117.267, -122.317, -123.217, -123.3, -123.1, -120.217, -124.417, -123.317, -120.933, -117.117, -119.65, -122.15, -119.55, -119.283, -121.517, -117.267, -120.7, -121.783, -118.083, -120.35, -122.683, -121.133, -117.017, -118.833, -123.183, -122.867, -121.183, -120.35, -118.433, -120.717, -124.05, -124.25, -117, -120.433, -116.967, -122.6, -123.933, -117.25, -120.533, -118.85, -118.817, -122.6, -124.067, -120.9, -122.517, -121.217, -121.15, -124.117, -117.167, -123.35, -123.35, -120.883, -123.017, -123.917, -118.967, -123.367, -122.65, -119.683, -122.767, -122.067, -123.867, -117.883, -117.25, -121.683],
+          10,
+          null,
+          {
+            "lineCap": null,
+            "lineJoin": null,
+            "clickable": true,
+            "pointerEvents": null,
+            "className": "",
+            "stroke": true,
+            "color": ["#FECD6A", "#7F0026", "#EA2D1F", "#FDA245", "#FFFFCC", "#FFEA9A", "#FD6B31", "#FFFFCC", "#FECD6A", "#C20324", "#7F0026", "#FFEA9A", "#FDA245", "#FFFFCC", "#FDA245", "#FD6B31", "#EA2D1F", "#FECD6A", "#EA2D1F", "#EA2D1F", "#EA2D1F", "#FFFFCC", "#EA2D1F", "#FD6B31", "#7F0026", "#FECD6A", "#FECD6A", "#7F0026", "#FFFFCC", "#EA2D1F", "#C20324", "#C20324", "#C20324", "#FECD6A", "#C20324", "#7F0026", "#FFFFCC", "#FFEA9A", "#FFFFCC", "#FD6B31", "#FDA245", "#C20324", "#FDA245", "#7F0026", "#FECD6A", "#FECD6A", "#FDA245", "#FFEA9A", "#C20324", "#FECD6A", "#FD6B31", "#FFEA9A", "#EA2D1F", "#7F0026", "#FFEA9A", "#EA2D1F", "#7F0026", "#FECD6A", "#FDA245", "#C20324", "#FD6B31", "#FFFFCC", "#EA2D1F", "#7F0026", "#FDA245", "#EA2D1F", "#FECD6A", "#C20324", "#FD6B31", "#7F0026", "#7F0026", "#FFEA9A", "#FDA245", "#FECD6A", "#FFEA9A", "#C20324", "#FD6B31", "#7F0026", "#7F0026", "#FFFFCC", "#EA2D1F", "#EA2D1F", "#FFFFCC", "#FECD6A", "#FECD6A", "#FFFFCC", "#C20324", "#FDA245", "#FDA245", "#FECD6A", "#FD6B31", "#FFFFCC"],
+            "weight": 5,
+            "opacity": 0.5,
+            "fill": true,
+            "fillColor": ["#FECD6A", "#7F0026", "#EA2D1F", "#FDA245", "#FFFFCC", "#FFEA9A", "#FD6B31", "#FFFFCC", "#FECD6A", "#C20324", "#7F0026", "#FFEA9A", "#FDA245", "#FFFFCC", "#FDA245", "#FD6B31", "#EA2D1F", "#FECD6A", "#EA2D1F", "#EA2D1F", "#EA2D1F", "#FFFFCC", "#EA2D1F", "#FD6B31", "#7F0026", "#FECD6A", "#FECD6A", "#7F0026", "#FFFFCC", "#EA2D1F", "#C20324", "#C20324", "#C20324", "#FECD6A", "#C20324", "#7F0026", "#FFFFCC", "#FFEA9A", "#FFFFCC", "#FD6B31", "#FDA245", "#C20324", "#FDA245", "#7F0026", "#FECD6A", "#FECD6A", "#FDA245", "#FFEA9A", "#C20324", "#FECD6A", "#FD6B31", "#FFEA9A", "#EA2D1F", "#7F0026", "#FFEA9A", "#EA2D1F", "#7F0026", "#FECD6A", "#FDA245", "#C20324", "#FD6B31", "#FFFFCC", "#EA2D1F", "#7F0026", "#FDA245", "#EA2D1F", "#FECD6A", "#C20324", "#FD6B31", "#7F0026", "#7F0026", "#FFEA9A", "#FDA245", "#FECD6A", "#FFEA9A", "#C20324", "#FD6B31", "#7F0026", "#7F0026", "#FFFFCC", "#EA2D1F", "#EA2D1F", "#FFFFCC", "#FECD6A", "#FECD6A", "#FFFFCC", "#C20324", "#FDA245", "#FDA245", "#FECD6A", "#FD6B31", "#FFFFCC"],
+            "fillOpacity": 0.2,
+            "dashArray": null
+          },
+          null
+        ]
+      }
+    ],
+    "limits": {
+      "lat": [42.05, 46.15],
+      "lng": [-124.567, -116.967]
+    }
+  },
+  "evals": []
+}</script></p>
 </div>
 
 
@@ -232,7 +236,7 @@ null
   <div>&nbsp;</div>
   <div>&nbsp;</div>
   <div class="text-muted">
-  Copyright &copy; 2014 Ramnath Vaidyanathan, Kenton Russell, and RStudio, Inc.
+  Copyright &copy; 2014 - 2015 Ramnath Vaidyanathan, Kenton Russell, and RStudio, Inc.
   </div>
 </footer>
 
