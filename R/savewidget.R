@@ -9,9 +9,10 @@
 #'   placed in an adjacent directory.
 #' @param libdir Directory to copy HTML dependencies into (defaults to
 #'   filename_files).
+#' @param background Text string giving the html background color of the widget. Defaults to white.
 #'
 #' @export
-saveWidget <- function(widget, file, selfcontained = TRUE, libdir = NULL) {
+saveWidget <- function(widget, file, selfcontained = TRUE, libdir = NULL, background="white") {
 
   # convert to HTML tags
   html <- toHTML(widget, standalone = TRUE)
@@ -23,7 +24,7 @@ saveWidget <- function(widget, file, selfcontained = TRUE, libdir = NULL) {
   }
 
   # save the file
-  htmltools::save_html(html, file = file, libdir = libdir)
+  htmltools::save_html(html, file = file, libdir = libdir, background=background)
 
   # make it self-contained if requested
   if (selfcontained) {
