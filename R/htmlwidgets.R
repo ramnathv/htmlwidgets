@@ -271,7 +271,7 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
   func <- shiny::exprToFunction(expr, env, quoted)
 
   # create the render function
-  renderFunc <- function() {
+  renderFunc <- function(shinysession, name) {
     instance <- func()
     if (!is.null(instance$elementId)) {
       warning("Ignoring explicitly provided widget ID \"",
@@ -283,7 +283,7 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
       htmltools::resolveDependencies(deps),
       shiny::createWebDependency
     )
-    payload <- c(createPayload(instance), list(deps = deps))
+    payload <- c(createPayload(instance, shinysession, name), list(deps = deps))
     toJSON(payload)
   }
 
@@ -303,11 +303,14 @@ checkShinyVersion <- function(error = TRUE) {
 }
 
 # Helper function to create payload
-createPayload <- function(instance){
-  if (!is.null(instance$preRenderHook)){
-    instance <- instance$preRenderHook(instance)
-    instance$preRenderHook <- NULL
+createPayload <- function(instance, ...){
+  hook <- instance$preRenderHook
+  if (is.function(hook)) {
+    instance <- if (length(list(...)) && length(formals(hook)) > 1) {
+      hook(instance, ...)
+    } else hook(instance)
   }
+  instance$preRenderHook <- NULL
   x <- .subset2(instance, "x")
   list(x = x, evals = JSEvals(x))
 }
