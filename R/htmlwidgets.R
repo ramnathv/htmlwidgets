@@ -306,7 +306,7 @@ checkShinyVersion <- function(error = TRUE) {
 createPayload <- function(instance, ...){
   hook <- instance$preRenderHook
   if (is.function(hook)) {
-    instance <- if (length(list(...)) && length(formals(hook)) > 1) {
+    instance <- if (length(formals(hook)) > 1 && length(list(...))) {
       hook(instance, ...)
     } else hook(instance)
   }
