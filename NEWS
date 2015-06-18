@@ -1,11 +1,16 @@
-htmlwidgets 0.4.1
+htmlwidgets 0.5
 -----------------------------------------------------------------------
+
+* Add background parameter to saveWidget function
 
 * Fix a bug where "</script>" appearing in widget data would break
   parsing
 
 * Fix a bug where multiple widgets on a page caused all but one to miss
   resize events
+
+* Sync vignettes with contents of htmlwidgets website
+
 
 htmlwidgets 0.4
 -----------------------------------------------------------------------
@@ -21,6 +26,7 @@ htmlwidgets 0.4
 * Use jsonlite rather than RJSONIO for JSON serialization
 
 * Call widget.resize in more situations
+
 
 htmlwidgets 0.3.2
 -----------------------------------------------------------------------
