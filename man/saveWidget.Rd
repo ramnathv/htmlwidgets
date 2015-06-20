@@ -4,7 +4,8 @@
 \alias{saveWidget}
 \title{Save a widget to an HTML file}
 \usage{
-saveWidget(widget, file, selfcontained = TRUE, libdir = NULL)
+saveWidget(widget, file, selfcontained = TRUE, libdir = NULL,
+  background = "white")
 }
 \arguments{
 \item{widget}{Widget to save}
@@ -16,7 +17,9 @@ saveWidget(widget, file, selfcontained = TRUE, libdir = NULL)
 placed in an adjacent directory.}
 
 \item{libdir}{Directory to copy HTML dependencies into (defaults to
-  filename_files).}
+filename_files).}
+
+\item{background}{Text string giving the html background color of the widget. Defaults to white.}
 }
 \description{
 Save a rendered widget to an HTML file (e.g. for sharing with others).
