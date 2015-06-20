@@ -42,12 +42,12 @@ Requires: bitops
 Package: RJSONIO
 Source: CRAN
 Version: 1.3-0
-Hash: 8b1341dfd547c90ed4b3365d5aa46a7b
+Hash: fb672e20eb6f3010a3639f855d8ef6de
 
 Package: Rcpp
 Source: CRAN
 Version: 0.11.2
-Hash: ef2b1a5e45d1461bd720e4ebbe48e601
+Hash: 8bad4bf4538fb07d27bfabe7b6e7cd54
 
 Package: XML
 Source: CRAN
@@ -57,17 +57,22 @@ Hash: c331c4a5e75c8ba3a4dc9545b66754d2
 Package: base64
 Source: CRAN
 Version: 1.1
-Hash: 62b3aa7d31c6cf90818e02006e539b35
+Hash: 5776d8d9472a017332f54e3326ecbca8
+
+Package: base64enc
+Source: CRAN
+Version: 0.1-2
+Hash: df66773c6ea9cad0beb6dc3e33e3e3e1
 
 Package: bitops
 Source: CRAN
 Version: 1.0-6
-Hash: cb26464a8321628636b547518994c931
+Hash: 67d0775189fd0041d95abca618c5c07e
 
 Package: caTools
 Source: CRAN
 Version: 1.17
-Hash: e350bf43b27772012b530ccdf2e34f4d
+Hash: b8b59ba93537332f45c1721790e4e314
 Requires: bitops
 
 Package: colorspace
@@ -90,7 +95,7 @@ Hash: 08eed0c80510af29bb15f840ccfe37ce
 Package: digest
 Source: CRAN
 Version: 0.6.4
-Hash: e4bf0e79b15a352510aff0de905d31e2
+Hash: 5095109541d6124bfe9e83fbdf39bad0
 
 Package: dygraphs
 Source: github
@@ -105,30 +110,30 @@ Requires: htmlwidgets, magrittr, xts, zoo
 Package: evaluate
 Source: CRAN
 Version: 0.5.5
-Hash: 20881970e590ee68de97a468694db7b0
+Hash: ec5984d7a8972abf5c8c92a0e3765c23
 Requires: stringr
 
 Package: formatR
 Source: CRAN
 Version: 1.0
-Hash: a90c211d7df7e61a72b8ab6c99c2e848
+Hash: edcb0a547fbfd29cb418eb0113f1209f
 
 Package: highr
 Source: CRAN
 Version: 0.4
-Hash: 8c77cca8556e1501621b4a5ccb7999bd
+Hash: caa3f5f3d2cce68cd302bfbb267043db
 
 Package: htmltools
 Source: CRAN
 Version: 0.2.6
-Hash: 2c87108d130de261ac3c468d3316ae42
+Hash: 595e7dea94f5f049dfc1ed739f5161af
 Requires: digest
 
 Package: htmlwidgets
 Source: CRAN
 Version: 0.3.2
-Hash: fc11f8e19515931be78ec6860e5f89d4
-Requires: RJSONIO, yaml, htmltools
+Hash: 54d58a3d5b7dbaf577784ea6418ec0ae
+Requires: RJSONIO, htmltools, yaml
 
 Package: httpuv
 Source: CRAN
@@ -154,8 +159,8 @@ GithubRepo: knitr
 GithubUsername: yihui
 GithubRef: master
 GithubSha1: a7eb3d850d3019ef14d8dff0b26b4561e3e4be5f
-Hash: a7eb3d850d3019ef14d8dff0b26b4561e3e4be5f
-Requires: digest, formatR, highr, stringr, markdown, evaluate
+Hash: f5fa909f6f34e1c2614ca37ad457a7c3
+Requires: digest, evaluate, formatR, highr, markdown, stringr
 
 Package: labeling
 Source: CRAN
@@ -175,7 +180,7 @@ Requires: RColorBrewer, htmltools, htmlwidgets, magrittr, scales
 Package: magrittr
 Source: CRAN
 Version: 1.0.1
-Hash: 576e5bf21e3801499cebc27af6ad1627
+Hash: 131da7f397c71b98730463cc1199acd7
 
 Package: maps
 Source: CRAN
@@ -185,7 +190,7 @@ Hash: 28d07bd51ca5f68bcda31c9570174f6a
 Package: markdown
 Source: CRAN
 Version: 0.7.4
-Hash: 01d7f71ed6e3d9b1c17ba51cff91be72
+Hash: 21f67752ecca6fd776077ee6401eca21
 Requires: mime
 
 Package: memoise
@@ -195,19 +200,15 @@ Hash: 812e6a1dd77a0ca4da41f3239de8e447
 Requires: digest
 
 Package: metricsgraphics
-Source: github
-Version: 0.4.1
-GithubRepo: metricsgraphics
-GithubUsername: hrbrmstr
-GithubRef: master
-GithubSha1: 6358939a969bfd9faaf92295304dfc4e88013732
-Hash: 6358939a969bfd9faaf92295304dfc4e88013732
-Requires: magrittr, htmltools, htmlwidgets
+Source: CRAN
+Version: 0.8.5
+Hash: 48e12bf5406c98f7c2e9f7d99cec2415
+Requires: htmltools, htmlwidgets, magrittr
 
 Package: mime
 Source: CRAN
 Version: 0.2
-Hash: 9179db921fcb2e5be44e217042ed06bc
+Hash: 2604ab77a73316cf06b0001766ae7196
 
 Package: munsell
 Source: CRAN
@@ -216,14 +217,10 @@ Hash: 72d343a6664778029f49a7ad36de1cab
 Requires: colorspace
 
 Package: networkD3
-Source: github
-Version: 0.1
-GithubRepo: networkD3
-GithubUsername: christophergandrud
-GithubRef: master
-GithubSha1: dac68822b8360aaf0eb106b8942b8c8010a24d32
-Hash: dac68822b8360aaf0eb106b8942b8c8010a24d32
-Requires: rjson, plyr, htmlwidgets
+Source: CRAN
+Version: 0.1.7
+Hash: 9c9405d7d8a58433b802c72d601e7150
+Requires: htmlwidgets, plyr, rjson
 
 Package: packrat
 Source: CRAN
@@ -233,13 +230,23 @@ Hash: aed7d17407538df551a57caf6289c8bf
 Package: plyr
 Source: CRAN
 Version: 1.8.1
-Hash: be21bad411e628f810a92212e17b5be7
+Hash: 67f6c9cdb53b0abfafe34c8362d8c4fd
 Requires: Rcpp
 
 Package: qtl
 Source: CRAN
 Version: 1.36-6
 Hash: e1c4668fd3c09d428e10ee91eb15b2b3
+
+Package: qtlcharts
+Source: github
+Version: 0.5-13
+GithubRepo: qtlcharts
+GithubUsername: kbroman
+GithubRef: master
+GithubSha1: 19d44da3275767e10b7692a3bf67064f15896601
+Hash: fe6114c5afe6cd6b1c541dbb7f9c596a
+Requires: htmlwidgets, jsonlite, qtl
 
 Package: rgl
 Source: CRAN
@@ -249,13 +256,13 @@ Hash: 7c30cf1a0dd7acd6906d3ff7e4fb5ee8
 Package: rjson
 Source: CRAN
 Version: 0.2.15
-Hash: f78059fac4af154bfe46bf547ae12be9
+Hash: def074f38d0cff3b597649ee6f976128
 
 Package: rmarkdown
 Source: CRAN
-Version: 0.5.1
-Hash: 2d87f70c12c5558c50c4b3587fc6f499
-Requires: yaml, caTools, htmltools, knitr
+Version: 0.7
+Hash: bf9c8cfc700d2417a309dd7a5ebd41d3
+Requires: caTools, htmltools, knitr, yaml
 
 Package: rstudioapi
 Source: CRAN
@@ -282,7 +289,7 @@ Hash: b399bae5489efd43fc65a6797d0e0347
 Package: stringr
 Source: CRAN
 Version: 0.6.2
-Hash: cdde0cfa0f52cffeaca23a11a3899779
+Hash: 0c2367e61726d5934eb45754a84b319a
 
 Package: testit
 Source: CRAN
@@ -296,14 +303,10 @@ Hash: b1375083546bc11c52a1af84098f995c
 Requires: digest
 
 Package: threejs
-Source: github
-Version: 0.2
-GithubRepo: rthreejs
-GithubUsername: bwlewis
-GithubRef: master
-GithubSha1: 42bdda28f9a2596d3c1a12256ff168ecf9108571
-Hash: 42bdda28f9a2596d3c1a12256ff168ecf9108571
-Requires: base64, rjson, plyr, htmlwidgets
+Source: CRAN
+Version: 0.2.1
+Hash: ae106a6267d71e662ff33709ac4887f8
+Requires: base64enc, htmlwidgets
 
 Package: whisker
 Source: CRAN
@@ -324,7 +327,7 @@ Requires: zoo
 Package: yaml
 Source: CRAN
 Version: 2.1.13
-Hash: e5d041c001f6d641fd009c1f6ef7d831
+Hash: 4854ccabebc225e8a7309fb4a74980de
 
 Package: zoo
 Source: CRAN
