@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>htmlwidgets: d3heatmap</title>
+
+<script src="libs/jquery/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap/css/cosmo.min.css" rel="stylesheet" />
+<script src="libs/bootstrap/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap/shim/respond.min.js"></script>
+<script src="libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="libs/d3/./d3.min.js"></script>
+<link href="libs/d3heatmapcore/heatmap.css" rel="stylesheet" />
+<script src="libs/d3heatmapcore/heatmap.js"></script>
+<script src="libs/d3-tip/index.js"></script>
+<script src="libs/d3heatmap-binding/d3heatmap.js"></script>
+
+<!-- Styles for this site -->
+<link href="css/styles.css" rel="stylesheet">
+
+<!-- Polyfill JS -->
+<script src="js/polyfill.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/textmate.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+<!--html_preserve-->
+
+<div class="header">
+  <nav class="navbar">
+      <h3 class="navbar-left"><strong>htmlwidgets</strong> for R</h3>
+      <ul class="nav nav-pills navbar-right">
+        <li role="presentation" id="nav-home"><a href="index.html">Home</a></li>
+        <li role="presentation" id="nav-showcase"><a href="showcase_leaflet.html">Showcase</a></li>
+        <li role="presentation" id="nav-develop" class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
+            Develop <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            <li role="presentation"><a href="develop_intro.html">Creating a widget</a></li>
+            <li role="presentation"><a href="develop_sizing.html">Widget sizing</a></li>
+            <li role="presentation"><a href="develop_advanced.html">Advanced topics</a></li>
+          </ul>
+        </li>
+        <li role="presentation" id="nav-github"><a href="https://github.com/ramnathv/htmlwidgets">GitHub</a></li>
+      </ul>
+  </nav>
+</div>
+
+<div class="showcase-header hidden">
+
+  <div id = "showcase-intro">
+    HTML widgets work just like R plots except they produce interactive web visualizations. A line or two of R code is all it takes to produce a D3 graphic or Leaflet map. HTML widgets can be used at the R console as well as embedded in R Markdown reports and Shiny web applications.
+  </div>
+
+  <div class="row">
+
+    <div class="col-sm-4">
+      <div class="list-group">
+        <a href="showcase_leaflet.html" class="list-group-item">
+          <h5 class="list-group-item-heading">Leaflet</h5>
+          <p class="list-group-item-text">Geo-spatial mapping</p>
+        </a>
+        <a href="showcase_dygraphs.html" class="list-group-item">
+          <h5 class="list-group-item-heading">dygraphs</h5>
+          <p class="list-group-item-text">Time series charting</p>
+        </a>
+        <a href="showcase_metricsgraphics.html" class="list-group-item">
+          <h5 class="list-group-item-heading">MetricsGraphics</h5>
+          <p class="list-group-item-text">Scatterplots and line charts with D3</p>
+        </a>
+        <a href="showcase_networkD3.html" class="list-group-item">
+          <h5 class="list-group-item-heading">networkD3</h5>
+          <p class="list-group-item-text">Graph data visualization with D3</p>
+        </a>
+        <a href="showcase_d3heatmap.html" class="list-group-item">
+          <h5 class="list-group-item-heading">d3heatmap</h5>
+          <p class="list-group-item-text">Interactive heatmaps with D3</p>
+        </a>
+        <a href="showcase_datatables.html" class="list-group-item">
+          <h5 class="list-group-item-heading">DataTables</h5>
+          <p class="list-group-item-text">Tabular data display</p>
+        </a>
+        <a href="showcase_threejs.html" class="list-group-item">
+          <h5 class="list-group-item-heading">threejs</h5>
+          <p class="list-group-item-text">3D scatterplots and globes</p>
+        </a>
+        <a href="showcase_diagrammer.html" class="list-group-item">
+          <h5 class="list-group-item-heading">DiagrammeR</h5>
+          <p class="list-group-item-text">Diagrams and flowcharts</p>
+        </a>
+
+      </div> <!-- list-group -->
+
+    </div> <!-- col-sm-4 -->
+
+    <div class="col-sm-8" id="showcase-body">
+
+    </div> <!-- col-sm-8 -->
+
+  </div> <!-- row -->
+
+</div> <!-- showcase-header -->
+
+<div id="page-body">
+
+<!--/html_preserve-->
+
+<div id="header">
+<h1 class="title">htmlwidgets: d3heatmap</h1>
+</div>
+
+
+<div id="d3heatmap" class="section level3">
+<h3>d3heatmap</h3>
+<p><a href="https://github.com/rstudio/d3heatmap" class="uri">https://github.com/rstudio/d3heatmap</a></p>
+<p>Interactive heatmaps with D3 including support for row/column highlighting and zooming.</p>
+<pre class="r"><code>library(d3heatmap)
+d3heatmap(scale(mtcars), colors = &quot;Greens&quot;)</code></pre>
+<p><div id="htmlwidget-3078" style="width:576px;height:336px;" class="d3heatmap"></div>
+<script type="application/json" data-for="htmlwidget-3078">{
+  "x": {
+    "rows": {
+      "members": 32,
+      "height": 8.48016706493588,
+      "edgePar": {
+        "col": ""
+      },
+      "children": [
+        {
+          "members": 17,
+          "height": 6.01782170693641,
+          "edgePar": {
+            "col": ""
+          },
+          "children": [
+            {
+              "members": 5,
+              "height": 5.00705585177218,
+              "edgePar": {
+                "col": ""
+              },
+              "children": [
+                {
+                  "members": 2,
+                  "height": 3.02875494760628,
+                  "edgePar": {
+                    "col": ""
+                  },
+                  "children": [
+                    {
+                      "members": 1,
+                      "height": 0,
+                      "label": "Maserati Bora",
+                      "edgePar": {
+                        "col": ""
+                      }
+                    },
+                    {
+                      "members": 1,
+                      "height": 0,
+                      "label": "Ford Pantera L",
+                      "edgePar": {
+                        "col": ""
+                      }
+                    }
+                  ]
+                },
+                {
+                  "members": 3,
+                  "height": 2.31073832947985,
+                  "edgePar": {
+                    "col": ""
+                  },
+                  "children": [
+                    {
+                      "members": 1,
+                      "height": 0,
+                      "label": "Ferrari Dino",
+                      "edgePar": {
+                        "col": ""
+                      }
+                    },
+                    {
+                      "members": 2,
+                      "height": 0.407589925937911,
+                      "edgePar": {
+                        "col": ""
+                      },
+                      "children": [
+                        {
+                          "members": 1,
+                          "height": 0,
+                          "label": "Mazda RX4 Wag",
+                          "edgePar": {
+                            "col": ""
+                          }
+                        },
+                        {
+                          "members": 1,
+                          "height": 0,
+                          "label": "Mazda RX4",
+                          "edgePar": {
+                            "col": ""
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "members": 12,
+              "height": 2.99102139456761,
+              "edgePar": {
+                "col": ""
+              },
+              "children": [
+                {
+                  "members": 3,
+                  "height": 1.06353101931419,
+                  "edgePar": {
+                    "col": ""
+                  },
+                  "children": [
+                    {
+                      "members": 2,
+                      "height": 0.295682470755259,
+                      "edgePar": {
+                        "col": ""
+                      },
+                      "children": [
+                        {
+                          "members": 1,
+                          "height": 0,
+                          "label": "Lincoln Continental",
+                          "edgePar": {
+                            "col": ""
+                          }
+                        },
+                        {
+                          "members": 1,
+                          "height": 0,
+                          "label": "Cadillac Fleetwood",
+                          "edgePar": {
+                            "col": ""
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "members": 1,
+                      "height": 0,
+                      "label": "Chrysler Imperial",
+                      "edgePar": {
+                        "col": ""
+                      }
+                    }
+                  ]
+                },
+                {
+                  "members": 9,
+                  "height": 2.77826057422867,
+                  "edgePar": {
+                    "col": ""
+                  },
+                  "children": [
+                    {
+                      "members": 2,
+                      "height": 1.05543225771433,
+                      "edgePar": {
+                        "col": ""
+                      },
+                      "children": [
+                        {
+                          "members": 1,
+                          "height": 0,
+                          "label": "Camaro Z28",
+                          "edgePar": {
+                            "col": ""
+                          }
+                        },
+                        {
+                          "members": 1,
+                          "height": 0,
+                          "label": "Duster 360",
+                          "edgePar": {
+                            "col": ""
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "members": 7,
+                      "height": 1.45627040413217,
+                      "edgePar": {
+                        "col": ""
+                      },
+                      "children": [
+                        {
+                          "members": 3,
+                          "height": 0.490130460573971,
+                          "edgePar": {
+                            "col": ""
+                          },
+                          "children": [
+                            {
+                              "members": 1,
+                              "height": 0,
+                              "label": "Merc 450SLC",
+                              "edgePar": {
+                                "col": ""
+                              }
+                            },
+                            {
+                              "members": 2,
+                              "height": 0.394426581799812,
+                              "edgePar": {
+                                "col": ""
+                              },
+                              "children": [
+                                {
+                                  "members": 1,
+                                  "height": 0,
+                                  "label": "Merc 450SE",
+                                  "edgePar": {
+                                    "col": ""
+                                  }
+                                },
+                                {
+                                  "members": 1,
+                                  "height": 0,
+                                  "label": "Merc 450SL",
+                                  "edgePar": {
+                                    "col": ""
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "members": 4,
+                          "height": 1.19425334317606,
+                          "edgePar": {
+                            "col": ""
+                          },
+                          "children": [
+                            {
+                              "members": 2,
+                              "height": 0.547533281588152,
+                              "edgePar": {
+                                "col": ""
+                              },
+                              "children": [
+                                {
+                                  "members": 1,
+                                  "height": 0,
+                                  "label": "Pontiac Firebird",
+                                  "edgePar": {
+                                    "col": ""
+                                  }
+                                },
+                                {
+                                  "members": 1,
+                                  "height": 0,
+                                  "label": "Hornet Sportabout",
+                                  "edgePar": {
+                                    "col": ""
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "members": 2,
+                              "height": 0.782769381520473,
+                              "edgePar": {
+                                "col": ""
+                              },
+                              "children": [
+                                {
+                                  "members": 1,
+                                  "height": 0,
+                                  "label": "AMC Javelin",
+                                  "edgePar": {
+                                    "col": ""
+                                  }
+                                },
+                                {
+                                  "members": 1,
+                                  "height": 0,
+                                  "label": "Dodge Challenger",
+                                  "edgePar": {
+                                    "col": ""
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "members": 15,
+          "height": 5.90486629797997,
+          "edgePar": {
+            "col": ""
+          },
+          "children": [
+            {
+              "members": 8,
+              "height": 3.41096157945612,
+              "edgePar": {
+                "col": ""
+              },
+              "children": [
+                {
+                  "members": 6,
+                  "height": 2.64587446337649,
+                  "edgePar": {
+                    "col": ""
+                  },
+                  "children": [
+                    {
+                      "members": 4,
+                      "height": 1.92433755845623,
+                      "edgePar": {
+                        "col": ""
+                      },
+                      "children": [
+                        {
+                          "members": 1,
+                          "height": 0,
+                          "label": "Honda Civic",
+                          "edgePar": {
+                            "col": ""
+                          }
+                        },
+                        {
+                          "members": 3,
+                          "height": 1.26319171210327,
+                          "edgePar": {
+                            "col": ""
+                          },
+                          "children": [
+                            {
+                              "members": 2,
+                              "height": 0.57579170076826,
+                              "edgePar": {
+                                "col": ""
+                              },
+                              "children": [
+                                {
+                                  "members": 1,
+                                  "height": 0,
+                                  "label": "Toyota Corolla",
+                                  "edgePar": {
+                                    "col": ""
+                                  }
+                                },
+                                {
+                                  "members": 1,
+                                  "height": 0,
+                                  "label": "Fiat 128",
+                                  "edgePar": {
+                                    "col": ""
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "members": 1,
+                              "height": 0,
+                              "label": "Fiat X1-9",
+                              "edgePar": {
+                                "col": ""
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "members": 2,
+                      "height": 0.979918090089399,
+                      "edgePar": {
+                        "col": ""
+                      },
+                      "children": [
+                        {
+                          "members": 1,
+                          "height": 0,
+                          "label": "Volvo 142E",
+                          "edgePar": {
+                            "col": ""
+                          }
+                        },
+                        {
+                          "members": 1,
+                          "height": 0,
+                          "label": "Datsun 710",
+                          "edgePar": {
+                            "col": ""
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "members": 2,
+                  "height": 2.5613775588122,
+                  "edgePar": {
+                    "col": ""
+                  },
+                  "children": [
+                    {
+                      "members": 1,
+                      "height": 0,
+                      "label": "Lotus Europa",
+                      "edgePar": {
+                        "col": ""
+                      }
+                    },
+                    {
+                      "members": 1,
+                      "height": 0,
+                      "label": "Porsche 914-2",
+                      "edgePar": {
+                        "col": ""
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "members": 7,
+              "height": 3.4090955988276,
+              "edgePar": {
+                "col": ""
+              },
+              "children": [
+                {
+                  "members": 5,
+                  "height": 3.17366639935743,
+                  "edgePar": {
+                    "col": ""
+                  },
+                  "children": [
+                    {
+                      "members": 2,
+                      "height": 0.408288414999535,
+                      "edgePar": {
+                        "col": ""
+                      },
+                      "children": [
+                        {
+                          "members": 1,
+                          "height": 0,
+                          "label": "Merc 280C",
+                          "edgePar": {
+                            "col": ""
+                          }
+                        },
+                        {
+                          "members": 1,
+                          "height": 0,
+                          "label": "Merc 280",
+                          "edgePar": {
+                            "col": ""
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "members": 3,
+                      "height": 2.36022211438828,
+                      "edgePar": {
+                        "col": ""
+                      },
+                      "children": [
+                        {
+                          "members": 2,
+                          "height": 1.76772871251927,
+                          "edgePar": {
+                            "col": ""
+                          },
+                          "children": [
+                            {
+                              "members": 1,
+                              "height": 0,
+                              "label": "Merc 230",
+                              "edgePar": {
+                                "col": ""
+                              }
+                            },
+                            {
+                              "members": 1,
+                              "height": 0,
+                              "label": "Merc 240D",
+                              "edgePar": {
+                                "col": ""
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "members": 1,
+                          "height": 0,
+                          "label": "Toyota Corona",
+                          "edgePar": {
+                            "col": ""
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "members": 2,
+                  "height": 0.993696896639909,
+                  "edgePar": {
+                    "col": ""
+                  },
+                  "children": [
+                    {
+                      "members": 1,
+                      "height": 0,
+                      "label": "Hornet 4 Drive",
+                      "edgePar": {
+                        "col": ""
+                      }
+                    },
+                    {
+                      "members": 1,
+                      "height": 0,
+                      "label": "Valiant",
+                      "edgePar": {
+                        "col": ""
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "cols": {
+      "members": 11,
+      "height": 10.7608030064707,
+      "edgePar": {
+        "col": ""
+      },
+      "children": [
+        {
+          "members": 5,
+          "height": 6.12465789886455,
+          "edgePar": {
+            "col": ""
+          },
+          "children": [
+            {
+              "members": 4,
+              "height": 4.5997424911211,
+              "edgePar": {
+                "col": ""
+              },
+              "children": [
+                {
+                  "members": 3,
+                  "height": 3.60016494692563,
+                  "edgePar": {
+                    "col": ""
+                  },
+                  "children": [
+                    {
+                      "members": 2,
+                      "height": 2.4645409160503,
+                      "edgePar": {
+                        "col": ""
+                      },
+                      "children": [
+                        {
+                          "members": 1,
+                          "height": 0,
+                          "label": "disp",
+                          "edgePar": {
+                            "col": ""
+                          }
+                        },
+                        {
+                          "members": 1,
+                          "height": 0,
+                          "label": "cyl",
+                          "edgePar": {
+                            "col": ""
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "members": 1,
+                      "height": 0,
+                      "label": "hp",
+                      "edgePar": {
+                        "col": ""
+                      }
+                    }
+                  ]
+                },
+                {
+                  "members": 1,
+                  "height": 0,
+                  "label": "wt",
+                  "edgePar": {
+                    "col": ""
+                  }
+                }
+              ]
+            },
+            {
+              "members": 1,
+              "height": 0,
+              "label": "carb",
+              "edgePar": {
+                "col": ""
+              }
+            }
+          ]
+        },
+        {
+          "members": 6,
+          "height": 8.73220324176337,
+          "edgePar": {
+            "col": ""
+          },
+          "children": [
+            {
+              "members": 4,
+              "height": 5.67647294056721,
+              "edgePar": {
+                "col": ""
+              },
+              "children": [
+                {
+                  "members": 3,
+                  "height": 4.31557317398869,
+                  "edgePar": {
+                    "col": ""
+                  },
+                  "children": [
+                    {
+                      "members": 1,
+                      "height": 0,
+                      "label": "drat",
+                      "edgePar": {
+                        "col": ""
+                      }
+                    },
+                    {
+                      "members": 2,
+                      "height": 3.57328376484526,
+                      "edgePar": {
+                        "col": ""
+                      },
+                      "children": [
+                        {
+                          "members": 1,
+                          "height": 0,
+                          "label": "gear",
+                          "edgePar": {
+                            "col": ""
+                          }
+                        },
+                        {
+                          "members": 1,
+                          "height": 0,
+                          "label": "am",
+                          "edgePar": {
+                            "col": ""
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "members": 1,
+                  "height": 0,
+                  "label": "mpg",
+                  "edgePar": {
+                    "col": ""
+                  }
+                }
+              ]
+            },
+            {
+              "members": 2,
+              "height": 3.97979930415746,
+              "edgePar": {
+                "col": ""
+              },
+              "children": [
+                {
+                  "members": 1,
+                  "height": 0,
+                  "label": "vs",
+                  "edgePar": {
+                    "col": ""
+                  }
+                },
+                {
+                  "members": 1,
+                  "height": 0,
+                  "label": "qsec",
+                  "edgePar": {
+                    "col": ""
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "matrix": {
+      "data": ["0.567039419469864", "1.01488214956065", "2.74656682471405", "0.360516446093113", "3.21167661703768", "-0.105787823947598", "1.77892757956397", "1.18990141802394", "-0.844643915295645", "-0.868027777333319", "-1.8180487966121", "0.970464681220845", "1.01488214956065", "1.71102088615608", "-0.0482902964646338", "0.735203081008625", "1.1660039158865", "1.77892757956397", "1.18990141802394", "-0.711906749969871", "-0.868027777333319", "-1.87401028323348", "-0.691647397193198", "-0.104987808575239", "0.41294217444257", "-0.45709703902238", "1.97343984902315", "0.0438347336799438", "1.77892757956397", "1.18990141802394", "-0.0648130690067253", "-0.868027777333319", "-1.31439541701968", "-0.570619818667904", "-0.104987808575239", "-0.535092839730217", "-0.349785269100972", "0.735203081008625", "0.567513685376339", "0.42355418561047", "1.18990141802394", "0.150884824647657", "-0.868027777333319", "-0.463780820374691", "-0.570619818667904", "-0.104987808575239", "-0.535092839730217", "-0.610399567481535", "0.735203081008625", "0.567513685376339", "0.42355418561047", "1.18990141802394", "0.150884824647657", "-0.868027777333319", "-0.777165145454422", "1.84993175183798", "1.01488214956065", "0.996348337010439", "2.25533569784827", "0.735203081008625", "-1.1157400879335", "-0.931819208343033", "-0.814143075490065", "-1.60788261591884", "-0.868027777333319", "-0.0160889274036462", "1.94675381465822", "1.01488214956065", "0.850496796368472", "2.07750476483565", "0.735203081008625", "-1.2466598258576", "-0.931819208343033", "-0.814143075490065", "-1.60788261591884", "-0.868027777333319", "0.0734494511905628", "1.68856164713759", "1.01488214956065", "1.21512564797339", "2.17459636619311", "0.735203081008625", "-0.685575234754321", "-0.931819208343033", "-0.814143075490065", "-0.89442035229281", "-0.868027777333319", "-0.239934873889168", "0.962396175985825", "1.01488214956065", "1.43390295893634", "0.636460997319592", "0.735203081008625", "0.249565750417813", "-0.931819208343033", "-0.814143075490065", "-1.12671039161291", "-0.868027777333319", "-1.36476075497892", "1.04308122833602", "1.01488214956065", "1.43390295893634", "0.360516446093113", "0.735203081008625", "-0.722980874161207", "-0.931819208343033", "-0.814143075490065", "-0.960788934955696", "-0.868027777333319", "-1.12412636250698", "0.363713087547369", "1.01488214956065", "0.485867944763553", "0.57513998593593", "0.116084697001362", "-0.984820350009405", "-0.931819208343033", "-0.814143075490065", "-0.811459623964201", "-0.868027777333319", "0.0846417485148387", "0.363713087547369", "1.01488214956065", "0.485867944763553", "0.871524874290296", "0.116084697001362", "-0.984820350009405", "-0.931819208343033", "-0.814143075490065", "-0.612353875975541", "-0.868027777333319", "-0.251127171213446", "0.363713087547369", "1.01488214956065", "0.485867944763553", "0.524039143116211", "0.116084697001362", "-0.984820350009405", "-0.931819208343033", "-0.814143075490065", "-0.463024564984046", "-0.868027777333319", "-0.139204197970683", "1.36582143773681", "1.01488214956065", "0.41294217444257", "0.641571081601564", "-0.503033687005901", "-0.966117530305962", "-0.931819208343033", "-0.814143075490065", "-0.147773797335334", "-0.868027777333319", "-0.446992374388276", "1.04308122833602", "1.01488214956065", "0.41294217444257", "0.227654254761845", "-0.503033687005901", "-0.835197792381863", "-0.931819208343033", "-0.814143075490065", "-0.230734525663942", "-0.868027777333319", "-0.463780820374691", "0.591244935174923", "1.01488214956065", "0.0483133228376517", "0.222544170479873", "-0.503033687005901", "-0.835197792381863", "-0.931819208343033", "-0.814143075490065", "-0.811459623964201", "-0.868027777333319", "-0.307088657834825", "0.704204008465197", "1.01488214956065", "0.0483133228376517", "0.309415603273395", "-0.503033687005901", "-1.56460776081613", "-0.931819208343033", "-0.814143075490065", "-0.761683186967036", "-0.868027777333319", "-0.547723050306761", "-1.25079480998006", "-1.22485776671113", "-1.38103177545363", "-1.63752650815787", "-0.503033687005901", "2.49390411483094", "0.42355418561047", "1.18990141802394", "1.7105465172255", "1.11603571371427", "0.375641478946017", "-1.28790993406115", "-1.22485776671113", "-1.19142477261907", "-1.41268279975111", "-1.12215207101316", "1.1660039158865", "0.42355418561047", "1.18990141802394", "2.29127161552575", "1.11603571371427", "1.14790999432107", "-1.226589294275", "-1.22485776671113", "-1.17683961855487", "-1.03964664716717", "-1.12215207101316", "0.904164440038308", "0.42355418561047", "1.18990141802394", "2.04238943053993", "1.11603571371427", "0.907275601849133", "-1.22416874270449", "-1.22485776671113", "-1.17683961855487", "-1.31048111411168", "-1.12215207101316", "0.904164440038308", "0.42355418561047", "1.18990141802394", "1.19619000158812", "1.11603571371427", "0.588295128107263", "-0.885291522833669", "-1.22485776671113", "-0.549677993794414", "-0.446876870458437", "-0.503033687005901", "0.960272899148636", "0.42355418561047", "1.18990141802394", "0.217253407310543", "1.11603571371427", "0.420410668243123", "-0.990182090888924", "-1.22485776671113", "-0.783040458821562", "-0.917004624399846", "-1.12215207101316", "0.473999586859126", "0.42355418561047", "1.18990141802394", "0.449543446630647", "1.11603571371427", "0.42600681690526", "-1.09426580842068", "-1.22485776671113", "-0.491337377537627", "-1.7417722275101", "-0.503033687005901", "0.324377029231584", "1.77892757956397", "1.18990141802394", "1.7105465172255", "1.11603571371427", "-0.530934604320349", "-0.890939476498183", "-1.22485776671113", "-0.812210766949955", "-1.10096765855083", "-0.503033687005901", "1.5587631296588", "1.77892757956397", "1.18990141802394", "0.980492107933741", "-0.868027777333319", "-0.642857577563109", "-0.509299178881755", "-0.104987808575239", "-0.34548583689566", "0.227654254761845", "0.735203081008625", "0.604919324783224", "0.42355418561047", "-0.814143075490065", "-0.380063836655437", "1.11603571371427", "0.588295128107263", "-0.509299178881755", "-0.104987808575239", "-0.34548583689566", "0.227654254761845", "0.735203081008625", "0.604919324783224", "0.42355418561047", "-0.814143075490065", "-0.147773797335334", "1.11603571371427", "0.252526208378981", "-0.725535119180281", "-1.22485776671113", "-0.753870150693168", "-0.0687306335925212", "-0.503033687005901", "0.604919324783224", "0.42355418561047", "-0.814143075490065", "0.449543446630647", "1.11603571371427", "2.82675459296249", "-0.677930938293665", "-1.22485776671113", "-1.23518023481166", "-0.0278499593367465", "-0.503033687005901", "0.174754471604042", "0.42355418561047", "-0.814143075490065", "0.715017777282194", "1.11603571371427", "1.20387148094245", "-0.892553177545187", "-1.22485776671113", "-0.724699842564775", "-0.768812180222662", "-1.12215207101316", "0.193457291307485", "-0.931819208343033", "-0.814143075490065", "0.233845552976265", "1.11603571371427", "1.20946762960459", "0.22009369436402", "-0.104987808575239", "-0.535092839730217", "-0.00229953792688741", "-1.12215207101316", "-0.966117530305962", "-0.931819208343033", "-0.814143075490065", "0.217253407310543", "1.11603571371427", "0.89048715586272", "-0.046166978391628", "-0.104987808575239", "-0.608018610051201", "0.248094591889733", "-1.12215207101316", "-1.56460776081613", "-0.931819208343033", "-0.814143075490065", "-0.330287399658272", "1.11603571371427", "1.32698675150949"],
+      "dim": [32, 11],
+      "rows": ["Maserati Bora", "Ford Pantera L", "Ferrari Dino", "Mazda RX4 Wag", "Mazda RX4", "Lincoln Continental", "Cadillac Fleetwood", "Chrysler Imperial", "Camaro Z28", "Duster 360", "Merc 450SLC", "Merc 450SE", "Merc 450SL", "Pontiac Firebird", "Hornet Sportabout", "AMC Javelin", "Dodge Challenger", "Honda Civic", "Toyota Corolla", "Fiat 128", "Fiat X1-9", "Volvo 142E", "Datsun 710", "Lotus Europa", "Porsche 914-2", "Merc 280C", "Merc 280", "Merc 230", "Merc 240D", "Toyota Corona", "Hornet 4 Drive", "Valiant"],
+      "cols": ["disp", "cyl", "hp", "wt", "carb", "drat", "gear", "am", "mpg", "vs", "qsec"]
+    },
+    "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAALCAYAAAAeEY8BAAAEwklEQVQ4jSXLe0zUBQDA8e/v7ncHx72P1/HwAEHBFwgiMp2pSa3NNN+vlWVrzly6yqXZdGJjZbV0ao+l01Zq/uFC7WEzDWOihAOUgBQPyeN5HI87lHt493v0R5//P8LBpo/UgeAoF+qaeO/FZew5fYZTW9/h6+Yr5NntbClai4CAy5TDztoqZEWhzdPP+xUraehvpSvgp6t7kOwJqRyY9wbx2jhyLQU0+Oro8Lu5N/KIRa4y1n9xkKqX1/NJ9UWystLYPOcZZqfMQnvq0PHKLIuTnAwrM5Nn8EJxCZWXf0AUtcRQ2fXtcYxOmdKUQiZYE5nlnEKyPY6J1iwKkws4+1cNFqsRnU7kg9MnEBxBJjtc6DQ63jp3DCVepNHbSX//EJakBI4uf5dn84qwxVnJNLkQavp+U+8MtXLop18omJqNWa/n5u12KuYWsatsM2PRAFElyiTrZLoeP6RhoJmT12uZODGdYCjC3RY3qyrK2TxjKWa9haj8FJ1Gh4KCO9DJ0RuXkWWZwcFRiqbnEpYkZqSksKFgKRE5giYpPomy1BLq3j6Bd2CEzm4vKiBqNGy/cpiQFCJBTODhWCcG0cDc9Nn8+HoVkqLQ3t5F4Yw82rv7OfPPZeK18SSIRiRVQlEV8m35FGdnkphoJRKJEgiGeOjuIRyLYdKZseltaF/ZubHS/zSAIECyQ0dPJMAjjxfRoCcWlRiJDVPhmo9BZ0BWZXqe9OCITySq+rna3IpGUcnNSsMzNEpush1HvAONIBCVo9T23WJF3vO4rBYuNTYwPBQgPz8bjUYgyRiHUW9EaBquV8NSiJv9t1mYOY8HATf7qs/y6EEf61YtxPtknE1F88mzTsQgGgjGgqio6LV6anvr+eb3a/T5RllZUU6ff4wNReWsyVtD62gLISlITJFIEA10P+5lVmoxqvr/TRCNNPkaEQw7i9WtLy2meWCAYV+A1LRESpxONhasQFZlVFXFIBoYj42zu+Y4xelpNPf183dLJ8Ul+SiqypGKHYCKoipElShaQWTvjRNMcjho9PTS0eFh6rQcTIZ4Di54EwBFldFr49D8ufsIDZ4esmxWBEHA5x3lWlsHH946iUGbgMuUgzfkZTg8zJ5567je/oAchx2b1URpRjp9PT4ON32PpEqYdGaCUghZlfh80Q66x8bISLRhNhpINptwd/ZSVX+SqPwUjaChbaQN7YHK/ZVOq57RiJ/m+//iSLIyPBRAo9eRm2TjSWwMR5yDkBzCHmdjSkYqJ69eYzwYZigcwWY3s6NsJb6QD0ucha6xLoy6BKrdv9LS3YsswPScTL5cvJ8FBVOoOn+G9qiHJbnz8Ia8aJdvX1JZ29PAH+0dpDodTEi0c2njMZx2kU1fHcLm1JBpTsVlcuF/6sfzuJd1pYtQzRL5aSnsKFvLBfdVqtsa2bvvM7asXkOOJZfS1JmENT6WTJrDYHCIc/euUJ4+jTtjD+nxDPLdrcusLV2I0DR0S+0IPEDUiGSaMvi4/jTbSpYRlsIcv3uFuvpWwtEYK54rZ3JiMoXJ+dT3tbCt6DWC0jiyqhCWQhxtOs/PNbdJsllYvWA2eq1IYcpkqu/Xs6f8VTKME7gXaCcsRbg34ubT6ov4n4T4D0anE13ioY10AAAAAElFTkSuQmCC",
+    "theme": null,
+    "options": {
+      "xaxis_height": 120,
+      "yaxis_width": 120,
+      "xaxis_font_size": null,
+      "yaxis_font_size": null,
+      "brush_color": "#0000FF",
+      "show_grid": true,
+      "anim_duration": 500
+    }
+  },
+  "evals": []
+}</script></p>
+</div>
+
+
+</div> <!-- page-body -->
+
+<footer>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div class="text-muted">
+  Copyright &copy; 2014 - 2015 Ramnath Vaidyanathan, Kenton Russell, and RStudio, Inc.
+  </div>
+</footer>
+
+<script>
+// manage active state of headres and navigation based on current page
+
+$(document).ready(function () {
+  
+  // compute name of page
+  href = window.location.pathname;
+  href = href.substr(href.lastIndexOf('/') + 1);
+  if (href == "")
+    href = "index.html";
+  
+  // main navigation and headers
+  if (href.startsWith("index")) {
+    $('#nav-home').addClass('active');
+    $('.title').addClass('hidden');
+  } else if (href.startsWith("showcase")) {
+    $('#nav-showcase').addClass('active');
+    $("#page-body").detach().appendTo('#showcase-body');
+    $('.showcase-header').removeClass('hidden');
+    $('.title').addClass('hidden');
+  } else if (href.startsWith("develop")) {
+    $('#nav-develop').addClass('active');
+  }
+     
+  // submenu navigation (used by showcase and develop)
+  $('.list-group a[href="' + href + '"]').addClass('active');      
+});
+
+</script>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+
+</body>
+</html>

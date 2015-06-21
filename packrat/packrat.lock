@@ -80,6 +80,16 @@ Source: CRAN
 Version: 1.2-4
 Hash: 563878773fe70148156427223b813fa2
 
+Package: d3heatmap
+Source: github
+Version: 0.5.0
+GithubRepo: d3heatmap
+GithubUsername: rstudio
+GithubRef: master
+GithubSha1: 866e710d2860deced640d093b36b1ec3181c35d3
+Hash: 43c5a4167ee23470b5999cb9d6bab913
+Requires: base64enc, htmlwidgets, png, scales
+
 Package: devtools
 Source: CRAN
 Version: 1.6.1
@@ -130,10 +140,14 @@ Hash: 595e7dea94f5f049dfc1ed739f5161af
 Requires: digest
 
 Package: htmlwidgets
-Source: CRAN
-Version: 0.3.2
-Hash: 54d58a3d5b7dbaf577784ea6418ec0ae
-Requires: RJSONIO, yaml, htmltools
+Source: github
+Version: 0.5
+GithubRepo: htmlwidgets
+GithubUsername: ramnathv
+GithubRef: master
+GithubSha1: ef523b400ea19b0ffecb9e1cf48db260ac291342
+Hash: 9110c18f0f75063852e9eb3e63c3df8d
+Requires: htmltools, jsonlite, yaml
 
 Package: httpuv
 Source: CRAN
@@ -149,8 +163,8 @@ Requires: RCurl, digest, jsonlite, stringr
 
 Package: jsonlite
 Source: CRAN
-Version: 0.9.14
-Hash: 682e43be75b5b93054527682afbd5e1a
+Version: 0.9.16
+Hash: 24d362a166a96ac1969e64ede522c717
 
 Package: knitr
 Source: github
@@ -160,7 +174,7 @@ GithubUsername: yihui
 GithubRef: master
 GithubSha1: a7eb3d850d3019ef14d8dff0b26b4561e3e4be5f
 Hash: f5fa909f6f34e1c2614ca37ad457a7c3
-Requires: digest, formatR, highr, stringr, markdown, evaluate
+Requires: digest, evaluate, formatR, highr, markdown, stringr
 
 Package: labeling
 Source: CRAN
@@ -233,6 +247,11 @@ Version: 1.8.1
 Hash: 67f6c9cdb53b0abfafe34c8362d8c4fd
 Requires: Rcpp
 
+Package: png
+Source: CRAN
+Version: 0.1-7
+Hash: 421d7d6e0fb4bd885ecbd909b6456b8b
+
 Package: qtl
 Source: CRAN
 Version: 1.36-6
@@ -262,7 +281,7 @@ Package: rmarkdown
 Source: CRAN
 Version: 0.7
 Hash: bf9c8cfc700d2417a309dd7a5ebd41d3
-Requires: yaml, caTools, htmltools, knitr
+Requires: caTools, htmltools, knitr, yaml
 
 Package: rstudioapi
 Source: CRAN
@@ -271,9 +290,9 @@ Hash: e31a489e8019b379967fde77361af4ad
 
 Package: scales
 Source: CRAN
-Version: 0.2.4
-Hash: 1d9e32bfc8fcd69f06f45fa49ded374e
-Requires: RColorBrewer, dichromat, labeling, munsell, plyr
+Version: 0.2.5
+Hash: 3900d91e50cd06117f5b2983d8490369
+Requires: RColorBrewer, Rcpp, dichromat, labeling, munsell, plyr
 
 Package: shiny
 Source: CRAN

@@ -1,0 +1,15 @@
+---
+title: "htmlwidgets: d3heatmap"
+---
+
+### d3heatmap
+<https://github.com/rstudio/d3heatmap>
+
+Interactive heatmaps with D3 including support for row/column highlighting and zooming.
+
+```{r}
+library(d3heatmap)
+d3heatmap(scale(mtcars), colors = "Greens")
+```
+
+
