@@ -133,7 +133,7 @@ Package: htmlwidgets
 Source: CRAN
 Version: 0.3.2
 Hash: 54d58a3d5b7dbaf577784ea6418ec0ae
-Requires: RJSONIO, htmltools, yaml
+Requires: RJSONIO, yaml, htmltools
 
 Package: httpuv
 Source: CRAN
@@ -160,7 +160,7 @@ GithubUsername: yihui
 GithubRef: master
 GithubSha1: a7eb3d850d3019ef14d8dff0b26b4561e3e4be5f
 Hash: f5fa909f6f34e1c2614ca37ad457a7c3
-Requires: digest, evaluate, formatR, highr, markdown, stringr
+Requires: digest, formatR, highr, stringr, markdown, evaluate
 
 Package: labeling
 Source: CRAN
@@ -262,7 +262,7 @@ Package: rmarkdown
 Source: CRAN
 Version: 0.7
 Hash: bf9c8cfc700d2417a309dd7a5ebd41d3
-Requires: caTools, htmltools, knitr, yaml
+Requires: yaml, caTools, htmltools, knitr
 
 Package: rstudioapi
 Source: CRAN

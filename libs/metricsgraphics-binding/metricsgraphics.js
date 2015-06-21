@@ -1,23 +1,15 @@
 HTMLWidgets.widget({
 
   name: 'metricsgraphics',
-
   type: 'output',
 
-  initialize: function(el, width, height) {
-
-    return {  }
-
-  },
+  initialize: function(el, width, height) { return {  }; },
 
   renderValue: function(el, params, instance) {
-
     // save params for reference from resize method
     instance.params = params;
-
     // draw the graphic
     this.drawGraphic(el, params, el.offsetWidth, el.offsetHeight);
-
   },
 
   drawGraphic: function(el, params, width, height) {
@@ -26,22 +18,21 @@ HTMLWidgets.widget({
     while (el.firstChild)
       el.removeChild(el.firstChild);
 
-    dbg = params
+    dbg = params;
 
     wide = null;
 
     if (params.geom == "hist") {
 
-      if (params.binned == false) {
+      if (params.binned === false) {
          wide = params.data;
-         console.log(params);
       }
 
     } else {
 
       wide = HTMLWidgets.dataframeToD3(params.data);
 
-      if (params.multi_line != null) {
+      if (params.multi_line !== null) {
 
         tmp = [];
         tmp.push(HTMLWidgets.dataframeToD3(params.data));
@@ -57,21 +48,31 @@ HTMLWidgets.widget({
       }
     }
 
+    console.log(wide) ;
+
     var xax_format = mjs_plain;
 
     if (params.xax_format == "date") {
 
       xax_format = mjs_date ;
 
-      if (params.multi_line == null) {
-        MG.convert.date(wide, params.x_accessor)
+      if (params.multi_line === null) {
+        if (params.orig_posix) {
+          for (var i=0; i<wide.length; i++) {
+            wide[i][params.x_accessor] = Date(wide[i][params.x_accessor] );
+            console.log("====> ", Date(wide[i][params.x_accessor]));
+            console.log("====> ", wide[i][params.x_accessor]);
+          }
+        } else {
+          MG.convert.date(wide, params.x_accessor);
+        }
       } else {
         for (var i=0; i<wide.length; i++) {
           wide[i] = MG.convert.date(wide[i], params.x_accessor);
         }
       }
 
-      if (params.markers != null) {
+      if (params.markers !== null) {
         for (var i=0; i<params.markers.length; i++) {
           params.markers[i][params.x_accessor] =
             d3.time.format("%Y-%m-%d").parse(params.markers[i][params.x_accessor]);
@@ -80,20 +81,24 @@ HTMLWidgets.widget({
 
     }
 
-    if (params.multi_line != null) {
+    console.log(wide) ;
+
+    if (params.multi_line !== null) {
 
       for (var i=0; i<wide.length; i++) {
         if (i>0) {
           for (var j=0; j<wide[i].length; j++) {
-            delete wide[i][j][params.y_accessor]
+            delete wide[i][j][params.y_accessor];
           }
           for (var j=0; j<wide[i].length; j++) {
-            wide[i][j][params.y_accessor] = wide[i][j][params.multi_line[i-1]]
+            wide[i][j][params.y_accessor] = wide[i][j][params.multi_line[i-1]];
           }
         }
       }
 
     }
+
+    console.log(wide) ;
 
     if (params.xax_format == "comma") xax_format = mjs_comma ;
 
@@ -119,10 +124,9 @@ HTMLWidgets.widget({
             right: params.right,
             left: params.left,
             buffer: params.buffer,
-            target: '#bar1',
+            //target: '#bar1',
             animate_on_load: params.animate_on_load,
             x_axis: params.x_axis,
-
             target: '#' + el.id
 
         });
@@ -171,10 +175,13 @@ HTMLWidgets.widget({
           color_accessor: params.color_accessor,
           size_accessor: params.size_accessor,
 
-          show_rollover_text: params.show_rollover_text,
-
           legend: params.legend,
           legend_target: params.legend_target,
+
+          yax_units: params.yax_units,
+
+          show_confidence_band: params.show_confidence_band,
+          show_secondary_x_label: params.show_secondary_x_label,
 
           linked: params.linked,
 
@@ -206,7 +213,7 @@ HTMLWidgets.widget({
           title: params.title,
           description: params.description
 
-      }
+      };
 
       if (typeof(params.mouseover) != "undefined") {
         mg_params.mouseover = params.mouseover;
@@ -228,13 +235,13 @@ HTMLWidgets.widget({
 mjs_comma = function(d) {
   var df =  d3.format("0,000");
   return df(d);
-}
+};
 
 mjs_date = function(d) {
   var df = d3.time.format('%b %d');
   return df(d);
-}
+};
 
 mjs_plain = function(d) {
  return(d.toString());
-}
+};

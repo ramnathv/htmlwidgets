@@ -177,13 +177,17 @@ forceNetwork(Links = MisLinks, Nodes = MisNodes, Source = &quot;source&quot;,
       "NodeID": "name",
       "Group": "group",
       "colourScale": "d3.scale.category20()",
-      "fontsize": 7,
+      "fontSize": 7,
       "clickTextSize": 17.5,
       "linkDistance": 50,
       "linkWidth": "function(d) { return Math.sqrt(d.value); }",
       "charge": -120,
       "linkColour": "#666",
-      "opacity": 0.4
+      "opacity": 0.4,
+      "zoom": false,
+      "legend": false,
+      "nodesize": "false",
+      "radiusCalculation": " Math.sqrt(d.nodesize)+6"
     }
   },
   "evals": []
