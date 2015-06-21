@@ -7,9 +7,14 @@ title: "htmlwidgets: d3heatmap"
 
 Interactive heatmaps with D3 including support for row/column highlighting and zooming.
 
+```{r, include=FALSE}
+mtcars <- head(mtcars, n = 20)
+```
+
+
 ```{r}
 library(d3heatmap)
-d3heatmap(scale(mtcars), colors = "Greens")
+d3heatmap(mtcars, scale="column", colors="Blues")
 ```
 
 
