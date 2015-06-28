@@ -1,3 +1,10 @@
+htmlwidgets 0.5.1 (unreleased)
+-----------------------------------------------------------------------
+
+* Increase pandoc stack size to 64MB for saveWidget (often required for
+  e.g. larger embedded leaflet maps)
+
+
 htmlwidgets 0.5
 -----------------------------------------------------------------------
 
