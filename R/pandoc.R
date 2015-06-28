@@ -36,7 +36,8 @@ pandoc_self_contained_html <- function(input, output) {
     output = output,
     options = c(
       "--self-contained",
-      "--template", template
+      "--template", template,
+      "+RTS", "-K64m", "-RTS"
     )
   )
 
