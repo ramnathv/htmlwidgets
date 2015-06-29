@@ -36,8 +36,7 @@ pandoc_self_contained_html <- function(input, output) {
     output = output,
     options = c(
       "--self-contained",
-      "--template", template,
-      "+RTS", "-K64m", "-RTS"
+      "--template", template
     )
   )
 
@@ -78,6 +77,10 @@ pandoc_convert <- function(input,
 
   # additional command line options
   args <- c(args, options)
+
+  # set pandoc stack size
+  stack_size <- getOption("pandoc.stack.size", default = "512m")
+  args <- c(c("+RTS", paste0("-K", stack_size), "-RTS"), args)
 
   # build the conversion command
   command <- paste(quoted(pandoc()), paste(quoted(args), collapse = " "))
