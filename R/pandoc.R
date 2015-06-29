@@ -14,7 +14,7 @@ pandoc_available <- function(version = NULL) {
     FALSE
 }
 
-pandoc_self_contained_html <- function(input, output) {
+pandoc_self_contained_html <- function(input, output, stack_size = "512m") {
 
   # make input file path absolute
   input <- normalizePath(input)
@@ -37,7 +37,7 @@ pandoc_self_contained_html <- function(input, output) {
     options = c(
       "--self-contained",
       "--template", template,
-      "+RTS", "-K64m", "-RTS"
+      "+RTS", paste0("-K", stack_size), "-RTS"
     )
   )
 

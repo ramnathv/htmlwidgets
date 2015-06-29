@@ -9,10 +9,13 @@
 #'   placed in an adjacent directory.
 #' @param libdir Directory to copy HTML dependencies into (defaults to
 #'   filename_files).
-#' @param background Text string giving the html background color of the widget. Defaults to white.
+#' @param stack_size Size of stack to use for pandoc conversion (defaults to
+#'   512m). Larger base64 content payloads may require larger stack sizes).
+#' @param background Text string giving the html background color of the widget.
+#'   Defaults to white.
 #'
 #' @export
-saveWidget <- function(widget, file, selfcontained = TRUE, libdir = NULL, background="white") {
+saveWidget <- function(widget, file, selfcontained = TRUE, libdir = NULL, background="white", stack_size = "512m") {
 
   # convert to HTML tags
   html <- toHTML(widget, standalone = TRUE)
@@ -34,7 +37,7 @@ saveWidget <- function(widget, file, selfcontained = TRUE, libdir = NULL, backgr
            "https://github.com/rstudio/rmarkdown/blob/master/PANDOC.md")
     }
 
-    pandoc_self_contained_html(file, file)
+    pandoc_self_contained_html(file, file, stack_size = stack_size)
     unlink(libdir, recursive = TRUE)
   }
 
