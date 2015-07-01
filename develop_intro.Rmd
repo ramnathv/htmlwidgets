@@ -9,7 +9,7 @@ output:
 
 ## Overview
 
-The **[htmlwidgets](http://cran.rstudio.com/web/packages/htmlwidgets/index.html)** package provides a framework for creating R bindings to JavaScript libraries. HTML Widgets can be:
+The **[htmlwidgets](https://cran.rstudio.com/web/packages/htmlwidgets/index.html)** package provides a framework for creating R bindings to JavaScript libraries. HTML Widgets can be:
 
 * Used at the R console for data analysis just like conventional R plots.
 * Embedded within [R Markdown](http://rmarkdown.rstudio.com) documents
