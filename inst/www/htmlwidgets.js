@@ -571,6 +571,7 @@
   };
 
   window.HTMLWidgets.transposeArray2D = function(array) {
+      if (array.length === 0) return array;
       var newArray = array[0].map(function(col, i) {
           return array.map(function(row) {
               return row[i]
