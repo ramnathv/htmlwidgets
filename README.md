@@ -33,10 +33,10 @@ devtools::install_github('ramnathv/htmlwidgets')
 
 There are several package vignettes that will help you get you off the ground quickly and take advantage of all of the capabilities of the framework:
 
-* [Introduction to HTML Widgets](vignettes/htmlwidgets-intro.Rmd)
+* [Introduction to HTML Widgets](vignettes/develop-intro.Rmd)
 
-* [HTML Widget Sizing](vignettes/htmlwidgets-sizing.Rmd)
+* [HTML Widget Sizing](vignettes/develop-sizing.Rmd)
 
-* [HTML Widgets: Advanced Topics](vignettes/htmlwidgets-advanced.Rmd)
+* [HTML Widgets: Advanced Topics](vignettes/develop-advanced.Rmd)
 
 
