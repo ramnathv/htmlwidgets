@@ -55,15 +55,28 @@ addWidgetConstructor <- function(name, package, edit){
   )
 }
 
-#' Widget output function for use in Shiny
+#' Shiny bindings for %s
+#'
+#' Output and render functions for using %s within Shiny
+#' applications and interactive Rmd documents.
+#'
+#' @param outputId output variable to read from
+#' @param width,height Must be a valid CSS unit (like \\code{'100\\%%'},
+#'   \\code{'400px'}, \\code{'auto'}) or a number, which will be coerced to a
+#'   string and have \\code{'px'} appended.
+#' @param expr An expression that generates a %s
+#' @param env The environment in which to evaluate \\code{expr}.
+#' @param quoted Is \\code{expr} a quoted expression (with \\code{quote()})? This
+#'   is useful if you want to save an expression in a variable.
+#'
+#' @name %s-shiny
 #'
 #' @export
 %sOutput <- function(outputId, width = '100%%', height = '400px'){
   shinyWidgetOutput(outputId, '%s', width, height, package = '%s')
 }
 
-#' Widget render function for use in Shiny
-#'
+#' @rdname %s-shiny
 #' @export
 render%s <- function(expr, env = parent.frame(), quoted = FALSE) {
   if (!quoted) { expr <- substitute(expr) } # force quoted
@@ -76,8 +89,8 @@ render%s <- function(expr, env = parent.frame(), quoted = FALSE) {
   }
   if (!file.exists(file_ <- sprintf("R/%s.R", name))){
     cat(
-      sprintf(tpl, name, name, package, name, name, package,
-              capName(name), name),
+      sprintf(tpl, name, name, package, name, name, name, name, name, name,
+         package, name, capName(name), name),
       file = file_
     )
     message('Created boilerplate for widget constructor ', file_)
