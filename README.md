@@ -31,7 +31,7 @@ You can alternatively install the development version of **htmlwidgets** from Gi
 devtools::install_github('ramnathv/htmlwidgets')
 ```
 
-There are several articles on the htmlwdigets website that will help you get you off the ground quickly and take advantage of all of the capabilities of the framework:
+There are several articles on the htmlwidgets website that will help you get you off the ground quickly and take advantage of all of the capabilities of the framework:
 
 * [Introduction to HTML Widgets](http://www.htmlwidgets.org/develop_intro.html)
 
