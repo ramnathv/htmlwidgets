@@ -249,7 +249,7 @@ shinyWidgetOutput <- function(outputId, name, width, height, package = name) {
   html <- htmltools::tagList(
     widget_html(name, package, id = outputId,
       class = paste(name, "html-widget html-widget-output"),
-      style = sprintf("width:%s; height:%s",
+      style = sprintf("width:%s; height:%s;",
         htmltools::validateCssUnit(width),
         htmltools::validateCssUnit(height)
       ), width = width, height = height
