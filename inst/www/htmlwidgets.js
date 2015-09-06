@@ -75,6 +75,45 @@
     target[methodName] = funcSource(superFuncBound);
   }
 
+  // Add a method to delegator that, when invoked, calls
+  // delegatee.methodName. If there is no such method on
+  // the delegatee, but there was one on delegator before
+  // delegateMethod was called, then the original version
+  // is invoked instead.
+  // For example:
+  //
+  // var a = {
+  //   method1: function() { console.log('a1'); }
+  //   method2: function() { console.log('a2'); }
+  // };
+  // var b = {
+  //   method1: function() { console.log('b1'); }
+  // };
+  // delegateMethod(a, b, "method1");
+  // delegateMethod(a, b, "method2");
+  // a.method1();
+  // a.method2();
+  //
+  // The output would be "b1", "a2".
+  function delegateMethod(delegator, delegatee, methodName) {
+    var inherited = delegator[methodName];
+    delegator[methodName] = function() {
+      var target = delegatee;
+      var method = delegatee[methodName];
+
+      // The method doesn't exist on the delegatee. Instead,
+      // call the method on the delegator, if it exists.
+      if (!method) {
+        target = delegator;
+        method = inherited;
+      }
+
+      if (method) {
+        return method.apply(target, arguments);
+      }
+    };
+  }
+
   // Implement a vague facsimilie of jQuery's data method
   function elementData(el, name, value) {
     if (arguments.length == 2) {
@@ -347,84 +386,90 @@
     window.HTMLWidgets.widgets.push(staticBinding);
 
     if (shinyMode) {
-      // Shiny is running. Register the definition as an output binding.
+      // Shiny is running. Register the definition with an output binding.
+      // The definition itself will not be the output binding, instead
+      // we will make an output binding object that delegates to the
+      // definition. This is because we foolishly used the same method
+      // name (renderValue) for htmlwidgets definition and Shiny bindings
+      // but they actually have quite different semantics (the Shiny
+      // bindings receive data that includes lots of metadata that it
+      // strips off before calling htmlwidgets renderValue). We can't
+      // just ignore the difference because in some widgets it's helpful
+      // to call this.renderValue() from inside of resize(), and if
+      // we're not delegating, then that call will go to the Shiny
+      // version instead of the htmlwidgets version.
 
       // Merge defaults into the definition; don't mutate the original definition.
       // The base object is a Shiny output binding if we're running in Shiny mode,
       // or an empty object if we're not.
-      var shinyBinding = extend(new Shiny.OutputBinding(), defaults, definition);
+      var bindingDef = extend(defaults, definition);
+      var shinyBinding = new Shiny.OutputBinding();
+
+      delegateMethod(shinyBinding, bindingDef, "getId", true);
+      delegateMethod(shinyBinding, bindingDef, "onValueChange", true);
+      delegateMethod(shinyBinding, bindingDef, "onValueError", true);
+      delegateMethod(shinyBinding, bindingDef, "renderError", true);
+      delegateMethod(shinyBinding, bindingDef, "clearError", true);
+      delegateMethod(shinyBinding, bindingDef, "showProgress", true);
+
+      shinyBinding.find = function(scope) {
+        var results = bindingDef.find(scope);
+
+        // Only return elements that are Shiny outputs, not static ones
+        var dynamicResults = results.filter(".html-widget-output");
+
+        // It's possible that whatever caused Shiny to think there might be
+        // new dynamic outputs, also caused there to be new static outputs.
+        // Since there might be lots of different htmlwidgets bindings, we
+        // schedule execution for later--no need to staticRender multiple
+        // times.
+        if (results.length !== dynamicResults.length)
+          scheduleStaticRender();
+
+        return dynamicResults;
+      };
 
       // Wrap renderValue to handle initialization, which unfortunately isn't
       // supported natively by Shiny at the time of this writing.
 
-      // NB: shinyBinding.initialize may be undefined, as it's optional.
-
-      // Rename initialize to make sure it isn't called by a future version
-      // of Shiny that does support initialize directly.
-      shinyBinding._htmlwidgets_initialize = shinyBinding.initialize;
-      delete shinyBinding.initialize;
-
-      overrideMethod(shinyBinding, "find", function(superfunc) {
-        return function(scope) {
-
-          var results = superfunc(scope);
-
-          // Only return elements that are Shiny outputs, not static ones
-          var dynamicResults = results.filter(".html-widget-output");
-
-          // It's possible that whatever caused Shiny to think there might be
-          // new dynamic outputs, also caused there to be new static outputs.
-          // Since there might be lots of different htmlwidgets bindings, we
-          // schedule execution for later--no need to staticRender multiple
-          // times.
-          if (results.length !== dynamicResults.length)
-            scheduleStaticRender();
-
-          return dynamicResults;
-        };
-      });
-
-      overrideMethod(shinyBinding, "renderValue", function(superfunc) {
-        return function(el, data) {
-          // Resolve strings marked as javascript literals to objects
-          if (!(data.evals instanceof Array)) data.evals = [data.evals];
-          for (var i = 0; data.evals && i < data.evals.length; i++) {
-            window.HTMLWidgets.evaluateStringMember(data.x, data.evals[i]);
+      shinyBinding.renderValue = function(el, data) {
+        // Resolve strings marked as javascript literals to objects
+        if (!(data.evals instanceof Array)) data.evals = [data.evals];
+        for (var i = 0; data.evals && i < data.evals.length; i++) {
+          window.HTMLWidgets.evaluateStringMember(data.x, data.evals[i]);
+        }
+        if (!bindingDef.renderOnNullValue) {
+          if (data.x === null) {
+            el.style.visibility = "hidden";
+            return;
+          } else {
+            el.style.visibility = "inherit";
           }
-          if (!this.renderOnNullValue) {
-            if (data.x === null) {
-              el.style.visibility = "hidden";
-              return;
-            } else {
-              el.style.visibility = "inherit";
-            }
-          }
-          if (!elementData(el, "initialized")) {
-            initSizing(el);
+        }
+        if (!elementData(el, "initialized")) {
+          debugger;
+          initSizing(el);
 
-            elementData(el, "initialized", true);
-            if (this._htmlwidgets_initialize) {
-              var result = this._htmlwidgets_initialize(el, el.offsetWidth,
-                el.offsetHeight);
-              elementData(el, "init_result", result);
-            }
+          elementData(el, "initialized", true);
+          if (bindingDef.initialize) {
+            var result = bindingDef.initialize(el, el.offsetWidth,
+              el.offsetHeight);
+            elementData(el, "init_result", result);
           }
-          Shiny.renderDependencies(data.deps);
-          superfunc(el, data.x, elementData(el, "init_result"));
-        };
-      });
+        }
+        Shiny.renderDependencies(data.deps);
+        bindingDef.renderValue(el, data.x, elementData(el, "init_result"));
+      };
 
-      overrideMethod(shinyBinding, "resize", function(superfunc) {
-        return function(el, width, height) {
-          // Shiny can call resize before initialize/renderValue have been
-          // called, which doesn't make sense for widgets.
-          if (elementData(el, "initialized")) {
-            superfunc(el, width, height, elementData(el, "init_result"));
-          }
-        };
-      });
+      shinyBinding.resize = function(el, width, height) {
+        // Shiny can call resize before initialize/renderValue have been
+        // called, which doesn't make sense for widgets.
+        if (elementData(el, "initialized")) {
+          bindingDef.resize(el, width, height, elementData(el, "init_result"));
+        }
+      };
 
-      Shiny.outputBindings.register(shinyBinding, shinyBinding.name);
+      Shiny.outputBindings.register(shinyBinding, bindingDef.name);
     }
   };
 
