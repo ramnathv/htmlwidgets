@@ -12,7 +12,7 @@ toJSON2 <- function(
   )
 }
 
-if (requireNamespace('shiny')) local({
+if (requireNamespace('shiny') && packageVersion('shiny') >= '0.12.0') local({
   tryCatch({
     toJSON <- getFromNamespace('toJSON', 'shiny')
     args2 <- formals(toJSON2)
