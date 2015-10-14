@@ -437,18 +437,27 @@
       // we're not delegating, then that call will go to the Shiny
       // version instead of the htmlwidgets version.
 
-      // Merge defaults into the definition; don't mutate the original definition.
-      // The base object is a Shiny output binding if we're running in Shiny mode,
-      // or an empty object if we're not.
-      var bindingDef = extend(defaults, definition);
+      // Merge defaults with definition, without mutating either.
+      var bindingDef = extend({}, defaults, definition);
+
+      // This object will be our actual Shiny binding.
       var shinyBinding = new Shiny.OutputBinding();
 
+      // With a few exceptions, we'll want to simply use the bindingDef's
+      // version of methods if they are available, otherwise fall back to
+      // Shiny's defaults. NOTE: If Shiny's output bindings gain additional
+      // methods in the future, and we want them to be overrideable by
+      // HTMLWidget binding definitions, then we'll need to add them to this
+      // list.
       delegateMethod(shinyBinding, bindingDef, "getId", true);
       delegateMethod(shinyBinding, bindingDef, "onValueChange", true);
       delegateMethod(shinyBinding, bindingDef, "onValueError", true);
       delegateMethod(shinyBinding, bindingDef, "renderError", true);
       delegateMethod(shinyBinding, bindingDef, "clearError", true);
       delegateMethod(shinyBinding, bindingDef, "showProgress", true);
+
+      // The find, renderValue, and resize are handled differently, because we
+      // want to actually decorate the behavior of the bindingDef methods.
 
       shinyBinding.find = function(scope) {
         var results = bindingDef.find(scope);
@@ -485,7 +494,6 @@
           }
         }
         if (!elementData(el, "initialized")) {
-          debugger;
           initSizing(el);
 
           elementData(el, "initialized", true);
@@ -500,13 +508,16 @@
         bindingDef.renderValue(el, data.x, elementData(el, "init_result"));
       };
 
-      shinyBinding.resize = function(el, width, height) {
-        // Shiny can call resize before initialize/renderValue have been
-        // called, which doesn't make sense for widgets.
-        if (elementData(el, "initialized")) {
-          bindingDef.resize(el, width, height, elementData(el, "init_result"));
-        }
-      };
+      // Only override resize if bindingDef implements it
+      if (bindingDef.resize) {
+        shinyBinding.resize = function(el, width, height) {
+          // Shiny can call resize before initialize/renderValue have been
+          // called, which doesn't make sense for widgets.
+          if (elementData(el, "initialized")) {
+            bindingDef.resize(el, width, height, elementData(el, "init_result"));
+          }
+        };
+      }
 
       Shiny.outputBindings.register(shinyBinding, bindingDef.name);
     }
