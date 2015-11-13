@@ -129,8 +129,13 @@ widget_data <- function(x, id, ...){
   # repro for the bug this gsub fixes is to have the string "</script>" appear
   # anywhere in the data/metadata of a widget--you will get a syntax error
   # instead of a properly rendered widget.
+  #
+  # Another issue is that if </body></html> appears inside a quoted string,
+  # then when pandoc coverts it with --self-contained, the escaping gets messed
+  # up. There may be other patterns that trigger this behavior, so to be safe
+  # we can replace all instances of "</" with "\\u003c/".
   payload <- toJSON(createPayload(x))
-  payload <- gsub("</(script)>", "\\\\u003c/\\1>", payload, ignore.case = TRUE)
+  payload <- gsub("</", "\\u003c/", payload, fixed = TRUE)
   tags$script(type = "application/json", `data-for` = id, HTML(payload))
 }
 
