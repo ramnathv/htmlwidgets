@@ -1,5 +1,8 @@
-htmlwidgets 0.5.1 (unreleased)
+htmlwidgets 0.5.2 (unreleased)
 -----------------------------------------------------------------------
+
+* Fix a bug where the string "</body></html>" in the widget data caused
+  `saveWidget()` to have malformed output. (#168)
 
 * Increase pandoc stack size to 512M for saveWidget (often required for
   e.g. larger embedded leaflet maps). Stack size can also be controlled
