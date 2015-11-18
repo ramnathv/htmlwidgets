@@ -28,22 +28,40 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
+div.sourceCode { overflow-x: auto; }
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
 table.sourceCode { width: 100%; line-height: 100%; }
 td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; background-color: #dddddd; }
 td.sourceCode { padding-left: 5px; }
-code > span.kw { font-weight: bold; }
-code > span.dt { color: #800000; }
-code > span.dv { color: #0000ff; }
-code > span.bn { color: #0000ff; }
-code > span.fl { color: #800080; }
-code > span.ch { color: #ff00ff; }
-code > span.st { color: #dd0000; }
-code > span.co { color: #808080; font-style: italic; }
-code > span.al { color: #00ff00; font-weight: bold; }
-code > span.fu { color: #000080; }
-code > span.er { color: #ff0000; font-weight: bold; }
+code > span.kw { font-weight: bold; } /* Keyword */
+code > span.dt { color: #800000; } /* DataType */
+code > span.dv { color: #0000ff; } /* DecVal */
+code > span.bn { color: #0000ff; } /* BaseN */
+code > span.fl { color: #800080; } /* Float */
+code > span.ch { color: #ff00ff; } /* Char */
+code > span.st { color: #dd0000; } /* String */
+code > span.co { color: #808080; font-style: italic; } /* Comment */
+code > span.al { color: #00ff00; font-weight: bold; } /* Alert */
+code > span.fu { color: #000080; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #ff0000; font-weight: bold; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #ff00ff; } /* SpecialChar */
+code > span.vs { color: #dd0000; } /* VerbatimString */
+code > span.ss { color: #dd0000; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { } /* Variable */
+code > span.cf { } /* ControlFlow */
+code > span.op { } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { font-weight: bold; } /* Preprocessor */
+code > span.at { } /* Attribute */
+code > span.do { color: #808080; font-style: italic; } /* Documentation */
+code > span.an { color: #808080; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #808080; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #808080; font-weight: bold; font-style: italic; } /* Information */
 </style>
 <style type="text/css">
   pre:not([class]) {
@@ -198,9 +216,9 @@ img {
 <div id="example-sigma.js" class="section level2">
 <h2>Example (sigma.js)</h2>
 <p>To start with we’ll walk through the creation of a simple widget that wraps the <a href="http://sigmajs.org">sigma.js</a> graph visualization library. When we’re done we’ll be able to use it to display interactive visualizations of <a href="http://gexf.net">GEXF</a> (Graph Exchange XML Format) data files. For example:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(sigma)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(sigma)
 data &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;examples/ediaspora.gexf.xml&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;sigma&quot;</span>)
-<span class="kw">sigma</span>(data)</code></pre>
+<span class="kw">sigma</span>(data)</code></pre></div>
 <p><img src="images/sigma.png" alt="sigma" data-toggle="tooltip" data-placement="right" title="" data-original-title="Note this is just an image of the visualization so it's not interactive. You can play with the interactive version by following the steps in the demo section below." onload="$(this).tooltip()"></p>
 <p>Note that the above is just an image of the visualization so it’s not interactive. You can play with the interactive version by following the steps in the demo section below.</p>
 <p>There is remarkably little code required to create this binding. Below we’ll go through all of the components step-by-step. Then we’ll describe how you can create your own widgets (including automatically generating basic scaffolding for all of the core components).</p>
@@ -224,19 +242,19 @@ inst/
 <div id="dependencies" class="section level3">
 <h3>Dependencies</h3>
 <p>Dependencies are the JavaScript and CSS assets used by a widget. Dependencies are included within the <code>inst/htmlwidgets/lib</code> directory. Dependencies are specified using a YAML configuration file which uses the name of the widget as its base file name. Here’s what our <strong>sigma.yaml</strong> file looks like:</p>
-<pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="fu">dependencies:</span>
+<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="fu">dependencies:</span>
   <span class="kw">-</span> <span class="fu">name:</span> sigma
     <span class="fu">version:</span> 1.0.3
     <span class="fu">src:</span> htmlwidgets/lib/sigma-1.0.3
     <span class="fu">script:</span> 
       <span class="kw">-</span> sigma.min.js
-      <span class="kw">-</span> plugins/sigma.parsers.gexf.min.js</code></pre>
+      <span class="kw">-</span> plugins/sigma.parsers.gexf.min.js</code></pre></div>
 <p>The dependency <code>src</code> specification refers to the directory that contains the library and <code>script</code> refers to specific JavaScript files. If your library contains multiple JavaScript files specify each one on a line beginning with <code>-</code> as shown here. You can also add <code>stylesheet</code> entries and even <code>meta</code> or <code>head</code> entries. Multiple dependencies may be specified in one YAML file. See the documentation on the <code>htmlDependency</code> function in the <a href="http://cran.r-project.org/web/packages/htmltools/index.html"><strong>htmltools</strong></a> package for additional details.</p>
 </div>
 <div id="r-binding" class="section level3">
 <h3>R binding</h3>
 <p>We need to provide users with an R function that invokes our widget. Typically this function will accept input data as well as various options that control the widget’s display. Here’s the R function for <code>sigma</code>:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#&#39; @import htmlwidgets</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#&#39; @import htmlwidgets</span>
 <span class="co">#&#39; @export</span>
 sigma &lt;-<span class="st"> </span>function(gexf, <span class="dt">drawEdges =</span> <span class="ot">TRUE</span>, <span class="dt">drawNodes =</span> <span class="ot">TRUE</span>,
                   <span class="dt">width =</span> <span class="ot">NULL</span>, <span class="dt">height =</span> <span class="ot">NULL</span>) {
@@ -258,10 +276,10 @@ sigma &lt;-<span class="st"> </span>function(gexf, <span class="dt">drawEdges =<
   
   <span class="co"># create the widget</span>
   htmlwidgets::<span class="kw">createWidget</span>(<span class="st">&quot;sigma&quot;</span>, x, <span class="dt">width =</span> width, <span class="dt">height =</span> height)
-}</code></pre>
+}</code></pre></div>
 <p>The function takes two classes of input: the GEXF data file to render and some additional settings which control how it is rendered. This input is collected into a list named <code>x</code> which is then passed on to the <code>htmlwidgets::createWidget</code> function. This <code>x</code> variable will subsequently be made available to the JavaScript binding for sigma (this is described below). Any width or height parameter specified is also forwarded to the widget (widgets size themselves automatically by default so typically don’t require an explicit width or height).</p>
 <p>We want our sigma widget to also work in Shiny applications, so we add the following boilerplate Shiny output and render functions (these are always the same for all widgets):</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#&#39; @export</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#&#39; @export</span>
 sigmaOutput &lt;-<span class="st"> </span>function(outputId, <span class="dt">width =</span> <span class="st">&quot;100%&quot;</span>, <span class="dt">height =</span> <span class="st">&quot;400px&quot;</span>) {
   <span class="kw">shinyWidgetOutput</span>(outputId, <span class="st">&quot;sigma&quot;</span>, width, height, <span class="dt">package =</span> <span class="st">&quot;sigma&quot;</span>)
 }
@@ -269,56 +287,56 @@ sigmaOutput &lt;-<span class="st"> </span>function(outputId, <span class="dt">wi
 renderSigma &lt;-<span class="st"> </span>function(expr, <span class="dt">env =</span> <span class="kw">parent.frame</span>(), <span class="dt">quoted =</span> <span class="ot">FALSE</span>) {
   if (!quoted) { expr &lt;-<span class="st"> </span><span class="kw">substitute</span>(expr) } <span class="co"># force quoted</span>
   <span class="kw">shinyRenderWidget</span>(expr, sigmaOutput, env, <span class="dt">quoted =</span> <span class="ot">TRUE</span>)
-}</code></pre>
+}</code></pre></div>
 </div>
 <div id="javascript-binding" class="section level3">
 <h3>JavaScript binding</h3>
 <p>The third piece in the puzzle is the JavaScript required to activate the widget. By convention we’ll define our JavaScript binding in the file <code>inst/htmlwidgets/sigma.js</code>. Here is the full source code of the binding:</p>
-<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="ot">HTMLWidgets</span>.<span class="fu">widget</span>({
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="va">HTMLWidgets</span>.<span class="at">widget</span>(<span class="op">{</span>
 
-  <span class="dt">name</span>: <span class="st">&quot;sigma&quot;</span>,
+  <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;sigma&quot;</span><span class="op">,</span>
   
-  <span class="dt">type</span>: <span class="st">&quot;output&quot;</span>,
+  <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;output&quot;</span><span class="op">,</span>
   
-  <span class="dt">initialize</span>: <span class="kw">function</span>(el, width, height) {
+  <span class="dt">initialize</span><span class="op">:</span> <span class="kw">function</span>(el<span class="op">,</span> width<span class="op">,</span> height) <span class="op">{</span>
    
     <span class="co">// create our sigma object and bind it to the element</span>
-    <span class="kw">var</span> sig = <span class="kw">new</span> <span class="fu">sigma</span>(<span class="ot">el</span>.<span class="fu">id</span>);
+    <span class="kw">var</span> sig <span class="op">=</span> <span class="kw">new</span> <span class="at">sigma</span>(<span class="va">el</span>.<span class="at">id</span>)<span class="op">;</span>
     
     <span class="co">// return it as part of our instance data</span>
-    <span class="kw">return</span> {
-      <span class="dt">sig</span>: sig
-    };
-  },
+    <span class="cf">return</span> <span class="op">{</span>
+      <span class="dt">sig</span><span class="op">:</span> sig
+    <span class="op">};</span>
+  <span class="op">},</span>
   
-  <span class="dt">renderValue</span>: <span class="kw">function</span>(el, x, instance) {
+  <span class="dt">renderValue</span><span class="op">:</span> <span class="kw">function</span>(el<span class="op">,</span> x<span class="op">,</span> instance) <span class="op">{</span>
       
     <span class="co">// parse gexf data</span>
-    <span class="kw">var</span> parser = <span class="kw">new</span> <span class="fu">DOMParser</span>();
-    <span class="kw">var</span> data = <span class="ot">parser</span>.<span class="fu">parseFromString</span>(<span class="ot">x</span>.<span class="fu">data</span>, <span class="st">&quot;application/xml&quot;</span>);
+    <span class="kw">var</span> parser <span class="op">=</span> <span class="kw">new</span> <span class="at">DOMParser</span>()<span class="op">;</span>
+    <span class="kw">var</span> data <span class="op">=</span> <span class="va">parser</span>.<span class="at">parseFromString</span>(<span class="va">x</span>.<span class="at">data</span><span class="op">,</span> <span class="st">&quot;application/xml&quot;</span>)<span class="op">;</span>
     
     <span class="co">// apply settings</span>
-    <span class="kw">for</span> (<span class="kw">var</span> name <span class="kw">in</span> <span class="ot">x</span>.<span class="fu">settings</span>)
-      <span class="ot">instance</span>.<span class="ot">sig</span>.<span class="fu">settings</span>(name, <span class="ot">x</span>.<span class="fu">settings</span>[name]);
+    <span class="cf">for</span> (<span class="kw">var</span> name <span class="kw">in</span> <span class="va">x</span>.<span class="at">settings</span>)
+      <span class="va">instance</span>.<span class="va">sig</span>.<span class="at">settings</span>(name<span class="op">,</span> <span class="va">x</span>.<span class="at">settings</span>[name])<span class="op">;</span>
     
     <span class="co">// update the sigma instance</span>
-    <span class="ot">sigma</span>.<span class="ot">parsers</span>.<span class="fu">gexf</span>(
-      data,          <span class="co">// parsed gexf data</span>
-      <span class="ot">instance</span>.<span class="fu">sig</span>,  <span class="co">// sigma instance we created in initialize</span>
-      <span class="kw">function</span>() {
+    <span class="va">sigma</span>.<span class="va">parsers</span>.<span class="at">gexf</span>(
+      data<span class="op">,</span>          <span class="co">// parsed gexf data</span>
+      <span class="va">instance</span>.<span class="at">sig</span><span class="op">,</span>  <span class="co">// sigma instance we created in initialize</span>
+      <span class="kw">function</span>() <span class="op">{</span>
         <span class="co">// need to call refresh to reflect new settings and data</span>
-        <span class="ot">instance</span>.<span class="ot">sig</span>.<span class="fu">refresh</span>();
-      }
-    );
-  },
+        <span class="va">instance</span>.<span class="va">sig</span>.<span class="at">refresh</span>()<span class="op">;</span>
+      <span class="op">}</span>
+    )<span class="op">;</span>
+  <span class="op">},</span>
   
-  <span class="dt">resize</span>: <span class="kw">function</span>(el, width, height, instance) {
+  <span class="dt">resize</span><span class="op">:</span> <span class="kw">function</span>(el<span class="op">,</span> width<span class="op">,</span> height<span class="op">,</span> instance) <span class="op">{</span>
     
     <span class="co">// forward resize on to sigma renderers</span>
-    <span class="kw">for</span> (<span class="kw">var</span> name <span class="kw">in</span> <span class="ot">instance</span>.<span class="ot">sig</span>.<span class="fu">renderers</span>)
-      <span class="ot">instance</span>.<span class="ot">sig</span>.<span class="fu">renderers</span>[name].<span class="fu">resize</span>(width, height);  
-  }
-});</code></pre>
+    <span class="cf">for</span> (<span class="kw">var</span> name <span class="kw">in</span> <span class="va">instance</span>.<span class="va">sig</span>.<span class="at">renderers</span>)
+      <span class="va">instance</span>.<span class="va">sig</span>.<span class="at">renderers</span>[name].<span class="at">resize</span>(width<span class="op">,</span> height)<span class="op">;</span>  
+  <span class="op">}</span>
+<span class="op">}</span>)<span class="op">;</span></code></pre></div>
 <p>We provide a name and type for the widget and then implement three functions:</p>
 <ol style="list-style-type: decimal">
 <li><p>The <code>initialize</code> function creates and/or attaches to DOM elements as required and returns on object containing the widget’s instance data. In this case we create a new sigma element and pass it the <code>id</code> of the DOM element that hosts the widget on the page. We’re going to need access to the sigma object later (to update it’s data and settings) so we return it as the <code>sig</code> member of the widgets instance data.</p></li>
@@ -330,13 +348,13 @@ renderSigma &lt;-<span class="st"> </span>function(expr, <span class="dt">env =<
 <div id="demo" class="section level3">
 <h3>Demo</h3>
 <p>Our widget is now complete! If you want to test drive it without reproducing all of the code locally you can install it from GitHub as follows:</p>
-<pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">&#39;jjallaire/sigma&#39;</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">&#39;jjallaire/sigma&#39;</span>)</code></pre></div>
 <p>Here’s the code to try it out with some sample data included with the package:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(sigma)
-<span class="kw">sigma</span>(<span class="kw">system.file</span>(<span class="st">&quot;examples/ediaspora.gexf.xml&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;sigma&quot;</span>))</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(sigma)
+<span class="kw">sigma</span>(<span class="kw">system.file</span>(<span class="st">&quot;examples/ediaspora.gexf.xml&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;sigma&quot;</span>))</code></pre></div>
 <p>If you execute this code in the R console you’ll see the widget displayed in the RStudio Viewer (or in an external browser if you aren’t running RStudio). If you include it within an R Markdown document the widget will be embedded into the document.</p>
 <p>We can also use the widget in a Shiny application:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
 <span class="kw">library</span>(sigma)
 
 gexf &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;examples/ediaspora.gexf.xml&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;sigma&quot;</span>)
@@ -355,7 +373,7 @@ server =<span class="st"> </span>function(input, output) {
   )
 }
 
-<span class="kw">shinyApp</span>(<span class="dt">ui =</span> ui, <span class="dt">server =</span> server)</code></pre>
+<span class="kw">shinyApp</span>(<span class="dt">ui =</span> ui, <span class="dt">server =</span> server)</code></pre></div>
 </div>
 </div>
 <div id="creating-your-own-widgets" class="section level2">
@@ -363,9 +381,9 @@ server =<span class="st"> </span>function(input, output) {
 <div id="requirements" class="section level3">
 <h3>Requirements</h3>
 <p>To implement a widget you need to create a new R package that in turn depends on the <strong>htmlwidgets</strong> package. You can install the package from CRAN as follows:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;htmlwidgets&quot;</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;htmlwidgets&quot;</span>)</code></pre></div>
 <p>While it’s not strictly required, the step-by-step instructions below for getting started also make use of the <strong>devtools</strong> package which you can also install from CRAN:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)</code></pre></div>
 </div>
 <div id="scaffolding" class="section level3">
 <h3>Scaffolding</h3>
@@ -375,13 +393,13 @@ server =<span class="st"> </span>function(input, output) {
 <li><p>If provided, take a <a href="http://bower.io/">Bower</a> package name and automatically download the JavaScript library (and its dependencies) and add the required entries to the .yaml file.</p></li>
 </ul>
 <p>This method is highly recommended as it ensures that you get started with the right file structure. Here’s an example that assumes you want to create a widget named ‘mywidget’ in a new package of the same name:</p>
-<pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">create</span>(<span class="st">&quot;mywidget&quot;</span>)               <span class="co"># create package using devtools</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">create</span>(<span class="st">&quot;mywidget&quot;</span>)               <span class="co"># create package using devtools</span>
 <span class="kw">setwd</span>(<span class="st">&quot;mywidget&quot;</span>)                          <span class="co"># navigate to package dir</span>
 htmlwidgets::<span class="kw">scaffoldWidget</span>(<span class="st">&quot;mywidget&quot;</span>)    <span class="co"># create widget scaffolding</span>
-devtools::<span class="kw">install</span>()                        <span class="co"># install the package so we can try it</span></code></pre>
+devtools::<span class="kw">install</span>()                        <span class="co"># install the package so we can try it</span></code></pre></div>
 <p>This creates a simple widget that takes a single <code>text</code> argument and displays that text within the widgets HTML element. You can try it like this:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mywidget)
-<span class="kw">mywidget</span>(<span class="st">&quot;hello, world&quot;</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mywidget)
+<span class="kw">mywidget</span>(<span class="st">&quot;hello, world&quot;</span>)</code></pre></div>
 <p>This is the most minimal widget possible and doesn’t yet include a JavaScript library to interface to (note that <code>scaffoldWidget</code> can optionally include JavaScript library dependencies via the <code>bowerPkg</code> argument). Before getting started with development you should review the introductory example above to make sure you understand the various components and also review the additional articles and examples linked to in the next section.</p>
 </div>
 <div id="learning-more" class="section level3">

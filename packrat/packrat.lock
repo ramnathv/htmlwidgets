@@ -1,7 +1,11 @@
 PackratFormat: 1.4
-PackratVersion: 0.4.4
-RVersion: 3.1.3
-Repos: CRAN=https://cran.rstudio.com
+PackratVersion: 0.4.6.1
+RVersion: 3.2.2
+Repos: BioCsoft=http://bioconductor.org/packages/3.1/bioc,
+    BioCann=http://bioconductor.org/packages/3.1/data/annotation,
+    BioCexp=http://bioconductor.org/packages/3.1/data/experiment,
+    BioCextra=http://bioconductor.org/packages/3.1/extra,
+    CRAN=https://cran.rstudio.com
 
 Package: DT
 Source: github
@@ -238,8 +242,8 @@ Requires: htmlwidgets, plyr, rjson
 
 Package: packrat
 Source: CRAN
-Version: 0.4.4
-Hash: aed7d17407538df551a57caf6289c8bf
+Version: 0.4.6-1
+Hash: 29eacc43b096c5b1a82c8d54a49b030b
 
 Package: plyr
 Source: CRAN

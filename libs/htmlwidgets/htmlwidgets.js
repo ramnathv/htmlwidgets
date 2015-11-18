@@ -49,17 +49,6 @@
     return target;
   }
 
-  // IE8 doesn't support Array.forEach.
-  function forEach(values, callback, thisArg) {
-    if (values.forEach) {
-      values.forEach(callback, thisArg);
-    } else {
-      for (var i = 0; i < values.length; i++) {
-        callback.call(thisArg, values[i], i, values);
-      }
-    }
-  }
-
   // Replaces the specified method with the return value of funcSource.
   //
   // Note that funcSource should not BE the new method, it should be a function
@@ -442,13 +431,15 @@
   // Statically render all elements that are of this widget's class
   window.HTMLWidgets.staticRender = function() {
     var bindings = window.HTMLWidgets.widgets || [];
-    forEach(bindings, function(binding) {
+    for (var i = 0; i < bindings.length; i++) {
+      var binding = bindings[i];
       var matches = binding.find(document.documentElement);
-      forEach(matches, function(el) {
+      for (var j = 0; j < matches.length; j++) {
+        var el = matches[j];
         var sizeObj = initSizing(el, binding);
 
         if (hasClass(el, "html-widget-static-bound"))
-          return;
+          continue;
         el.className = el.className + " html-widget-static-bound";
 
         var initResult;
@@ -513,8 +504,8 @@
           }
           binding.renderValue(el, data.x, initResult);
         }
-      });
-    });
+      }
+    }
   }
 
   // Wait until after the document has loaded to render the widgets.

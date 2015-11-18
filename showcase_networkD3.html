@@ -182,6 +182,7 @@ forceNetwork(Links = MisLinks, Nodes = MisNodes, Source = &quot;source&quot;,
       "Group": "group",
       "colourScale": "d3.scale.category20()",
       "fontSize": 7,
+      "fontFamily": "serif",
       "clickTextSize": 17.5,
       "linkDistance": 50,
       "linkWidth": "function(d) { return Math.sqrt(d.value); }",
@@ -190,8 +191,11 @@ forceNetwork(Links = MisLinks, Nodes = MisNodes, Source = &quot;source&quot;,
       "opacity": 0.4,
       "zoom": false,
       "legend": false,
-      "nodesize": "false",
-      "radiusCalculation": " Math.sqrt(d.nodesize)+6"
+      "nodesize": false,
+      "radiusCalculation": " Math.sqrt(d.nodesize)+6",
+      "bounded": false,
+      "opacityNoHover": 0,
+      "clickAction": null
     }
   },
   "evals": []

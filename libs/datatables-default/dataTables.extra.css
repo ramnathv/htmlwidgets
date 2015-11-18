@@ -18,6 +18,7 @@ table.dataTable tbody tr.selected,
 table.dataTable tr.selected td.sorting_1,
 table.dataTable tr.selected td.sorting_2,
 table.dataTable tr.selected td.sorting_3,
+div.DTS tbody tr.even.selected,
 .table-striped tbody>tr.selected:nth-child(odd)>td,
 .table-striped tbody>tr.selected:nth-child(even)>td {
   background-color: #b0bed9;
