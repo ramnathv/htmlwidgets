@@ -1,0 +1,24 @@
+---
+title: "htmlwidgets: Plotly"
+---
+
+### Plotly
+<https://plot.ly/r/>
+
+Plotly allows you to easily translate your ggplot2 graphics to an interactive web-based version, and also provides bindings to the [plotly.js](https://plot.ly/javascript/) graphing library.
+
+```{r, message=FALSE}
+library(plotly)
+p <- ggplot(data = diamonds, aes(x = cut, fill = clarity)) +
+            geom_bar(position = "dodge")
+ggplotly(p)
+```
+
+The R package also provides high-level bindings for working directly with [plotly.js](https://plot.ly/javascript/).
+
+```{r, message=FALSE}
+d <- diamonds[sample(nrow(diamonds), 500), ]
+plot_ly(d, x = carat, y = price, text = paste("Clarity: ", clarity),
+        mode = "markers", color = carat, size = carat)
+```
+

@@ -12,17 +12,8 @@ HTMLWidgets.widget({
     };
 
   },
-  
-  renderValue: function(el, x, instance) {
-    this.doRenderValue(el, x, instance);
-  },
 
-  // Need dedicated helper function that can be called by both renderValue
-  // and resize. resize can't call this.renderValue because that will be
-  // routed to the Shiny wrapper method from htmlwidgets, which expects the
-  // wrapper data object, not x.
-  doRenderValue: function(el, x, instance) {
-    var self = this;
+  renderValue: function(el, x, instance) {
     
     instance.lastValue = x;
     
@@ -56,30 +47,28 @@ HTMLWidgets.widget({
       
       var hm = heatmap(el, x, x.options);
       if (window.Shiny) {
-        var id = self.getId(el);
+        var id = this.getId(el);
         hm.on('hover', function(e) {
           Shiny.onInputChange(id + '_hover', !e.data ? e.data : {
-            label: e.data.label,
-            row: x.matrix.rows[e.data.row],
-            col: x.matrix.cols[e.data.col]
-          });
-        });
-        /* heatmap doesn't currently send click, since it means zoom-out
-        hm.on('click', function(e) {
-          Shiny.onInputChange(id + '_click', !e.data ? e.data : {
-            label: e.data.label,
+            value: e.data.value,
             row: e.data.row + 1,
             col: e.data.col + 1
           });
         });
-        */
+        hm.on('click', function(e) {
+          Shiny.onInputChange(id + '_click', !e.data ? e.data : {
+            value: e.data.value,
+            row: e.data.row + 1,
+            col: e.data.col + 1
+          });
+        });
   	  }
     });
   },
 
   resize: function(el, width, height, instance) {
     if (instance.lastValue) {
-      this.doRenderValue(el, instance.lastValue, instance);
+      this.renderValue(el, instance.lastValue, instance);
     }
   },
   

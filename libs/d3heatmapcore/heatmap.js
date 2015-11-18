@@ -54,7 +54,7 @@ function heatmap(selector, data, options) {
   opts.xclust_height = options.xclust_height || opts.height * 0.12;
   opts.yclust_width = options.yclust_width || opts.width * 0.12;
   opts.link_color = opts.link_color || "#AAA";
-  opts.xaxis_height = options.xaxis_height || 80;
+  opts.xaxis_height = options.xaxis_height || 120;
   opts.yaxis_width = options.yaxis_width || 120;
   opts.axis_padding = options.axis_padding || 6;
   opts.show_grid = options.show_grid;

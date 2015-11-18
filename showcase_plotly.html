@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>htmlwidgets: Plotly</title>
+
+<script src="libs/jquery/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap/css/cosmo.min.css" rel="stylesheet" />
+<script src="libs/bootstrap/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap/shim/respond.min.js"></script>
+<script src="libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="libs/plotlyjs/plotly-latest.min.js"></script>
+<script src="libs/plotly-binding/plotly.js"></script>
+
+<!-- Styles for this site -->
+<link href="css/styles.css" rel="stylesheet">
+
+<!-- Polyfill JS -->
+<script src="js/polyfill.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/textmate.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+<!--html_preserve-->
+
+<div class="header">
+  <nav class="navbar">
+      <h3 class="navbar-left"><strong>htmlwidgets</strong> for R</h3>
+      <ul class="nav nav-pills navbar-right">
+        <li role="presentation" id="nav-home"><a href="index.html">Home</a></li>
+        <li role="presentation" id="nav-showcase"><a href="showcase_leaflet.html">Showcase</a></li>
+        <li role="presentation" id="nav-develop" class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
+            Develop <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            <li role="presentation"><a href="develop_intro.html">Creating a widget</a></li>
+            <li role="presentation"><a href="develop_sizing.html">Widget sizing</a></li>
+            <li role="presentation"><a href="develop_advanced.html">Advanced topics</a></li>
+          </ul>
+        </li>
+        <li role="presentation" id="nav-github"><a href="https://github.com/ramnathv/htmlwidgets">GitHub</a></li>
+      </ul>
+  </nav>
+</div>
+
+<div class="showcase-header hidden">
+
+  <div id = "showcase-intro">
+    HTML widgets work just like R plots except they produce interactive web visualizations. A line or two of R code is all it takes to produce a D3 graphic or Leaflet map. HTML widgets can be used at the R console as well as embedded in R Markdown reports and Shiny web applications.
+  </div>
+
+  <div class="row">
+
+    <div class="col-sm-4">
+      <div class="list-group">
+        <a href="showcase_leaflet.html" class="list-group-item">
+          <h5 class="list-group-item-heading">Leaflet</h5>
+          <p class="list-group-item-text">Geo-spatial mapping</p>
+        </a>
+        <a href="showcase_dygraphs.html" class="list-group-item">
+          <h5 class="list-group-item-heading">dygraphs</h5>
+          <p class="list-group-item-text">Time series charting</p>
+        </a>
+        <a href="showcase_plotly.html" class="list-group-item">
+          <h5 class="list-group-item-heading">Plotly</h5>
+          <p class="list-group-item-text">Interactive graphics with D3</p>
+        </a>
+        <a href="showcase_networkD3.html" class="list-group-item">
+          <h5 class="list-group-item-heading">networkD3</h5>
+          <p class="list-group-item-text">Graph data visualization with D3</p>
+        </a>
+        <a href="showcase_d3heatmap.html" class="list-group-item">
+          <h5 class="list-group-item-heading">d3heatmap</h5>
+          <p class="list-group-item-text">Interactive heatmaps with D3</p>
+        </a>
+        <a href="showcase_datatables.html" class="list-group-item">
+          <h5 class="list-group-item-heading">DataTables</h5>
+          <p class="list-group-item-text">Tabular data display</p>
+        </a>
+        <a href="showcase_threejs.html" class="list-group-item">
+          <h5 class="list-group-item-heading">threejs</h5>
+          <p class="list-group-item-text">3D scatterplots and globes</p>
+        </a>
+        <a href="showcase_diagrammer.html" class="list-group-item">
+          <h5 class="list-group-item-heading">DiagrammeR</h5>
+          <p class="list-group-item-text">Diagrams and flowcharts</p>
+        </a>
+         <a href="showcase_metricsgraphics.html" class="list-group-item">
+          <h5 class="list-group-item-heading">MetricsGraphics</h5>
+          <p class="list-group-item-text">Scatterplots and line charts with D3</p>
+        </a>
+
+      </div> <!-- list-group -->
+
+    </div> <!-- col-sm-4 -->
+
+    <div class="col-sm-8" id="showcase-body">
+
+    </div> <!-- col-sm-8 -->
+
+  </div> <!-- row -->
+
+</div> <!-- showcase-header -->
+
+<div id="page-body">
+
+<!--/html_preserve-->
+
+<div id="header">
+<h1 class="title">htmlwidgets: Plotly</h1>
+</div>
+
+
+<div id="plotly" class="section level3">
+<h3>Plotly</h3>
+<p><a href="https://plot.ly/r/" class="uri">https://plot.ly/r/</a></p>
+<p>Plotly allows you to easily translate your ggplot2 graphics to an interactive web-based version, and also provides bindings to the <a href="https://plot.ly/javascript/">plotly.js</a> graphing library.</p>
+<pre class="r"><code>library(plotly)
+p &lt;- ggplot(data = diamonds, aes(x = cut, fill = clarity)) +
+            geom_bar(position = &quot;dodge&quot;)
+ggplotly(p)</code></pre>
+<p><div id="htmlwidget-3078" style="width:960px;height:500px;" class="plotly"></div>
+<script type="application/json" data-for="htmlwidget-3078">{
+  "x": {
+    "data": [
+      {
+        "x": ["Fair", "Good", "Very Good", "Premium", "Ideal"],
+        "y": [210, 96, 84, 205, 146],
+        "type": "bar",
+        "text": [null],
+        "name": "I1",
+        "marker": {
+          "color": "rgb(248,118,109)"
+        },
+        "xaxis": "x1",
+        "yaxis": "y1",
+        "bargap": "default",
+        "barmode": "group",
+        "showlegend": true
+      },
+      {
+        "x": ["Fair", "Good", "Very Good", "Premium", "Ideal"],
+        "y": [466, 1081, 2100, 2949, 2598],
+        "type": "bar",
+        "text": [null],
+        "name": "SI2",
+        "marker": {
+          "color": "rgb(205,150,0)"
+        },
+        "xaxis": "x1",
+        "yaxis": "y1",
+        "bargap": "default",
+        "barmode": "group",
+        "showlegend": true
+      },
+      {
+        "x": ["Fair", "Good", "Very Good", "Premium", "Ideal"],
+        "y": [408, 1560, 3240, 3575, 4282],
+        "type": "bar",
+        "text": [null],
+        "name": "SI1",
+        "marker": {
+          "color": "rgb(124,174,0)"
+        },
+        "xaxis": "x1",
+        "yaxis": "y1",
+        "bargap": "default",
+        "barmode": "group",
+        "showlegend": true
+      },
+      {
+        "x": ["Fair", "Good", "Very Good", "Premium", "Ideal"],
+        "y": [261, 978, 2591, 3357, 5071],
+        "type": "bar",
+        "text": [null],
+        "name": "VS2",
+        "marker": {
+          "color": "rgb(0,190,103)"
+        },
+        "xaxis": "x1",
+        "yaxis": "y1",
+        "bargap": "default",
+        "barmode": "group",
+        "showlegend": true
+      },
+      {
+        "x": ["Fair", "Good", "Very Good", "Premium", "Ideal"],
+        "y": [170, 648, 1775, 1989, 3589],
+        "type": "bar",
+        "text": [null],
+        "name": "VS1",
+        "marker": {
+          "color": "rgb(0,191,196)"
+        },
+        "xaxis": "x1",
+        "yaxis": "y1",
+        "bargap": "default",
+        "barmode": "group",
+        "showlegend": true
+      },
+      {
+        "x": ["Fair", "Good", "Very Good", "Premium", "Ideal"],
+        "y": [69, 286, 1235, 870, 2606],
+        "type": "bar",
+        "text": [null],
+        "name": "VVS2",
+        "marker": {
+          "color": "rgb(0,169,255)"
+        },
+        "xaxis": "x1",
+        "yaxis": "y1",
+        "bargap": "default",
+        "barmode": "group",
+        "showlegend": true
+      },
+      {
+        "x": ["Fair", "Good", "Very Good", "Premium", "Ideal"],
+        "y": [17, 186, 789, 616, 2047],
+        "type": "bar",
+        "text": [null],
+        "name": "VVS1",
+        "marker": {
+          "color": "rgb(199,124,255)"
+        },
+        "xaxis": "x1",
+        "yaxis": "y1",
+        "bargap": "default",
+        "barmode": "group",
+        "showlegend": true
+      },
+      {
+        "x": ["Fair", "Good", "Very Good", "Premium", "Ideal"],
+        "y": [9, 71, 268, 230, 1212],
+        "type": "bar",
+        "text": [null],
+        "name": "IF",
+        "marker": {
+          "color": "rgb(255,97,204)"
+        },
+        "xaxis": "x1",
+        "yaxis": "y1",
+        "bargap": "default",
+        "barmode": "group",
+        "showlegend": true
+      }
+    ],
+    "layout": {
+      "barmode": "group",
+      "xaxis": {
+        "tickcolor": "rgb(127,127,127)",
+        "gridcolor": "rgb(255,255,255)",
+        "showgrid": true,
+        "ticks": "outside",
+        "showticklabels": true,
+        "type": "category",
+        "title": "cut",
+        "zeroline": false,
+        "showline": false
+      },
+      "yaxis": {
+        "tickcolor": "rgb(127,127,127)",
+        "gridcolor": "rgb(255,255,255)",
+        "showgrid": true,
+        "ticks": "outside",
+        "showticklabels": true,
+        "type": "linear",
+        "title": "count",
+        "zeroline": false,
+        "showline": false
+      },
+      "plot_bgcolor": "rgb(229,229,229)",
+      "margin": {
+        "b": 40,
+        "l": 60,
+        "t": 25,
+        "r": 10
+      },
+      "legend": {
+        "bordercolor": "transparent",
+        "x": 1.01,
+        "y": 0.75,
+        "xref": "paper",
+        "yref": "paper",
+        "xanchor": "left",
+        "yanchor": "top",
+        "font": {
+          "family": ""
+        },
+        "bgcolor": "rgb(255,255,255)"
+      },
+      "showlegend": true,
+      "annotations": [
+        {
+          "text": "<b>clarity</b>",
+          "x": 1.025554,
+          "y": 0.85,
+          "showarrow": false,
+          "xref": "paper",
+          "yref": "paper",
+          "xanchor": "left",
+          "yanchor": "top",
+          "textangle": 0
+        }
+      ],
+      "titlefont": {
+        "family": ""
+      },
+      "paper_bgcolor": "rgb(255,255,255)"
+    },
+    "world_readable": true
+  },
+  "evals": []
+}</script></p>
+<p>The R package also provides high-level bindings for working directly with <a href="https://plot.ly/javascript/">plotly.js</a>.</p>
+<pre class="r"><code>d &lt;- diamonds[sample(nrow(diamonds), 500), ]
+plot_ly(d, x = carat, y = price, text = paste(&quot;Clarity: &quot;, clarity),
+        mode = &quot;markers&quot;, color = carat, size = carat)</code></pre>
+<p><div id="htmlwidget-7431" style="width:960px;height:500px;" class="plotly"></div>
+<script type="application/json" data-for="htmlwidget-7431">{
+  "x": {
+    "data": [
+      {
+        "type": "scatter",
+        "inherit": true,
+        "x": [0.9, 0.3, 0.3, 1.58, 1.56, 0.51, 1.16, 0.32, 1.08, 0.3, 0.51, 1.07, 1.7, 0.44, 0.4, 0.91, 1, 1.47, 0.31, 0.3, 0.5, 0.31, 0.53, 1.51, 1.01, 0.42, 0.52, 0.35, 1.21, 1.71, 0.6, 1.51, 0.74, 0.35, 0.71, 1.06, 0.37, 0.7, 1.36, 1.52, 0.3, 0.49, 0.53, 0.4, 2.3, 0.56, 0.31, 1, 1, 1.01, 1.09, 0.26, 1.22, 0.3, 1.27, 0.9, 0.28, 0.35, 0.34, 2.01, 0.3, 0.65, 0.31, 1.51, 1.57, 1.28, 1.5, 1.02, 0.51, 1.5, 1.16, 0.33, 0.71, 0.31, 0.32, 0.5, 0.41, 0.5, 0.97, 1.73, 0.26, 0.59, 0.7, 0.79, 0.43, 0.41, 0.32, 1.07, 0.41, 0.55, 1.14, 1, 1.54, 0.56, 1.36, 0.31, 0.33, 0.73, 0.5, 1.5, 0.7, 1.02, 1.42, 0.43, 0.42, 0.72, 0.38, 0.75, 0.41, 0.54, 0.5, 0.8, 1.05, 0.7, 0.9, 0.75, 0.48, 1.31, 0.52, 1.73, 1.56, 2.02, 0.3, 1.72, 0.74, 0.9, 0.71, 0.4, 0.9, 1.13, 0.5, 0.4, 2.25, 0.32, 0.7, 2.05, 0.78, 1.91, 0.3, 0.36, 0.71, 0.26, 0.71, 1.19, 0.54, 0.57, 0.76, 0.25, 0.96, 2.01, 0.56, 0.9, 1.01, 0.28, 0.58, 0.54, 0.5, 0.75, 0.51, 0.52, 0.31, 2.01, 1.09, 0.92, 1.06, 0.9, 0.34, 0.3, 0.55, 1.86, 1.2, 0.34, 0.55, 0.5, 1.05, 0.72, 0.3, 1.52, 0.32, 1.02, 0.57, 0.32, 0.32, 1, 0.27, 0.85, 0.91, 1.01, 0.63, 0.7, 2.29, 1.21, 0.71, 0.41, 0.3, 0.77, 0.31, 0.99, 0.54, 1.01, 0.71, 0.51, 0.51, 1.06, 0.46, 0.52, 0.4, 0.77, 1.53, 1.06, 0.53, 1.08, 0.29, 0.83, 0.23, 0.71, 0.51, 2.18, 0.9, 0.31, 2, 0.36, 0.73, 1.17, 0.41, 0.74, 0.7, 1.2, 1.46, 0.35, 2.68, 0.55, 0.41, 1.21, 1.02, 1.52, 0.33, 0.55, 0.58, 1.03, 0.51, 0.42, 0.23, 1.02, 0.32, 0.38, 0.72, 0.76, 1, 1.03, 0.72, 1.2, 1.23, 0.54, 0.53, 1.01, 1, 0.31, 0.43, 1.02, 0.77, 1.17, 0.32, 0.47, 0.7, 1.19, 1.27, 0.62, 0.76, 0.33, 0.41, 1.34, 0.9, 0.43, 0.3, 2.16, 1.25, 0.32, 1.4, 1.34, 1.03, 0.76, 1.5, 0.38, 0.32, 0.41, 0.31, 1.09, 1.52, 1, 0.33, 1.33, 0.3, 1.02, 0.9, 0.3, 0.36, 0.31, 0.3, 0.52, 0.44, 0.76, 0.39, 1.38, 0.82, 2.19, 0.39, 0.32, 0.71, 1.02, 0.71, 2.18, 2.14, 0.3, 0.31, 0.31, 0.52, 0.3, 0.33, 1.52, 0.41, 0.43, 0.72, 0.33, 0.71, 0.56, 2.01, 2.01, 0.72, 1.01, 1.01, 1.55, 0.3, 1.05, 1, 0.36, 1.16, 0.3, 0.4, 0.41, 2.01, 0.33, 0.32, 1.7, 0.36, 0.36, 0.75, 2.5, 0.4, 0.71, 1.06, 0.3, 1.01, 1.21, 1.5, 0.7, 1.01, 0.73, 0.71, 1.01, 1.02, 0.37, 0.72, 0.42, 0.33, 1.01, 1.54, 0.5, 0.79, 0.41, 0.41, 1.55, 1.02, 1.21, 1.24, 0.93, 1.51, 1.02, 0.42, 1.26, 1.2, 1.5, 0.91, 0.52, 0.25, 1.23, 0.43, 0.76, 0.36, 1.51, 1, 0.72, 1.5, 0.33, 0.41, 0.9, 1.04, 0.4, 1.19, 0.34, 1.01, 1, 1.86, 0.61, 0.42, 0.32, 0.55, 0.54, 2, 1.13, 0.4, 0.3, 0.71, 1.09, 0.73, 0.31, 0.38, 0.37, 0.5, 0.51, 1.51, 0.33, 0.55, 0.9, 2, 0.94, 0.71, 0.87, 1.13, 0.51, 0.32, 1.5, 1.07, 1.09, 0.71, 0.53, 0.7, 1.51, 0.53, 0.74, 1.22, 2.01, 0.31, 2.01, 0.4, 0.33, 1.2, 0.34, 1.03, 1.01, 2.01, 0.41, 0.41, 0.92, 0.34, 0.52, 0.3, 1.08, 1.04, 0.48, 0.67, 0.54, 0.61, 1.1, 0.52, 0.9, 1, 1.12, 1.06, 1.01, 1.53, 1.58, 2.03, 0.61, 0.79, 0.23, 0.72, 0.4, 0.3, 1, 1.58, 0.71, 0.78, 0.77, 2.14, 0.71, 0.7, 0.3, 1.19, 0.3, 1.46, 1.37, 1.28, 0.91, 0.37, 1.27, 0.7, 0.71, 1.24, 1],
+        "y": [5656, 709, 565, 13917, 15334, 1443, 8520, 702, 4544, 838, 1875, 6076, 9586, 1196, 925, 4919, 8002, 8055, 975, 684, 1020, 687, 1132, 10696, 4559, 1235, 1872, 706, 6031, 15829, 2201, 7693, 2374, 984, 1917, 4654, 844, 2656, 4158, 7186, 526, 1261, 1607, 798, 16062, 1270, 530, 4956, 6612, 7179, 4849, 599, 5966, 776, 5588, 4093, 598, 788, 596, 13498, 878, 2406, 942, 12141, 8001, 12841, 12156, 5456, 983, 10256, 7113, 743, 2458, 907, 834, 1746, 1243, 1632, 3729, 13102, 453, 2125, 2591, 3107, 754, 1079, 602, 6471, 1079, 2030, 4980, 8008, 12308, 2026, 9178, 652, 579, 3014, 1237, 7098, 2741, 3142, 8102, 739, 958, 2493, 1000, 2840, 683, 1637, 1415, 3603, 5361, 2443, 3105, 2093, 1061, 4864, 1656, 9494, 9295, 14182, 764, 7802, 2999, 2693, 2386, 707, 3841, 5338, 1755, 1090, 16575, 756, 2872, 14111, 3159, 13367, 844, 933, 3674, 580, 2036, 4078, 1065, 2339, 3170, 558, 4849, 17433, 2167, 4232, 4525, 458, 1453, 1665, 1306, 2903, 988, 1446, 734, 14837, 4456, 3697, 4465, 2974, 1014, 499, 1743, 11520, 10454, 765, 1580, 1332, 7056, 2383, 886, 13001, 801, 6220, 1037, 540, 477, 4704, 620, 4089, 3911, 6407, 1641, 2657, 11502, 4880, 2416, 904, 608, 4039, 789, 4052, 1304, 8416, 2368, 2063, 1574, 6856, 1834, 1369, 807, 3488, 10698, 7541, 1132, 5078, 607, 7889, 465, 1917, 1107, 12853, 3084, 734, 11600, 789, 2337, 5842, 899, 3537, 3472, 8442, 6387, 706, 8419, 1668, 827, 9541, 6432, 8810, 992, 2312, 1234, 5087, 1029, 908, 485, 6047, 1018, 904, 3140, 3363, 6048, 6479, 2364, 9139, 8509, 1662, 1678, 6843, 4170, 816, 1318, 7351, 1996, 4826, 505, 1143, 2042, 6944, 3665, 2041, 2358, 922, 1107, 11640, 3992, 935, 1069, 15166, 4543, 936, 5723, 7453, 4974, 2873, 8649, 721, 943, 1107, 544, 4465, 6982, 4172, 854, 7148, 878, 6499, 3470, 905, 1163, 707, 684, 1689, 883, 2326, 816, 15968, 2499, 15801, 889, 783, 2308, 8303, 1826, 12631, 16390, 639, 816, 791, 1280, 709, 1207, 9781, 647, 661, 2642, 631, 2667, 1286, 18640, 17014, 2731, 5751, 4578, 9557, 684, 5433, 8602, 753, 4958, 506, 855, 1079, 11526, 752, 603, 13256, 587, 810, 2363, 14502, 1125, 2913, 4541, 857, 4479, 7826, 4704, 1935, 5317, 2565, 2922, 3897, 5430, 1041, 3043, 700, 946, 6425, 9055, 1068, 2389, 1163, 755, 13171, 7861, 8877, 4916, 4229, 9069, 5773, 992, 9907, 5765, 9573, 4816, 1591, 363, 9319, 739, 2443, 878, 7208, 7146, 2265, 8770, 723, 647, 4229, 5353, 1028, 6363, 647, 5988, 8020, 11416, 1368, 653, 482, 1667, 1662, 9193, 4371, 855, 605, 2145, 4395, 2393, 553, 1004, 839, 1220, 1895, 17936, 1114, 2132, 3724, 16291, 4817, 2633, 3090, 5052, 1882, 576, 8316, 4458, 4496, 2450, 1408, 2326, 9513, 1690, 3388, 6469, 15675, 871, 17838, 1333, 723, 7761, 895, 5337, 5756, 18736, 1079, 1241, 3986, 803, 2012, 844, 5927, 7738, 918, 1981, 1057, 2075, 8796, 1694, 3288, 5557, 8251, 8003, 6041, 9022, 7592, 6002, 1356, 2633, 493, 2720, 772, 755, 5322, 12530, 2637, 3613, 3253, 15913, 3281, 2306, 844, 5825, 552, 7931, 8424, 7109, 3863, 746, 7176, 2777, 2623, 8299, 5082],
+        "text": ["Clarity:  SI1<br>carat (size): 0.9", "Clarity:  SI1<br>carat (size): 0.3", "Clarity:  VS1<br>carat (size): 0.3", "Clarity:  VS2<br>carat (size): 1.58", "Clarity:  VVS1<br>carat (size): 1.56", "Clarity:  SI1<br>carat (size): 0.51", "Clarity:  VS2<br>carat (size): 1.16", "Clarity:  VS1<br>carat (size): 0.32", "Clarity:  SI2<br>carat (size): 1.08", "Clarity:  VVS1<br>carat (size): 0.3", "Clarity:  VVS2<br>carat (size): 0.51", "Clarity:  VS1<br>carat (size): 1.07", "Clarity:  VS2<br>carat (size): 1.7", "Clarity:  VVS1<br>carat (size): 0.44", "Clarity:  VS2<br>carat (size): 0.4", "Clarity:  SI1<br>carat (size): 0.91", "Clarity:  IF<br>carat (size): 1", "Clarity:  VVS2<br>carat (size): 1.47", "Clarity:  VVS1<br>carat (size): 0.31", "Clarity:  VVS2<br>carat (size): 0.3", "Clarity:  SI2<br>carat (size): 0.5", "Clarity:  VVS1<br>carat (size): 0.31", "Clarity:  SI1<br>carat (size): 0.53", "Clarity:  SI1<br>carat (size): 1.51", "Clarity:  SI1<br>carat (size): 1.01", "Clarity:  VVS1<br>carat (size): 0.42", "Clarity:  VS1<br>carat (size): 0.52", "Clarity:  VS1<br>carat (size): 0.35", "Clarity:  SI2<br>carat (size): 1.21", "Clarity:  VS2<br>carat (size): 1.71", "Clarity:  VS1<br>carat (size): 0.6", "Clarity:  SI2<br>carat (size): 1.51", "Clarity:  VS2<br>carat (size): 0.74", "Clarity:  VVS1<br>carat (size): 0.35", "Clarity:  SI1<br>carat (size): 0.71", "Clarity:  SI2<br>carat (size): 1.06", "Clarity:  VVS2<br>carat (size): 0.37", "Clarity:  SI1<br>carat (size): 0.7", "Clarity:  SI2<br>carat (size): 1.36", "Clarity:  VS1<br>carat (size): 1.52", "Clarity:  SI1<br>carat (size): 0.3", "Clarity:  VS2<br>carat (size): 0.49", "Clarity:  VS1<br>carat (size): 0.53", "Clarity:  SI2<br>carat (size): 0.4", "Clarity:  VS2<br>carat (size): 2.3", "Clarity:  SI1<br>carat (size): 0.56", "Clarity:  SI1<br>carat (size): 0.31", "Clarity:  SI1<br>carat (size): 1", "Clarity:  VS2<br>carat (size): 1", "Clarity:  VS2<br>carat (size): 1.01", "Clarity:  SI1<br>carat (size): 1.09", "Clarity:  VVS2<br>carat (size): 0.26", "Clarity:  VS1<br>carat (size): 1.22", "Clarity:  VVS2<br>carat (size): 0.3", "Clarity:  VS1<br>carat (size): 1.27", "Clarity:  VS2<br>carat (size): 0.9", "Clarity:  VS1<br>carat (size): 0.28", "Clarity:  SI1<br>carat (size): 0.35", "Clarity:  VS2<br>carat (size): 0.34", "Clarity:  SI2<br>carat (size): 2.01", "Clarity:  VVS2<br>carat (size): 0.3", "Clarity:  VS1<br>carat (size): 0.65", "Clarity:  VS2<br>carat (size): 0.31", "Clarity:  SI1<br>carat (size): 1.51", "Clarity:  SI2<br>carat (size): 1.57", "Clarity:  VVS2<br>carat (size): 1.28", "Clarity:  VS2<br>carat (size): 1.5", "Clarity:  SI1<br>carat (size): 1.02", "Clarity:  SI2<br>carat (size): 0.51", "Clarity:  VS1<br>carat (size): 1.5", "Clarity:  VS2<br>carat (size): 1.16", "Clarity:  VS1<br>carat (size): 0.33", "Clarity:  SI1<br>carat (size): 0.71", "Clarity:  VVS2<br>carat (size): 0.31", "Clarity:  VVS2<br>carat (size): 0.32", "Clarity:  VS2<br>carat (size): 0.5", "Clarity:  VVS2<br>carat (size): 0.41", "Clarity:  VS2<br>carat (size): 0.5", "Clarity:  SI2<br>carat (size): 0.97", "Clarity:  VS2<br>carat (size): 1.73", "Clarity:  VS1<br>carat (size): 0.26", "Clarity:  VVS2<br>carat (size): 0.59", "Clarity:  VS2<br>carat (size): 0.7", "Clarity:  SI1<br>carat (size): 0.79", "Clarity:  SI1<br>carat (size): 0.43", "Clarity:  VS1<br>carat (size): 0.41", "Clarity:  VS1<br>carat (size): 0.32", "Clarity:  VS2<br>carat (size): 1.07", "Clarity:  VS1<br>carat (size): 0.41", "Clarity:  VS2<br>carat (size): 0.55", "Clarity:  SI1<br>carat (size): 1.14", "Clarity:  VVS1<br>carat (size): 1", "Clarity:  VS2<br>carat (size): 1.54", "Clarity:  VS1<br>carat (size): 0.56", "Clarity:  VS1<br>carat (size): 1.36", "Clarity:  IF<br>carat (size): 0.31", "Clarity:  VS2<br>carat (size): 0.33", "Clarity:  SI1<br>carat (size): 0.73", "Clarity:  SI1<br>carat (size): 0.5", "Clarity:  SI2<br>carat (size): 1.5", "Clarity:  VS1<br>carat (size): 0.7", "Clarity:  SI2<br>carat (size): 1.02", "Clarity:  SI1<br>carat (size): 1.42", "Clarity:  SI1<br>carat (size): 0.43", "Clarity:  VS2<br>carat (size): 0.42", "Clarity:  VVS1<br>carat (size): 0.72", "Clarity:  VS1<br>carat (size): 0.38", "Clarity:  SI2<br>carat (size): 0.75", "Clarity:  SI2<br>carat (size): 0.41", "Clarity:  VS2<br>carat (size): 0.54", "Clarity:  VVS1<br>carat (size): 0.5", "Clarity:  VS1<br>carat (size): 0.8", "Clarity:  SI1<br>carat (size): 1.05", "Clarity:  VS1<br>carat (size): 0.7", "Clarity:  SI2<br>carat (size): 0.9", "Clarity:  SI2<br>carat (size): 0.75", "Clarity:  VVS2<br>carat (size): 0.48", "Clarity:  SI2<br>carat (size): 1.31", "Clarity:  SI1<br>carat (size): 0.52", "Clarity:  SI2<br>carat (size): 1.73", "Clarity:  VS2<br>carat (size): 1.56", "Clarity:  VS2<br>carat (size): 2.02", "Clarity:  VVS1<br>carat (size): 0.3", "Clarity:  I1<br>carat (size): 1.72", "Clarity:  VS1<br>carat (size): 0.74", "Clarity:  SI2<br>carat (size): 0.9", "Clarity:  VVS2<br>carat (size): 0.71", "Clarity:  SI1<br>carat (size): 0.4", "Clarity:  SI1<br>carat (size): 0.9", "Clarity:  SI1<br>carat (size): 1.13", "Clarity:  VS1<br>carat (size): 0.5", "Clarity:  VVS2<br>carat (size): 0.4", "Clarity:  SI2<br>carat (size): 2.25", "Clarity:  SI1<br>carat (size): 0.32", "Clarity:  SI1<br>carat (size): 0.7", "Clarity:  VS2<br>carat (size): 2.05", "Clarity:  VS2<br>carat (size): 0.78", "Clarity:  SI1<br>carat (size): 1.91", "Clarity:  VS2<br>carat (size): 0.3", "Clarity:  VS2<br>carat (size): 0.36", "Clarity:  SI1<br>carat (size): 0.71", "Clarity:  VS1<br>carat (size): 0.26", "Clarity:  SI2<br>carat (size): 0.71", "Clarity:  SI2<br>carat (size): 1.19", "Clarity:  SI1<br>carat (size): 0.54", "Clarity:  VVS1<br>carat (size): 0.57", "Clarity:  SI1<br>carat (size): 0.76", "Clarity:  VS1<br>carat (size): 0.25", "Clarity:  SI1<br>carat (size): 0.96", "Clarity:  VS2<br>carat (size): 2.01", "Clarity:  VS2<br>carat (size): 0.56", "Clarity:  SI1<br>carat (size): 0.9", "Clarity:  SI1<br>carat (size): 1.01", "Clarity:  VS1<br>carat (size): 0.28", "Clarity:  SI1<br>carat (size): 0.58", "Clarity:  VS1<br>carat (size): 0.54", "Clarity:  VS2<br>carat (size): 0.5", "Clarity:  SI1<br>carat (size): 0.75", "Clarity:  VS1<br>carat (size): 0.51", "Clarity:  VS2<br>carat (size): 0.52", "Clarity:  VS2<br>carat (size): 0.31", "Clarity:  SI1<br>carat (size): 2.01", "Clarity:  SI2<br>carat (size): 1.09", "Clarity:  SI2<br>carat (size): 0.92", "Clarity:  SI2<br>carat (size): 1.06", "Clarity:  SI1<br>carat (size): 0.9", "Clarity:  VVS1<br>carat (size): 0.34", "Clarity:  SI1<br>carat (size): 0.3", "Clarity:  VS1<br>carat (size): 0.55", "Clarity:  SI2<br>carat (size): 1.86", "Clarity:  VVS2<br>carat (size): 1.2", "Clarity:  VS2<br>carat (size): 0.34", "Clarity:  SI1<br>carat (size): 0.55", "Clarity:  VS2<br>carat (size): 0.5", "Clarity:  VS2<br>carat (size): 1.05", "Clarity:  VS2<br>carat (size): 0.72", "Clarity:  IF<br>carat (size): 0.3", "Clarity:  VS2<br>carat (size): 1.52", "Clarity:  VVS1<br>carat (size): 0.32", "Clarity:  VS2<br>carat (size): 1.02", "Clarity:  SI1<br>carat (size): 0.57", "Clarity:  SI2<br>carat (size): 0.32", "Clarity:  SI2<br>carat (size): 0.32", "Clarity:  SI2<br>carat (size): 1", "Clarity:  VVS2<br>carat (size): 0.27", "Clarity:  SI1<br>carat (size): 0.85", "Clarity:  SI1<br>carat (size): 0.91", "Clarity:  VS1<br>carat (size): 1.01", "Clarity:  VS2<br>carat (size): 0.63", "Clarity:  VS2<br>carat (size): 0.7", "Clarity:  SI2<br>carat (size): 2.29", "Clarity:  SI2<br>carat (size): 1.21", "Clarity:  SI1<br>carat (size): 0.71", "Clarity:  SI1<br>carat (size): 0.41", "Clarity:  VS1<br>carat (size): 0.3", "Clarity:  VS1<br>carat (size): 0.77", "Clarity:  VVS1<br>carat (size): 0.31", "Clarity:  SI2<br>carat (size): 0.99", "Clarity:  VS1<br>carat (size): 0.54", "Clarity:  VS1<br>carat (size): 1.01", "Clarity:  VS1<br>carat (size): 0.71", "Clarity:  IF<br>carat (size): 0.51", "Clarity:  VS2<br>carat (size): 0.51", "Clarity:  VS2<br>carat (size): 1.06", "Clarity:  VS1<br>carat (size): 0.46", "Clarity:  SI1<br>carat (size): 0.52", "Clarity:  VS1<br>carat (size): 0.4", "Clarity:  VS1<br>carat (size): 0.77", "Clarity:  SI2<br>carat (size): 1.53", "Clarity:  VS2<br>carat (size): 1.06", "Clarity:  SI2<br>carat (size): 0.53", "Clarity:  SI1<br>carat (size): 1.08", "Clarity:  VVS1<br>carat (size): 0.29", "Clarity:  IF<br>carat (size): 0.83", "Clarity:  VVS2<br>carat (size): 0.23", "Clarity:  VS2<br>carat (size): 0.71", "Clarity:  SI1<br>carat (size): 0.51", "Clarity:  SI2<br>carat (size): 2.18", "Clarity:  SI2<br>carat (size): 0.9", "Clarity:  VS2<br>carat (size): 0.31", "Clarity:  SI2<br>carat (size): 2", "Clarity:  VS2<br>carat (size): 0.36", "Clarity:  VS2<br>carat (size): 0.73", "Clarity:  SI2<br>carat (size): 1.17", "Clarity:  VS1<br>carat (size): 0.41", "Clarity:  VVS1<br>carat (size): 0.74", "Clarity:  VS1<br>carat (size): 0.7", "Clarity:  VS1<br>carat (size): 1.2", "Clarity:  SI2<br>carat (size): 1.46", "Clarity:  VVS2<br>carat (size): 0.35", "Clarity:  I1<br>carat (size): 2.68", "Clarity:  SI1<br>carat (size): 0.55", "Clarity:  VS2<br>carat (size): 0.41", "Clarity:  VS1<br>carat (size): 1.21", "Clarity:  VS2<br>carat (size): 1.02", "Clarity:  SI2<br>carat (size): 1.52", "Clarity:  IF<br>carat (size): 0.33", "Clarity:  VVS2<br>carat (size): 0.55", "Clarity:  SI2<br>carat (size): 0.58", "Clarity:  SI1<br>carat (size): 1.03", "Clarity:  SI2<br>carat (size): 0.51", "Clarity:  VS2<br>carat (size): 0.42", "Clarity:  IF<br>carat (size): 0.23", "Clarity:  SI1<br>carat (size): 1.02", "Clarity:  IF<br>carat (size): 0.32", "Clarity:  VVS1<br>carat (size): 0.38", "Clarity:  VS2<br>carat (size): 0.72", "Clarity:  VVS1<br>carat (size): 0.76", "Clarity:  VS2<br>carat (size): 1", "Clarity:  VS1<br>carat (size): 1.03", "Clarity:  SI1<br>carat (size): 0.72", "Clarity:  VVS1<br>carat (size): 1.2", "Clarity:  VVS2<br>carat (size): 1.23", "Clarity:  VS2<br>carat (size): 0.54", "Clarity:  VS1<br>carat (size): 0.53", "Clarity:  VS2<br>carat (size): 1.01", "Clarity:  SI2<br>carat (size): 1", "Clarity:  VVS1<br>carat (size): 0.31", "Clarity:  IF<br>carat (size): 0.43", "Clarity:  VS1<br>carat (size): 1.02", "Clarity:  SI2<br>carat (size): 0.77", "Clarity:  SI2<br>carat (size): 1.17", "Clarity:  VS2<br>carat (size): 0.32", "Clarity:  VS1<br>carat (size): 0.47", "Clarity:  SI1<br>carat (size): 0.7", "Clarity:  VS2<br>carat (size): 1.19", "Clarity:  I1<br>carat (size): 1.27", "Clarity:  VS2<br>carat (size): 0.62", "Clarity:  SI1<br>carat (size): 0.76", "Clarity:  VVS2<br>carat (size): 0.33", "Clarity:  VVS1<br>carat (size): 0.41", "Clarity:  VVS1<br>carat (size): 1.34", "Clarity:  SI1<br>carat (size): 0.9", "Clarity:  SI2<br>carat (size): 0.43", "Clarity:  VVS1<br>carat (size): 0.3", "Clarity:  SI2<br>carat (size): 2.16", "Clarity:  SI2<br>carat (size): 1.25", "Clarity:  VVS2<br>carat (size): 0.32", "Clarity:  SI2<br>carat (size): 1.4", "Clarity:  SI2<br>carat (size): 1.34", "Clarity:  SI2<br>carat (size): 1.03", "Clarity:  VS2<br>carat (size): 0.76", "Clarity:  SI2<br>carat (size): 1.5", "Clarity:  VVS2<br>carat (size): 0.38", "Clarity:  IF<br>carat (size): 0.32", "Clarity:  VS2<br>carat (size): 0.41", "Clarity:  VS2<br>carat (size): 0.31", "Clarity:  SI1<br>carat (size): 1.09", "Clarity:  VS2<br>carat (size): 1.52", "Clarity:  VS2<br>carat (size): 1", "Clarity:  VS2<br>carat (size): 0.33", "Clarity:  VS2<br>carat (size): 1.33", "Clarity:  VVS1<br>carat (size): 0.3", "Clarity:  VS2<br>carat (size): 1.02", "Clarity:  SI2<br>carat (size): 0.9", "Clarity:  VVS1<br>carat (size): 0.3", "Clarity:  IF<br>carat (size): 0.36", "Clarity:  SI1<br>carat (size): 0.31", "Clarity:  VVS2<br>carat (size): 0.3", "Clarity:  VS2<br>carat (size): 0.52", "Clarity:  SI1<br>carat (size): 0.44", "Clarity:  SI1<br>carat (size): 0.76", "Clarity:  VS2<br>carat (size): 0.39", "Clarity:  VVS1<br>carat (size): 1.38", "Clarity:  SI2<br>carat (size): 0.82", "Clarity:  SI1<br>carat (size): 2.19", "Clarity:  VS2<br>carat (size): 0.39", "Clarity:  IF<br>carat (size): 0.32", "Clarity:  SI1<br>carat (size): 0.71", "Clarity:  VS1<br>carat (size): 1.02", "Clarity:  SI2<br>carat (size): 0.71", "Clarity:  SI2<br>carat (size): 2.18", "Clarity:  VS2<br>carat (size): 2.14", "Clarity:  VVS1<br>carat (size): 0.3", "Clarity:  VVS2<br>carat (size): 0.31", "Clarity:  VVS2<br>carat (size): 0.31", "Clarity:  SI1<br>carat (size): 0.52", "Clarity:  VVS1<br>carat (size): 0.3", "Clarity:  VVS1<br>carat (size): 0.33", "Clarity:  SI2<br>carat (size): 1.52", "Clarity:  VS1<br>carat (size): 0.41", "Clarity:  SI2<br>carat (size): 0.43", "Clarity:  SI1<br>carat (size): 0.72", "Clarity:  SI2<br>carat (size): 0.33", "Clarity:  SI2<br>carat (size): 0.71", "Clarity:  SI2<br>carat (size): 0.56", "Clarity:  VS2<br>carat (size): 2.01", "Clarity:  SI2<br>carat (size): 2.01", "Clarity:  SI1<br>carat (size): 0.72", "Clarity:  SI1<br>carat (size): 1.01", "Clarity:  SI1<br>carat (size): 1.01", "Clarity:  SI2<br>carat (size): 1.55", "Clarity:  VVS2<br>carat (size): 0.3", "Clarity:  SI1<br>carat (size): 1.05", "Clarity:  VVS2<br>carat (size): 1", "Clarity:  VS1<br>carat (size): 0.36", "Clarity:  VS2<br>carat (size): 1.16", "Clarity:  VS1<br>carat (size): 0.3", "Clarity:  SI2<br>carat (size): 0.4", "Clarity:  VS1<br>carat (size): 0.41", "Clarity:  VS1<br>carat (size): 2.01", "Clarity:  VVS2<br>carat (size): 0.33", "Clarity:  VS2<br>carat (size): 0.32", "Clarity:  SI1<br>carat (size): 1.7", "Clarity:  VS2<br>carat (size): 0.36", "Clarity:  VS1<br>carat (size): 0.36", "Clarity:  SI1<br>carat (size): 0.75", "Clarity:  SI2<br>carat (size): 2.5", "Clarity:  VS1<br>carat (size): 0.4", "Clarity:  SI1<br>carat (size): 0.71", "Clarity:  SI2<br>carat (size): 1.06", "Clarity:  VS2<br>carat (size): 0.3", "Clarity:  SI2<br>carat (size): 1.01", "Clarity:  VS2<br>carat (size): 1.21", "Clarity:  SI2<br>carat (size): 1.5", "Clarity:  SI2<br>carat (size): 0.7", "Clarity:  VS2<br>carat (size): 1.01", "Clarity:  VVS2<br>carat (size): 0.73", "Clarity:  VS2<br>carat (size): 0.71", "Clarity:  SI2<br>carat (size): 1.01", "Clarity:  SI1<br>carat (size): 1.02", "Clarity:  VS2<br>carat (size): 0.37", "Clarity:  VVS2<br>carat (size): 0.72", "Clarity:  SI1<br>carat (size): 0.42", "Clarity:  IF<br>carat (size): 0.33", "Clarity:  VS2<br>carat (size): 1.01", "Clarity:  SI2<br>carat (size): 1.54", "Clarity:  SI2<br>carat (size): 0.5", "Clarity:  SI1<br>carat (size): 0.79", "Clarity:  VS2<br>carat (size): 0.41", "Clarity:  SI1<br>carat (size): 0.41", "Clarity:  SI1<br>carat (size): 1.55", "Clarity:  VVS1<br>carat (size): 1.02", "Clarity:  VS2<br>carat (size): 1.21", "Clarity:  SI1<br>carat (size): 1.24", "Clarity:  SI1<br>carat (size): 0.93", "Clarity:  SI1<br>carat (size): 1.51", "Clarity:  SI1<br>carat (size): 1.02", "Clarity:  SI1<br>carat (size): 0.42", "Clarity:  VS1<br>carat (size): 1.26", "Clarity:  VS1<br>carat (size): 1.2", "Clarity:  SI1<br>carat (size): 1.5", "Clarity:  SI1<br>carat (size): 0.91", "Clarity:  VS2<br>carat (size): 0.52", "Clarity:  SI1<br>carat (size): 0.25", "Clarity:  VS1<br>carat (size): 1.23", "Clarity:  SI1<br>carat (size): 0.43", "Clarity:  SI1<br>carat (size): 0.76", "Clarity:  VS2<br>carat (size): 0.36", "Clarity:  SI2<br>carat (size): 1.51", "Clarity:  VS2<br>carat (size): 1", "Clarity:  VS1<br>carat (size): 0.72", "Clarity:  SI1<br>carat (size): 1.5", "Clarity:  VS2<br>carat (size): 0.33", "Clarity:  VS1<br>carat (size): 0.41", "Clarity:  VS2<br>carat (size): 0.9", "Clarity:  VS2<br>carat (size): 1.04", "Clarity:  VVS2<br>carat (size): 0.4", "Clarity:  VS2<br>carat (size): 1.19", "Clarity:  SI1<br>carat (size): 0.34", "Clarity:  VS2<br>carat (size): 1.01", "Clarity:  VS1<br>carat (size): 1", "Clarity:  SI2<br>carat (size): 1.86", "Clarity:  SI2<br>carat (size): 0.61", "Clarity:  SI2<br>carat (size): 0.42", "Clarity:  SI1<br>carat (size): 0.32", "Clarity:  VS1<br>carat (size): 0.55", "Clarity:  VS2<br>carat (size): 0.54", "Clarity:  SI1<br>carat (size): 2", "Clarity:  SI2<br>carat (size): 1.13", "Clarity:  SI1<br>carat (size): 0.4", "Clarity:  VS2<br>carat (size): 0.3", "Clarity:  VS2<br>carat (size): 0.71", "Clarity:  SI2<br>carat (size): 1.09", "Clarity:  VS1<br>carat (size): 0.73", "Clarity:  SI1<br>carat (size): 0.31", "Clarity:  VS1<br>carat (size): 0.38", "Clarity:  VVS2<br>carat (size): 0.37", "Clarity:  VS2<br>carat (size): 0.5", "Clarity:  VVS2<br>carat (size): 0.51", "Clarity:  VS1<br>carat (size): 1.51", "Clarity:  IF<br>carat (size): 0.33", "Clarity:  VS1<br>carat (size): 0.55", "Clarity:  SI1<br>carat (size): 0.9", "Clarity:  VS2<br>carat (size): 2", "Clarity:  SI1<br>carat (size): 0.94", "Clarity:  SI2<br>carat (size): 0.71", "Clarity:  SI2<br>carat (size): 0.87", "Clarity:  SI2<br>carat (size): 1.13", "Clarity:  VS2<br>carat (size): 0.51", "Clarity:  VS2<br>carat (size): 0.32", "Clarity:  VS2<br>carat (size): 1.5", "Clarity:  VS2<br>carat (size): 1.07", "Clarity:  SI2<br>carat (size): 1.09", "Clarity:  VVS2<br>carat (size): 0.71", "Clarity:  SI1<br>carat (size): 0.53", "Clarity:  SI2<br>carat (size): 0.7", "Clarity:  SI2<br>carat (size): 1.51", "Clarity:  VS2<br>carat (size): 0.53", "Clarity:  VVS1<br>carat (size): 0.74", "Clarity:  VS1<br>carat (size): 1.22", "Clarity:  VS2<br>carat (size): 2.01", "Clarity:  IF<br>carat (size): 0.31", "Clarity:  VS1<br>carat (size): 2.01", "Clarity:  IF<br>carat (size): 0.4", "Clarity:  VS2<br>carat (size): 0.33", "Clarity:  SI1<br>carat (size): 1.2", "Clarity:  VVS1<br>carat (size): 0.34", "Clarity:  SI1<br>carat (size): 1.03", "Clarity:  VS2<br>carat (size): 1.01", "Clarity:  SI1<br>carat (size): 2.01", "Clarity:  VS1<br>carat (size): 0.41", "Clarity:  VVS1<br>carat (size): 0.41", "Clarity:  SI1<br>carat (size): 0.92", "Clarity:  SI1<br>carat (size): 0.34", "Clarity:  VVS2<br>carat (size): 0.52", "Clarity:  VS2<br>carat (size): 0.3", "Clarity:  SI1<br>carat (size): 1.08", "Clarity:  VVS1<br>carat (size): 1.04", "Clarity:  SI2<br>carat (size): 0.48", "Clarity:  VS1<br>carat (size): 0.67", "Clarity:  SI1<br>carat (size): 0.54", "Clarity:  VS2<br>carat (size): 0.61", "Clarity:  VS1<br>carat (size): 1.1", "Clarity:  VS2<br>carat (size): 0.52", "Clarity:  VVS2<br>carat (size): 0.9", "Clarity:  VS1<br>carat (size): 1", "Clarity:  VS2<br>carat (size): 1.12", "Clarity:  VVS2<br>carat (size): 1.06", "Clarity:  VS2<br>carat (size): 1.01", "Clarity:  SI1<br>carat (size): 1.53", "Clarity:  VVS2<br>carat (size): 1.58", "Clarity:  I1<br>carat (size): 2.03", "Clarity:  SI1<br>carat (size): 0.61", "Clarity:  SI1<br>carat (size): 0.79", "Clarity:  VS1<br>carat (size): 0.23", "Clarity:  VVS2<br>carat (size): 0.72", "Clarity:  SI1<br>carat (size): 0.4", "Clarity:  VS1<br>carat (size): 0.3", "Clarity:  VS2<br>carat (size): 1", "Clarity:  VS1<br>carat (size): 1.58", "Clarity:  VS1<br>carat (size): 0.71", "Clarity:  VS2<br>carat (size): 0.78", "Clarity:  SI1<br>carat (size): 0.77", "Clarity:  SI1<br>carat (size): 2.14", "Clarity:  VS1<br>carat (size): 0.71", "Clarity:  SI1<br>carat (size): 0.7", "Clarity:  VS1<br>carat (size): 0.3", "Clarity:  SI1<br>carat (size): 1.19", "Clarity:  SI1<br>carat (size): 0.3", "Clarity:  SI2<br>carat (size): 1.46", "Clarity:  VS1<br>carat (size): 1.37", "Clarity:  SI1<br>carat (size): 1.28", "Clarity:  VS1<br>carat (size): 0.91", "Clarity:  VS2<br>carat (size): 0.37", "Clarity:  VS2<br>carat (size): 1.27", "Clarity:  SI1<br>carat (size): 0.7", "Clarity:  VS2<br>carat (size): 0.71", "Clarity:  VS1<br>carat (size): 1.24", "Clarity:  SI1<br>carat (size): 1"],
+        "mode": "markers",
+        "size": [0.9, 0.3, 0.3, 1.58, 1.56, 0.51, 1.16, 0.32, 1.08, 0.3, 0.51, 1.07, 1.7, 0.44, 0.4, 0.91, 1, 1.47, 0.31, 0.3, 0.5, 0.31, 0.53, 1.51, 1.01, 0.42, 0.52, 0.35, 1.21, 1.71, 0.6, 1.51, 0.74, 0.35, 0.71, 1.06, 0.37, 0.7, 1.36, 1.52, 0.3, 0.49, 0.53, 0.4, 2.3, 0.56, 0.31, 1, 1, 1.01, 1.09, 0.26, 1.22, 0.3, 1.27, 0.9, 0.28, 0.35, 0.34, 2.01, 0.3, 0.65, 0.31, 1.51, 1.57, 1.28, 1.5, 1.02, 0.51, 1.5, 1.16, 0.33, 0.71, 0.31, 0.32, 0.5, 0.41, 0.5, 0.97, 1.73, 0.26, 0.59, 0.7, 0.79, 0.43, 0.41, 0.32, 1.07, 0.41, 0.55, 1.14, 1, 1.54, 0.56, 1.36, 0.31, 0.33, 0.73, 0.5, 1.5, 0.7, 1.02, 1.42, 0.43, 0.42, 0.72, 0.38, 0.75, 0.41, 0.54, 0.5, 0.8, 1.05, 0.7, 0.9, 0.75, 0.48, 1.31, 0.52, 1.73, 1.56, 2.02, 0.3, 1.72, 0.74, 0.9, 0.71, 0.4, 0.9, 1.13, 0.5, 0.4, 2.25, 0.32, 0.7, 2.05, 0.78, 1.91, 0.3, 0.36, 0.71, 0.26, 0.71, 1.19, 0.54, 0.57, 0.76, 0.25, 0.96, 2.01, 0.56, 0.9, 1.01, 0.28, 0.58, 0.54, 0.5, 0.75, 0.51, 0.52, 0.31, 2.01, 1.09, 0.92, 1.06, 0.9, 0.34, 0.3, 0.55, 1.86, 1.2, 0.34, 0.55, 0.5, 1.05, 0.72, 0.3, 1.52, 0.32, 1.02, 0.57, 0.32, 0.32, 1, 0.27, 0.85, 0.91, 1.01, 0.63, 0.7, 2.29, 1.21, 0.71, 0.41, 0.3, 0.77, 0.31, 0.99, 0.54, 1.01, 0.71, 0.51, 0.51, 1.06, 0.46, 0.52, 0.4, 0.77, 1.53, 1.06, 0.53, 1.08, 0.29, 0.83, 0.23, 0.71, 0.51, 2.18, 0.9, 0.31, 2, 0.36, 0.73, 1.17, 0.41, 0.74, 0.7, 1.2, 1.46, 0.35, 2.68, 0.55, 0.41, 1.21, 1.02, 1.52, 0.33, 0.55, 0.58, 1.03, 0.51, 0.42, 0.23, 1.02, 0.32, 0.38, 0.72, 0.76, 1, 1.03, 0.72, 1.2, 1.23, 0.54, 0.53, 1.01, 1, 0.31, 0.43, 1.02, 0.77, 1.17, 0.32, 0.47, 0.7, 1.19, 1.27, 0.62, 0.76, 0.33, 0.41, 1.34, 0.9, 0.43, 0.3, 2.16, 1.25, 0.32, 1.4, 1.34, 1.03, 0.76, 1.5, 0.38, 0.32, 0.41, 0.31, 1.09, 1.52, 1, 0.33, 1.33, 0.3, 1.02, 0.9, 0.3, 0.36, 0.31, 0.3, 0.52, 0.44, 0.76, 0.39, 1.38, 0.82, 2.19, 0.39, 0.32, 0.71, 1.02, 0.71, 2.18, 2.14, 0.3, 0.31, 0.31, 0.52, 0.3, 0.33, 1.52, 0.41, 0.43, 0.72, 0.33, 0.71, 0.56, 2.01, 2.01, 0.72, 1.01, 1.01, 1.55, 0.3, 1.05, 1, 0.36, 1.16, 0.3, 0.4, 0.41, 2.01, 0.33, 0.32, 1.7, 0.36, 0.36, 0.75, 2.5, 0.4, 0.71, 1.06, 0.3, 1.01, 1.21, 1.5, 0.7, 1.01, 0.73, 0.71, 1.01, 1.02, 0.37, 0.72, 0.42, 0.33, 1.01, 1.54, 0.5, 0.79, 0.41, 0.41, 1.55, 1.02, 1.21, 1.24, 0.93, 1.51, 1.02, 0.42, 1.26, 1.2, 1.5, 0.91, 0.52, 0.25, 1.23, 0.43, 0.76, 0.36, 1.51, 1, 0.72, 1.5, 0.33, 0.41, 0.9, 1.04, 0.4, 1.19, 0.34, 1.01, 1, 1.86, 0.61, 0.42, 0.32, 0.55, 0.54, 2, 1.13, 0.4, 0.3, 0.71, 1.09, 0.73, 0.31, 0.38, 0.37, 0.5, 0.51, 1.51, 0.33, 0.55, 0.9, 2, 0.94, 0.71, 0.87, 1.13, 0.51, 0.32, 1.5, 1.07, 1.09, 0.71, 0.53, 0.7, 1.51, 0.53, 0.74, 1.22, 2.01, 0.31, 2.01, 0.4, 0.33, 1.2, 0.34, 1.03, 1.01, 2.01, 0.41, 0.41, 0.92, 0.34, 0.52, 0.3, 1.08, 1.04, 0.48, 0.67, 0.54, 0.61, 1.1, 0.52, 0.9, 1, 1.12, 1.06, 1.01, 1.53, 1.58, 2.03, 0.61, 0.79, 0.23, 0.72, 0.4, 0.3, 1, 1.58, 0.71, 0.78, 0.77, 2.14, 0.71, 0.7, 0.3, 1.19, 0.3, 1.46, 1.37, 1.28, 0.91, 0.37, 1.27, 0.7, 0.71, 1.24, 1],
+        "marker": {
+          "colorbar": {
+            "title": "carat"
+          },
+          "colorscale": [
+            [0, "#440154"],
+            [0.111111111111111, "#482878"],
+            [0.222222222222222, "#3E4A89"],
+            [0.333333333333333, "#31688E"],
+            [0.444444444444444, "#26838E"],
+            [0.555555555555556, "#1F9D89"],
+            [0.666666666666667, "#35B779"],
+            [0.777777777777778, "#6CCE59"],
+            [0.888888888888889, "#B4DD2C"],
+            [1, "#FDE725"]
+          ],
+          "color": [0.9, 0.3, 0.3, 1.58, 1.56, 0.51, 1.16, 0.32, 1.08, 0.3, 0.51, 1.07, 1.7, 0.44, 0.4, 0.91, 1, 1.47, 0.31, 0.3, 0.5, 0.31, 0.53, 1.51, 1.01, 0.42, 0.52, 0.35, 1.21, 1.71, 0.6, 1.51, 0.74, 0.35, 0.71, 1.06, 0.37, 0.7, 1.36, 1.52, 0.3, 0.49, 0.53, 0.4, 2.3, 0.56, 0.31, 1, 1, 1.01, 1.09, 0.26, 1.22, 0.3, 1.27, 0.9, 0.28, 0.35, 0.34, 2.01, 0.3, 0.65, 0.31, 1.51, 1.57, 1.28, 1.5, 1.02, 0.51, 1.5, 1.16, 0.33, 0.71, 0.31, 0.32, 0.5, 0.41, 0.5, 0.97, 1.73, 0.26, 0.59, 0.7, 0.79, 0.43, 0.41, 0.32, 1.07, 0.41, 0.55, 1.14, 1, 1.54, 0.56, 1.36, 0.31, 0.33, 0.73, 0.5, 1.5, 0.7, 1.02, 1.42, 0.43, 0.42, 0.72, 0.38, 0.75, 0.41, 0.54, 0.5, 0.8, 1.05, 0.7, 0.9, 0.75, 0.48, 1.31, 0.52, 1.73, 1.56, 2.02, 0.3, 1.72, 0.74, 0.9, 0.71, 0.4, 0.9, 1.13, 0.5, 0.4, 2.25, 0.32, 0.7, 2.05, 0.78, 1.91, 0.3, 0.36, 0.71, 0.26, 0.71, 1.19, 0.54, 0.57, 0.76, 0.25, 0.96, 2.01, 0.56, 0.9, 1.01, 0.28, 0.58, 0.54, 0.5, 0.75, 0.51, 0.52, 0.31, 2.01, 1.09, 0.92, 1.06, 0.9, 0.34, 0.3, 0.55, 1.86, 1.2, 0.34, 0.55, 0.5, 1.05, 0.72, 0.3, 1.52, 0.32, 1.02, 0.57, 0.32, 0.32, 1, 0.27, 0.85, 0.91, 1.01, 0.63, 0.7, 2.29, 1.21, 0.71, 0.41, 0.3, 0.77, 0.31, 0.99, 0.54, 1.01, 0.71, 0.51, 0.51, 1.06, 0.46, 0.52, 0.4, 0.77, 1.53, 1.06, 0.53, 1.08, 0.29, 0.83, 0.23, 0.71, 0.51, 2.18, 0.9, 0.31, 2, 0.36, 0.73, 1.17, 0.41, 0.74, 0.7, 1.2, 1.46, 0.35, 2.68, 0.55, 0.41, 1.21, 1.02, 1.52, 0.33, 0.55, 0.58, 1.03, 0.51, 0.42, 0.23, 1.02, 0.32, 0.38, 0.72, 0.76, 1, 1.03, 0.72, 1.2, 1.23, 0.54, 0.53, 1.01, 1, 0.31, 0.43, 1.02, 0.77, 1.17, 0.32, 0.47, 0.7, 1.19, 1.27, 0.62, 0.76, 0.33, 0.41, 1.34, 0.9, 0.43, 0.3, 2.16, 1.25, 0.32, 1.4, 1.34, 1.03, 0.76, 1.5, 0.38, 0.32, 0.41, 0.31, 1.09, 1.52, 1, 0.33, 1.33, 0.3, 1.02, 0.9, 0.3, 0.36, 0.31, 0.3, 0.52, 0.44, 0.76, 0.39, 1.38, 0.82, 2.19, 0.39, 0.32, 0.71, 1.02, 0.71, 2.18, 2.14, 0.3, 0.31, 0.31, 0.52, 0.3, 0.33, 1.52, 0.41, 0.43, 0.72, 0.33, 0.71, 0.56, 2.01, 2.01, 0.72, 1.01, 1.01, 1.55, 0.3, 1.05, 1, 0.36, 1.16, 0.3, 0.4, 0.41, 2.01, 0.33, 0.32, 1.7, 0.36, 0.36, 0.75, 2.5, 0.4, 0.71, 1.06, 0.3, 1.01, 1.21, 1.5, 0.7, 1.01, 0.73, 0.71, 1.01, 1.02, 0.37, 0.72, 0.42, 0.33, 1.01, 1.54, 0.5, 0.79, 0.41, 0.41, 1.55, 1.02, 1.21, 1.24, 0.93, 1.51, 1.02, 0.42, 1.26, 1.2, 1.5, 0.91, 0.52, 0.25, 1.23, 0.43, 0.76, 0.36, 1.51, 1, 0.72, 1.5, 0.33, 0.41, 0.9, 1.04, 0.4, 1.19, 0.34, 1.01, 1, 1.86, 0.61, 0.42, 0.32, 0.55, 0.54, 2, 1.13, 0.4, 0.3, 0.71, 1.09, 0.73, 0.31, 0.38, 0.37, 0.5, 0.51, 1.51, 0.33, 0.55, 0.9, 2, 0.94, 0.71, 0.87, 1.13, 0.51, 0.32, 1.5, 1.07, 1.09, 0.71, 0.53, 0.7, 1.51, 0.53, 0.74, 1.22, 2.01, 0.31, 2.01, 0.4, 0.33, 1.2, 0.34, 1.03, 1.01, 2.01, 0.41, 0.41, 0.92, 0.34, 0.52, 0.3, 1.08, 1.04, 0.48, 0.67, 0.54, 0.61, 1.1, 0.52, 0.9, 1, 1.12, 1.06, 1.01, 1.53, 1.58, 2.03, 0.61, 0.79, 0.23, 0.72, 0.4, 0.3, 1, 1.58, 0.71, 0.78, 0.77, 2.14, 0.71, 0.7, 0.3, 1.19, 0.3, 1.46, 1.37, 1.28, 0.91, 0.37, 1.27, 0.7, 0.71, 1.24, 1],
+          "size": [116.846584761859, 38.9488615872863, 38.9488615872863, 205.130671026375, 202.534080253889, 66.2130646983867, 150.602264804174, 41.5454523597721, 140.215901714231, 38.9488615872863, 66.2130646983867, 138.917606327988, 220.710215661289, 57.1249969946866, 51.9318154497151, 118.144880148102, 129.829538624288, 190.849421777703, 40.2471569735292, 38.9488615872863, 64.9147693121439, 40.2471569735292, 68.8096554708725, 196.042603322674, 131.127834010531, 54.5284062222008, 67.5113600846296, 45.4403385185007, 157.093741735388, 222.008511047532, 77.8977231745726, 196.042603322674, 96.0738585819729, 45.4403385185007, 92.1789724232443, 137.619310941745, 48.0369292909865, 90.8806770370014, 176.568172529031, 197.340898708917, 38.9488615872863, 63.616473925901, 68.8096554708725, 51.9318154497151, 298.607938835862, 72.7045416296011, 40.2471569735292, 129.829538624288, 129.829538624288, 131.127834010531, 141.514197100474, 33.7556800423148, 158.392037121631, 38.9488615872863, 164.883514052845, 116.846584761859, 36.3522708148006, 45.4403385185007, 44.1420431322578, 260.957372634818, 38.9488615872863, 84.389200105787, 40.2471569735292, 196.042603322674, 203.832375640132, 166.181809439088, 194.744307936432, 132.426129396773, 66.2130646983867, 194.744307936432, 150.602264804174, 42.843747746015, 92.1789724232443, 40.2471569735292, 41.5454523597721, 64.9147693121439, 53.230110835958, 64.9147693121439, 125.934652465559, 224.605101820018, 33.7556800423148, 76.5994277883298, 90.8806770370014, 102.565335513187, 55.8267016084437, 53.230110835958, 41.5454523597721, 138.917606327988, 53.230110835958, 71.4062462433583, 148.005674031688, 129.829538624288, 199.937489481403, 72.7045416296011, 176.568172529031, 40.2471569735292, 42.843747746015, 94.7755631957301, 64.9147693121439, 194.744307936432, 90.8806770370014, 132.426129396773, 184.357944846489, 55.8267016084437, 54.5284062222008, 93.4772678094872, 49.3352246772293, 97.3721539682158, 53.230110835958, 70.1079508571154, 64.9147693121439, 103.86363089943, 136.321015555502, 90.8806770370014, 116.846584761859, 97.3721539682158, 62.3181785396581, 170.076695597817, 67.5113600846296, 224.605101820018, 202.534080253889, 262.255668021061, 38.9488615872863, 223.306806433775, 96.0738585819729, 116.846584761859, 92.1789724232443, 51.9318154497151, 116.846584761859, 146.707378645445, 64.9147693121439, 51.9318154497151, 292.116461904647, 41.5454523597721, 90.8806770370014, 266.15055417979, 101.267040126944, 247.97441877239, 38.9488615872863, 46.7386339047436, 92.1789724232443, 33.7556800423148, 92.1789724232443, 154.497150962902, 70.1079508571154, 74.002837015844, 98.6704493544587, 32.4573846560719, 124.636357079316, 260.957372634818, 72.7045416296011, 116.846584761859, 131.127834010531, 36.3522708148006, 75.3011324020869, 70.1079508571154, 64.9147693121439, 97.3721539682158, 66.2130646983867, 67.5113600846296, 40.2471569735292, 260.957372634818, 141.514197100474, 119.443175534345, 137.619310941745, 116.846584761859, 44.1420431322578, 38.9488615872863, 71.4062462433583, 241.482941841175, 155.795446349145, 44.1420431322578, 71.4062462433583, 64.9147693121439, 136.321015555502, 93.4772678094872, 38.9488615872863, 197.340898708917, 41.5454523597721, 132.426129396773, 74.002837015844, 41.5454523597721, 41.5454523597721, 129.829538624288, 35.0539754285577, 110.355107830645, 118.144880148102, 131.127834010531, 81.7926093333013, 90.8806770370014, 297.309643449619, 157.093741735388, 92.1789724232443, 53.230110835958, 38.9488615872863, 99.9687447407016, 40.2471569735292, 128.531243238045, 70.1079508571154, 131.127834010531, 92.1789724232443, 66.2130646983867, 66.2130646983867, 137.619310941745, 59.7215877671724, 67.5113600846296, 51.9318154497151, 99.9687447407016, 198.63919409516, 137.619310941745, 68.8096554708725, 140.215901714231, 37.6505662010434, 107.758517058159, 29.8607938835862, 92.1789724232443, 66.2130646983867, 283.028394200947, 116.846584761859, 40.2471569735292, 259.659077248575, 46.7386339047436, 94.7755631957301, 151.900560190417, 53.230110835958, 96.0738585819729, 90.8806770370014, 155.795446349145, 189.55112639146, 45.4403385185007, 347.943163513091, 71.4062462433583, 53.230110835958, 157.093741735388, 132.426129396773, 197.340898708917, 42.843747746015, 71.4062462433583, 75.3011324020869, 133.724424783016, 66.2130646983867, 54.5284062222008, 29.8607938835862, 132.426129396773, 41.5454523597721, 49.3352246772293, 93.4772678094872, 98.6704493544587, 129.829538624288, 133.724424783016, 93.4772678094872, 155.795446349145, 159.690332507874, 70.1079508571154, 68.8096554708725, 131.127834010531, 129.829538624288, 40.2471569735292, 55.8267016084437, 132.426129396773, 99.9687447407016, 151.900560190417, 41.5454523597721, 61.0198831534152, 90.8806770370014, 154.497150962902, 164.883514052845, 80.4943139470584, 98.6704493544587, 42.843747746015, 53.230110835958, 173.971581756546, 116.846584761859, 55.8267016084437, 38.9488615872863, 280.431803428462, 162.28692328036, 41.5454523597721, 181.761354074003, 173.971581756546, 133.724424783016, 98.6704493544587, 194.744307936432, 49.3352246772293, 41.5454523597721, 53.230110835958, 40.2471569735292, 141.514197100474, 197.340898708917, 129.829538624288, 42.843747746015, 172.673286370303, 38.9488615872863, 132.426129396773, 116.846584761859, 38.9488615872863, 46.7386339047436, 40.2471569735292, 38.9488615872863, 67.5113600846296, 57.1249969946866, 98.6704493544587, 50.6335200634722, 179.164763301517, 106.460221671916, 284.32668958719, 50.6335200634722, 41.5454523597721, 92.1789724232443, 132.426129396773, 92.1789724232443, 283.028394200947, 277.835212655976, 38.9488615872863, 40.2471569735292, 40.2471569735292, 67.5113600846296, 38.9488615872863, 42.843747746015, 197.340898708917, 53.230110835958, 55.8267016084437, 93.4772678094872, 42.843747746015, 92.1789724232443, 72.7045416296011, 260.957372634818, 260.957372634818, 93.4772678094872, 131.127834010531, 131.127834010531, 201.235784867646, 38.9488615872863, 136.321015555502, 129.829538624288, 46.7386339047436, 150.602264804174, 38.9488615872863, 51.9318154497151, 53.230110835958, 260.957372634818, 42.843747746015, 41.5454523597721, 220.710215661289, 46.7386339047436, 46.7386339047436, 97.3721539682158, 324.573846560719, 51.9318154497151, 92.1789724232443, 137.619310941745, 38.9488615872863, 131.127834010531, 157.093741735388, 194.744307936432, 90.8806770370014, 131.127834010531, 94.7755631957301, 92.1789724232443, 131.127834010531, 132.426129396773, 48.0369292909865, 93.4772678094872, 54.5284062222008, 42.843747746015, 131.127834010531, 199.937489481403, 64.9147693121439, 102.565335513187, 53.230110835958, 53.230110835958, 201.235784867646, 132.426129396773, 157.093741735388, 160.988627894117, 120.741470920588, 196.042603322674, 132.426129396773, 54.5284062222008, 163.585218666603, 155.795446349145, 194.744307936432, 118.144880148102, 67.5113600846296, 32.4573846560719, 159.690332507874, 55.8267016084437, 98.6704493544587, 46.7386339047436, 196.042603322674, 129.829538624288, 93.4772678094872, 194.744307936432, 42.843747746015, 53.230110835958, 116.846584761859, 135.022720169259, 51.9318154497151, 154.497150962902, 44.1420431322578, 131.127834010531, 129.829538624288, 241.482941841175, 79.1960185608155, 54.5284062222008, 41.5454523597721, 71.4062462433583, 70.1079508571154, 259.659077248575, 146.707378645445, 51.9318154497151, 38.9488615872863, 92.1789724232443, 141.514197100474, 94.7755631957301, 40.2471569735292, 49.3352246772293, 48.0369292909865, 64.9147693121439, 66.2130646983867, 196.042603322674, 42.843747746015, 71.4062462433583, 116.846584761859, 259.659077248575, 122.03976630683, 92.1789724232443, 112.95169860313, 146.707378645445, 66.2130646983867, 41.5454523597721, 194.744307936432, 138.917606327988, 141.514197100474, 92.1789724232443, 68.8096554708725, 90.8806770370014, 196.042603322674, 68.8096554708725, 96.0738585819729, 158.392037121631, 260.957372634818, 40.2471569735292, 260.957372634818, 51.9318154497151, 42.843747746015, 155.795446349145, 44.1420431322578, 133.724424783016, 131.127834010531, 260.957372634818, 53.230110835958, 53.230110835958, 119.443175534345, 44.1420431322578, 67.5113600846296, 38.9488615872863, 140.215901714231, 135.022720169259, 62.3181785396581, 86.9857908782728, 70.1079508571154, 79.1960185608155, 142.812492486717, 67.5113600846296, 116.846584761859, 129.829538624288, 145.409083259202, 137.619310941745, 131.127834010531, 198.63919409516, 205.130671026375, 263.553963407304, 79.1960185608155, 102.565335513187, 29.8607938835862, 93.4772678094872, 51.9318154497151, 38.9488615872863, 129.829538624288, 205.130671026375, 92.1789724232443, 101.267040126944, 99.9687447407016, 277.835212655976, 92.1789724232443, 90.8806770370014, 38.9488615872863, 154.497150962902, 38.9488615872863, 189.55112639146, 177.866467915274, 166.181809439088, 118.144880148102, 48.0369292909865, 164.883514052845, 90.8806770370014, 92.1789724232443, 160.988627894117, 129.829538624288],
+          "sizemode": "area"
+        }
+      }
+    ],
+    "layout": {
+      "xaxis": {
+        "title": "carat"
+      },
+      "yaxis": {
+        "title": "price"
+      },
+      "margin": {
+        "b": 40,
+        "l": 60,
+        "t": 25,
+        "r": 10
+      }
+    },
+    "url": {},
+    "width": {},
+    "height": {},
+    "layout.1": {
+      "xaxis": {
+        "title": "carat"
+      },
+      "yaxis": {
+        "title": "price"
+      }
+    },
+    "filename": "carat vs. price"
+  },
+  "evals": []
+}</script></p>
+</div>
+
+
+</div> <!-- page-body -->
+
+<footer>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div class="text-muted">
+  Copyright &copy; 2014 - 2015 Ramnath Vaidyanathan, Kenton Russell, and RStudio, Inc.
+  </div>
+</footer>
+
+<script>
+// manage active state of headres and navigation based on current page
+
+$(document).ready(function () {
+  
+  // compute name of page
+  href = window.location.pathname;
+  href = href.substr(href.lastIndexOf('/') + 1);
+  if (href == "")
+    href = "index.html";
+  
+  // main navigation and headers
+  if (href.startsWith("index")) {
+    $('#nav-home').addClass('active');
+    $('.title').addClass('hidden');
+  } else if (href.startsWith("showcase")) {
+    $('#nav-showcase').addClass('active');
+    $("#page-body").detach().appendTo('#showcase-body');
+    $('.showcase-header').removeClass('hidden');
+    $('.title').addClass('hidden');
+  } else if (href.startsWith("develop")) {
+    $('#nav-develop').addClass('active');
+  }
+     
+  // submenu navigation (used by showcase and develop)
+  $('.list-group a[href="' + href + '"]').addClass('active');      
+});
+
+</script>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+
+</body>
+</html>

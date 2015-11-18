@@ -123,14 +123,31 @@ Requires: htmlwidgets, magrittr, xts, zoo
 
 Package: evaluate
 Source: CRAN
-Version: 0.5.5
-Hash: ec5984d7a8972abf5c8c92a0e3765c23
+Version: 0.8
+Hash: aac00bd789bac10970b50e3b7e0cab04
 Requires: stringr
 
 Package: formatR
 Source: CRAN
 Version: 1.0
 Hash: edcb0a547fbfd29cb418eb0113f1209f
+
+Package: ggplot2
+Source: CRAN
+Version: 1.0.1
+Hash: 4aff1b269135bd2cdea378f4f2f2895e
+Requires: digest, gtable, plyr, proto, reshape2, scales
+
+Package: gridExtra
+Source: CRAN
+Version: 2.0.0
+Hash: 9be37a2d3b6a427d8a3d2a42f2b0bc01
+Requires: gtable
+
+Package: gtable
+Source: CRAN
+Version: 0.1.2
+Hash: 38a0f066373a60824cd3ade2362af363
 
 Package: highr
 Source: CRAN
@@ -171,14 +188,10 @@ Version: 0.9.16
 Hash: 24d362a166a96ac1969e64ede522c717
 
 Package: knitr
-Source: github
-Version: 1.8.4
-GithubRepo: knitr
-GithubUsername: yihui
-GithubRef: master
-GithubSha1: a7eb3d850d3019ef14d8dff0b26b4561e3e4be5f
-Hash: f5fa909f6f34e1c2614ca37ad457a7c3
-Requires: digest, evaluate, formatR, highr, markdown, stringr
+Source: CRAN
+Version: 1.11
+Hash: 0a6d1006425040af05e29504af948535
+Requires: digest, evaluate, formatR, highr, markdown, stringr, yaml
 
 Package: labeling
 Source: CRAN
@@ -245,6 +258,13 @@ Source: CRAN
 Version: 0.4.6-1
 Hash: 29eacc43b096c5b1a82c8d54a49b030b
 
+Package: plotly
+Source: CRAN
+Version: 2.0.2
+Hash: bab6d4963f957b21bb3120c8e48829b7
+Requires: base64enc, digest, ggplot2, htmlwidgets, httr, jsonlite,
+    magrittr, plyr, scales, viridis
+
 Package: plyr
 Source: CRAN
 Version: 1.8.1
@@ -255,6 +275,11 @@ Package: png
 Source: CRAN
 Version: 0.1-7
 Hash: 421d7d6e0fb4bd885ecbd909b6456b8b
+
+Package: proto
+Source: CRAN
+Version: 0.3-10
+Hash: 05d7ad64db29a39d1b02c4b9f1f4edb2
 
 Package: qtl
 Source: CRAN
@@ -271,6 +296,12 @@ GithubSha1: 19d44da3275767e10b7692a3bf67064f15896601
 Hash: fe6114c5afe6cd6b1c541dbb7f9c596a
 Requires: htmlwidgets, jsonlite, qtl
 
+Package: reshape2
+Source: CRAN
+Version: 1.4.1
+Hash: 688261d4ec91a510450d3db7cb2a6df5
+Requires: Rcpp, plyr, stringr
+
 Package: rgl
 Source: CRAN
 Version: 0.93.1098
@@ -283,8 +314,8 @@ Hash: def074f38d0cff3b597649ee6f976128
 
 Package: rmarkdown
 Source: CRAN
-Version: 0.7
-Hash: bf9c8cfc700d2417a309dd7a5ebd41d3
+Version: 0.8.1
+Hash: 13ce5c86c765918f857c602d97d1ffb9
 Requires: caTools, htmltools, knitr, yaml
 
 Package: rstudioapi
@@ -330,6 +361,12 @@ Source: CRAN
 Version: 0.2.1
 Hash: ae106a6267d71e662ff33709ac4887f8
 Requires: base64enc, htmlwidgets
+
+Package: viridis
+Source: CRAN
+Version: 0.3.1
+Hash: 1ce286b0c746a49369dc5cd9ecc1e560
+Requires: ggplot2, gridExtra
 
 Package: whisker
 Source: CRAN
