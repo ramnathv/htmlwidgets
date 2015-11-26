@@ -647,7 +647,7 @@
   // to rewrite all the logic in this file to accomodate both
   // types of definitions.
   function createLegacyDefinitionAdapter(defn) {
-    return {
+    var result = {
       name: defn.name,
       type: defn.type,
       initialize: function(el, width, height) {
@@ -660,6 +660,15 @@
         return instance.resize(width, height);
       }
     };
+
+    if (defn.find)
+      result.find = defn.find;
+    if (defn.renderError)
+      result.renderError = defn.renderError;
+    if (defn.clearError)
+      result.clearError = defn.clearError;
+
+    return result;
   }
 })();
 
