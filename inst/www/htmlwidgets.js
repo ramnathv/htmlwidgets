@@ -535,6 +535,8 @@
         }
       });
     });
+
+    invokePostRenderHandlers();
   }
 
   // Wait until after the document has loaded to render the widgets.
@@ -692,6 +694,22 @@
       results.push(window.HTMLWidgets.getInstance(nodes[i]));
     }
     return results;
+  };
+
+  var postRenderHandlers = [];
+  function invokePostRenderHandlers() {
+    while (postRenderHandlers.length) {
+      var handler = postRenderHandlers.shift();
+      if (handler) {
+        handler();
+      }
+    }
+  }
+
+  // Register the given callback function to be invoked after the
+  // next time static widgets are rendered.
+  window.HTMLWidgets.addPostRenderHandler = function(callback) {
+    postRenderHandlers.push(callback);
   };
 
   // Takes a new-style instance-bound definition, and returns an
