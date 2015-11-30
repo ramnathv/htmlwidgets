@@ -41,6 +41,33 @@ as.tags.htmlwidget <- function(x, standalone = FALSE) {
   toHTML(x, standalone = standalone)
 }
 
+#' Prepend/append extra HTML content to a widget
+#'
+#' Use these functions to attach extra HTML content (primarily JavaScript and/or
+#' CSS styles) to a widget, for rendering in standalone mode (i.e. printing at
+#' the R console) or in a knitr document. These functions are NOT supported when
+#' running in a Shiny widget rendering function, and will result in a warning if
+#' used in that context. Multiple calls are allowed, and later calls do not undo
+#' the effects of previous calls.
+#'
+#' @param x An HTML Widget object
+#' @param ... Valid \link[htmltools]{tags}, text, and/or
+#'   \code{\link[htmltools]{HTML}}, or lists thereof.
+#' @return A modified HTML Widget object.
+#'
+#' @export
+prependContent <- function(x, ...) {
+  x$prepend <- c(x$prepend, list(...))
+  x
+}
+
+#' @rdname prependContent
+#' @export
+appendContent <- function(x, ...) {
+  x$append <- c(x$append, list(...))
+  x
+}
+
 
 toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
 
@@ -72,14 +99,18 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
 
   html <- htmltools::tagList(
     container(
-      widget_html(
-        name = class(x)[1],
-        package = attr(x, "package"),
-        id = id,
-        style = style,
-        class = class(x)[1],
-        width = sizeInfo$width,
-        height = sizeInfo$height
+      htmltools::tagList(
+        x$prepend,
+        widget_html(
+          name = class(x)[1],
+          package = attr(x, "package"),
+          id = id,
+          style = style,
+          class = class(x)[1],
+          width = sizeInfo$width,
+          height = sizeInfo$height
+        ),
+        x$append
       )
     ),
     widget_data(x, id),
@@ -278,6 +309,23 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
         instance$elementId, "\"; Shiny doesn't use them"
       )
     }
+
+    # We don't support prependContent/appendContent in dynamic Shiny contexts
+    # because the Shiny equivalent of onStaticRenderComplete is unclear. If we
+    # ever figure that out it would be great to support it. One possibility
+    # would be to have a dedicated property for "post-render customization JS",
+    # I suppose. In any case, it's less of a big deal for Shiny since there are
+    # other mechanisms (that are at least as natural) for putting custom JS in a
+    # Shiny app.
+    if (!is.null(instance$prepend)) {
+      warning("Ignoring prepended content; prependContent can't be used in a ",
+        "Shiny render call")
+    }
+    if (!is.null(instance$append)) {
+      warning("Ignoring appended content; appendContent can't be used in a ",
+        "Shiny render call")
+    }
+
     deps <- .subset2(instance, "dependencies")
     deps <- lapply(
       htmltools::resolveDependencies(deps),
