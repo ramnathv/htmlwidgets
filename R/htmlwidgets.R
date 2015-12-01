@@ -68,6 +68,56 @@ appendContent <- function(x, ...) {
   x
 }
 
+#' Execute custom JavaScript code after rendering
+#'
+#' Use this function to supplement the widget's built-in JavaScript rendering
+#' logic with additional custom JavaScript code, just for this specific widget
+#' object.
+#'
+#' @param x An HTML Widget object
+#' @param jsCode Character vector containing JavaScript code (see Details)
+#' @return The modified widget object
+#'
+#' @details The \code{jsCode} parameter must be a valid JavaScript expression
+#'   that returns a function.
+#'
+#'   The function will be invoked with two arguments: the first is the widget's
+#'   main HTML element, and the second is the data to be rendered (the \code{x}
+#'   parameter in \code{createWidget}). When the function is invoked, the
+#'   \code{this} will be the widget instance object.
+#'
+#' @seealso \code{\link{onStaticRenderComplete}}, for writing custom JavaScript
+#'   that involves multiple widgets.
+#'
+#' @examples
+#' \dontrun{
+#' library(leaflet)
+#'
+#' leaflet() %>% addTiles() %>%
+#'   addRenderHook("
+#'     function(el, x) {
+#'       // Navigate the map to the user's location
+#'       this.locate({setView: true});
+#'     }
+#'   ")
+#' }
+#'
+#' @export
+addRenderHook <- function(x, jsCode) {
+  addHook(x, "render", jsCode)
+}
+
+addHook <- function(x, hookName, jsCode) {
+  if (length(jsCode) == 0)
+    return(x)
+
+  if (length(jsCode) > 1)
+    jsCode <- paste(jsCode, collapse = "\n")
+
+  x$jsHooks[[hookName]] <- c(x$jsHooks[[hookName]], list(jsCode))
+  x
+}
+
 
 toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
 
@@ -225,7 +275,8 @@ createWidget <- function(name,
          sizingPolicy = sizingPolicy,
          dependencies = dependencies,
          elementId = elementId,
-         preRenderHook = preRenderHook),
+         preRenderHook = preRenderHook,
+         jsHooks = list()),
     class = c(name,
               if (sizingPolicy$viewer$suppress) "suppress_viewer",
               "htmlwidget"),
@@ -357,6 +408,6 @@ createPayload <- function(instance){
     instance$preRenderHook <- NULL
   }
   x <- .subset2(instance, "x")
-  list(x = x, evals = JSEvals(x))
+  list(x = x, evals = JSEvals(x), jsHooks = instance$jsHooks)
 }
 
