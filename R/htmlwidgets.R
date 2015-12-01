@@ -94,7 +94,7 @@ appendContent <- function(x, ...) {
 #' library(leaflet)
 #'
 #' leaflet() %>% addTiles() %>%
-#'   addRenderHook("
+#'   onRender("
 #'     function(el, x) {
 #'       // Navigate the map to the user's location
 #'       this.locate({setView: true});
@@ -103,7 +103,7 @@ appendContent <- function(x, ...) {
 #' }
 #'
 #' @export
-addRenderHook <- function(x, jsCode) {
+onRender <- function(x, jsCode) {
   addHook(x, "render", jsCode)
 }
 
