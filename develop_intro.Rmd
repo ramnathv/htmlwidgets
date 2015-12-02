@@ -127,7 +127,7 @@ renderSigma <- function(expr, env = parent.frame(), quoted = FALSE) {
 
 ### JavaScript binding
 
-_**Note:** An older JavaScript binding API was used in htmlwidgets 0.5.2 and earlier. Later versions of htmlwidgets are backwards compatible with legacy bindings, and you may encounter this style in older widgets. See this [archived version](https://cdn.rawgit.com/ramnathv/htmlwidgets/f735840bf938d35d3c4143c0d16515da6ff252bd/develop_intro.html#javascript-binding) for details on the legacy binding API._
+_**Note:** An older, less intuitive JavaScript binding API was used in htmlwidgets 0.5.2 and earlier, and continues to be supported in newer versions of htmlwidgets. See this [archived version](https://cdn.rawgit.com/ramnathv/htmlwidgets/f735840bf938d35d3c4143c0d16515da6ff252bd/develop_intro.html#javascript-binding) for details on the legacy binding API. New widgets are encouraged to use the newer API described below._
 
 The third piece in the puzzle is the JavaScript required to activate the widget. By convention we'll define our JavaScript binding in the file `inst/htmlwidgets/sigma.js`. Here is the full source code of the binding:
 
@@ -188,13 +188,19 @@ The `factory` function should prepare the HTML element to start receiving values
 
 We're going to need access to the sigma object later (to update its data and settings) so we save it as a variable `sig`. Note that variables declared directly inside of the factory function are tied to a particular widget instance/`el`.
 
-The return value of the `factory` function must be an object that has one required method and one optional method:
+The return value of the `factory` function is called a _widget instance object_. It is a bridge between the htmlwidgets runtime, and the JavaScript visualization that you're wrapping. As the name implies, each widget instance object is responsible for managing a single widget instance on a page.
 
-1. The `renderValue` method actually pours our dynamic data and settings into the widget. The `x` parameter contains the widget data and settings. We parse and update the GEXF data, apply the settings to our previously-created `sig` sigma object, and finally call `refresh` to reflect the new values on-screen. This 
+The widget instance object you create must have one required method, and may have one optional method:
 
-2. The `resize` method is called whenever the element containing the widget is resized. In this case we forward the sizing information on to each of the underlying sigma renderers.
+1. The required `renderValue` method actually pours our dynamic data and settings into the widget's DOM element. The `x` parameter contains the widget data and settings. We parse and update the GEXF data, apply the settings to our previously-created `sig` sigma object, and finally call `refresh` to reflect the new values on-screen. This method may be called repeatedly with different data (i.e. in Shiny), so be sure to account for that possibility. If it makes sense for your widget, consider making your visualization transition smoothly from one value of `x` to another.
+
+2. The optional `resize` method is called whenever the element containing the widget is resized. The only reason not to implement this method is if your widget naturally scales (without additional JavaScript code needing to be invoked) when its element size changes. In the case of sigma.js, we forward the sizing information on to each of the underlying sigma renderers.
 
 All JavaScript libraries handle initialization, binding to DOM elements, dynamically updating data, and resizing slightly differently. Most of the work on the JavaScript side of creating widgets is mapping these three functions---`factory`, `renderValue`, and `resize`---correctly onto the behavior of the underlying library.
+
+The sigma.js example uses a simple object literal to create its widget instance object, but you can also use [class based objects](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Introduction_to_Object-Oriented_JavaScript#Custom_objects) or any other style of object, as long as `obj.renderValue(x)` and `obj.resize(width, height)` can be invoked on it.
+
+You can add additional methods and properties on the widget instance object. Although they won't be called by htmlwidgets itself, they might be useful to users of your widget that know some JavaScript and want to further customize your widget by adding custom JS code (e.g. using the `htmlwidgets::onRender` R function). In this case we add an `s` property to make the sigma object itself available.
 
 
 ### Demo
