@@ -175,6 +175,25 @@
     }
   }
 
+  // @param tasks Array of strings (or falsy value, in which case no-op).
+  //   Each element must be a valid JavaScript expression that yields a
+  //   function.
+  // @param target The object that will be "this" for each function
+  //   execution.
+  // @param args Array of arguments to be passed to the functions. (The
+  //   same arguments will be passed to all functions.)
+  function evalAndRun(tasks, target, args) {
+    if (tasks) {
+      forEach(tasks, function(task) {
+        var taskFunc = eval("(" + task + ")");
+        if (typeof(taskFunc) !== "function") {
+          throw new Error("Task must be a function! Source:\n" + task);
+        }
+        taskFunc.apply(target, args);
+      });
+    }
+  }
+
   function initSizing(el) {
     var sizing = sizingPolicy(el);
     if (!sizing)
@@ -430,6 +449,7 @@
           }
           Shiny.renderDependencies(data.deps);
           superfunc(el, data.x, elementData(el, "init_result"));
+          evalAndRun(data.jsHooks.render, elementData(el, "init_result"), [el, data.x]);
         };
       });
 
@@ -532,9 +552,12 @@
             window.HTMLWidgets.evaluateStringMember(data.x, data.evals[k]);
           }
           binding.renderValue(el, data.x, initResult);
+          evalAndRun(data.jsHooks.render, initResult, [el, data.x]);
         }
       });
     });
+
+    invokePostRenderHandlers();
   }
 
   // Wait until after the document has loaded to render the widgets.
@@ -692,6 +715,22 @@
       results.push(window.HTMLWidgets.getInstance(nodes[i]));
     }
     return results;
+  };
+
+  var postRenderHandlers = [];
+  function invokePostRenderHandlers() {
+    while (postRenderHandlers.length) {
+      var handler = postRenderHandlers.shift();
+      if (handler) {
+        handler();
+      }
+    }
+  }
+
+  // Register the given callback function to be invoked after the
+  // next time static widgets are rendered.
+  window.HTMLWidgets.addPostRenderHandler = function(callback) {
+    postRenderHandlers.push(callback);
   };
 
   // Takes a new-style instance-bound definition, and returns an
