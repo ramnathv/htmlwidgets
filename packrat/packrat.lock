@@ -129,8 +129,8 @@ Requires: stringr
 
 Package: formatR
 Source: CRAN
-Version: 1.0
-Hash: edcb0a547fbfd29cb418eb0113f1209f
+Version: 1.2.1
+Hash: 54c730c712edd6087972ecf99bf87c55
 
 Package: ggplot2
 Source: CRAN
@@ -304,8 +304,14 @@ Requires: Rcpp, plyr, stringr
 
 Package: rgl
 Source: CRAN
-Version: 0.93.1098
-Hash: 7c30cf1a0dd7acd6906d3ff7e4fb5ee8
+Version: 0.95.1429
+Hash: 918960f5ba1a5e2651b26cada322c598
+
+Package: rglwidget
+Source: CRAN
+Version: 0.1.1431
+Hash: b17662d448cb9d35a8e7c2f2a5cd7c13
+Requires: htmltools, htmlwidgets, jsonlite, knitr, rgl, shiny
 
 Package: rjson
 Source: CRAN
