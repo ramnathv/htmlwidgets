@@ -79,8 +79,13 @@ addWidgetYAML <- function(name, bowerPkg, edit){
 }
 
 addWidgetJS <- function(name, edit){
+  if (packageVersion('htmlwidgets') <= '0.5.2'){
+    tplFile = 'templates/widget_js.txt'
+  } else {
+    tplFile = 'templates/widget_js_new.txt'
+  }
   tpl <- paste(readLines(
-    system.file('templates/widget_js_new.txt', package = 'htmlwidgets')
+    system.file(tplFile, package = 'htmlwidgets')
   ), collapse = "\n")
 
   if (!file.exists(file_ <- sprintf('inst/htmlwidgets/%s.js', name))){
