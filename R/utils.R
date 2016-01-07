@@ -39,10 +39,10 @@ getDependency <- function(name, package = name){
   jsfile = sprintf("htmlwidgets/%s.js", name)
 
   config = yaml::yaml.load_file(
-    system.file(config, package = package)
+    system_file(config, package = package)
   )
   widgetDep <- lapply(config$dependencies, function(l){
-    l$src = system.file(l$src, package = package)
+    l$src = system_file(l$src, package = package)
     do.call(htmlDependency, l)
   })
 
@@ -52,12 +52,12 @@ getDependency <- function(name, package = name){
   if (copyBindingDir){
     bindingDir <- tempfile("widgetbinding")
     dir.create(bindingDir, mode = "0700")
-    file.copy(system.file(jsfile, package = package), bindingDir)
+    file.copy(system_file(jsfile, package = package), bindingDir)
   } else {
-    bindingDir = system.file("htmlwidgets", package = package)
+    bindingDir = system_file("htmlwidgets", package = package)
   }
 
-  bindingDep <- htmlDependency(paste0(name, "-binding"), packageVersion(package),
+  bindingDep <- htmlDependency(paste0(name, "-binding"), binding_version(package),
     bindingDir,
     script = basename(jsfile)
   )
@@ -208,4 +208,20 @@ onStaticRenderComplete <- function(jsCode) {
     HTML(paste0(jsCode, collapse = "\n")),
     "});"
   )
+}
+
+system_file <- function(..., package){
+  if (file.exists(package)){
+    file.path(package, ...)
+  } else {
+    system.file(..., package = package)
+  }
+}
+
+binding_version <- function(package){
+  if (file.exists(package)){
+    'folderwidget'
+  } else {
+    packageVersion(package)
+  }
 }
