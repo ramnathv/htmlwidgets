@@ -5,7 +5,7 @@
 #' @import htmlwidgets
 #'
 #' @export
-%s <- function(message, width = NULL, height = NULL) {
+%s <- function(message, width = NULL, height = NULL, elementId = NULL) {
 
   # forward options using x
   x = list(
@@ -15,10 +15,11 @@
   # create widget
   htmlwidgets::createWidget(
     name = '%s',
-    x,
+    x = x,
     width = width,
     height = height,
-    package = '%s'
+    package = '%s',
+    elementId = elementId
   )
 }
 
