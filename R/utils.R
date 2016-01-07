@@ -220,7 +220,7 @@ system_file <- function(..., package){
 
 binding_version <- function(package){
   if (file.exists(package)){
-    'folderwidget'
+    '0.1'
   } else {
     packageVersion(package)
   }
