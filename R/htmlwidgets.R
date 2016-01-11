@@ -180,7 +180,7 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
 }
 
 
-widget_html <- function(name, package, id, style, class, ...){
+widget_html <- function(name, package, id, style, class, inline = FALSE, ...){
 
   # attempt to lookup custom html function for widget
   fn <- tryCatch(get(paste0(name, "_html"),
@@ -191,6 +191,8 @@ widget_html <- function(name, package, id, style, class, ...){
   # call the custom function if we have one, otherwise create a div
   if (is.function(fn)) {
     fn(id = id, style = style, class = class, ...)
+  } else if (inline) {
+    tags$span(id = id, style = style, class = class)
   } else {
     tags$div(id = id, style = style, class = class)
   }
@@ -300,6 +302,8 @@ createWidget <- function(name,
 #' @param width,height Must be a valid CSS unit (like \code{"100\%"},
 #'   \code{"400px"}, \code{"auto"}) or a number, which will be coerced to a
 #'   string and have \code{"px"} appended.
+#' @param inline use an inline (\code{span()}) or block container (\code{div()})
+#' for the output
 #' @param package Package containing widget (defaults to \code{name})
 #' @param outputFunction Shiny output function corresponding to this render
 #'   function.
@@ -329,16 +333,18 @@ createWidget <- function(name,
 #' @name htmlwidgets-shiny
 #'
 #' @export
-shinyWidgetOutput <- function(outputId, name, width, height, package = name) {
+shinyWidgetOutput <- function(outputId, name, width, height, inline = FALSE,
+                              package = name) {
 
   checkShinyVersion()
   # generate html
   html <- htmltools::tagList(
     widget_html(name, package, id = outputId,
       class = paste(name, "html-widget html-widget-output"),
-      style = sprintf("width:%s; height:%s;",
+      style = sprintf("width:%s; height:%s; %s",
         htmltools::validateCssUnit(width),
-        htmltools::validateCssUnit(height)
+        htmltools::validateCssUnit(height),
+        if (inline) "display: inline-block;" else ""
       ), width = width, height = height
     )
   )
