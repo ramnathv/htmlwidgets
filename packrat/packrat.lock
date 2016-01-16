@@ -7,25 +7,35 @@ Repos: BioCsoft=http://bioconductor.org/packages/3.1/bioc,
     BioCextra=http://bioconductor.org/packages/3.1/extra,
     CRAN=https://cran.rstudio.com
 
+Package: BH
+Source: CRAN
+Version: 1.60.0-1
+Hash: 889445e87a2acd4cc58440957f3b0d1a
+
+Package: DBI
+Source: CRAN
+Version: 0.3.1
+Hash: 096699d1ac1cf530acfc646a0c90ee5d
+
 Package: DT
 Source: github
 Version: 0.0.3
+Hash: 871e6a5cf846fcb15d31d71651993b54
+Requires: htmltools, htmlwidgets, magrittr
 GithubRepo: DT
 GithubUsername: rstudio
 GithubRef: master
 GithubSha1: 03f08307e6b7e165e1d571d43e39057afa1f4269
-Hash: 871e6a5cf846fcb15d31d71651993b54
-Requires: htmltools, htmlwidgets, magrittr
 
 Package: DiagrammeR
 Source: github
 Version: 0.4
+Hash: 8b4f9428123a4127e6b9dd99229da577
+Requires: htmlwidgets, rstudioapi
 GithubRepo: DiagrammeR
 GithubUsername: rich-iannone
 GithubRef: master
 GithubSha1: 4b08887320181a9fd71ec84b51e6ede2e1654f73
-Hash: 8b4f9428123a4127e6b9dd99229da577
-Requires: htmlwidgets, rstudioapi
 
 Package: R6
 Source: CRAN
@@ -58,6 +68,11 @@ Source: CRAN
 Version: 3.98-1.1
 Hash: c331c4a5e75c8ba3a4dc9545b66754d2
 
+Package: assertthat
+Source: CRAN
+Version: 0.1
+Hash: 0afb92b59b02593c70ff8046700ba9d3
+
 Package: base64
 Source: CRAN
 Version: 1.1
@@ -79,6 +94,11 @@ Version: 1.17
 Hash: b8b59ba93537332f45c1721790e4e314
 Requires: bitops
 
+Package: chron
+Source: CRAN
+Version: 2.3-47
+Hash: d25d96d908cd21080f24c89eed4c80a0
+
 Package: colorspace
 Source: CRAN
 Version: 1.2-4
@@ -87,12 +107,18 @@ Hash: 563878773fe70148156427223b813fa2
 Package: d3heatmap
 Source: github
 Version: 0.5.0
+Hash: 43c5a4167ee23470b5999cb9d6bab913
+Requires: base64enc, htmlwidgets, png, scales
 GithubRepo: d3heatmap
 GithubUsername: rstudio
 GithubRef: master
 GithubSha1: 866e710d2860deced640d093b36b1ec3181c35d3
-Hash: 43c5a4167ee23470b5999cb9d6bab913
-Requires: base64enc, htmlwidgets, png, scales
+
+Package: data.table
+Source: CRAN
+Version: 1.9.6
+Hash: f92ef1f73afa43bf6fd69a22f3794abd
+Requires: chron
 
 Package: devtools
 Source: CRAN
@@ -114,12 +140,12 @@ Hash: 5095109541d6124bfe9e83fbdf39bad0
 Package: dygraphs
 Source: github
 Version: 0.2
+Hash: 9f8849eb339d3353a9f7e09660e2a308
+Requires: htmlwidgets, magrittr, xts, zoo
 GithubRepo: dygraphs
 GithubUsername: rstudio
 GithubRef: master
 GithubSha1: b273ee118a33b395058e14cdff4e88a838132d6c
-Hash: 9f8849eb339d3353a9f7e09660e2a308
-Requires: htmlwidgets, magrittr, xts, zoo
 
 Package: evaluate
 Source: CRAN
@@ -163,12 +189,12 @@ Requires: digest
 Package: htmlwidgets
 Source: github
 Version: 0.5
+Hash: 9110c18f0f75063852e9eb3e63c3df8d
+Requires: htmltools, jsonlite, yaml
 GithubRepo: htmlwidgets
 GithubUsername: ramnathv
 GithubRef: master
 GithubSha1: ef523b400ea19b0ffecb9e1cf48db260ac291342
-Hash: 9110c18f0f75063852e9eb3e63c3df8d
-Requires: htmltools, jsonlite, yaml
 
 Package: httpuv
 Source: CRAN
@@ -198,20 +224,25 @@ Source: CRAN
 Version: 0.2
 Hash: 9f11050d84ff44d77d6113272c0ab2db
 
+Package: lazyeval
+Source: CRAN
+Version: 0.1.10
+Hash: 9679f1ac7f6bc07bc79755f34cd15e1f
+
 Package: leaflet
 Source: github
 Version: 0.0.5
+Hash: 104c7a6e4ac689b65ad34c335027d3af
+Requires: RColorBrewer, htmltools, htmlwidgets, magrittr, scales
 GithubRepo: leaflet
 GithubUsername: rstudio
 GithubRef: master
 GithubSha1: 656fcf3838cb087f96a776c4879fd1db8d261ea1
-Hash: 104c7a6e4ac689b65ad34c335027d3af
-Requires: RColorBrewer, htmltools, htmlwidgets, magrittr, scales
 
 Package: magrittr
 Source: CRAN
-Version: 1.0.1
-Hash: 131da7f397c71b98730463cc1199acd7
+Version: 1.5
+Hash: bdc4d48c3135e8f3b399536ddf160df4
 
 Package: maps
 Source: CRAN
@@ -289,12 +320,12 @@ Hash: e1c4668fd3c09d428e10ee91eb15b2b3
 Package: qtlcharts
 Source: github
 Version: 0.5-13
+Hash: fe6114c5afe6cd6b1c541dbb7f9c596a
+Requires: htmlwidgets, jsonlite, qtl
 GithubRepo: qtlcharts
 GithubUsername: kbroman
 GithubRef: master
 GithubSha1: 19d44da3275767e10b7692a3bf67064f15896601
-Hash: fe6114c5afe6cd6b1c541dbb7f9c596a
-Requires: htmlwidgets, jsonlite, qtl
 
 Package: reshape2
 Source: CRAN
@@ -373,6 +404,11 @@ Source: CRAN
 Version: 0.3.1
 Hash: 1ce286b0c746a49369dc5cd9ecc1e560
 Requires: ggplot2, gridExtra
+
+Package: viridisLite
+Source: CRAN
+Version: 0.1.1
+Hash: ee671992fc2cbdecd60b2c96d4c08d92
 
 Package: whisker
 Source: CRAN
