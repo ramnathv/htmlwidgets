@@ -8,7 +8,7 @@ scaffoldSimpleWidget <- function(name, bowerPkg = NULL, edit = interactive(), di
   }
   package = normalizePath(dir_)
   tpl <- paste(readLines(
-    file.path('~/Desktop/htmlwidgets_templates', 'widget_r.txt')
+  	system.file('templates/widget_r.txt', package = 'htmlwidgets')
   ), collapse = "\n")
 
   capName = function(name){
@@ -32,6 +32,7 @@ scaffoldSimpleWidget <- function(name, bowerPkg = NULL, edit = interactive(), di
   #    src:
   #    script:
   #    stylesheet:
+
   "
   if (!file.exists(file_ <- sprintf('%s/htmlwidgets/%s.yaml', dir_, name))){
     cat(tpl, file = file_)
@@ -44,7 +45,7 @@ scaffoldSimpleWidget <- function(name, bowerPkg = NULL, edit = interactive(), di
   if (edit) file.edit(file_)
 
   tpl <- paste(readLines(
-    file.path('~/Desktop/htmlwidgets_templates', 'widget_js_new.txt')
+  	system.file('templates/widget_js_new.txt', package = 'htmlwidgets')
   ), collapse = "\n")
 
   if (!file.exists(file_ <- sprintf('%s/htmlwidgets/%s.js', dir_, name))){
@@ -54,6 +55,14 @@ scaffoldSimpleWidget <- function(name, bowerPkg = NULL, edit = interactive(), di
     )
   } else {
     message(file_, " already exists")
+  }
+
+  if (!file.exists('index.R')){
+  	cat("source('hello.R')\nhtml <- hello('World')", file = file.path(dir_, "index.R"))
+  }
+  if (!file.exists("Makefile")){
+  	f <- system.file('templates/Makefile', package = 'htmlwidgets')
+  	file.copy(f, dir_)
   }
   if (edit) file.edit(file_)
 
