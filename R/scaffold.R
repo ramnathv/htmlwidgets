@@ -169,7 +169,7 @@ addWidgetJS <- function(name, edit){
 #
 # This function uses bower to install a javascript package along with
 # its dependencies.
-installBowerPkg <- function(pkg){
+installBowerPkg <- function(pkg, simple = FALSE){
   # check if bower is installed
   if (findBower() == ""){
     stop(
@@ -178,13 +178,17 @@ installBowerPkg <- function(pkg){
     )
   }
   #check if we are in the root directory of a package
-  if (!file.exists('DESCRIPTION')){
+  if (!simple && !file.exists('DESCRIPTION')){
     stop("You need to be in a package directory to run this!",
       call. = F)
   }
   # set up .bowerrc to install packages to correct directory
   if (!file.exists('.bowerrc')){
-    x = '{"directory": "inst/htmlwidgets/lib"}'
+  	if (!simple){
+  		x = '{"directory": "inst/htmlwidgets/lib"}'
+  	} else {
+  		x = '{"directory": "htmlwidgets/lib"}'
+  	}
     cat(x, file = '.bowerrc')
   }
   # Install package
@@ -236,7 +240,12 @@ getConfig <- function(pkg, src = "inst/htmlwidgets/lib"){
   deps = readBower(pkg, src)$deps
   all = c(names(deps),pkg)
   config = lapply(all, function(pkg){
-    readBower(pkg, src = src)$spec
+    spec = readBower(pkg, src = src)$spec
+    if (is.null(spec$version)){
+    	message("WARNING: The dependency ", pkg, "does not have a version specified.")
+    	spec$version = "0.1.0"
+    }
+    return(spec)
   })
   yaml::as.yaml(list(dependencies = config))
 }
