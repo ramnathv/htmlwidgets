@@ -5,8 +5,11 @@ scaffoldSimpleWidget <- function(name, bowerPkg = NULL, edit = interactive(), di
   if (!file.exists(dir_)){
     dir.create(dir_)
     dir.create(file.path(dir_, 'htmlwidgets'))
+    cwd = getwd(); setwd(dir_);
   }
+	dir_ = "."
   package = normalizePath(dir_)
+
   tpl <- paste(readLines(
   	system.file('templates/widget_r.txt', package = 'htmlwidgets')
   ), collapse = "\n")
@@ -34,6 +37,10 @@ scaffoldSimpleWidget <- function(name, bowerPkg = NULL, edit = interactive(), di
   #    stylesheet:
 
   "
+  if (!is.null(bowerPkg)){
+  	installBowerPkg(bowerPkg, simple = TRUE)
+  	tpl <- getConfig(bowerPkg, src = 'htmlwidgets/lib')
+  }
   if (!file.exists(file_ <- sprintf('%s/htmlwidgets/%s.yaml', dir_, name))){
     cat(tpl, file = file_)
     message('Created boilerplate for widget dependencies at ',
@@ -58,14 +65,21 @@ scaffoldSimpleWidget <- function(name, bowerPkg = NULL, edit = interactive(), di
   }
 
   if (!file.exists('index.R')){
-  	cat("source('hello.R')\nhtml <- hello('World')", file = file.path(dir_, "index.R"))
+  	x = sprintf("source('%s.R')\nhtml <- %s('World')", name, name)
+  	cat(x, file = file.path(dir_, "index.R"))
   }
   if (!file.exists("Makefile")){
   	f <- system.file('templates/Makefile', package = 'htmlwidgets')
-  	file.copy(f, dir_)
+  	f2 <- gsub('hello', name, paste(readLines(f), collapse = '\n'))
+  	cat(f2, file = file.path(dir_, 'Makefile'))
   }
   if (edit) file.edit(file_)
-
+  if (edit){
+  	file.edit('index.R')
+    servr::make()
+  } else {
+  	on.exit(setwd(cwd))
+  }
 }
 
 #' Save simple widget html
