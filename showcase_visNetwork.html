@@ -10,7 +10,7 @@
 
 
 
-<title>htmlwidgets: MetricsGraphics</title>
+<title>htmlwidgets: visNetwork</title>
 
 <script src="libs/jquery/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -19,10 +19,9 @@
 <script src="libs/bootstrap/shim/html5shiv.min.js"></script>
 <script src="libs/bootstrap/shim/respond.min.js"></script>
 <script src="libs/htmlwidgets/htmlwidgets.js"></script>
-<script src="libs/d3/d3.min.js"></script>
-<link href="libs/metrics-graphics/dist/metricsgraphics.css" rel="stylesheet" />
-<script src="libs/metrics-graphics/dist/metricsgraphics.min.js"></script>
-<script src="libs/metricsgraphics-binding/metricsgraphics.js"></script>
+<link href="libs/vis/vis.min.css" rel="stylesheet" />
+<script src="libs/vis/vis.min.js"></script>
+<script src="libs/visNetwork-binding/visNetwork.js"></script>
 
 <!-- Styles for this site -->
 <link href="css/styles.css" rel="stylesheet">
@@ -170,92 +169,68 @@ img {
 <!--/html_preserve-->
 
 <div id="header">
-<h1 class="title">htmlwidgets: MetricsGraphics</h1>
+<h1 class="title">htmlwidgets: visNetwork</h1>
 </div>
 
 
-<div id="metricsgraphics" class="section level3">
-<h3>MetricsGraphics</h3>
-<p><a href="http://hrbrmstr.github.io/metricsgraphics/" class="uri">http://hrbrmstr.github.io/metricsgraphics/</a></p>
-<p>MetricsGraphics enables easy creation of D3 scatterplots, line charts, and histograms.</p>
-<pre class="r"><code>library(metricsgraphics)
-mjs_plot(mtcars, x=wt, y=mpg) %&gt;%
-  mjs_point(color_accessor=carb, size_accessor=carb) %&gt;%
-  mjs_labs(x=&quot;Weight of Car&quot;, y=&quot;Miles per Gallon&quot;)</code></pre>
-<p><div id="mjs-ee2a116f2c38e064dff525250c682e" class="metricsgraphics" style="width:576px;height:336px;"></div>
-<div id="mjs-ee2a116f2c38e064dff525250c682e-legend" class="metricsgraphics-legend"></div>
-<script type="application/json" data-for="mjs-ee2a116f2c38e064dff525250c682e">{
+<div id="visnetwork" class="section level3">
+<h3>visNetwork</h3>
+<p><a href="http://dataknowledge.github.io/visNetwork" class="uri">http://dataknowledge.github.io/visNetwork</a></p>
+<p>visNetwork provides an interface to the network visualization capabilties of the <a href="http://visjs.org/">vis.js</a> library.</p>
+<pre class="r"><code>library(visNetwork)
+nodes &lt;- data.frame(id = 1:5, group = c(rep(&quot;A&quot;, 2), rep(&quot;B&quot;, 3)))
+edges &lt;- data.frame(from = c(2,5,3,3), to = c(1,2,4,2))
+
+visNetwork(nodes, edges, width = &quot;100%&quot;) %&gt;% 
+  # darkblue square with shadow for group &quot;A&quot;
+  visGroups(groupname = &quot;A&quot;, color = &quot;darkblue&quot;, shape = &quot;square&quot;, 
+            shadow = list(enabled = TRUE)) %&gt;% 
+  # red triangle for group &quot;B&quot;
+  visGroups(groupname = &quot;B&quot;, color = &quot;red&quot;, shape = &quot;triangle&quot;)     </code></pre>
+<p><div id="htmlwidget-3078" style="width:100%;height:480px;" class="visNetwork"></div>
+<script type="application/json" data-for="htmlwidget-3078">{
   "x": {
-    "orig_posix": false,
-    "data": {
-      "mpg": [21, 21, 22.8, 21.4, 18.7, 18.1, 14.3, 24.4, 22.8, 19.2, 17.8, 16.4, 17.3, 15.2, 10.4, 10.4, 14.7, 32.4, 30.4, 33.9, 21.5, 15.5, 15.2, 13.3, 19.2, 27.3, 26, 30.4, 15.8, 19.7, 15, 21.4],
-      "cyl": [6, 6, 4, 6, 8, 6, 8, 4, 4, 6, 6, 8, 8, 8, 8, 8, 8, 4, 4, 4, 4, 8, 8, 8, 8, 4, 4, 4, 8, 6, 8, 4],
-      "disp": [160, 160, 108, 258, 360, 225, 360, 146.7, 140.8, 167.6, 167.6, 275.8, 275.8, 275.8, 472, 460, 440, 78.7, 75.7, 71.1, 120.1, 318, 304, 350, 400, 79, 120.3, 95.1, 351, 145, 301, 121],
-      "hp": [110, 110, 93, 110, 175, 105, 245, 62, 95, 123, 123, 180, 180, 180, 205, 215, 230, 66, 52, 65, 97, 150, 150, 245, 175, 66, 91, 113, 264, 175, 335, 109],
-      "drat": [3.9, 3.9, 3.85, 3.08, 3.15, 2.76, 3.21, 3.69, 3.92, 3.92, 3.92, 3.07, 3.07, 3.07, 2.93, 3, 3.23, 4.08, 4.93, 4.22, 3.7, 2.76, 3.15, 3.73, 3.08, 4.08, 4.43, 3.77, 4.22, 3.62, 3.54, 4.11],
-      "wt": [2.62, 2.875, 2.32, 3.215, 3.44, 3.46, 3.57, 3.19, 3.15, 3.44, 3.44, 4.07, 3.73, 3.78, 5.25, 5.424, 5.345, 2.2, 1.615, 1.835, 2.465, 3.52, 3.435, 3.84, 3.845, 1.935, 2.14, 1.513, 3.17, 2.77, 3.57, 2.78],
-      "qsec": [16.46, 17.02, 18.61, 19.44, 17.02, 20.22, 15.84, 20, 22.9, 18.3, 18.9, 17.4, 17.6, 18, 17.98, 17.82, 17.42, 19.47, 18.52, 19.9, 20.01, 16.87, 17.3, 15.41, 17.05, 18.9, 16.7, 16.9, 14.5, 15.5, 14.6, 18.6],
-      "vs": [0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1],
-      "am": [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
-      "gear": [4, 4, 4, 3, 3, 3, 3, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 4, 4, 4, 3, 3, 3, 3, 3, 4, 5, 5, 5, 5, 5, 4],
-      "carb": [4, 4, 1, 1, 2, 1, 4, 2, 2, 4, 4, 3, 3, 3, 4, 4, 4, 1, 2, 1, 1, 2, 2, 4, 2, 1, 2, 2, 4, 6, 8, 2]
+    "nodes": {
+      "id": [1, 2, 3, 4, 5],
+      "group": ["A", "A", "B", "B", "B"]
     },
-    "x_axis": true,
-    "y_axis": true,
-    "baseline_accessor": null,
-    "predictor_accessor": null,
-    "show_confidence_band": null,
-    "show_secondary_x_label": null,
-    "chart_type": "point",
-    "xax_format": "plain",
-    "x_label": "Weight of Car",
-    "y_label": "Miles per Gallon",
-    "markers": null,
-    "baselines": null,
-    "linked": false,
-    "title": null,
-    "description": null,
-    "left": 80,
-    "right": 10,
-    "bottom": 60,
-    "buffer": 8,
-    "format": "count",
-    "y_scale_type": "linear",
-    "yax_count": 5,
-    "xax_count": 6,
-    "x_rug": false,
-    "y_rug": false,
-    "area": false,
-    "missing_is_hidden": false,
-    "size_accessor": "carb",
-    "color_accessor": "carb",
-    "color_type": "number",
-    "color_range": ["blue", "red"],
-    "size_range": [1, 5],
-    "bar_height": 20,
-    "min_x": null,
-    "max_x": null,
-    "min_y": null,
-    "max_y": null,
-    "bar_margin": 1,
-    "binned": false,
-    "bins": null,
-    "least_squares": false,
-    "interpolate": "cardinal",
-    "decimals": 2,
-    "show_rollover_text": true,
-    "x_accessor": "wt",
-    "y_accessor": "mpg",
-    "multi_line": null,
-    "geom": "point",
-    "yax_units": "",
-    "legend": null,
-    "legend_target": null,
-    "y_extended_ticks": false,
-    "x_extended_ticks": false,
-    "target": "#mjs-ee2a116f2c38e064dff525250c682e",
-    "full_width": true,
-    "full_height": true
+    "edges": {
+      "from": [2, 5, 3, 3],
+      "to": [1, 2, 4, 2]
+    },
+    "options": {
+      "width": "100%",
+      "height": "100%",
+      "nodes": {
+        "shape": "dot"
+      },
+      "manipulation": {
+        "enabled": false
+      },
+      "groups": {
+        "A": {
+          "color": "darkblue",
+          "shape": "square",
+          "shadow": {
+            "enabled": true
+          }
+        },
+        "useDefaultGroups": true,
+        "B": {
+          "color": "red",
+          "shape": "triangle"
+        }
+      }
+    },
+    "groups": ["A", "B"],
+    "width": "100%",
+    "height": null,
+    "idselection": {
+      "enabled": false
+    },
+    "byselection": {
+      "enabled": false
+    }
   },
   "evals": []
 }</script></p>

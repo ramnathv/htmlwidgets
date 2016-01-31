@@ -1,0 +1,22 @@
+---
+title: "htmlwidgets: visNetwork"
+---
+
+### visNetwork
+<http://dataknowledge.github.io/visNetwork>
+
+visNetwork provides an interface to the network visualization capabilties of the [vis.js](http://visjs.org/) library. 
+
+```{r, fig.height=5}
+library(visNetwork)
+nodes <- data.frame(id = 1:5, group = c(rep("A", 2), rep("B", 3)))
+edges <- data.frame(from = c(2,5,3,3), to = c(1,2,4,2))
+
+visNetwork(nodes, edges, width = "100%") %>% 
+  # darkblue square with shadow for group "A"
+  visGroups(groupname = "A", color = "darkblue", shape = "square", 
+            shadow = list(enabled = TRUE)) %>% 
+  # red triangle for group "B"
+  visGroups(groupname = "B", color = "red", shape = "triangle")     
+```
+
