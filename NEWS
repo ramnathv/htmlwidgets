@@ -8,6 +8,9 @@ htmlwidgets 0.5.2 (unreleased)
   e.g. larger embedded leaflet maps). Stack size can also be controlled
   by the pandoc.stack.size option.
 
+* Added new functions `widgetList()` and `as.widgetList()` to combine multiple
+  HTML widgets into a list, and render all of them when the list is printed in
+  the R console or R Markdown or Shiny apps. (#110)
 
 htmlwidgets 0.5
 -----------------------------------------------------------------------

@@ -29,7 +29,8 @@ registerMethods <- function(methods) {
   # htmlwidgets and knitr are loaded.
   registerMethods(list(
     # c(package, genname, class)
-    c("knitr", "knit_print", "htmlwidget")
+    c("knitr", "knit_print", "htmlwidget"),
+    c("knitr", "knit_print", "widgetList")
   ))
 }
 
@@ -42,3 +43,6 @@ knit_print.htmlwidget <- function(x, ..., options = NULL) {
   knitr::knit_print(toHTML(x, standalone = FALSE, knitrOptions = options), options = options,  ...)
 }
 
+knit_print.widgetList <- function(x, ..., options = NULL) {
+  structure(lapply(x, knitr::knit_print, ..., options = options), class = 'knit_asis_list')
+}
