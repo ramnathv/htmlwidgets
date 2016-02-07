@@ -178,25 +178,27 @@ img {
 <p><a href="http://dataknowledge.github.io/visNetwork" class="uri">http://dataknowledge.github.io/visNetwork</a></p>
 <p>visNetwork provides an interface to the network visualization capabilties of the <a href="http://visjs.org/">vis.js</a> library.</p>
 <pre class="r"><code>library(visNetwork)
-nodes &lt;- data.frame(id = 1:5, group = c(rep(&quot;A&quot;, 2), rep(&quot;B&quot;, 3)))
-edges &lt;- data.frame(from = c(2,5,3,3), to = c(1,2,4,2))
-
-visNetwork(nodes, edges, width = &quot;100%&quot;) %&gt;% 
-  # darkblue square with shadow for group &quot;A&quot;
-  visGroups(groupname = &quot;A&quot;, color = &quot;darkblue&quot;, shape = &quot;square&quot;, 
-            shadow = list(enabled = TRUE)) %&gt;% 
-  # red triangle for group &quot;B&quot;
-  visGroups(groupname = &quot;B&quot;, color = &quot;red&quot;, shape = &quot;triangle&quot;)     </code></pre>
-<p><div id="htmlwidget-3078" style="width:100%;height:480px;" class="visNetwork"></div>
+nodes &lt;- data.frame(id = 1:6, title = paste(&quot;node&quot;, 1:6), 
+                    shape = c(&quot;dot&quot;, &quot;square&quot;),
+                    size = 10:15, color = c(&quot;blue&quot;, &quot;red&quot;))
+edges &lt;- data.frame(from = 1:5, to = c(5, 4, 6, 3, 3))
+visNetwork(nodes, edges) %&gt;%
+  visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE)</code></pre>
+<p><div id="htmlwidget-3078" style="width:576px;height:336px;" class="visNetwork"></div>
 <script type="application/json" data-for="htmlwidget-3078">{
   "x": {
     "nodes": {
-      "id": [1, 2, 3, 4, 5],
-      "group": ["A", "A", "B", "B", "B"]
+      "id": [1, 2, 3, 4, 5, 6],
+      "title": ["node 1", "node 2", "node 3", "node 4", "node 5", "node 6"],
+      "shape": ["dot", "square", "dot", "square", "dot", "square"],
+      "size": [10, 11, 12, 13, 14, 15],
+      "color": ["blue", "red", "blue", "red", "blue", "red"],
+      "label": ["1", "2", "3", "4", "5", "6"],
+      "group": [1, 1, 1, 1, 1, 1]
     },
     "edges": {
-      "from": [2, 5, 3, 3],
-      "to": [1, 2, 4, 2]
+      "from": [1, 2, 3, 4, 5],
+      "to": [5, 4, 6, 3, 3]
     },
     "options": {
       "width": "100%",
@@ -206,31 +208,21 @@ visNetwork(nodes, edges, width = &quot;100%&quot;) %&gt;%
       },
       "manipulation": {
         "enabled": false
-      },
-      "groups": {
-        "A": {
-          "color": "darkblue",
-          "shape": "square",
-          "shadow": {
-            "enabled": true
-          }
-        },
-        "useDefaultGroups": true,
-        "B": {
-          "color": "red",
-          "shape": "triangle"
-        }
       }
     },
-    "groups": ["A", "B"],
-    "width": "100%",
+    "groups": null,
+    "width": null,
     "height": null,
     "idselection": {
-      "enabled": false
+      "enabled": true,
+      "style": "width: 150px; height: 26px"
     },
     "byselection": {
-      "enabled": false
-    }
+      "enabled": false,
+      "style": "width: 150px; height: 26px"
+    },
+    "highlight": true,
+    "degree": 1
   },
   "evals": []
 }</script></p>
