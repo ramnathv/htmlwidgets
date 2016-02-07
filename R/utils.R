@@ -46,20 +46,10 @@ getDependency <- function(name, package = name){
     do.call(htmlDependency, l)
   })
 
-  # Create a dependency that will cause the jsfile and only the jsfile (rather
-  # than all of its filesystem siblings) to be copied
-  copyBindingDir = getOption('htmlwidgets.copybindingdir', default = TRUE)
-  if (copyBindingDir){
-    bindingDir <- tempfile("widgetbinding")
-    dir.create(bindingDir, mode = "0700")
-    file.copy(system.file(jsfile, package = package), bindingDir)
-  } else {
-    bindingDir = system.file("htmlwidgets", package = package)
-  }
-
   bindingDep <- htmlDependency(paste0(name, "-binding"), packageVersion(package),
-    bindingDir,
-    script = basename(jsfile)
+    system.file("htmlwidgets", package = package),
+    script = basename(jsfile),
+    all_files = !getOption('htmlwidgets.copybindingdir', TRUE)
   )
 
   c(
