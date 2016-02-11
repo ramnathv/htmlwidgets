@@ -51,13 +51,15 @@ getDependency <- function(name, package = name){
     bindingDir <- tempfile("widgetbinding")
     dir.create(bindingDir, mode = "0700")
     file.copy(system.file(jsfile, package = package), bindingDir)
+    argsDep <- NULL
   } else {
     bindingDir <- system.file("htmlwidgets", package = package)
+    argsDep <- list(all_files = FALSE)
   }
   bindingDep <- do.call(htmlDependency, c(list(
     paste0(name, "-binding"), packageVersion(package),
     bindingDir, script = basename(jsfile)
-  ), if (packageVersion('htmltools' >= '0.3.3')) list(all_files = FALSE)))
+  ), argsDep))
 
   c(
     list(htmlDependency("htmlwidgets", packageVersion("htmlwidgets"),
