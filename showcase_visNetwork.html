@@ -7,6 +7,7 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 
 
@@ -49,6 +50,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 
 
+
 </head>
 
 <body>
@@ -63,12 +65,55 @@ code {
   color: inherit;
   background-color: rgba(0, 0, 0, 0.04);
 }
-img { 
-  max-width:100%; 
-  height: auto; 
+img {
+  max-width:100%;
+  height: auto;
+}
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
 }
 </style>
+
+
 <div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="libs/navigation/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
 
 <!--html_preserve-->
 
@@ -168,8 +213,11 @@ img {
 
 <!--/html_preserve-->
 
-<div id="header">
+<div class="fluid-row" id="header">
+
+
 <h1 class="title">htmlwidgets: visNetwork</h1>
+
 </div>
 
 
@@ -268,6 +316,8 @@ $(document).ready(function () {
 });
 
 </script>
+
+
 
 </div>
 

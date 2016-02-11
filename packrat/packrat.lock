@@ -375,10 +375,14 @@ Hash: 7f8972bfb3adc6221a13cbdd80ff766a
 Requires: XML, data.table, jsonlite, yaml
 
 Package: rmarkdown
-Source: CRAN
-Version: 0.9.2
-Hash: 62ef7e7066b3e768f7684feb9bf9d693
+Source: github
+Version: 0.9.5
+Hash: 9b7c234f5aee3f1264010d6285a41169
 Requires: caTools, htmltools, knitr, yaml
+GithubRepo: rmarkdown
+GithubUsername: rstudio
+GithubRef: master
+GithubSha1: 5ec65597275312422d815f98afd1333b531adc1f
 
 Package: rstudioapi
 Source: CRAN
