@@ -156,7 +156,7 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
           package = attr(x, "package"),
           id = id,
           style = style,
-          class = class(x)[1],
+          class = paste(class(x)[1], "html-widget"),
           width = sizeInfo$width,
           height = sizeInfo$height
         ),
