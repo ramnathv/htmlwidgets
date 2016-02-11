@@ -46,10 +46,19 @@ getDependency <- function(name, package = name){
     do.call(htmlDependency, l)
   })
 
+  # TODO: remove this trick when htmltools >= 0.3.3 is on CRAN
+  if (packageVersion('htmltools') < '0.3.3') {
+    bindingDir <- tempfile("widgetbinding")
+    dir.create(bindingDir, mode = "0700")
+    file.copy(system.file(jsfile, package = package), bindingDir)
+  } else {
+    bindingDir <- system.file("htmlwidgets", package = package)
+  }
   bindingDep <- htmlDependency(paste0(name, "-binding"), packageVersion(package),
-    system.file("htmlwidgets", package = package),
-    script = basename(jsfile), all_files = FALSE
+    bindingDir,
+    script = basename(jsfile)
   )
+  if (packageVersion('htmltools' >= '0.3.3')) bindingDep$all_files <- FALSE
 
   c(
     list(htmlDependency("htmlwidgets", packageVersion("htmlwidgets"),
