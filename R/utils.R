@@ -48,8 +48,7 @@ getDependency <- function(name, package = name){
 
   bindingDep <- htmlDependency(paste0(name, "-binding"), packageVersion(package),
     system.file("htmlwidgets", package = package),
-    script = basename(jsfile),
-    all_files = !getOption('htmlwidgets.copybindingdir', TRUE)
+    script = basename(jsfile), all_files = FALSE
   )
 
   c(
