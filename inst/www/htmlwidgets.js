@@ -524,8 +524,8 @@
           // call resize handlers for Shiny outputs, not for static
           // widgets, so we do it ourselves.
           if (window.jQuery) {
-            window.jQuery(document).on("shown", resizeHandler);
-            window.jQuery(document).on("hidden", resizeHandler);
+            window.jQuery(document).on("shown.htmlwidgets shown.bs.tab.htmlwidgets", resizeHandler);
+            window.jQuery(document).on("hidden.htmlwidgets hidden.bs.tab.htmlwidgets", resizeHandler);
           }
 
           // This is needed for the specific case of ioslides, which
