@@ -6,7 +6,8 @@
 \alias{shinyWidgetOutput}
 \title{Shiny bindings for HTML widgets}
 \usage{
-shinyWidgetOutput(outputId, name, width, height, package = name)
+shinyWidgetOutput(outputId, name, width, height, inline = FALSE,
+  package = name)
 
 shinyRenderWidget(expr, outputFunction, env, quoted)
 }
@@ -18,6 +19,9 @@ shinyRenderWidget(expr, outputFunction, env, quoted)
 \item{width,height}{Must be a valid CSS unit (like \code{"100\%"},
 \code{"400px"}, \code{"auto"}) or a number, which will be coerced to a
 string and have \code{"px"} appended.}
+
+\item{inline}{use an inline (\code{span()}) or block container (\code{div()})
+for the output}
 
 \item{package}{Package containing widget (defaults to \code{name})}
 
