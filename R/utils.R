@@ -46,15 +46,16 @@ getDependency <- function(name, package = name){
     do.call(htmlDependency, l)
   })
 
+  bindingDir <- system.file("htmlwidgets", package = package)
+  argsDep <- NULL
+  copyBindingDir <- getOption('htmlwidgets.copybindingdir', TRUE)
   # TODO: remove this trick when htmltools >= 0.3.3 is on CRAN
-  if (packageVersion('htmltools') < '0.3.3') {
-    bindingDir <- tempfile("widgetbinding")
-    dir.create(bindingDir, mode = "0700")
-    file.copy(system.file(jsfile, package = package), bindingDir)
-    argsDep <- NULL
-  } else {
-    bindingDir <- system.file("htmlwidgets", package = package)
-    argsDep <- list(all_files = FALSE)
+  if (copyBindingDir) {
+    if (packageVersion('htmltools') < '0.3.3') {
+      bindingDir <- tempfile("widgetbinding")
+      dir.create(bindingDir, mode = "0700")
+      file.copy(system.file(jsfile, package = package), bindingDir)
+    } else argsDep <- list(all_files = FALSE)
   }
   bindingDep <- do.call(htmlDependency, c(list(
     paste0(name, "-binding"), packageVersion(package),
