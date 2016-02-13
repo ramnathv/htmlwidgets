@@ -122,12 +122,12 @@ We want our sigma widget to also work in Shiny applications, so we add the follo
 ```r
 #' @export
 sigmaOutput <- function(outputId, width = "100%", height = "400px") {
-  shinyWidgetOutput(outputId, "sigma", width, height, package = "sigma")
+  htmlwidgets::shinyWidgetOutput(outputId, "sigma", width, height, package = "sigma")
 }
 #' @export
 renderSigma <- function(expr, env = parent.frame(), quoted = FALSE) {
   if (!quoted) { expr <- substitute(expr) } # force quoted
-  shinyRenderWidget(expr, sigmaOutput, env, quoted = TRUE)
+  htmlwidgets::shinyRenderWidget(expr, sigmaOutput, env, quoted = TRUE)
 }
 ```
 
