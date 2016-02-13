@@ -1,9 +1,15 @@
-htmlwidgets 0.6 (unreleased)
+htmlwidgets 0.6
 -----------------------------------------------------------------------
 
 * Introduce new scheme for defining JavaScript bindings that will make
   it easier for widgets to gain access to other widget instances on
   the page.
+
+* Add `onRender` hook for widgets to execute custom JavaScript code
+  after rendering.
+
+* Add `appendContent` and `prependContent` functions for adding HTML
+  to a widget rendered in a static context (i.e. R console or Rmd)
 
 * Fix a bug where the string "</body></html>" in the widget data caused
   `saveWidget()` to have malformed output. (#168)
