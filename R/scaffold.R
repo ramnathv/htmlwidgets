@@ -134,24 +134,27 @@ addWidgetJS <- function(name, edit){
 
   type: 'output',
 
-  initialize: function(el, width, height) {
+  factory: function(el, width, height) {
+
+    // TODO: define shared variables for this instance
 
     return {
-      // TODO: add instance fields as required
-    }
 
-  },
+      renderValue: function(x) {
 
-  renderValue: function(el, x, instance) {
+        // TODO: code to render the widget, e.g.
+        el.innerText = x.message;
 
-    el.innerText = x.message;
+      },
 
-  },
+      resize: function(width, height) {
 
-  resize: function(el, width, height, instance) {
+        // TODO: code to re-render the widget with a new size
 
+      }
+
+    };
   }
-
 });
 "
   if (!file.exists(file_ <- sprintf('inst/htmlwidgets/%s.js', name))){
