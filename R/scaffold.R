@@ -31,58 +31,9 @@ scaffoldWidget <- function(name, bowerPkg = NULL, edit = interactive()){
 }
 
 addWidgetConstructor <- function(name, package, edit){
-  tpl <- "#' <Add Title>
-#'
-#' <Add Description>
-#'
-#' @import htmlwidgets
-#'
-#' @export
-%s <- function(message, width = NULL, height = NULL) {
-
-  # forward options using x
-  x = list(
-    message = message
-  )
-
-  # create widget
-  htmlwidgets::createWidget(
-    name = '%s',
-    x,
-    width = width,
-    height = height,
-    package = '%s'
-  )
-}
-
-#' Shiny bindings for %s
-#'
-#' Output and render functions for using %s within Shiny
-#' applications and interactive Rmd documents.
-#'
-#' @param outputId output variable to read from
-#' @param width,height Must be a valid CSS unit (like \\code{'100\\%%'},
-#'   \\code{'400px'}, \\code{'auto'}) or a number, which will be coerced to a
-#'   string and have \\code{'px'} appended.
-#' @param expr An expression that generates a %s
-#' @param env The environment in which to evaluate \\code{expr}.
-#' @param quoted Is \\code{expr} a quoted expression (with \\code{quote()})? This
-#'   is useful if you want to save an expression in a variable.
-#'
-#' @name %s-shiny
-#'
-#' @export
-%sOutput <- function(outputId, width = '100%%', height = '400px'){
-  htmlwidgets::shinyWidgetOutput(outputId, '%s', width, height, package = '%s')
-}
-
-#' @rdname %s-shiny
-#' @export
-render%s <- function(expr, env = parent.frame(), quoted = FALSE) {
-  if (!quoted) { expr <- substitute(expr) } # force quoted
-  htmlwidgets::shinyRenderWidget(expr, %sOutput, env, quoted = TRUE)
-}
-"
+  tpl <- paste(readLines(
+    system.file('templates/widget_r.txt', package = 'htmlwidgets')
+  ), collapse = "\n")
 
   capName = function(name){
     paste0(toupper(substring(name, 1, 1)), substring(name, 2))
@@ -128,35 +79,10 @@ addWidgetYAML <- function(name, bowerPkg, edit){
 }
 
 addWidgetJS <- function(name, edit){
-  tpl <- "HTMLWidgets.widget({
+  tpl <- paste(readLines(
+    system.file('templates/widget_js.txt', package = 'htmlwidgets')
+  ), collapse = "\n")
 
-  name: '%s',
-
-  type: 'output',
-
-  factory: function(el, width, height) {
-
-    // TODO: define shared variables for this instance
-
-    return {
-
-      renderValue: function(x) {
-
-        // TODO: code to render the widget, e.g.
-        el.innerText = x.message;
-
-      },
-
-      resize: function(width, height) {
-
-        // TODO: code to re-render the widget with a new size
-
-      }
-
-    };
-  }
-});
-"
   if (!file.exists(file_ <- sprintf('inst/htmlwidgets/%s.js', name))){
     cat(sprintf(tpl, name), file = file_)
     message('Created boilerplate for widget javascript bindings at ',
