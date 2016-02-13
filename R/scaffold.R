@@ -35,6 +35,8 @@ addWidgetConstructor <- function(name, package, edit){
 #'
 #' <Add Description>
 #'
+#' @import htmlwidgets
+#'
 #' @export
 %s <- function(message, width = NULL, height = NULL) {
 
