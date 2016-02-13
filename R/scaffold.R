@@ -35,8 +35,6 @@ addWidgetConstructor <- function(name, package, edit){
 #'
 #' <Add Description>
 #'
-#' @import htmlwidgets
-#'
 #' @export
 %s <- function(message, width = NULL, height = NULL) {
 
@@ -73,14 +71,14 @@ addWidgetConstructor <- function(name, package, edit){
 #'
 #' @export
 %sOutput <- function(outputId, width = '100%%', height = '400px'){
-  shinyWidgetOutput(outputId, '%s', width, height, package = '%s')
+  htmlwidgets::shinyWidgetOutput(outputId, '%s', width, height, package = '%s')
 }
 
 #' @rdname %s-shiny
 #' @export
 render%s <- function(expr, env = parent.frame(), quoted = FALSE) {
   if (!quoted) { expr <- substitute(expr) } # force quoted
-  shinyRenderWidget(expr, %sOutput, env, quoted = TRUE)
+  htmlwidgets::shinyRenderWidget(expr, %sOutput, env, quoted = TRUE)
 }
 "
 
