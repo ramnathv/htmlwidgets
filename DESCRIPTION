@@ -17,7 +17,7 @@ Description: A framework for creating HTML widgets that render in various
 License: MIT + file LICENSE
 VignetteBuilder: knitr
 Imports:
-    htmltools (>= 0.2.6),
+    htmltools (>= 0.3),
     jsonlite (>= 0.9.16),
     yaml
 Suggests:

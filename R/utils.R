@@ -46,21 +46,21 @@ getDependency <- function(name, package = name){
     do.call(htmlDependency, l)
   })
 
-  # Create a dependency that will cause the jsfile and only the jsfile (rather
-  # than all of its filesystem siblings) to be copied
-  copyBindingDir = getOption('htmlwidgets.copybindingdir', default = TRUE)
-  if (copyBindingDir){
-    bindingDir <- tempfile("widgetbinding")
-    dir.create(bindingDir, mode = "0700")
-    file.copy(system.file(jsfile, package = package), bindingDir)
-  } else {
-    bindingDir = system.file("htmlwidgets", package = package)
+  bindingDir <- system.file("htmlwidgets", package = package)
+  argsDep <- NULL
+  copyBindingDir <- getOption('htmlwidgets.copybindingdir', TRUE)
+  # TODO: remove this trick when htmltools >= 0.3.3 is on CRAN
+  if (copyBindingDir) {
+    if (packageVersion('htmltools') < '0.3.3') {
+      bindingDir <- tempfile("widgetbinding")
+      dir.create(bindingDir, mode = "0700")
+      file.copy(system.file(jsfile, package = package), bindingDir)
+    } else argsDep <- list(all_files = FALSE)
   }
-
-  bindingDep <- htmlDependency(paste0(name, "-binding"), packageVersion(package),
-    bindingDir,
-    script = basename(jsfile)
-  )
+  bindingDep <- do.call(htmlDependency, c(list(
+    paste0(name, "-binding"), packageVersion(package),
+    bindingDir, script = basename(jsfile)
+  ), argsDep))
 
   c(
     list(htmlDependency("htmlwidgets", packageVersion("htmlwidgets"),
