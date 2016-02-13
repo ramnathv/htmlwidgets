@@ -1,5 +1,9 @@
-htmlwidgets 0.5.2 (unreleased)
+htmlwidgets 0.6 (unreleased)
 -----------------------------------------------------------------------
+
+* Introduce new scheme for defining JavaScript bindings that will make
+  it easier for widgets to gain access to other widget instances on
+  the page.
 
 * Fix a bug where the string "</body></html>" in the widget data caused
   `saveWidget()` to have malformed output. (#168)
@@ -7,7 +11,6 @@ htmlwidgets 0.5.2 (unreleased)
 * Increase pandoc stack size to 512M for saveWidget (often required for
   e.g. larger embedded leaflet maps). Stack size can also be controlled
   by the pandoc.stack.size option.
-
 
 htmlwidgets 0.5
 -----------------------------------------------------------------------

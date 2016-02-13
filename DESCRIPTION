@@ -1,7 +1,7 @@
 Package: htmlwidgets
 Type: Package
 Title: HTML Widgets for R
-Version: 0.5.2
+Version: 0.6
 Date: 2015-06-21
 Authors@R: c(
     person("Ramnath", "Vaidyanathan", role = c("aut", "cph")),
@@ -22,7 +22,7 @@ Imports:
     yaml
 Suggests:
     knitr (>= 1.8)
-Enhances:
-    shiny (>= 0.12)
+Enhances: shiny (>= 0.12)
 URL: https://github.com/ramnathv/htmlwidgets
 BugReports: https://github.com/ramnathv/htmlwidgets/issues
+RoxygenNote: 5.0.1
