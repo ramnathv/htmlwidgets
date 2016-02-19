@@ -159,17 +159,23 @@ with_pandoc_safe_environment <- function(code) {
     on.exit(Sys.setenv(LC_CTYPE = lc_ctype), add = TRUE)
   }
   if (Sys.info()['sysname'] == "Linux" &&
-        is.na(Sys.getenv("HOME", unset = NA))) {
+      is.na(Sys.getenv("HOME", unset = NA))) {
     stop("The 'HOME' environment variable must be set before running Pandoc.")
   }
   if (Sys.info()['sysname'] == "Linux" &&
-        is.na(Sys.getenv("LANG", unset = NA))) {
+      is.na(Sys.getenv("LANG", unset = NA))) {
     # fill in a the LANG environment variable if it doesn't exist
     Sys.setenv(LANG=detect_generic_lang())
     on.exit(Sys.unsetenv("LANG"), add = TRUE)
   }
+  if (Sys.info()['sysname'] == "Linux" &&
+      identical(Sys.getenv("LANG"), "en_US")) {
+    Sys.setenv(LANG="en_US.UTF-8")
+    on.exit(Sys.setenv(LANG="en_US"), add = TRUE)
+  }
   force(code)
 }
+
 
 # if there is no LANG environment variable set pandoc is going to hang so
 # we need to specify a "generic" lang setting. With glibc >= 2.13 you can

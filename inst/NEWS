@@ -18,6 +18,9 @@ htmlwidgets 0.6
   e.g. larger embedded leaflet maps). Stack size can also be controlled
   by the pandoc.stack.size option.
 
+* Import latest version of with_pandoc_safe_environment from rmarkdown
+
+
 htmlwidgets 0.5
 -----------------------------------------------------------------------
 
