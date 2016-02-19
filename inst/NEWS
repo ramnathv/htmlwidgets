@@ -14,6 +14,10 @@ htmlwidgets 0.6
 * Fix a bug where the string "</body></html>" in the widget data caused
   `saveWidget()` to have malformed output. (#168)
 
+* Tweak pandoc conversion used in saveWidget to prevent hanging with
+  large htmlwidget script data elements (use "markdown" rather than
+  "markdown-strict" as input format)
+
 * Increase pandoc stack size to 512M for saveWidget (often required for
   e.g. larger embedded leaflet maps). Stack size can also be controlled
   by the pandoc.stack.size option.
