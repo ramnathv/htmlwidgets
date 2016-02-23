@@ -282,9 +282,9 @@ Requires: colorspace
 
 Package: networkD3
 Source: CRAN
-Version: 0.1.7
-Hash: 9c9405d7d8a58433b802c72d601e7150
-Requires: htmlwidgets, plyr, rjson
+Version: 0.2.8
+Hash: edce1d6f899f12e5ec689766f3b5d54a
+Requires: htmlwidgets
 
 Package: packrat
 Source: CRAN
