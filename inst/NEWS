@@ -24,6 +24,8 @@ htmlwidgets 0.6
 
 * Import latest version of with_pandoc_safe_environment from rmarkdown
 
+* Fix issue that prevented calling renderValue() from within resize()
+
 
 htmlwidgets 0.5
 -----------------------------------------------------------------------
