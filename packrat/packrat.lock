@@ -24,14 +24,10 @@ Hash: 66d3d04d40c505e567c1328eae0409ee
 Requires: htmltools, htmlwidgets, magrittr
 
 Package: DiagrammeR
-Source: github
-Version: 0.4
-Hash: 8b4f9428123a4127e6b9dd99229da577
-Requires: htmlwidgets, rstudioapi
-GithubRepo: DiagrammeR
-GithubUsername: rich-iannone
-GithubRef: master
-GithubSha1: 4b08887320181a9fd71ec84b51e6ede2e1654f73
+Source: CRAN
+Version: 0.8.2
+Hash: 8a7aef23a392f188623688734be88ec6
+Requires: htmlwidgets, rstudioapi, scales, stringr, visNetwork
 
 Package: R6
 Source: CRAN
@@ -383,8 +379,8 @@ GithubSha1: 5ec65597275312422d815f98afd1333b531adc1f
 
 Package: rstudioapi
 Source: CRAN
-Version: 0.2
-Hash: e31a489e8019b379967fde77361af4ad
+Version: 0.5
+Hash: f942db72a8f51e968b061f28058e2c57
 
 Package: scales
 Source: CRAN
