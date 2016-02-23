@@ -7,7 +7,7 @@
     root.MG = factory(root.d3, root.jQuery);
   }
 }(this, function(d3, $) {
-window.MG = {version: '2.5.0'};
+window.MG = {version: '2.7.0'};
 
 function register(chartType, descriptor, defaults) {
     MG.charts[chartType] = {
@@ -86,7 +86,8 @@ MG.globals = {};
 MG.deprecations = {
     rollover_callback: { replacement: 'mouseover', version: '2.0' },
     rollout_callback: { replacement: 'mouseout', version: '2.0' },
-    show_years: { replacement: 'show_secondary_x_label', version: '2.1' }
+    show_years: { replacement: 'show_secondary_x_label', version: '2.1' },
+    xax_start_at_min: { replacement: 'axes_not_compact', version: '2.7' }
 };
 MG.globals.link = false;
 MG.globals.version = "1.1";
@@ -96,41 +97,44 @@ MG.charts = {};
 MG.data_graphic = function(args) {
     'use strict';
     var defaults = {
-        missing_is_zero: false,       // if true, missing values will be treated as zeros
-        missing_is_hidden: false,     // if true, missing values will appear as broken segments
-        legend: '' ,                  // an array identifying the labels for a chart's lines
-        legend_target: '',            // if set, the specified element is populated with a legend
-        error: '',                    // if set, a graph will show an error icon and log the error to the console
-        animate_on_load: false,       // animate lines on load
-        top: 40,                      // the size of the top margin
-        bottom: 30,                   // the size of the bottom margin
-        right: 10,                    // size of the right margin
-        left: 50,                     // size of the left margin
-        buffer: 8,                    // the buffer between the actual chart area and the margins
-        width: 350,                   // the width of the entire graphic
-        height: 220,                  // the height of the entire graphic
-        full_width: false,            // sets the graphic width to be the width of the parent element and resizes dynamically
-        full_height: false,           // sets the graphic width to be the width of the parent element and resizes dynamically
-        small_height_threshold: 120,  // the height threshold for when smaller text appears
-        small_width_threshold: 160,   // the width  threshold for when smaller text appears
-        small_text: false,            // coerces small text regardless of graphic size
-        xax_count: 6,                 // number of x axis ticks
-        xax_tick_length: 5,           // x axis tick length
-        xax_start_at_min: false,
-        yax_count: 5,                 // number of y axis ticks
-        yax_tick_length: 5,           // y axis tick length
-        x_extended_ticks: false,      // extends x axis ticks across chart - useful for tall charts
-        y_extended_ticks: false,      // extends y axis ticks across chart - useful for long charts
+        missing_is_zero: false,                // if true, missing values will be treated as zeros
+        missing_is_hidden: false,              // if true, missing values will appear as broken segments
+        missing_is_hidden_accessor: null,      // the accessor that determines the boolean value for missing data points
+        legend: '' ,                           // an array identifying the labels for a chart's lines
+        legend_target: '',                     // if set, the specified element is populated with a legend
+        error: '',                             // if set, a graph will show an error icon and log the error to the console
+        animate_on_load: false,                // animate lines on load
+        top: 65,                               // the size of the top margin
+        title_y_position: 10,                  // how many pixels from the top edge (0) should we show the title at
+        bottom: 30,                            // the size of the bottom margin
+        right: 10,                             // size of the right margin
+        left: 50,                              // size of the left margin
+        buffer: 8,                             // the buffer between the actual chart area and the margins
+        width: 350,                            // the width of the entire graphic
+        height: 220,                           // the height of the entire graphic
+        full_width: false,                     // sets the graphic width to be the width of the parent element and resizes dynamically
+        full_height: false,                    // sets the graphic width to be the width of the parent element and resizes dynamically
+        small_height_threshold: 120,           // the height threshold for when smaller text appears
+        small_width_threshold: 160,            // the width  threshold for when smaller text appears
+        small_text: false,                     // coerces small text regardless of graphic size
+        xax_count: 6,                          // number of x axis ticks
+        xax_tick_length: 5,                    // x axis tick length
+        axes_not_compact: true,
+        yax_count: 5,                          // number of y axis ticks
+        yax_tick_length: 5,                    // y axis tick length
+        x_extended_ticks: false,               // extends x axis ticks across chart - useful for tall charts
+        y_extended_ticks: false,               // extends y axis ticks across chart - useful for long charts
         y_scale_type: 'linear',
         max_x: null,
         max_y: null,
         min_x: null,
-        min_y: null,                  // if set, y axis starts at an arbitrary value
-        min_y_from_data: false,       // if set, y axis will start at minimum value rather than at 0
-        point_size: 2.5,              // the size of the dot that appears on a line on mouse-over
+        min_y: null,                           // if set, y axis starts at an arbitrary value
+        min_y_from_data: false,                // if set, y axis will start at minimum value rather than at 0
+        point_size: 2.5,                       // the size of the dot that appears on a line on mouse-over
         x_accessor: 'date',
         xax_units: '',
         x_label: '',
+        x_sort: true,
         x_axis: true,
         y_axis: true,
         y_accessor: 'value',
@@ -138,33 +142,38 @@ MG.data_graphic = function(args) {
         yax_units: '',
         x_rug: false,
         y_rug: false,
+        x_rollover_format: null,               //
+        y_rollover_format: null,               //
         transition_on_update: true,
         mouseover: null,
         show_rollover_text: true,
-        show_confidence_band: null,   // given [l, u] shows a confidence at each point from l to u
-        xax_format: null,             // xax_format is a function that formats the labels for the x axis.
+        show_confidence_band: null,            // given [l, u] shows a confidence at each point from l to u
+        xax_format: null,                      // xax_format is a function that formats the labels for the x axis.
         area: true,
         chart_type: 'line',
         data: [],
-        decimals: 2,                  // the number of decimals in any rollover
-        format: 'count',              // format = {count, percentage}
-        inflator: 10/9,               // for setting y axis max
-        linked: false,                // links together all other graphs with linked:true, so rollovers in one trigger rollovers in the others
-        linked_format: '%Y-%m-%d',    // What granularity to link on for graphs. Default is at day
+        decimals: 2,                           // the number of decimals in any rollover
+        format: 'count',                       // format = {count, percentage}
+        inflator: 10/9,                        // for setting y axis max
+        linked: false,                         // links together all other graphs with linked:true, so rollovers in one trigger rollovers in the others
+        linked_format: '%Y-%m-%d',             // What granularity to link on for graphs. Default is at day
         list: false,
-        baselines: null,              // sets the baseline lines
-        markers: null,                // sets the marker lines
+        baselines: null,                       // sets the baseline lines
+        markers: null,                         // sets the marker lines
         scalefns: {},
         scales: {},
+        utc_time: false,
+        european_clock: false,
         show_year_markers: false,
         show_secondary_x_label: true,
         target: '#viz',
-        interpolate: 'cardinal',       // interpolation method to use when rendering lines
-        interpolate_tension: 0.7,      // its range is from 0 to 1; increase if your data is irregular and you notice artifacts
-        custom_line_color_map: [],     // allows arbitrary mapping of lines to colors, e.g. [2,3] will map line 1 to color 2 and line 2 to color 3
-        max_data_size: null,           // explicitly specify the the max number of line series, for use with custom_line_color_map
-        aggregate_rollover: false,     // links the lines in a multi-line chart
-        show_tooltips: true            // if enabled, a chart's description will appear in a tooltip (requires jquery)
+        interpolate: 'cardinal',               // interpolation method to use when rendering lines
+        interpolate_tension: 0.7,              // its range is from 0 to 1; increase if your data is irregular and you notice artifacts
+        custom_line_color_map: [],             // allows arbitrary mapping of lines to colors, e.g. [2,3] will map line 1 to color 2 and line 2 to color 3
+        colors: null,                          // UNIMPLEMENTED - allows direct color mapping to line colors. Will eventually require
+        max_data_size: null,                   // explicitly specify the the max number of line series, for use with custom_line_color_map
+        aggregate_rollover: false,             // links the lines in a multi-line chart
+        show_tooltips: true                    // if enabled, a chart's description will appear in a tooltip (requires jquery)
     };
 
     MG.call_hook('global.defaults', defaults);
@@ -218,50 +227,37 @@ MG.data_graphic = function(args) {
 };
 
 if (typeof jQuery !== 'undefined') {
-    /*!
-     * Bootstrap v3.3.1 (http://getbootstrap.com)
-     * Copyright 2011-2014 Twitter, Inc.
-     * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
-     */
-
-    /*!
-     * Generated using the Bootstrap Customizer (http://getbootstrap.com/customize/?id=698666b23215c58f23d4)
-     * Config saved to config.json and https://gist.github.com/698666b23215c58f23d4
-     */
-
     /* ========================================================================
-     * Bootstrap: tooltip.js v3.3.1
+     * Bootstrap: tooltip.js v3.3.5
      * http://getbootstrap.com/javascript/#tooltip
      * Inspired by the original jQuery.tipsy by Jason Frame
      * ========================================================================
-     * Copyright 2011-2014 Twitter, Inc.
+     * Copyright 2011-2015 Twitter, Inc.
      * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
      * ======================================================================== */
 
 
     +function ($) {
       'use strict';
-      
-      if(typeof $().tooltip == 'function')
-        return true;
 
       // TOOLTIP PUBLIC CLASS DEFINITION
       // ===============================
 
       var Tooltip = function (element, options) {
-        this.type       =
-        this.options    =
-        this.enabled    =
-        this.timeout    =
-        this.hoverState =
-        this.$element   = null;
+        this.type       = null
+        this.options    = null
+        this.enabled    = null
+        this.timeout    = null
+        this.hoverState = null
+        this.$element   = null
+        this.inState    = null
 
-        this.init('tooltip', element, options);
-      };
+        this.init('tooltip', element, options)
+      }
 
-      Tooltip.VERSION  = '3.3.1';
+      Tooltip.VERSION  = '3.3.5'
 
-      Tooltip.TRANSITION_DURATION = 150;
+      Tooltip.TRANSITION_DURATION = 150
 
       Tooltip.DEFAULTS = {
         animation: true,
@@ -277,200 +273,223 @@ if (typeof jQuery !== 'undefined') {
           selector: 'body',
           padding: 0
         }
-      };
+      }
 
       Tooltip.prototype.init = function (type, element, options) {
-        this.enabled   = true;
-        this.type      = type;
-        this.$element  = $(element);
-        this.options   = this.getOptions(options);
-        this.$viewport = this.options.viewport && $(this.options.viewport.selector || this.options.viewport);
+        this.enabled   = true
+        this.type      = type
+        this.$element  = $(element)
+        this.options   = this.getOptions(options)
+        this.$viewport = this.options.viewport && $($.isFunction(this.options.viewport) ? this.options.viewport.call(this, this.$element) : (this.options.viewport.selector || this.options.viewport))
+        this.inState   = { click: false, hover: false, focus: false }
 
-        var triggers = this.options.trigger.split(' ');
+        if (this.$element[0] instanceof document.constructor && !this.options.selector) {
+          throw new Error('`selector` option must be specified when initializing ' + this.type + ' on the window.document object!')
+        }
+
+        var triggers = this.options.trigger.split(' ')
 
         for (var i = triggers.length; i--;) {
-          var trigger = triggers[i];
+          var trigger = triggers[i]
 
           if (trigger == 'click') {
-            this.$element.on('click.' + this.type, this.options.selector, $.proxy(this.toggle, this));
+            this.$element.on('click.' + this.type, this.options.selector, $.proxy(this.toggle, this))
           } else if (trigger != 'manual') {
-            var eventIn  = trigger == 'hover' ? 'mouseenter' : 'focusin';
-            var eventOut = trigger == 'hover' ? 'mouseleave' : 'focusout';
+            var eventIn  = trigger == 'hover' ? 'mouseenter' : 'focusin'
+            var eventOut = trigger == 'hover' ? 'mouseleave' : 'focusout'
 
-            this.$element.on(eventIn  + '.' + this.type, this.options.selector, $.proxy(this.enter, this));
-            this.$element.on(eventOut + '.' + this.type, this.options.selector, $.proxy(this.leave, this));
+            this.$element.on(eventIn  + '.' + this.type, this.options.selector, $.proxy(this.enter, this))
+            this.$element.on(eventOut + '.' + this.type, this.options.selector, $.proxy(this.leave, this))
           }
         }
 
         this.options.selector ?
           (this._options = $.extend({}, this.options, { trigger: 'manual', selector: '' })) :
-          this.fixTitle();
-      };
+          this.fixTitle()
+      }
 
       Tooltip.prototype.getDefaults = function () {
-        return Tooltip.DEFAULTS;
-      };
+        return Tooltip.DEFAULTS
+      }
 
       Tooltip.prototype.getOptions = function (options) {
-        options = $.extend({}, this.getDefaults(), this.$element.data(), options);
+        options = $.extend({}, this.getDefaults(), this.$element.data(), options)
 
         if (options.delay && typeof options.delay == 'number') {
           options.delay = {
             show: options.delay,
             hide: options.delay
-          };
+          }
         }
 
-        return options;
-      };
+        return options
+      }
 
       Tooltip.prototype.getDelegateOptions = function () {
-        var options  = {};
-        var defaults = this.getDefaults();
+        var options  = {}
+        var defaults = this.getDefaults()
 
         this._options && $.each(this._options, function (key, value) {
-          if (defaults[key] != value) options[key] = value;
-        });
+          if (defaults[key] != value) options[key] = value
+        })
 
-        return options;
-      };
+        return options
+      }
 
       Tooltip.prototype.enter = function (obj) {
         var self = obj instanceof this.constructor ?
-          obj : $(obj.currentTarget).data('bs.' + this.type);
-
-        if (self && self.$tip && self.$tip.is(':visible')) {
-          self.hoverState = 'in';
-          return;
-        }
+          obj : $(obj.currentTarget).data('bs.' + this.type)
 
         if (!self) {
-          self = new this.constructor(obj.currentTarget, this.getDelegateOptions());
-          $(obj.currentTarget).data('bs.' + this.type, self);
+          self = new this.constructor(obj.currentTarget, this.getDelegateOptions())
+          $(obj.currentTarget).data('bs.' + this.type, self)
         }
 
-        clearTimeout(self.timeout);
+        if (obj instanceof $.Event) {
+          self.inState[obj.type == 'focusin' ? 'focus' : 'hover'] = true
+        }
 
-        self.hoverState = 'in';
+        if (self.tip().hasClass('in') || self.hoverState == 'in') {
+          self.hoverState = 'in'
+          return
+        }
 
-        if (!self.options.delay || !self.options.delay.show) return self.show();
+        clearTimeout(self.timeout)
+
+        self.hoverState = 'in'
+
+        if (!self.options.delay || !self.options.delay.show) return self.show()
 
         self.timeout = setTimeout(function () {
-          if (self.hoverState == 'in') self.show();
-        }, self.options.delay.show);
-      };
+          if (self.hoverState == 'in') self.show()
+        }, self.options.delay.show)
+      }
+
+      Tooltip.prototype.isInStateTrue = function () {
+        for (var key in this.inState) {
+          if (this.inState[key]) return true
+        }
+
+        return false
+      }
 
       Tooltip.prototype.leave = function (obj) {
         var self = obj instanceof this.constructor ?
-          obj : $(obj.currentTarget).data('bs.' + this.type);
+          obj : $(obj.currentTarget).data('bs.' + this.type)
 
         if (!self) {
-          self = new this.constructor(obj.currentTarget, this.getDelegateOptions());
-          $(obj.currentTarget).data('bs.' + this.type, self);
+          self = new this.constructor(obj.currentTarget, this.getDelegateOptions())
+          $(obj.currentTarget).data('bs.' + this.type, self)
         }
 
-        clearTimeout(self.timeout);
+        if (obj instanceof $.Event) {
+          self.inState[obj.type == 'focusout' ? 'focus' : 'hover'] = false
+        }
 
-        self.hoverState = 'out';
+        if (self.isInStateTrue()) return
 
-        if (!self.options.delay || !self.options.delay.hide) return self.hide();
+        clearTimeout(self.timeout)
+
+        self.hoverState = 'out'
+
+        if (!self.options.delay || !self.options.delay.hide) return self.hide()
 
         self.timeout = setTimeout(function () {
-          if (self.hoverState == 'out') self.hide();
-        }, self.options.delay.hide);
-      };
+          if (self.hoverState == 'out') self.hide()
+        }, self.options.delay.hide)
+      }
 
       Tooltip.prototype.show = function () {
-        var e = $.Event('show.bs.' + this.type);
+        var e = $.Event('show.bs.' + this.type)
 
         if (this.hasContent() && this.enabled) {
-          this.$element.trigger(e);
+          this.$element.trigger(e)
 
-          var inDom = $.contains(this.$element[0].ownerDocument.documentElement, this.$element[0]);
-          if (e.isDefaultPrevented() || !inDom) return;
-          var that = this;
+          var inDom = $.contains(this.$element[0].ownerDocument.documentElement, this.$element[0])
+          if (e.isDefaultPrevented() || !inDom) return
+          var that = this
 
-          var $tip = this.tip();
+          var $tip = this.tip()
 
-          var tipId = this.getUID(this.type);
+          var tipId = this.getUID(this.type)
 
-          this.setContent();
-          $tip.attr('id', tipId);
-          this.$element.attr('aria-describedby', tipId);
+          this.setContent()
+          $tip.attr('id', tipId)
+          this.$element.attr('aria-describedby', tipId)
 
-          if (this.options.animation) $tip.addClass('fade');
+          if (this.options.animation) $tip.addClass('fade')
 
           var placement = typeof this.options.placement == 'function' ?
             this.options.placement.call(this, $tip[0], this.$element[0]) :
-            this.options.placement;
+            this.options.placement
 
-          var autoToken = /\s?auto?\s?/i;
-          var autoPlace = autoToken.test(placement);
-          if (autoPlace) placement = placement.replace(autoToken, '') || 'top';
+          var autoToken = /\s?auto?\s?/i
+          var autoPlace = autoToken.test(placement)
+          if (autoPlace) placement = placement.replace(autoToken, '') || 'top'
 
           $tip
             .detach()
             .css({ top: 0, left: 0, display: 'block' })
             .addClass(placement)
-            .data('bs.' + this.type, this);
+            .data('bs.' + this.type, this)
 
-          this.options.container ? $tip.appendTo(this.options.container) : $tip.insertAfter(this.$element);
+          this.options.container ? $tip.appendTo(this.options.container) : $tip.insertAfter(this.$element)
+          this.$element.trigger('inserted.bs.' + this.type)
 
-          var pos          = this.getPosition();
-          var actualWidth  = $tip[0].offsetWidth;
-          var actualHeight = $tip[0].offsetHeight;
+          var pos          = this.getPosition()
+          var actualWidth  = $tip[0].offsetWidth
+          var actualHeight = $tip[0].offsetHeight
 
           if (autoPlace) {
-            var orgPlacement = placement;
-            var $container   = this.options.container ? $(this.options.container) : this.$element.parent();
-            var containerDim = this.getPosition($container);
+            var orgPlacement = placement
+            var viewportDim = this.getPosition(this.$viewport)
 
-            placement = placement == 'bottom' && pos.bottom + actualHeight > containerDim.bottom ? 'top'    :
-                        placement == 'top'    && pos.top    - actualHeight < containerDim.top    ? 'bottom' :
-                        placement == 'right'  && pos.right  + actualWidth  > containerDim.width  ? 'left'   :
-                        placement == 'left'   && pos.left   - actualWidth  < containerDim.left   ? 'right'  :
-                        placement;
+            placement = placement == 'bottom' && pos.bottom + actualHeight > viewportDim.bottom ? 'top'    :
+                        placement == 'top'    && pos.top    - actualHeight < viewportDim.top    ? 'bottom' :
+                        placement == 'right'  && pos.right  + actualWidth  > viewportDim.width  ? 'left'   :
+                        placement == 'left'   && pos.left   - actualWidth  < viewportDim.left   ? 'right'  :
+                        placement
 
             $tip
               .removeClass(orgPlacement)
-              .addClass(placement);
+              .addClass(placement)
           }
 
-          var calculatedOffset = this.getCalculatedOffset(placement, pos, actualWidth, actualHeight);
+          var calculatedOffset = this.getCalculatedOffset(placement, pos, actualWidth, actualHeight)
 
-          this.applyPlacement(calculatedOffset, placement);
+          this.applyPlacement(calculatedOffset, placement)
 
           var complete = function () {
-            var prevHoverState = that.hoverState;
-            that.$element.trigger('shown.bs.' + that.type);
-            that.hoverState = null;
+            var prevHoverState = that.hoverState
+            that.$element.trigger('shown.bs.' + that.type)
+            that.hoverState = null
 
-            if (prevHoverState == 'out') that.leave(that);
-          };
+            if (prevHoverState == 'out') that.leave(that)
+          }
 
           $.support.transition && this.$tip.hasClass('fade') ?
             $tip
               .one('bsTransitionEnd', complete)
               .emulateTransitionEnd(Tooltip.TRANSITION_DURATION) :
-            complete();
+            complete()
         }
-      };
+      }
 
       Tooltip.prototype.applyPlacement = function (offset, placement) {
-        var $tip   = this.tip();
-        var width  = $tip[0].offsetWidth;
-        var height = $tip[0].offsetHeight;
+        var $tip   = this.tip()
+        var width  = $tip[0].offsetWidth
+        var height = $tip[0].offsetHeight
 
         // manually read margins because getBoundingClientRect includes difference
-        var marginTop = parseInt($tip.css('margin-top'), 10);
-        var marginLeft = parseInt($tip.css('margin-left'), 10);
+        var marginTop = parseInt($tip.css('margin-top'), 10)
+        var marginLeft = parseInt($tip.css('margin-left'), 10)
 
         // we must check for NaN for ie 8/9
-        if (isNaN(marginTop))  marginTop  = 0;
-        if (isNaN(marginLeft)) marginLeft = 0;
+        if (isNaN(marginTop))  marginTop  = 0
+        if (isNaN(marginLeft)) marginLeft = 0
 
-        offset.top  = offset.top  + marginTop;
-        offset.left = offset.left + marginLeft;
+        offset.top  += marginTop
+        offset.left += marginLeft
 
         // $.fn.offset doesn't round pixel values
         // so we use setOffset directly with our own function B-0
@@ -479,199 +498,217 @@ if (typeof jQuery !== 'undefined') {
             $tip.css({
               top: Math.round(props.top),
               left: Math.round(props.left)
-            });
+            })
           }
-        }, offset), 0);
+        }, offset), 0)
 
-        $tip.addClass('in');
+        $tip.addClass('in')
 
         // check to see if placing tip in new offset caused the tip to resize itself
-        var actualWidth  = $tip[0].offsetWidth;
-        var actualHeight = $tip[0].offsetHeight;
+        var actualWidth  = $tip[0].offsetWidth
+        var actualHeight = $tip[0].offsetHeight
 
         if (placement == 'top' && actualHeight != height) {
-          offset.top = offset.top + height - actualHeight;
+          offset.top = offset.top + height - actualHeight
         }
 
-        var delta = this.getViewportAdjustedDelta(placement, offset, actualWidth, actualHeight);
+        var delta = this.getViewportAdjustedDelta(placement, offset, actualWidth, actualHeight)
 
-        if (delta.left) offset.left += delta.left;
-        else offset.top += delta.top;
+        if (delta.left) offset.left += delta.left
+        else offset.top += delta.top
 
-        var isVertical          = /top|bottom/.test(placement);
-        var arrowDelta          = isVertical ? delta.left * 2 - width + actualWidth : delta.top * 2 - height + actualHeight;
-        var arrowOffsetPosition = isVertical ? 'offsetWidth' : 'offsetHeight';
+        var isVertical          = /top|bottom/.test(placement)
+        var arrowDelta          = isVertical ? delta.left * 2 - width + actualWidth : delta.top * 2 - height + actualHeight
+        var arrowOffsetPosition = isVertical ? 'offsetWidth' : 'offsetHeight'
 
-        $tip.offset(offset);
-        this.replaceArrow(arrowDelta, $tip[0][arrowOffsetPosition], isVertical);
-      };
+        $tip.offset(offset)
+        this.replaceArrow(arrowDelta, $tip[0][arrowOffsetPosition], isVertical)
+      }
 
-      Tooltip.prototype.replaceArrow = function (delta, dimension, isHorizontal) {
+      Tooltip.prototype.replaceArrow = function (delta, dimension, isVertical) {
         this.arrow()
-          .css(isHorizontal ? 'left' : 'top', 50 * (1 - delta / dimension) + '%')
-          .css(isHorizontal ? 'top' : 'left', '');
-      };
+          .css(isVertical ? 'left' : 'top', 50 * (1 - delta / dimension) + '%')
+          .css(isVertical ? 'top' : 'left', '')
+      }
 
       Tooltip.prototype.setContent = function () {
-        var $tip  = this.tip();
-        var title = this.getTitle();
+        var $tip  = this.tip()
+        var title = this.getTitle()
 
-        $tip.find('.tooltip-inner')[this.options.html ? 'html' : 'text'](title);
-        $tip.removeClass('fade in top bottom left right');
-      };
+        $tip.find('.tooltip-inner')[this.options.html ? 'html' : 'text'](title)
+        $tip.removeClass('fade in top bottom left right')
+      }
 
       Tooltip.prototype.hide = function (callback) {
-        var that = this;
-        var $tip = this.tip();
-        var e    = $.Event('hide.bs.' + this.type);
+        var that = this
+        var $tip = $(this.$tip)
+        var e    = $.Event('hide.bs.' + this.type)
 
         function complete() {
-          if (that.hoverState != 'in') $tip.detach();
+          if (that.hoverState != 'in') $tip.detach()
           that.$element
             .removeAttr('aria-describedby')
-            .trigger('hidden.bs.' + that.type);
-          callback && callback();
+            .trigger('hidden.bs.' + that.type)
+          callback && callback()
         }
 
-        this.$element.trigger(e);
+        this.$element.trigger(e)
 
-        if (e.isDefaultPrevented()) return;
+        if (e.isDefaultPrevented()) return
 
-        $tip.removeClass('in');
+        $tip.removeClass('in')
 
-        $.support.transition && this.$tip.hasClass('fade') ?
+        $.support.transition && $tip.hasClass('fade') ?
           $tip
             .one('bsTransitionEnd', complete)
             .emulateTransitionEnd(Tooltip.TRANSITION_DURATION) :
-          complete();
+          complete()
 
-        this.hoverState = null;
+        this.hoverState = null
 
-        return this;
-      };
+        return this
+      }
 
       Tooltip.prototype.fixTitle = function () {
-        var $e = this.$element;
-        if ($e.attr('title') || typeof ($e.attr('data-original-title')) != 'string') {
-          $e.attr('data-original-title', $e.attr('title') || '').attr('title', '');
+        var $e = this.$element
+        if ($e.attr('title') || typeof $e.attr('data-original-title') != 'string') {
+          $e.attr('data-original-title', $e.attr('title') || '').attr('title', '')
         }
-      };
+      }
 
       Tooltip.prototype.hasContent = function () {
-        return this.getTitle();
-      };
+        return this.getTitle()
+      }
 
       Tooltip.prototype.getPosition = function ($element) {
-        $element   = $element || this.$element;
+        $element   = $element || this.$element
 
-        var el     = $element[0];
-        var isBody = el.tagName == 'BODY';
+        var el     = $element[0]
+        var isBody = el.tagName == 'BODY'
 
-        var elRect    = el.getBoundingClientRect();
+        var elRect    = el.getBoundingClientRect()
         if (elRect.width == null) {
           // width and height are missing in IE8, so compute them manually; see https://github.com/twbs/bootstrap/issues/14093
-          elRect = $.extend({}, elRect, { width: elRect.right - elRect.left, height: elRect.bottom - elRect.top });
+          elRect = $.extend({}, elRect, { width: elRect.right - elRect.left, height: elRect.bottom - elRect.top })
         }
-        var elOffset  = isBody ? { top: 0, left: 0 } : $element.offset();
-        var scroll    = { scroll: isBody ? document.documentElement.scrollTop || document.body.scrollTop : $element.scrollTop() };
-        var outerDims = isBody ? { width: $(window).width(), height: $(window).height() } : null;
+        var elOffset  = isBody ? { top: 0, left: 0 } : $element.offset()
+        var scroll    = { scroll: isBody ? document.documentElement.scrollTop || document.body.scrollTop : $element.scrollTop() }
+        var outerDims = isBody ? { width: $(window).width(), height: $(window).height() } : null
 
-        return $.extend({}, elRect, scroll, outerDims, elOffset);
-      };
+        return $.extend({}, elRect, scroll, outerDims, elOffset)
+      }
 
       Tooltip.prototype.getCalculatedOffset = function (placement, pos, actualWidth, actualHeight) {
-        return placement == 'bottom' ? { top: pos.top + pos.height,   left: pos.left + pos.width / 2 - actualWidth / 2  } :
-               placement == 'top'    ? { top: pos.top - actualHeight, left: pos.left + pos.width / 2 - actualWidth / 2  } :
+        return placement == 'bottom' ? { top: pos.top + pos.height,   left: pos.left + pos.width / 2 - actualWidth / 2 } :
+               placement == 'top'    ? { top: pos.top - actualHeight, left: pos.left + pos.width / 2 - actualWidth / 2 } :
                placement == 'left'   ? { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left - actualWidth } :
-            /* placement == 'right' */ { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width   };
+            /* placement == 'right' */ { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width }
 
-      };
+      }
 
       Tooltip.prototype.getViewportAdjustedDelta = function (placement, pos, actualWidth, actualHeight) {
-        var delta = { top: 0, left: 0 };
-        if (!this.$viewport) return delta;
+        var delta = { top: 0, left: 0 }
+        if (!this.$viewport) return delta
 
-        var viewportPadding = this.options.viewport && this.options.viewport.padding || 0;
-        var viewportDimensions = this.getPosition(this.$viewport);
+        var viewportPadding = this.options.viewport && this.options.viewport.padding || 0
+        var viewportDimensions = this.getPosition(this.$viewport)
 
         if (/right|left/.test(placement)) {
-          var topEdgeOffset    = pos.top - viewportPadding - viewportDimensions.scroll;
-          var bottomEdgeOffset = pos.top + viewportPadding - viewportDimensions.scroll + actualHeight;
+          var topEdgeOffset    = pos.top - viewportPadding - viewportDimensions.scroll
+          var bottomEdgeOffset = pos.top + viewportPadding - viewportDimensions.scroll + actualHeight
           if (topEdgeOffset < viewportDimensions.top) { // top overflow
-            delta.top = viewportDimensions.top - topEdgeOffset;
+            delta.top = viewportDimensions.top - topEdgeOffset
           } else if (bottomEdgeOffset > viewportDimensions.top + viewportDimensions.height) { // bottom overflow
-            delta.top = viewportDimensions.top + viewportDimensions.height - bottomEdgeOffset;
+            delta.top = viewportDimensions.top + viewportDimensions.height - bottomEdgeOffset
           }
         } else {
-          var leftEdgeOffset  = pos.left - viewportPadding;
-          var rightEdgeOffset = pos.left + viewportPadding + actualWidth;
+          var leftEdgeOffset  = pos.left - viewportPadding
+          var rightEdgeOffset = pos.left + viewportPadding + actualWidth
           if (leftEdgeOffset < viewportDimensions.left) { // left overflow
-            delta.left = viewportDimensions.left - leftEdgeOffset;
-          } else if (rightEdgeOffset > viewportDimensions.width) { // right overflow
-            delta.left = viewportDimensions.left + viewportDimensions.width - rightEdgeOffset;
+            delta.left = viewportDimensions.left - leftEdgeOffset
+          } else if (rightEdgeOffset > viewportDimensions.right) { // right overflow
+            delta.left = viewportDimensions.left + viewportDimensions.width - rightEdgeOffset
           }
         }
 
-        return delta;
-      };
+        return delta
+      }
 
       Tooltip.prototype.getTitle = function () {
-        var title;
-        var $e = this.$element;
-        var o  = this.options;
+        var title
+        var $e = this.$element
+        var o  = this.options
 
         title = $e.attr('data-original-title')
-          || (typeof o.title == 'function' ? o.title.call($e[0]) :  o.title);
+          || (typeof o.title == 'function' ? o.title.call($e[0]) :  o.title)
 
-        return title;
-      };
+        return title
+      }
 
       Tooltip.prototype.getUID = function (prefix) {
-        do prefix += ~~(Math.random() * 1000000);
-        while (document.getElementById(prefix));
-        return prefix;
-      };
+        do prefix += ~~(Math.random() * 1000000)
+        while (document.getElementById(prefix))
+        return prefix
+      }
 
       Tooltip.prototype.tip = function () {
-        return (this.$tip = this.$tip || $(this.options.template));
-      };
+        if (!this.$tip) {
+          this.$tip = $(this.options.template)
+          if (this.$tip.length != 1) {
+            throw new Error(this.type + ' `template` option must consist of exactly 1 top-level element!')
+          }
+        }
+        return this.$tip
+      }
 
       Tooltip.prototype.arrow = function () {
-        return (this.$arrow = this.$arrow || this.tip().find('.tooltip-arrow'));
-      };
+        return (this.$arrow = this.$arrow || this.tip().find('.tooltip-arrow'))
+      }
 
       Tooltip.prototype.enable = function () {
-        this.enabled = true;
-      };
+        this.enabled = true
+      }
 
       Tooltip.prototype.disable = function () {
-        this.enabled = false;
-      };
+        this.enabled = false
+      }
 
       Tooltip.prototype.toggleEnabled = function () {
-        this.enabled = !this.enabled;
-      };
+        this.enabled = !this.enabled
+      }
 
       Tooltip.prototype.toggle = function (e) {
-        var self = this;
+        var self = this
         if (e) {
-          self = $(e.currentTarget).data('bs.' + this.type);
+          self = $(e.currentTarget).data('bs.' + this.type)
           if (!self) {
-            self = new this.constructor(e.currentTarget, this.getDelegateOptions());
-            $(e.currentTarget).data('bs.' + this.type, self);
+            self = new this.constructor(e.currentTarget, this.getDelegateOptions())
+            $(e.currentTarget).data('bs.' + this.type, self)
           }
         }
 
-        self.tip().hasClass('in') ? self.leave(self) : self.enter(self);
-      };
+        if (e) {
+          self.inState.click = !self.inState.click
+          if (self.isInStateTrue()) self.enter(self)
+          else self.leave(self)
+        } else {
+          self.tip().hasClass('in') ? self.leave(self) : self.enter(self)
+        }
+      }
 
       Tooltip.prototype.destroy = function () {
-        var that = this;
-        clearTimeout(this.timeout);
+        var that = this
+        clearTimeout(this.timeout)
         this.hide(function () {
-          that.$element.off('.' + that.type).removeData('bs.' + that.type);
-        });
-      };
+          that.$element.off('.' + that.type).removeData('bs.' + that.type)
+          if (that.$tip) {
+            that.$tip.detach()
+          }
+          that.$tip = null
+          that.$arrow = null
+          that.$viewport = null
+        })
+      }
 
 
       // TOOLTIP PLUGIN DEFINITION
@@ -679,43 +716,38 @@ if (typeof jQuery !== 'undefined') {
 
       function Plugin(option) {
         return this.each(function () {
-          var $this    = $(this);
-          var data     = $this.data('bs.tooltip');
-          var options  = typeof option == 'object' && option;
-          var selector = options && options.selector;
+          var $this   = $(this)
+          var data    = $this.data('bs.tooltip')
+          var options = typeof option == 'object' && option
 
-          if (!data && option == 'destroy') return;
-          if (selector) {
-            if (!data) $this.data('bs.tooltip', (data = {}));
-            if (!data[selector]) data[selector] = new Tooltip(this, options);
-          } else {
-            if (!data) $this.data('bs.tooltip', (data = new Tooltip(this, options)));
-          }
-          if (typeof option == 'string') data[option]();
-        });
+          if (!data && /destroy|hide/.test(option)) return
+          if (!data) $this.data('bs.tooltip', (data = new Tooltip(this, options)))
+          if (typeof option == 'string') data[option]()
+        })
       }
 
-      var old = $.fn.tooltip;
+      var old = $.fn.tooltip
 
-      $.fn.tooltip             = Plugin;
-      $.fn.tooltip.Constructor = Tooltip;
+      $.fn.tooltip             = Plugin
+      $.fn.tooltip.Constructor = Tooltip
 
 
       // TOOLTIP NO CONFLICT
       // ===================
 
       $.fn.tooltip.noConflict = function () {
-        $.fn.tooltip = old;
-        return this;
-      };
+        $.fn.tooltip = old
+        return this
+      }
 
     }(jQuery);
 
+
     /* ========================================================================
-     * Bootstrap: popover.js v3.3.1
+     * Bootstrap: popover.js v3.3.5
      * http://getbootstrap.com/javascript/#popovers
      * ========================================================================
-     * Copyright 2011-2014 Twitter, Inc.
+     * Copyright 2011-2015 Twitter, Inc.
      * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
      * ======================================================================== */
 
@@ -723,78 +755,70 @@ if (typeof jQuery !== 'undefined') {
     +function ($) {
       'use strict';
 
-      if(typeof $().popover == 'function')
-        return true;
-          
       // POPOVER PUBLIC CLASS DEFINITION
       // ===============================
 
       var Popover = function (element, options) {
-        this.init('popover', element, options);
-      };
+        this.init('popover', element, options)
+      }
 
-      if (!$.fn.tooltip) throw new Error('Popover requires tooltip.js');
+      if (!$.fn.tooltip) throw new Error('Popover requires tooltip.js')
 
-      Popover.VERSION  = '3.3.1';
+      Popover.VERSION  = '3.3.5'
 
       Popover.DEFAULTS = $.extend({}, $.fn.tooltip.Constructor.DEFAULTS, {
         placement: 'right',
         trigger: 'click',
         content: '',
         template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-      });
+      })
 
 
       // NOTE: POPOVER EXTENDS tooltip.js
       // ================================
 
-      Popover.prototype = $.extend({}, $.fn.tooltip.Constructor.prototype);
+      Popover.prototype = $.extend({}, $.fn.tooltip.Constructor.prototype)
 
-      Popover.prototype.constructor = Popover;
+      Popover.prototype.constructor = Popover
 
       Popover.prototype.getDefaults = function () {
-        return Popover.DEFAULTS;
-      };
+        return Popover.DEFAULTS
+      }
 
       Popover.prototype.setContent = function () {
-        var $tip    = this.tip();
-        var title   = this.getTitle();
-        var content = this.getContent();
+        var $tip    = this.tip()
+        var title   = this.getTitle()
+        var content = this.getContent()
 
-        $tip.find('.popover-title')[this.options.html ? 'html' : 'text'](title);
+        $tip.find('.popover-title')[this.options.html ? 'html' : 'text'](title)
         $tip.find('.popover-content').children().detach().end()[ // we use append for html objects to maintain js events
           this.options.html ? (typeof content == 'string' ? 'html' : 'append') : 'text'
-        ](content);
+        ](content)
 
-        $tip.removeClass('fade top bottom left right in');
+        $tip.removeClass('fade top bottom left right in')
 
         // IE8 doesn't accept hiding via the `:empty` pseudo selector, we have to do
         // this manually by checking the contents.
-        if (!$tip.find('.popover-title').html()) $tip.find('.popover-title').hide();
-      };
+        if (!$tip.find('.popover-title').html()) $tip.find('.popover-title').hide()
+      }
 
       Popover.prototype.hasContent = function () {
-        return this.getTitle() || this.getContent();
-      };
+        return this.getTitle() || this.getContent()
+      }
 
       Popover.prototype.getContent = function () {
-        var $e = this.$element;
-        var o  = this.options;
+        var $e = this.$element
+        var o  = this.options
 
         return $e.attr('data-content')
           || (typeof o.content == 'function' ?
                 o.content.call($e[0]) :
-                o.content);
-      };
+                o.content)
+      }
 
       Popover.prototype.arrow = function () {
-        return (this.$arrow = this.$arrow || this.tip().find('.arrow'));
-      };
-
-      Popover.prototype.tip = function () {
-        if (!this.$tip) this.$tip = $(this.options.template);
-        return this.$tip;
-      };
+        return (this.$arrow = this.$arrow || this.tip().find('.arrow'))
+      }
 
 
       // POPOVER PLUGIN DEFINITION
@@ -802,67 +826,87 @@ if (typeof jQuery !== 'undefined') {
 
       function Plugin(option) {
         return this.each(function () {
-          var $this    = $(this);
-          var data     = $this.data('bs.popover');
-          var options  = typeof option == 'object' && option;
-          var selector = options && options.selector;
+          var $this   = $(this)
+          var data    = $this.data('bs.popover')
+          var options = typeof option == 'object' && option
 
-          if (!data && option == 'destroy') return;
-          if (selector) {
-            if (!data) $this.data('bs.popover', (data = {}));
-            if (!data[selector]) data[selector] = new Popover(this, options);
-          } else {
-            if (!data) $this.data('bs.popover', (data = new Popover(this, options)));
-          }
-          if (typeof option == 'string') data[option]();
-        });
+          if (!data && /destroy|hide/.test(option)) return
+          if (!data) $this.data('bs.popover', (data = new Popover(this, options)))
+          if (typeof option == 'string') data[option]()
+        })
       }
 
-      var old = $.fn.popover;
+      var old = $.fn.popover
 
-      $.fn.popover             = Plugin;
-      $.fn.popover.Constructor = Popover;
+      $.fn.popover             = Plugin
+      $.fn.popover.Constructor = Popover
 
 
       // POPOVER NO CONFLICT
       // ===================
 
       $.fn.popover.noConflict = function () {
-        $.fn.popover = old;
-        return this;
-      };
+        $.fn.popover = old
+        return this
+      }
 
     }(jQuery);
 }
 function chart_title(args) {
     'use strict';
 
-    var container = d3.select(args.target);
+    var svg = mg_get_svg_child_of(args.target);
 
-    // remove the current title if it exists
-    container.select('.mg-chart-title').remove();
+    //remove the current title if it exists
+    svg.select('.mg-header').remove();
 
     if (args.target && args.title) {
-        //only show question mark if there's a description
-        var optional_question_mark = (args.show_tooltips && args.description)
-            ? '<i class="fa fa-question-circle fa-inverse description"></i>'
-            : '';
+        var chartTitle = svg.insert('text')
+            .attr('class', 'mg-header')
+            .attr('x', (args.width + args.left - args.right) / 2)
+            .attr('y', args.title_y_position)
+            .attr('text-anchor', 'middle')
+            .attr('dy', '0.55em');
 
-        container.insert('h2', ':first-child')
+        //show the title
+        chartTitle.append('tspan')
             .attr('class', 'mg-chart-title')
-            .html(args.title + optional_question_mark);
+            .text(args.title);
 
-        //activate the question mark if we have a description
+        //show and activate the description icon if we have a description
         if (args.show_tooltips && args.description) {
-            var $newTitle = $(container.node()).find('h2.mg-chart-title');
+            chartTitle.append('tspan')
+                .attr('class', 'mg-chart-description')
+                .attr('dx', '0.3em')
+                .text('\uf059');
 
-            $newTitle.popover({
+            //now that the title is an svg text element, we'll have to trigger
+            //mouseenter, mouseleave events manually for the popover to work properly
+            var $chartTitle = $(chartTitle.node());
+            $chartTitle.popover({
                 html: true,
                 animation: false,
-                content: args.description,
-                trigger: 'hover',
                 placement: 'top',
-                container: $newTitle
+                content: args.description,
+                container: args.target,
+                trigger: 'manual',
+                template: '<div class="popover mg-popover"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>'
+            }).on('mouseenter', function() {
+                d3.selectAll(args.target)
+                    .selectAll('.mg-popover')
+                    .remove();
+
+                $(this).popover('show');
+                $(args.target).select('.popover')
+                    .on('mouseleave', function () {
+                        $chartTitle.popover('hide');
+                    });
+            }).on('mouseleave', function () {
+                setTimeout(function () {
+                    if (!$('.popover:hover').length) {
+                        $chartTitle.popover('hide');
+                    }
+                }, 120);
             });
         }
     }
@@ -927,22 +971,24 @@ function y_axis(args) {
     var svg = mg_get_svg_child_of(args.target);
 
     var g;
-
-    var min_y,
-        max_y;
+    var min_y;
+    var max_y;
 
     args.scalefns.yf = function(di) {
-        //since we want to show actual zeros when missing_is_hidden is on
-        if(args.missing_is_hidden && di['missing']) {
-            return args.scales.Y(di[args.y_accessor]) + 42.1234;
-        }
-
         return args.scales.Y(di[args.y_accessor]);
     };
 
-    var _set = false,
-        gtZeroFilter = function(d) { return d[args.y_accessor] > 0; },
-        mapToY = function(d) { return d[args.y_accessor]; };
+    var _set = false;
+
+    var gtZeroFilter = function(d) {
+        return d[args.y_accessor] > 0;
+    };
+
+    var mapToY = function(d) {
+        return d[args.y_accessor];
+    };
+
+    //get min_y and max_y from data
     for (var i = 0; i < args.data.length; i++) {
         var a = args.data[i];
 
@@ -951,7 +997,12 @@ function y_axis(args) {
             a = a.filter(gtZeroFilter);
         }
 
-        if (a.length > 0) { // get min/max in one pass
+        //get min/max in one pass, consider baselines to be part of data
+        if (a.length > 0) { 
+            if (args.baselines) {
+                a = a.concat(args.baselines);
+            }
+
             var extent = d3.extent(a, mapToY);
 
             if (!_set) {
@@ -966,8 +1017,8 @@ function y_axis(args) {
         }
     }
 
-    // the default case is for the y-axis to start at 0, unless we explicitly want it
-    // to start at an arbitrary number or from the data's minimum value
+    //the default case is for the y-axis to start at 0, unless we explicitly want it
+    //to start at an arbitrary number or from the data's minimum value
     if (min_y >= 0 && !args.min_y && !args.min_y_from_data) {
         min_y = 0;
     }
@@ -989,17 +1040,20 @@ function y_axis(args) {
             return Math.max.apply(null, trio);
         });
     }
-    //if a min_y or max_y have been set, use those instead
-    min_y = args.min_y !== null ? args.min_y : min_y;
-    max_y = args.max_y !== null ? args.max_y : max_y * args.inflator;
-    if (args.y_scale_type !== 'log') {
-        //we are currently saying that if the min val > 0, set 0 as min y
-        if (min_y >= 0) {
-            args.y_axis_negative = false;
-        } else {
-            min_y = min_y  - (max_y * (args.inflator - 1));
-            args.y_axis_negative = true;
-        }
+
+    //if a min_y or max_y has been set, use those instead
+    min_y = (args.min_y !== null)
+        ? args.min_y
+        : min_y;
+
+    max_y = (args.max_y !== null)
+        ? args.max_y
+        : (max_y < 0)
+            ? max_y + (max_y - max_y * args.inflator)
+            : max_y * args.inflator;
+
+    if (args.y_scale_type !== 'log' && min_y < 0) {
+        min_y = min_y  - (min_y - min_y * args.inflator);
     }
 
     if (!args.min_y && args.min_y_from_data) {
@@ -1041,6 +1095,13 @@ function y_axis(args) {
     var yax_format = args.yax_format;
     if (!yax_format) {
         if (args.format === 'count') {
+            //increase decimals if we have small values, useful for realtime data
+            if (max_y < 0.0001) {
+                args.decimals = 6;
+            } else if (max_y < 0.1) {
+                args.decimals = 4;
+            }
+
             yax_format = function(f) {
                 if (f < 1.0) {
                     // Don't scale tiny values.
@@ -1132,13 +1193,27 @@ function y_axis(args) {
         });
     }
 
-    var last_i = scale_ticks.length - 1;
-    if (!args.x_extended_ticks && !args.y_extended_ticks) {
+    //add the y-axis line; if we have 0s hide the line
+    var tick_length = scale_ticks.length;
+    if (!args.x_extended_ticks && !args.y_extended_ticks && tick_length) {
+        var y1scale, y2scale;
+
+        if (args.axes_not_compact && args.chart_type !== 'bar') {
+            y1scale = args.height - args.bottom;
+            y2scale = args.top;
+        } else if (tick_length) {
+            y1scale = args.scales.Y(scale_ticks[0]).toFixed(2);
+            y2scale = args.scales.Y(scale_ticks[tick_length - 1]).toFixed(2);
+        } else {
+            y1scale = 0;
+            y2scale = 0;
+        }
+
         g.append('line')
             .attr('x1', args.left)
             .attr('x2', args.left)
-            .attr('y1', args.scales.Y(scale_ticks[0]).toFixed(2))
-            .attr('y2', args.scales.Y(scale_ticks[last_i]).toFixed(2));
+            .attr('y1', y1scale)
+            .attr('y2', y2scale);
     }
 
     //add y ticks
@@ -1228,17 +1303,13 @@ MG.y_axis_categorical = y_axis_categorical;
 
 function x_rug(args) {
     'use strict';
+
     var buffer_size = args.chart_type === 'point'
         ? args.buffer / 2
         : args.buffer;
-    var svg = mg_get_svg_child_of(args.target);
 
+    var svg = mg_get_svg_child_of(args.target);
     var all_data = mg_flatten_array(args.data)
-    // for (var i=0; i<args.data.length; i++) {
-    //     for (var j=0; j<args.data[i].length; j++) {
-    //         all_data.push(args.data[i][j]);
-    //     }
-    // }
 
     var rug = svg.selectAll('line.mg-x-rug').data(all_data);
 
@@ -1256,8 +1327,8 @@ function x_rug(args) {
 
     rug.attr('x1', args.scalefns.xf)
         .attr('x2', args.scalefns.xf)
-        .attr('y1', args.height-args.top+buffer_size)
-        .attr('y2', args.height-args.top);
+        .attr('y1', args.height - args.bottom - buffer_size)
+        .attr('y2', args.height - args.bottom);
 
     if (args.color_accessor) {
         rug.attr('stroke', args.scalefns.color);
@@ -1272,12 +1343,16 @@ MG.x_rug = x_rug;
 
 function x_axis(args) {
     'use strict';
+    
     var svg = mg_get_svg_child_of(args.target);
     var g;
     var min_x;
     var max_x;
 
-    args.processed = {};
+    if (!args.processed) {
+        args.processed = {};
+    }
+
     var all_data = [];
     for (var i = 0; i < args.data.length; i++) {
         for (var j = 0; j < args.data[i].length; j++) {
@@ -1295,8 +1370,12 @@ function x_axis(args) {
 
     mg_find_min_max_x(args);
 
+    var time_scale = (args.utc_time)
+        ? d3.time.scale.utc()
+        : d3.time.scale();
+
     args.scales.X = (args.time_series)
-        ? d3.time.scale()
+        ? time_scale
         : d3.scale.linear();
 
     args.scales.X
@@ -1374,22 +1453,22 @@ function x_axis_categorical(args) {
         .attr('text-anchor', 'middle')
         .text(String);
 
-    if (args.rotate_x_labels) {
-        labels.attr({
-            dy: 0,
-            'text-anchor': 'end',
-            transform: function() {
-                var elem = d3.select(this);
-                return 'rotate('+args.rotate_x_labels+' '+elem.attr('x')+','+elem.attr('y')+')';
-            }
-        });
-    }
-
     if (args.truncate_x_labels) {
         labels.each(function(d, idx) {
             var elem = this,
                 width = args.scales.X.rangeBand();
             truncate_text(elem, d, width);
+        });
+    }
+
+    if (args.rotate_x_labels) {
+        labels.attr({
+            dy: 0,
+            'text-anchor': (args.rotate_x_labels + 360) % 360 > 180 ? 'end' : 'start',
+            transform: function() {
+                var elem = d3.select(this);
+                return 'rotate('+args.rotate_x_labels+' '+elem.attr('x')+','+elem.attr('y')+')';
+            }
         });
     }
 
@@ -1517,12 +1596,44 @@ function mg_default_bar_xax_format(args) {
     };
 }
 
+function mg_get_time_frame(diff) {
+    // diff should be (max_x - min_x) / 1000, in other words, the difference in seconds.
+    var time_frame;
+    if (diff < 10) {
+        time_frame = 'millis'
+    } else if (diff < 60) {
+        time_frame = 'seconds';
+    } else if (diff / (60 * 60) <= 24) {
+        time_frame = 'less-than-a-day';
+    } else if (diff / (60 * 60) <= 24 * 4) {
+        time_frame = 'four-days';
+    } else {
+        time_frame = 'default';
+    }
+    return time_frame;
+}
+
+function mg_get_time_format(utc, diff) {
+    if (diff < 10) {
+        main_time_format = MG.time_format(utc, '%M:%S.%L');
+    } else if (diff < 60) {
+        main_time_format = MG.time_format(utc, '%M:%S');
+    } else if (diff / (60 * 60) <= 24) {
+        main_time_format = MG.time_format(utc, '%H:%M');
+    } else if (diff / (60 * 60) <= 24 * 4) {
+        main_time_format = MG.time_format(utc, '%H:%M');
+    } else {
+        main_time_format = MG.time_format(utc, '%b %d');
+    }
+    return main_time_format;
+}
+
 function mg_default_xax_format(args) {
     if (args.xax_format) {
         return args.xax_format;
     }
-    var test_point = mg_flatten_array(args.data)[0][args.x_accessor]
-
+    var data = args.processed.original_data || args.data;
+    var test_point = mg_flatten_array(data)[0][args.processed.original_x_accessor || args.x_accessor]
     return function(d) {
         var diff;
         var main_time_format;
@@ -1530,31 +1641,19 @@ function mg_default_xax_format(args) {
 
         if (args.time_series) {
             diff = (args.processed.max_x - args.processed.min_x) / 1000;
-
-            if (diff < 60) {
-                main_time_format = d3.time.format('%M:%S');
-                time_frame = 'seconds';
-            } else if (diff / (60 * 60) <= 24) {
-                main_time_format = d3.time.format('%H:%M');
-                time_frame = 'less-than-a-day';
-            } else if (diff / (60 * 60) <= 24 * 4) {
-                main_time_format = d3.time.format('%H:%M');
-                time_frame = 'four-days';
-            } else {
-                main_time_format = d3.time.format('%b %d');
-                time_frame = 'default';
-            }
+            time_frame = mg_get_time_frame(diff);
+            main_time_format = mg_get_time_format(args.utc_time, diff);
         }
 
         args.processed.main_x_time_format = main_time_format;
         args.processed.x_time_frame = time_frame;
 
-        var df = d3.time.format('%b %d');
+        var df = MG.time_format(args.utc_time, '%b %d');
         var pf = d3.formatPrefix(d);
 
         // format as date or not, of course user can pass in
         // a custom function if desired
-        if(test_point instanceof Date) {
+        if (test_point instanceof Date) {
             return args.processed.main_x_time_format(new Date(d));
         } else if (typeof test_point === 'number') {
             if (d < 1.0) {
@@ -1574,33 +1673,25 @@ function mg_add_x_ticks(g, args) {
     var last_i = args.scales.X.ticks(args.xax_count).length - 1;
     var ticks = args.scales.X.ticks(args.xax_count);
 
-    //force min to be the first tick rather than the first element in ticks
-    if(args.xax_start_at_min) {
-        ticks[0] = args.processed.min_x;
-    }
-
     if (args.chart_type !== 'bar' && !args.x_extended_ticks && !args.y_extended_ticks) {
         //draw x-axis line
         g.append('line')
             .attr('x1', function() {
-                //start the axis line from the beginning, domain's min, or the auto-generated
-                //ticks' first element, depending on whether xax_count is set to 0 or
-                //xax_start_at_min is set to true
                 if (args.xax_count === 0) {
                     return args.left + args.buffer;
-                }
-                else if (args.xax_start_at_min) {
-                    return args.scales.X(args.processed.min_x).toFixed(2)
-                }
-                else {
+                } else if (args.axes_not_compact && args.chart_type !== 'bar') {
+                    return args.left;
+                } else {
                     return (args.scales.X(args.scales.X.ticks(args.xax_count)[0])).toFixed(2);
                 }
             })
-            .attr('x2',
-                (args.xax_count === 0)
-                    ? args.width - args.right - args.buffer
-                    : (args.scales.X(args.scales.X.ticks(args.xax_count)[last_i])).toFixed(2)
-            )
+            .attr('x2', function() {
+                if (args.xax_count === 0 || (args.axes_not_compact && args.chart_type !== 'bar')) {
+                    return args.width - args.right - args.buffer;
+                } else {
+                    return args.scales.X(args.scales.X.ticks(args.xax_count)[last_i]).toFixed(2);
+                }
+            })
             .attr('y1', args.height - args.bottom)
             .attr('y2', args.height - args.bottom);
     }
@@ -1626,53 +1717,58 @@ function mg_add_x_ticks(g, args) {
 function mg_add_x_tick_labels(g, args) {
     var ticks = args.scales.X.ticks(args.xax_count);
 
-    //force min to be the first tick rather than the first element in ticks
-    if(args.xax_start_at_min) {
-        ticks[0] = args.processed.min_x;
-    }
-
-    g.selectAll('.mg-xax-labels')
+    var labels = g.selectAll('.mg-xax-labels')
         .data(ticks).enter()
             .append('text')
                 .attr('x', function(d) { return args.scales.X(d).toFixed(2); })
                 .attr('y', (args.height - args.bottom + args.xax_tick_length * 7 / 3).toFixed(2))
                 .attr('dy', '.50em')
-                .attr('text-anchor', 'middle')
-                .text(function(d) {
-                    return args.xax_units + args.processed.xax_format(d);
-                });
+                .attr('text-anchor', 'middle');
+
+    if (args.time_series && args.european_clock) {
+        labels.append('tspan').classed('mg-european-hours', true).text(function(_d,i) {
+            var d = new Date(_d);
+            if (i === 0) return d3.time.format('%H')(d);
+            else return ''
+        });
+        labels.append('tspan').classed('mg-european-minutes-seconds', true).text(function(_d,i) {
+            var d = new Date(_d);
+            return ":" + args.processed.xax_format(d);
+        });
+    } else {
+        labels.text(function(d) {
+            return args.xax_units + args.processed.xax_format(d);
+        });
+    }
 
     if (args.time_series && (args.show_years || args.show_secondary_x_label)) {
         var secondary_marks,
             secondary_function, yformat;
 
         var time_frame = args.processed.x_time_frame;
-
         switch(time_frame) {
+            case 'millis':
             case 'seconds':
                 secondary_function = d3.time.days;
-                yformat = d3.time.format('%I %p');
+                if (args.european_clock) yformat = MG.time_format(args.utc_time, '%b %d');
+                else yformat = MG.time_format(args.utc_time, '%I %p');
                 break;
             case 'less-than-a-day':
                 secondary_function = d3.time.days;
-                yformat = d3.time.format('%b %d');
+                yformat = MG.time_format(args.utc_time, '%b %d');
                 break;
             case 'four-days':
                 secondary_function = d3.time.days;
-                yformat = d3.time.format('%b %d');
+                yformat = MG.time_format(args.utc_time, '%b %d');
                 break;
             default:
                 secondary_function = d3.time.years;
-                yformat = d3.time.format('%Y');
+                yformat = MG.time_format(args.utc_time, '%Y');
         }
 
         var years = secondary_function(args.processed.min_x, args.processed.max_x);
 
-        //if xax_start_at_min is set
-        if (args.xax_start_at_min && years.length === 0) {
-            var first_tick = ticks[0];
-            years = [first_tick];
-        } else if (years.length === 0) {
+        if (years.length === 0) {
             var first_tick = args.scales.X.ticks(args.xax_count)[0];
             years = [first_tick];
         }
@@ -1696,14 +1792,15 @@ function mg_add_x_tick_labels(g, args) {
             .data(years).enter()
                 .append('text')
                     .attr('x', function(d, i) {
-                        if (args.xax_start_at_min && i == 0) {
-                            d = ticks[0];
-                        }
-
                         return args.scales.X(d).toFixed(2);
                     })
-                    .attr('y', (args.height - args.bottom + args.xax_tick_length * 7 / 1.3).toFixed(2))
-                    .attr('dy', args.use_small_class ? -3 : 0)
+                    .attr('y', function() {
+                        var xAxisTextElement = d3.select(args.target)
+                            .select('.mg-x-axis text').node().getBoundingClientRect();
+
+                        return (args.height - args.bottom + args.xax_tick_length * 7 / 3) + (xAxisTextElement.height * 0.8);
+                    })
+                    .attr('dy', '.50em')
                     .attr('text-anchor', 'middle')
                     .text(function(d) {
                         return yformat(new Date(d));
@@ -1735,6 +1832,7 @@ function mg_find_min_max_x(args) {
             return Math.max.apply(null, trio);
         });
     }
+
     //if data set is of length 1, expand the range so that we can build the x-axis
     if (min_x === max_x
             && !(args.min_x && args.max_x)
@@ -1793,7 +1891,7 @@ function mg_select_xax_format(args) {
               args.processed.xax_format = mg_default_xax_format(args);
           } else if (c === 'bar') {
               args.processed.xax_format = mg_default_bar_xax_format(args);
-          }
+          } 
         }
     }
 }
@@ -1811,14 +1909,20 @@ function init(args) {
 
     args = arguments[0];
     if (!args) { args = {}; }
-    args = merge_with_defaults(args, defaults);
 
-    if (d3.select(args.target).empty()) {
+    if (!args.processed) {
+        args.processed = {};
+    }
+
+    args = merge_with_defaults(args, defaults);
+    var container = d3.select(args.target);
+
+
+    if (container.empty()) {
         console.warn('The specified target element "' + args.target + '" could not be found in the page. The chart will not be rendered.');
         return;
     }
 
-    var container = d3.select(args.target);
     var svg = container.selectAll('svg');
 
     //this is how we're dealing with passing in a single array of data,
@@ -1826,14 +1930,14 @@ function init(args) {
 
     //do we have a time_series?
 
-    function is_time_series(args) {
+    function is_time_series() {
         var flat_data = [];
-        var first_elem = mg_flatten_array(args.data)[0];
-        return first_elem[args.x_accessor] instanceof Date;
+        var first_elem = mg_flatten_array(args.processed.original_data || args.data)[0];
+        return first_elem[args.processed.original_x_accessor || args.x_accessor] instanceof Date;
     }
 
-    args.time_series = is_time_series(args);
-
+    args.time_series = is_time_series();
+    
     var svg_width = args.width;
     var svg_height = args.height;
 
@@ -1874,7 +1978,7 @@ function init(args) {
     args.width = svg_width;
     args.height = svg_height;
 
-    // add clip path element to svg
+    //add clip path element to svg
     svg.selectAll('.mg-clip-path').remove();
 
     svg.append('defs')
@@ -1896,17 +2000,17 @@ function init(args) {
         svg.attr('height', svg_height);
     }
 
-    // @todo need to reconsider how we handle automatic scaling
+    //we need to reconsider how we handle automatic scaling
     svg.attr('viewBox', '0 0 ' + svg_width + ' ' + svg_height);
 
     if (args.full_width || args.full_height) {
         svg.attr('preserveAspectRatio', 'xMinYMin meet');
     }
 
-    // remove missing class
+    //remove missing class
     svg.classed('mg-missing', false);
 
-    // remove missing text
+    //remove missing text
     svg.selectAll('.mg-missing-text').remove();
     svg.selectAll('.mg-missing-pane').remove();
 
@@ -1943,7 +2047,7 @@ function init(args) {
                     .remove();
             }
         }
-        //if we don't have a customer line-color map, just remove the lines from the end
+        //if we don't have a custom line-color map, just remove the lines from the end
         else {
             var num_of_new = args.data.length;
             var num_of_existing = svg.selectAll('.mg-main-line')[0].length;
@@ -1986,24 +2090,35 @@ function markers(args) {
                 .attr('y2', function() {
                     return args.height - args.bottom - args.buffer;
                 })
+                .attr('class', function (d) {
+                    return d.lineclass;
+                })
                 .attr('stroke-dasharray', '3,1');
 
         gm.selectAll('.mg-markers')
             .data(args.markers.filter(inRange))
             .enter()
             .append('text')
-                .attr('class', 'mg-marker-text')
+                .attr('class', function (d) {
+                    return d.textclass ? 'mg-marker-text ' + d.textclass : 'mg-marker-text';
+                })
                 .attr('x', xPosition)
-                .attr('y', args.top - 8)
+                .attr('y', args.top * 0.95)
                 .attr('text-anchor', 'middle')
                 .text(function(d) {
                     return d.label;
+                })
+                .each(function(d) {
+                    if(d.click) {
+                        d3.select(this)
+                            .style('cursor', 'pointer')
+                            .on('click', d.click);
+                    }
                 });
 
         preventHorizontalOverlap(gm.selectAll('.mg-marker-text')[0], args);
     }
 
-    
     function xPosition(d) {
         return args.scales.X(d[args.x_accessor]);
     }
@@ -2053,14 +2168,14 @@ function markers(args) {
 
 MG.markers = markers;
 
-function mg_window_listeners(args){
-	mg_if_aspect_ratio_resize_svg(args);
+function mg_window_listeners(args) {
+    mg_if_aspect_ratio_resize_svg(args);
 }
 
-function mg_if_aspect_ratio_resize_svg(args){
-	// If we've asked the svg to fill a div, resize with div.
-    if (args.full_width || args.full_height){
-        window.addEventListener('resize', function(){
+function mg_if_aspect_ratio_resize_svg(args) {
+    //have we asked the svg to fill a div, if so resize with div
+    if (args.full_width || args.full_height) {
+        window.addEventListener('resize', function() {
             var svg = d3.select(args.target).select('svg');
             var aspect = svg.attr('height') / svg.attr('width');
             var newWidth = get_width(args.target);
@@ -2069,7 +2184,6 @@ function mg_if_aspect_ratio_resize_svg(args){
             svg.attr('height', aspect * newWidth);
         }, true);
     }
-
 }
 
 if (typeof jQuery !== 'undefined') {
@@ -2261,7 +2375,7 @@ MG.button_layout = function(target) {
 
     this._strip_punctuation = function(s) {
         var punctuationless = s.replace(/[^a-zA-Z0-9 _]+/g, '');
-        var finalString = punctuationless.replace(/ +?/g, "");
+        var finalString = punctuationless.replace(/ +?/g, '');
         return finalString;
     };
 
@@ -2392,7 +2506,9 @@ MG.button_layout = function(target) {
             }
 
             raw_data_transformation(args);
+
             process_line(args);
+
             init(args);
             x_axis(args);
             y_axis(args);
@@ -2426,8 +2542,39 @@ MG.button_layout = function(target) {
                 return d[args.y_accessor];
             };
 
+            //main line
+            var line = d3.svg.line()
+                .x(args.scalefns.xf)
+                .y(args.scalefns.yf)
+                .interpolate(args.interpolate)
+                .tension(args.interpolate_tension);
+
+            //if missing_is_zero is not set, then hide data points that fall in missing
+            //data ranges or that have been explicitly identified as missing in the
+            //data source
+            if (!args.missing_is_zero) {
+                //a line is defined if the _missing attrib is not set to true
+                //and the y-accessor is not null
+                line = line.defined(function(d) {
+                    return (d['_missing'] == undefined || d['_missing'] != true)
+                        && d[args.y_accessor] != null;
+                })
+            }
+
+            //for animating line on first load
+            var flat_line = d3.svg.line()
+                .defined(function(d) {
+                    return (d['_missing'] == undefined || d['_missing'] != true)
+                        && d[args.y_accessor] != null;
+                })
+                .x(args.scalefns.xf)
+                .y(function() { return args.scales.Y(data_median); })
+                .interpolate(args.interpolate)
+                .tension(args.interpolate_tension);
+
             //main area
             var area = d3.svg.area()
+                .defined(line.defined())
                 .x(args.scalefns.xf)
                 .y0(args.scales.Y.range()[0])
                 .y1(args.scalefns.yf)
@@ -2440,6 +2587,7 @@ MG.button_layout = function(target) {
 
             if (args.show_confidence_band) {
                 confidence_area = d3.svg.area()
+                    .defined(line.defined())
                     .x(args.scalefns.xf)
                     .y0(function(d) {
                         var l = args.show_confidence_band[0];
@@ -2452,20 +2600,6 @@ MG.button_layout = function(target) {
                     .interpolate(args.interpolate)
                     .tension(args.interpolate_tension);
             }
-
-            //main line
-            var line = d3.svg.line()
-                .x(args.scalefns.xf)
-                .y(args.scalefns.yf)
-                .interpolate(args.interpolate)
-                .tension(args.interpolate_tension);
-
-            //for animating line on first load
-            var flat_line = d3.svg.line()
-                .x(args.scalefns.xf)
-                .y(function() { return args.scales.Y(data_median); })
-                .interpolate(args.interpolate)
-                .tension(args.interpolate_tension);
 
             //for building the optional legend
             var legend = '';
@@ -2508,26 +2642,28 @@ MG.button_layout = function(target) {
 
                         confidenceBand
                             .attr('d', confidence_area(args.data[i]))
-                            .attr('clip-path', 'url(#mg-plot-window-'+ mg_target_ref(args.target)+')');
+                            .attr('clip-path', 'url(#mg-plot-window-' + mg_target_ref(args.target) + ')');
                     }
 
                     //add the area
-                    var areas = svg.selectAll('.mg-main-area.mg-area' + (line_id) + '-color');
-                    var displayArea = args.area && !args.use_data_y_min && !args.y_axis_negative && args.data.length <= 1;
+                    var areas = svg.selectAll('.mg-main-area.mg-area' + line_id);
+                    var displayArea = args.area && !args.use_data_y_min && args.data.length <= 1;
                     if (displayArea) {
                         //if area already exists, transition it
                         if (!areas.empty()) {
-                            svg.select('.mg-y-axis').node().parentNode.appendChild(areas.node());
+                            svg.node().appendChild(areas.node());
 
-                            areas
-                                .transition()
-                                    .duration(updateTransitionDuration)
-                                    .attr('d', area(args.data[i]))
-                                    .attr('clip-path', 'url(#mg-plot-window-'+ mg_target_ref(args.target)+')');
+                            areas.transition()
+                                .duration(updateTransitionDuration)
+                                .attr('d', area(args.data[i]))
+                                .attr('clip-path', 'url(#mg-plot-window-' + mg_target_ref(args.target) + ')');
                         } else { //otherwise, add the area
                             svg.append('path')
-                                .attr('class', 'mg-main-area ' + 'mg-area' + (line_id) + '-color')
+                            .classed('mg-main-area', true)
+                                .classed('mg-area' + line_id, true)
+                                .classed('mg-area' + line_id + '-color', args.colors === null)
                                 .attr('d', area(args.data[i]))
+                                .attr('fill', args.colors === null ? '' : args.colors[line_id-1])
                                 .attr('clip-path', 'url(#mg-plot-window-' + mg_target_ref(args.target) + ')');
                         }
                     } else if (!areas.empty()) {
@@ -2537,11 +2673,9 @@ MG.button_layout = function(target) {
                     //add the line, if it already exists, transition the fine gentleman
                     var existing_line = svg.select('path.mg-main-line.mg-line' + (line_id) + '-color');
                     if (!existing_line.empty()) {
-                        //$(svg.node()).find('.mg-y-axis').after($(existing_line.node()).detach());
-                        svg.select('.mg-y-axis').node().parentNode.appendChild(existing_line.node());
+                        svg.node().appendChild(existing_line.node());
 
-                        var lineTransition = existing_line
-                            .transition()
+                        var lineTransition = existing_line.transition()
                             .duration(updateTransitionDuration);
 
                         if (!displayArea && args.transition_on_update) {
@@ -2552,79 +2686,38 @@ MG.button_layout = function(target) {
                     }
                     else { //otherwise...
                         //if we're animating on load, animate the line from its median value
+                        var this_path =  svg.append('path')
+                            .attr('class', 'mg-main-line');
+
+                        // UNFINISHED - if we have args.colors, color the line appropriately.
+                        if (args.colors) {
+                            // for now, if args.colors is not an array, then keep moving as if nothing happened.
+                            // if args.colors is not long enough, default to the usual line_id color.
+                            if (args.colors.constructor === Array) {
+                                this_path.attr('stroke', args.colors[i]);
+                                if (args.colors.length < i + 1) {
+                                    // Go with default coloring.
+                                    this_path.classed('mg-line' + (line_id) + '-color', true);
+                                }
+                            }
+                            else { 
+                                this_path.classed('mg-line' + (line_id) + '-color', true);
+                            }
+                        } else {
+                            // this is the typical workflow
+                            this_path.classed('mg-line' + (line_id) + '-color', true);
+                        }
+
                         if (args.animate_on_load) {
                             data_median = d3.median(args.data[i], mapToY);
-
-                            svg.append('path')
-                                .attr('class', 'mg-main-line ' + 'mg-line' + (line_id) + '-color')
-                                .attr('d', flat_line(args.data[i]))
+                            this_path.attr('d', flat_line(args.data[i]))
                                 .transition()
                                     .duration(1000)
                                     .attr('d', line(args.data[i]))
                                     .attr('clip-path', 'url(#mg-plot-window-' + mg_target_ref(args.target) + ')');
                         } else { //or just add the line
-                            svg.append('path')
-                                .attr('class', 'mg-main-line ' + 'mg-line' + (line_id) + '-color')
-                                .attr('d', line(args.data[i]))
+                            this_path.attr('d', line(args.data[i]))
                                 .attr('clip-path', 'url(#mg-plot-window-' + mg_target_ref(args.target) + ')');
-                        }
-                    }
-
-                    var the_line = svg.select('.mg-line' + (line_id) + '-color');
-                    if (args.missing_is_hidden && the_line.attr('d') !== null) {
-                        var bits = the_line.attr('d').split('L');
-                        var zero = args.scales.Y(0) + 42.1234;
-                        var dasharray = [];
-                        var singleton_point_length = 2;
-
-                        var x_y,
-                            x_y_plus_1,
-                            x,
-                            y,
-                            x_plus_1,
-                            y_plus_1,
-                            segment_length,
-                            cumulative_segment_length = 0;
-
-                        bits[0] = bits[0].replace('M', '');
-                        bits[bits.length - 1] = bits[bits.length - 1].replace('Z', '');
-
-                        //if we have a min_x, turn the line off first
-                        if (args.min_x) {
-                            dasharray.push(0);
-                        }
-
-                        //build the stroke-dasharray pattern
-                        for (var j = 0; j < bits.length - 1; j++) {
-                            x_y = bits[j].split(',');
-                            x_y_plus_1 = bits[j + 1].split(',');
-                            x = Number(x_y[0]);
-                            y = Number(x_y[1]);
-                            x_plus_1 = Number(x_y_plus_1[0]);
-                            y_plus_1 = Number(x_y_plus_1[1]);
-
-                            segment_length = Math.sqrt(Math.pow(x - x_plus_1, 2) + Math.pow(y - y_plus_1, 2));
-
-                            //do we need to either cover or clear the current stroke
-                            if (y_plus_1 == zero && y != zero) {
-                                dasharray.push(cumulative_segment_length || singleton_point_length);
-                                cumulative_segment_length = (cumulative_segment_length)
-                                    ? segment_length
-                                    : segment_length - singleton_point_length;
-                            } else if (y_plus_1 != zero && y == zero) { //switching on line
-                                dasharray.push(cumulative_segment_length += segment_length);
-                                cumulative_segment_length = 0;
-                            } else {
-                                cumulative_segment_length += segment_length;
-                            }
-                        }
-
-                        //fear not, end bit of line, ye too shall be covered
-                        if (dasharray.length > 0) {
-                            dasharray.push(the_line.node().getTotalLength() - dasharray[dasharray.length - 1]);
-
-                            svg.select('.mg-line' + (line_id) + '-color')
-                                .attr('stroke-dasharray', dasharray.join());
                         }
                     }
 
@@ -2637,13 +2730,17 @@ MG.button_layout = function(target) {
                         }
 
                         if (args.legend_target) {
-                            legend = "<span class='mg-line" + line_id  + "-legend-color'>&mdash; "
-                                + this_legend + "&nbsp; </span>" + legend;
+                            if (args.colors && args.colors.constructor === Array) {
+                                legend = "<span style='color:" + args.colors[i] + "'>&mdash; "
+                                    + this_legend + '&nbsp; </span>' + legend;
+                            } else {
+                                legend = "<span class='mg-line" + line_id  + "-legend-color'>&mdash; "
+                                    + this_legend + "&nbsp; </span>" + legend;
+                            }
                         } else {
 
-                            var last_point = this_data[this_data.length-1];
-                            legend_group.append('svg:text')
-                                .classed('mg-line' + (line_id) + '-legend-color', true)
+                            var last_point = this_data[this_data.length - 1];
+                            var legend_text = legend_group.append('svg:text')
                                 .attr('x', args.scalefns.xf(last_point))
                                 .attr('dx', args.buffer)
                                 .attr('y', args.scalefns.yf(last_point))
@@ -2651,6 +2748,16 @@ MG.button_layout = function(target) {
                                 .attr('font-size', 10)
                                 .attr('font-weight', '300')
                                 .text(this_legend);
+
+                            if (args.colors && args.colors.constructor === Array) {
+                                if (args.colors.length < i + 1) {
+                                    legend_text.classed('mg-line' + (line_id) + '-legend-color', true);
+                                } else {
+                                    legend_text.attr('fill', args.colors[i]);    
+                                }
+                            } else {
+                                legend_text.classed('mg-line' + (line_id) + '-legend-color', true);
+                            }
 
                             preventVerticalOverlap(legend_group.selectAll('.mg-line-legend text')[0], args);
                         }
@@ -2688,31 +2795,62 @@ MG.button_layout = function(target) {
             svg.selectAll('.mg-active-datapoint-container').remove();
 
             //rollover text
-            svg.append('g')
+            var activeDatapointContainer = svg.append('g')
                 .attr('class', 'mg-active-datapoint-container')
-                .attr('transform', 'translate(' + (args.width - args.right) + ',' + (args.top / 2) + ')')
                 .append('text')
                     .attr('class', 'mg-active-datapoint')
                     .classed('mg-active-datapoint-small', args.use_small_class)
                     .attr('xml:space', 'preserve')
                     .attr('text-anchor', 'end');
 
+            //set the rollover text's position; if we have markers on two lines,
+            //nudge up the rollover text a bit
+            var activeDatapointYnudge = 0.75;
+            if(args.markers) {
+                var yPos;
+                svg.selectAll('.mg-marker-text')
+                    .each(function() {
+                        if (!yPos) {
+                            yPos = d3.select(this).attr('y');
+                        } else if (yPos !== d3.select(this).attr('y')) {
+                            activeDatapointYnudge = 0.56;
+                        }
+                    })
+            }
+            activeDatapointContainer
+                .attr('transform', 'translate(' + (args.width - args.right) + ',' + (args.top * activeDatapointYnudge) + ')')
+
             //append circle
-            svg.selectAll('.mg-line-rollover-circle')
+            var circle = svg.selectAll('.mg-line-rollover-circle')
                 .data(args.data).enter()
                     .append('circle')
                     .attr({
-                      'class': function(d, i) {
-                          return [
-                              'mg-line-rollover-circle',
-                              'mg-line' + d.line_id + '-color',
-                              'mg-area' + d.line_id + '-color'
-                          ].join(' ');
-                      },
-                      'cx': 0,
-                      'cy': 0,
-                      'r': 0
+                        'cx': 0,
+                        'cy': 0,
+                        'r': 0
                     });
+
+            if (args.colors && args.colors.constructor === Array) {
+                circle
+                    .attr('class', function(d) {
+                        return 'mg-line' + d.line_id;
+                    })
+                    .attr('fill', function(d,i) {
+                        return args.colors[i];
+                    })
+                    .attr('stroke', function(d,i) {
+                        return args.colors[i];
+                    })
+            } else {
+                circle.attr('class', function(d, i) {
+                      return [
+                          'mg-line' + d.line_id,
+                          'mg-line' + d.line_id + '-color',
+                          'mg-area' + d.line_id + '-color'
+                      ].join(' ');
+                    });
+            }
+            circle.classed('mg-line-rollover-circle', true);
 
             //update our data by setting a unique line id for each series
             //increment from 1... unless we have a custom increment series
@@ -2735,12 +2873,11 @@ MG.button_layout = function(target) {
 
             //for multi-line, use voronoi
             if (args.data.length > 1 && !args.aggregate_rollover) {
-
                 //main rollover
                 var voronoi = d3.geom.voronoi()
                     .x(function(d) { return args.scales.X(d[args.x_accessor]).toFixed(2); })
                     .y(function(d) { return args.scales.Y(d[args.y_accessor]).toFixed(2); })
-                    .clipExtent([[args.buffer, args.buffer], [args.width - args.buffer, args.height - args.buffer]]);
+                    .clipExtent([[args.buffer, args.buffer + args.title_y_position], [args.width - args.buffer, args.height - args.buffer]]);
 
                 g = svg.append('g')
                     .attr('class', 'mg-voronoi');
@@ -2760,22 +2897,35 @@ MG.button_layout = function(target) {
                     .data(voronoi(data_nested))
                     .enter()
                         .append('path')
-                            .filter(function(d) { return d !== undefined; })
+                            .filter(function(d) { return d !== undefined && d.length > 0; })
                             .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
                             .datum(function(d) { return d.point; }) //because of d3.nest, reassign d
                             .attr('class', function(d) {
+                                var class_string;
+
                                 if (args.linked) {
+
                                     var v = d[args.x_accessor];
-                                    var formatter = d3.time.format(args.linked_format);
+                                    var formatter = MG.time_format(args.utc_time, args.linked_format);
 
                                     //only format when x-axis is date
                                     var id = (typeof v === 'number')
                                             ? i
                                             : formatter(v);
 
-                                    return 'mg-line' + d.line_id + '-color ' + 'roll_' + id;
+                                    class_string = 'roll_' + id  + ' mg-line' + d.line_id;
+
+                                    if (args.color === null) {
+                                        class_string += ' mg-line' + d.line_id + '-color';
+                                    }
+                                    return class_string;
+
                                 } else {
-                                    return 'mg-line' + d.line_id + '-color';
+
+                                    class_string = 'mg-line' + d.line_id;
+                                    if (args.color === null) class_string += ' mg-line' + d.line_id + '-color';
+                                    return class_string;
+
                                 }
                             })
                             .on('mouseover', this.rolloverOn(args))
@@ -2787,10 +2937,18 @@ MG.button_layout = function(target) {
             else if (args.data.length > 1 && args.aggregate_rollover) {
                 data_nested = d3.nest()
                     .key(function(d) { return d[args.x_accessor]; })
-                    .entries(d3.merge(args.data));
+                    .entries(d3.merge(args.data))
+                    .sort(function(a, b) { return new Date(a.key) - new Date(b.key); });
+
+                // Undo the keys getting coerced to strings, by setting the keys from the values
+                // This is necessary for when we have X axis keys that are things like 
+                data_nested.forEach(function(entry) {
+                    var datum = entry.values[0];
+                    entry.key = datum[args.x_accessor];
+                });
 
                 xf = data_nested.map(function(di) {
-                    return args.scales.X(new Date(di.key));
+                    return args.scales.X(di.key);
                 });
 
                 g = svg.append('g')
@@ -2801,7 +2959,7 @@ MG.button_layout = function(target) {
                         .append('rect')
                             .attr('x', function(d, i) {
                                 //if data set is of length 1
-                                if(xf.length === 1) {
+                                if (xf.length === 1) {
                                     return args.left + args.buffer;
                                 } else if (i === 0) {
                                     return xf[i].toFixed(2);
@@ -2812,7 +2970,7 @@ MG.button_layout = function(target) {
                             .attr('y', args.top)
                             .attr('width', function(d, i) {
                                 //if data set is of length 1
-                                if(xf.length === 1) {
+                                if (xf.length === 1) {
                                     return args.width - args.right - args.buffer;
                                 } else if (i === 0) {
                                     return ((xf[i+1] - xf[i]) / 2).toFixed(2);
@@ -2820,6 +2978,26 @@ MG.button_layout = function(target) {
                                     return ((xf[i] - xf[i-1]) / 2).toFixed(2);
                                 } else {
                                     return ((xf[i+1] - xf[i-1]) / 2).toFixed(2);
+                                }
+                            })
+                            .attr('class', function(d) {
+                                var line_classes = d.values.map(function(datum) {
+                                    var lc = 'mg-line' + d.line_id;
+                                    if (args.colors === null) lc += ' mg-line' + datum.line_id + '-color';
+                                    return lc;
+                                }).join(' ');
+                                if (args.linked && d.values.length > 0) {
+                                    var formatter = MG.time_format(args.utc_time, args.linked_format);
+
+                                    // add line classes for every line the rect contains
+
+                                    var first_datum = d.values[0];
+                                    var v = first_datum[args.x_accessor];
+                                    var id = (typeof v === 'number') ? i : formatter(v);
+
+                                    return line_classes + ' roll_' + id;
+                                } else {
+                                    return line_classes;
                                 }
                             })
                             .attr('height', args.height - args.bottom - args.top - args.buffer)
@@ -2848,16 +3026,16 @@ MG.button_layout = function(target) {
                             .attr('class', function(d, i) {
                                 if (args.linked) {
                                     var v = d[args.x_accessor];
-                                    var formatter = d3.time.format(args.linked_format);
+                                    var formatter = MG.time_format(args.utc_time, args.linked_format);
 
                                     //only format when x-axis is date
                                     var id = (typeof v === 'number')
                                             ? i
                                             : formatter(v);
 
-                                    return 'mg-line' + line_id + '-color ' + 'roll_' + id;
+                                    return 'mg-line' + line_id + '-color ' + 'roll_' + id  + ' mg-line' + d.line_id;
                                 } else {
-                                    return 'mg-line' + line_id + '-color';
+                                    return 'mg-line' + line_id + '-color'  + ' mg-line' + d.line_id;
                                 }
                             })
                             .attr('x', function(d, i) {
@@ -2902,7 +3080,7 @@ MG.button_layout = function(target) {
             if (args.data.length == 1 && args.data[0].length == 1) {
                 svg.select('.mg-rollover-rect rect')
                     .on('mouseover')(args.data[0][0], 0);
-            } else if (args.data.length > 1) {
+            } else if (args.data.length > 1 && !args.aggregate_rollover) {
                 //otherwise, trigger it for an appropriate line in a multi-line chart
                 for (var i = 0; i < args.data.length; i++) {
                     var j = i + 1;
@@ -2912,13 +3090,22 @@ MG.button_layout = function(target) {
                         j = args.custom_line_color_map[i];
                     }
 
-                    if (args.data[i].length == 1) {
-                        svg.selectAll('.mg-voronoi .mg-line' + j + '-color')
+                    if (args.data[i].length === 1 
+                            && !svg.selectAll('.mg-voronoi .mg-line' + j).empty()
+                        ) {
+                        svg.selectAll('.mg-voronoi .mg-line' + j)
                             .on('mouseover')(args.data[i][0], 0);
 
-                        svg.selectAll('.mg-voronoi .mg-line' + j + '-color')
+                        svg.selectAll('.mg-voronoi .mg-line' + j) 
                             .on('mouseout')(args.data[i][0], 0);
                     }
+                }
+            } else if (args.data.length > 1 && args.aggregate_rollover) {
+                //if any of the series is of length 1, trigger for the first line
+                //since they're aggregated
+                var rect = svg.selectAll('.mg-rollover-rect rect');
+                if (args.data.filter(function(d) { return d.length === 1; }).length > 0) {
+                    rect.on('mouseover')(rect[0][0].__data__, 0);
                 }
             }
 
@@ -2931,21 +3118,23 @@ MG.button_layout = function(target) {
             var svg = mg_get_svg_child_of(args.target);
             var fmt;
             switch(args.processed.x_time_frame) {
+                case 'millis':
+                    fmt = MG.time_format(args.utc_time, '%b %e, %Y  %H:%M:%S.%L');
+                    break;
                 case 'seconds':
-                    fmt = d3.time.format('%b %e, %Y  %H:%M:%S');
+                    fmt = MG.time_format(args.utc_time, '%b %e, %Y  %H:%M:%S');
                     break;
                 case 'less-than-a-day':
-                    fmt = d3.time.format('%b %e, %Y  %I:%M%p');
+                    fmt = MG.time_format(args.utc_time, '%b %e, %Y  %I:%M%p');
                     break;
                 case 'four-days':
-                    fmt = d3.time.format('%b %e, %Y  %I:%M%p');
+                    fmt = MG.time_format(args.utc_time, '%b %e, %Y  %I:%M%p');
                     break;
                 default:
-                    fmt = d3.time.format('%b %e, %Y');
+                    fmt = MG.time_format(args.utc_time, '%b %e, %Y');
             }
 
             return function(d, i) {
-
                 if (args.aggregate_rollover && args.data.length > 1) {
                     // hide the circles in case a non-contiguous series is present
                     svg.selectAll('circle.mg-line-rollover-circle')
@@ -2953,40 +3142,41 @@ MG.button_layout = function(target) {
 
                     d.values.forEach(function(datum) {
 
-                      if (datum[args.x_accessor] >= args.processed.min_x &&
-                          datum[args.x_accessor] <= args.processed.max_x &&
-                          datum[args.y_accessor] >= args.processed.min_y &&
-                          datum[args.y_accessor] <= args.processed.max_y
-                      ){
-                        var circle = svg.select('circle.mg-line-rollover-circle.mg-line' + datum.line_id + '-color')
-                            .attr({
-                                'cx': function() {
-                                    return args.scales.X(datum[args.x_accessor]).toFixed(2);
-                                },
-                                'cy': function() {
-                                    return args.scales.Y(datum[args.y_accessor]).toFixed(2);
-                                },
-                                'r': args.point_size
-                            })
-                            .style('opacity', 1);
-                      }
+                        if (datum[args.x_accessor] >= args.processed.min_x &&
+                            datum[args.x_accessor] <= args.processed.max_x &&
+                            datum[args.y_accessor] >= args.processed.min_y &&
+                            datum[args.y_accessor] <= args.processed.max_y
+                        ) {
+                            var circle = svg.select('circle.mg-line-rollover-circle.mg-line' + datum.line_id)
+                                .attr({
+                                    'cx': function() {
+                                        return args.scales.X(datum[args.x_accessor]).toFixed(2);
+                                    },
+                                    'cy': function() {
+                                        return args.scales.Y(datum[args.y_accessor]).toFixed(2);
+                                    },
+                                    'r': args.point_size
+                                })
+                                .style('opacity', 1);
+                        }
                     });
-                } else if (args.missing_is_hidden
-                            && d[args.y_accessor] == 0
-                            && d['missing']) {
+                } else if ((args.missing_is_hidden && d['_missing'])
+                        || d[args.y_accessor] == null
+                    ) {
                     //disable rollovers for hidden parts of the line
+                    //recall that hidden parts are missing data ranges and possibly also
+                    //data points that have been explicitly identified as missing
                     return;
                 } else {
-
                     //show circle on mouse-overed rect
+
                     if (d[args.x_accessor] >= args.processed.min_x &&
                         d[args.x_accessor] <= args.processed.max_x &&
                         d[args.y_accessor] >= args.processed.min_y &&
                         d[args.y_accessor] <= args.processed.max_y
-                    ){
-                        svg.selectAll('circle.mg-line-rollover-circle.mg-area' + d.line_id + '-color')
-                            .attr('class', "")
-                            .attr('class', 'mg-area' + d.line_id + '-color')
+                    ) {
+
+                        var circle = svg.selectAll('circle.mg-line-rollover-circle.mg-line' + d.line_id)
                             .classed('mg-line-rollover-circle', true)
                             .attr('cx', function() {
                                 return args.scales.X(d[args.x_accessor]).toFixed(2);
@@ -2997,22 +3187,20 @@ MG.button_layout = function(target) {
                             .attr('r', args.point_size)
                             .style('opacity', 1);
                     }
+                }
 
-                    //trigger mouseover on all rects for this date in .linked charts
-                    if (args.linked && !MG.globals.link) {
-                        MG.globals.link = true;
+                //trigger mouseover on all rects for this date in .linked charts
+                if (args.linked && !MG.globals.link) {
+                    MG.globals.link = true;
 
-                        var v = d[args.x_accessor];
-                        var formatter = d3.time.format(args.linked_format);
-
-                        //only format when y-axis is date
-                        var id = (typeof v === 'number')
-                                ? i
-                                : formatter(v);
-
+                    if (!args.aggregate_rollover || d.value !== undefined || d.values.length > 0) {
+                        var datum = d.values ? d.values[0] : d;
+                        var formatter = MG.time_format(args.utc_time, args.linked_format);
+                        var v = datum[args.x_accessor];
+                        var id = (typeof v === 'number') ? i : formatter(v);
                         //trigger mouseover on matching line in .linked charts
-                        d3.selectAll('.mg-line' + d.line_id + '-color.roll_' + id)
-                            .each(function(d, i) {
+                        d3.selectAll('.mg-line' + datum.line_id + '.roll_' + id)
+                            .each(function(d) {
                                 d3.select(this).on('mouseover')(d,i);
                             });
                     }
@@ -3032,24 +3220,104 @@ MG.button_layout = function(target) {
                         lineCount = 0,
                         lineHeight = 1.1;
 
-                    textContainer.select('*').remove();
+                    textContainer
+                        .selectAll('*')
+                        .remove();
 
+                    var formatted_x, formatted_y;
+
+                    //define our rollover format for time
+                    var time_rollover_format = function(f, d, accessor, utc) {
+                        var fd;
+                        if (typeof f === 'string') {
+                            fd = MG.time_format(utc, f)(d[accessor]);
+                        } else if (typeof f === 'function') {
+                            fd = f(d);
+                        } else {
+                            fd = d[accessor];
+                        }
+                        return fd;
+                    }
+
+                    //define our rollover format for numbers
+                    var number_rollover_format = function(f, d, accessor) {
+                        var fd;
+                        if (typeof f === 'string') {
+                            fd = d3.format(f)(d[accessor]);
+                        } else if (typeof f === 'function') {
+                            fd = f(d);
+                        } else {
+                            fd = d[accessor];
+                        }
+                        return fd;
+                    }
+
+                    //format the y-accessor value to show
+                    if (args.y_rollover_format !== null) {
+                        if (args.aggregate_rollover) {
+                            formatted_y = '';
+                        } else {
+                            formatted_y = number_rollover_format(args.y_rollover_format, d, args.y_accessor);
+                        }
+                    } else {
+                        if (args.time_series) {
+                            if (args.aggregate_rollover) {
+                                formatted_y = '';
+                            } else {
+                                formatted_y = args.yax_units + num(d[args.y_accessor]);
+                            }
+                        }
+                        else formatted_y = args.y_accessor + ': ' + args.yax_units + num(d[args.y_accessor]);
+                    }
+
+                    //format the x-accessor value to show
+                    if (args.x_rollover_format !== null) {
+                        if (args.time_series) {
+                            if (args.aggregate_rollover) {
+                                formatted_x = time_rollover_format(args.x_rollover_format, d, 'key', args.utc);
+                            } else {
+                                formatted_x = time_rollover_format(args.x_rollover_format, d, args.x_accessor, args.utc);
+                            }
+                        } else {
+                            formatted_x = number_rollover_format(args.x_rollover_format, d, args.x_accessor);
+                        }
+                    } else {
+                        if (args.time_series) {
+                            if (args.aggregate_rollover && args.data.length > 1) {
+                                var date = new Date(d.key);
+                            } else {
+                                var date = new Date(+d[args.x_accessor]);
+                                date.setDate(date.getDate());    
+                            }
+
+                            formatted_x  = fmt(date) + '  ';
+                        } else {
+                            formatted_x = args.x_accessor + ': ' + d[args.x_accessor] + ', ';
+                        }
+                    }
+
+                    //rollover text when aggregate_rollover is enabled
                     if (args.aggregate_rollover && args.data.length > 1) {
                         if (args.time_series) {
-                            var date = new Date(d.key);
-
                             textContainer.append('tspan')
-                                .text((fmt(date) + '  ' + args.yax_units).trim());
+                                .text(formatted_x.trim());
 
                             lineCount = 1;
+                            var fy;
 
                             d.values.forEach(function(datum) {
+                                if (args.y_rollover_format != null) {
+                                    formatted_y = number_rollover_format(args.y_rollover_format, datum, args.y_accessor);
+                                } else {
+                                    formatted_y = num(datum[args.y_accessor]);
+                                }
+
                                 var label = textContainer.append('tspan')
                                     .attr({
                                       x: 0,
                                       y: (lineCount * lineHeight) + 'em'
                                     })
-                                    .text(num(datum[args.y_accessor]));
+                                    .text(formatted_y);
 
                                 textContainer.append('tspan')
                                     .attr({
@@ -3057,7 +3325,8 @@ MG.button_layout = function(target) {
                                       y: (lineCount * lineHeight) + 'em'
                                     })
                                     .text('\u2014 ') // mdash
-                                    .classed('mg-hover-line' + datum.line_id + '-color', true)
+                                    .classed('mg-hover-line' + datum.line_id +'-color', args.colors === null)
+                                    .attr('fill', args.colors === null ? '' : args.colors[datum.line_id - 1])
                                     .style('font-weight', 'bold');
 
                                 lineCount++;
@@ -3069,14 +3338,18 @@ MG.button_layout = function(target) {
                                 .text('\u00A0');
                         } else {
                             d.values.forEach(function(datum) {
+                                if (args.y_rollover_format != null) {
+                                    formatted_y = number_rollover_format(args.y_rollover_format, datum, args.y_accessor);
+                                } else {
+                                    formatted_y = args.yax_units + num(datum[args.y_accessor]);
+                                }
+
                                 var label = textContainer.append('tspan')
                                     .attr({
                                       x: 0,
                                       y: (lineCount * lineHeight) + 'em'
                                     })
-                                    .text(args.x_accessor + ': ' + datum[args.x_accessor]
-                                        + ', ' + args.y_accessor + ': ' + args.yax_units
-                                        + num(datum[args.y_accessor]));
+                                    .text(formatted_x + ' ' + formatted_y);
 
                                 textContainer.append('tspan')
                                     .attr({
@@ -3097,19 +3370,20 @@ MG.button_layout = function(target) {
                             .attr('y', (lineCount * lineHeight) + 'em')
                             .text('\u00A0');
                     } else {
+                        //rollover text when aggregate_rollover is not enabled
                         if (args.time_series) {
-                            var dd = new Date(+d[args.x_accessor]);
-                            dd.setDate(dd.getDate());
-
+                            textContainer.select('*').remove();
                             textContainer.append('tspan')
-                                .text(fmt(dd) + '  ' + args.yax_units
-                                    + num(d[args.y_accessor]));
-                        }
-                        else {
+                                .classed('mg-x-rollover-text', true)
+                                .text(formatted_x);
                             textContainer.append('tspan')
-                                .text(args.x_accessor + ': ' + d[args.x_accessor]
-                                    + ', ' + args.y_accessor + ': ' + args.yax_units
-                                    + num(d[args.y_accessor]));
+                                .classed('mg-y-rollover-text', true)
+                                .text(formatted_y);
+                        } else {
+                            textContainer.append('tspan')
+                                .text(formatted_x);
+                            textContainer.append('tspan')
+                                .text(formatted_y);
                         }
                     }
                 }
@@ -3129,18 +3403,18 @@ MG.button_layout = function(target) {
                 if (args.linked && MG.globals.link) {
                     MG.globals.link = false;
 
-                    var v = d[args.x_accessor];
-                    var formatter = d3.time.format(args.linked_format);
+                    var formatter = MG.time_format(args.utc_time, args.linked_format);
+                    var datums = d.values ? d.values : [d];
+                    datums.forEach(function(datum) {
+                        var v = datum[args.x_accessor];
+                        var id = (typeof v === 'number') ? i : formatter(v);
 
-                    //only format when y-axis is date
-                    var id = (typeof v === 'number')
-                            ? i
-                            : formatter(v);
-
-                    d3.selectAll('.roll_' + id)
-                        .each(function(d, i) {
-                            d3.select(this).on('mouseout')(d);
-                        });
+                        //trigger mouseout on matching line in .linked charts
+                        d3.selectAll('.roll_' + id)
+                            .each(function(d) {
+                                d3.select(this).on('mouseout')(d);
+                            });
+                    });
                 }
 
                 //remove all active data points when aggregate_rollover is enabled
@@ -3151,7 +3425,7 @@ MG.button_layout = function(target) {
                         });
                 //remove active data point text on mouse out, except if we have a single point
                 } else {
-                    svg.selectAll('circle.mg-line-rollover-circle.mg-area' + (d.line_id) + '-color')
+                    svg.selectAll('circle.mg-line-rollover-circle.mg-line' + d.line_id)
                         .style('opacity', function() {
                             var id = d.line_id - 1;
 
@@ -3281,7 +3555,7 @@ MG.button_layout = function(target) {
                 .attr('class', 'mg-active-datapoint')
                 .attr('xml:space', 'preserve')
                 .attr('x', args.width - args.right)
-                .attr('y', args.top / 2)
+                .attr('y', args.top * 0.75)
                 .attr('text-anchor', 'end');
 
             var g = svg.append('g')
@@ -3304,7 +3578,7 @@ MG.button_layout = function(target) {
 
             bar.append('rect')
                 .attr('x', 1)
-                .attr('y', 0)
+                .attr('y', args.buffer + args.title_y_position)
                 .attr('width', function(d, i) {
                     //if data set is of length 1
                     if (args.data[0].length === 1) {
@@ -3331,7 +3605,6 @@ MG.button_layout = function(target) {
 
         this.rolloverOn = function(args) {
             var svg = mg_get_svg_child_of(args.target);
-            var x_formatter = d3.time.format('%Y-%m-%d');
 
             return function(d, i) {
                 svg.selectAll('text')
@@ -3340,7 +3613,7 @@ MG.button_layout = function(target) {
                     })
                     .attr('opacity', 0.3);
 
-                var fmt = d3.time.format('%b %e, %Y');
+                var fmt = args.processed.xax_format || MG.time_format(args.utc_time, '%b %e, %Y');
                 var num = format_rollover_number(args);
 
                 svg.selectAll('.mg-bar rect')
@@ -3525,14 +3798,14 @@ MG.button_layout = function(target) {
                 .attr('class', 'mg-active-datapoint')
                 .attr('xml:space', 'preserve')
                 .attr('x', args.width - args.right)
-                .attr('y', args.top / 2)
+                .attr('y', args.top * 0.75)
                 .attr('text-anchor', 'end');
 
             //add rollover paths
             var voronoi = d3.geom.voronoi()
                 .x(args.scalefns.xf)
                 .y(args.scalefns.yf)
-                .clipExtent([[args.buffer, args.buffer], [args.width - args.buffer, args.height - args.buffer]]);
+                .clipExtent([[args.buffer, args.buffer + args.title_y_position], [args.width - args.buffer, args.height - args.buffer]]);
 
             var paths = svg.append('g')
                 .attr('class', 'mg-voronoi');
@@ -3588,7 +3861,7 @@ MG.button_layout = function(target) {
                         });
                 }
 
-                var fmt = d3.time.format('%b %e, %Y');
+                var fmt = MG.time_format(args.utc_time, '%b %e, %Y');
                 var num = format_rollover_number(args);
 
                 //update rollover text
@@ -3936,7 +4209,7 @@ MG.button_layout = function(target) {
                 .attr('class', 'mg-active-datapoint')
                 .attr('xml:space', 'preserve')
                 .attr('x', args.width - args.right)
-                .attr('y', args.top / 2)
+                .attr('y', args.top * 0.75)
                 .attr('dy', '.35em')
                 .attr('text-anchor', 'end');
 
@@ -3986,7 +4259,7 @@ MG.button_layout = function(target) {
                     })
                     .attr('opacity', 0.3);
 
-                var fmt = d3.time.format('%b %e, %Y');
+                var fmt = MG.time_format(args.utc_time, '%b %e, %Y');
                 var num = format_rollover_number(args);
 
                 //highlight active bar
@@ -4062,13 +4335,13 @@ MG.button_layout = function(target) {
         padding_percentage: 0,
         outer_padding_percentage: 0.1,
         height: 500,
-        top: 20,
         bar_height: 20,
+        top: 45,
         left: 70,
         truncate_x_labels: true,
         truncate_y_labels: true,
-        x_label_rotation: 0,
-        y_label_rotation: 0
+        rotate_x_labels: 0,
+        rotate_y_labels: 0
     };
 
     MG.register('bar', barChart, defaults);
@@ -4100,7 +4373,7 @@ MG.data_table = function(args) {
 
     this._strip_punctuation = function(s) {
         var punctuationless = s.replace(/[^a-zA-Z0-9 _]+/g, '');
-        var finalString = punctuationless.replace(/ +?/g, "");
+        var finalString = punctuationless.replace(/ +?/g, '');
         return finalString;
     };
 
@@ -4332,7 +4605,7 @@ MG.data_table = function(args) {
                 svg.attr('height', svg_height);
             }
 
-            // @todo need to reconsider how we handle automatic scaling
+            //we need to reconsider how we handle automatic scaling
             svg.attr('viewBox', '0 0 ' + svg_width + ' ' + svg_height);
 
             // delete child elements
@@ -4343,7 +4616,7 @@ MG.data_table = function(args) {
 
             // do we need to clear the legend?
             if (args.legend_target) {
-                $(args.legend_target).html('');
+                d3.select(args.legend_target).html('');
             }
 
             //are we adding a background placeholder
@@ -4406,6 +4679,13 @@ MG.data_table = function(args) {
                 .attr('text-anchor', 'middle')
                 .text(args.missing_text);
 
+            this.windowListeners();
+
+            return this;
+        };
+
+        this.windowListeners = function() {
+            mg_window_listeners(this.args);
             return this;
         };
 
@@ -4452,12 +4732,12 @@ function raw_data_transformation(args) {
     args.nested_array_of_objects = false;
 
     if (_is_nested_array) {
-        args.nested_array_of_objects = args.data.map(function(d){
+        args.nested_array_of_objects = args.data.map(function(d) {
             return is_array_of_objects_or_empty(d);
-        });                                                      // Case #2
-        args.nested_array_of_arrays = args.data.map(function(d){
+        });                                                           // Case #2
+        args.nested_array_of_arrays = args.data.map(function(d) {
             return is_array_of_arrays(d);
-        })                                                       // Case #4
+        });                                                           // Case #4
     } else {
         args.array_of_objects = is_array_of_objects(args.data);       // Case #1
         args.array_of_arrays = is_array_of_arrays(args.data);         // Case #3
@@ -4473,6 +4753,7 @@ function raw_data_transformation(args) {
         }
     }
 
+    //if the y_accessor is an array, break it up and store the result in args.data
     if (args.y_accessor instanceof Array) {
         args.data = args.data.map(function(_d) {
             return args.y_accessor.map(function(ya) {
@@ -4492,8 +4773,18 @@ function raw_data_transformation(args) {
         args.y_accessor = 'multiline_y_accessor';
     }
 
+    // if user supplies keyword in args.color, change to arg.colors. 
+    // this is so that the API remains fairly sensible and legible.
+    if (args.color !== undefined) {
+        args.colors = args.color;
+    }
+
+    // if user has supplied args.colors, and that value is a string, turn it into an array.
+    if (args.colors !== null && typeof args.colors === 'string') {
+        args.colors = [args.colors];
+    }
     //sort x-axis data
-    if (args.chart_type === 'line') {
+    if (args.chart_type === 'line' && args.x_sort === true) {
         for (var i = 0; i < args.data.length; i++) {
             args.data[i].sort(function(a, b) {
                 return a[args.x_accessor] - b[args.x_accessor];
@@ -4508,30 +4799,27 @@ MG.raw_data_transformation = raw_data_transformation;
 
 function process_line(args) {
     'use strict';
-    var is_time_series;
+
+    var time_frame;
 
     //do we have a time-series?
     var is_time_series = d3.sum(args.data.map(function(series) {
         return series.length > 0 && series[0][args.x_accessor] instanceof Date;
     })) > 0;
 
-    // var is_time_series = args.data[0][0][args.x_accessor] instanceof Date
-    //     ? true
-    //     : false;
-
     //force linear interpolation when missing_is_hidden is enabled
     if (args.missing_is_hidden) {
         args.interpolate = 'linear';
     }
-
     //are we replacing missing y values with zeros?
     if ((args.missing_is_zero || args.missing_is_hidden)
             && args.chart_type === 'line'
             && is_time_series
         ) {
+
         for (var i = 0; i < args.data.length; i++) {
             //we need to have a dataset of length > 2, so if it's less than that, skip
-            if (args.data[i].length == 1) {
+            if (args.data[i].length <= 1) {
                 continue;
             }
 
@@ -4546,36 +4834,56 @@ function process_line(args) {
             //if we've set a max_x, add data points up to there
             var from = (args.min_x) ? args.min_x : start_date;
             var upto = (args.max_x) ? args.max_x : last[args.x_accessor];
-            for (var d = new Date(from); d <= upto; d.setDate(d.getDate() + 1)) {
-                var o = {};
-                d.setHours(0, 0, 0, 0);
 
-                //add the first date item (judge me not, world)
-                //we'll be starting from the day after our first date
-                if (Date.parse(d) === Date.parse(new Date(start_date))) {
-                    processed_data.push(MG.clone(args.data[i][0]));
-                }
+            time_frame = mg_get_time_frame((upto-from)/1000);
 
-                //check to see if we already have this date in our data object
-                var existing_o = null;
-                args.data[i].forEach(function(val, i) {
-                    if (Date.parse(val[args.x_accessor]) === Date.parse(new Date(d))) {
-                        existing_o = val;
+            if (time_frame == 'default' && args.missing_is_hidden_accessor === null) {
+                for (var d = new Date(from); d <= upto; d.setDate(d.getDate() + 1)) {
+                    var o = {};
+                    d.setHours(0, 0, 0, 0);
 
-                        return false;
+                    //add the first date item
+                    //we'll be starting from the day after our first date
+                    if (Date.parse(d) === Date.parse(new Date(start_date))) {
+                        processed_data.push(MG.clone(args.data[i][0]));
                     }
-                });
 
-                //if we don't have this date in our data object, add it and set it to zero
-                if (!existing_o) {
-                    o[args.x_accessor] = new Date(d);
-                    o[args.y_accessor] = 0;
-                    o['missing'] = true; //we want to distinguish between zero-value and missing observations
-                    processed_data.push(o);
+                    //check to see if we already have this date in our data object
+                    var existing_o = null;
+                    args.data[i].forEach(function(val, i) {
+                        if (Date.parse(val[args.x_accessor]) === Date.parse(new Date(d))) {
+                            existing_o = val;
+
+                            return false;
+                        }
+                    });
+
+                    //if we don't have this date in our data object, add it and set it to zero
+                    if (!existing_o) {
+                        o[args.x_accessor] = new Date(d);
+                        o[args.y_accessor] = 0;
+                        o['_missing'] = true; //we want to distinguish between zero-value and missing observations
+                        processed_data.push(o);
+                    }
+                    //if the data point has, say, a 'missing' attribute set or if its
+                    //y-value is null identify it internally as missing
+                    else if (existing_o[args.missing_is_hidden_accessor]
+                            || existing_o[args.y_accessor] === null
+                        ) {
+                        existing_o['_missing'] = true;
+                        processed_data.push(existing_o);
+                    }
+                    //otherwise, use the existing object for that date
+                    else {
+                        processed_data.push(existing_o);
+                    }
                 }
-                //otherwise, use the existing object for that date
-                else {
-                    processed_data.push(existing_o);
+            }
+            else {
+                for (var j = 0; j < args.data[i].length; j += 1) {
+                    var o = MG.clone(args.data[i][j]);
+                    o['_missing'] = args.data[i][j][args.missing_is_hidden_accessor];
+                    processed_data.push(o);
                 }
             }
 
@@ -4653,6 +4961,14 @@ function process_histogram(args) {
             }
         }
     }
+    
+    // capture the original data and accessors before replacing args.data
+    if (!args.processed) {
+        args.processed = {};
+    }
+    args.processed.original_data = args.data;
+    args.processed.original_x_accessor = args.x_accessor;
+    args.processed.original_y_accessor = args.y_accessor;
 
     args.data = [args.processed_data];
     args.x_accessor = args.processed_x_accessor;
@@ -4734,8 +5050,8 @@ MG.process_point = process_point;
 function add_ls(args) {
     var svg = mg_get_svg_child_of(args.target);
     var data = args.data[0];
-    var min_x = args.scales.X.ticks(args.xax_count)[0];
-    var max_x = args.scales.X.ticks(args.xax_count)[args.scales.X.ticks(args.xax_count).length - 1];
+    var min_x = d3.min(data, function(d) { return d[args.x_accessor]; });
+    var max_x = d3.max(data, function(d) { return d[args.x_accessor]; });
 
     d3.select(args.target).selectAll('.mg-least-squares-line').remove();
 
@@ -4909,7 +5225,7 @@ function _weighted_beta(wxy, xbar, ybar) {
     }));
 
     var denom = d3.sum(wxy.map(function(wxyi) {
-        return Math.pow(wxyi.w, 2) * (Math.pow(wxyi.x - xbar), 2);
+        return Math.pow(wxyi.w, 2) * Math.pow(wxyi.x - xbar, 2);
     }));
 
     return num / denom;
@@ -5030,8 +5346,8 @@ function path_tween(d1, precision) {
   return function() {
     var path0 = this,
         path1 = path0.cloneNode(),
-        n0 = path0.getTotalLength(),
-        n1 = (path1.setAttribute("d", d1), path1).getTotalLength();
+        n0 = path0.getTotalLength() || 0,
+        n1 = (path1.setAttribute("d", d1), path1).getTotalLength() || 0;
 
     // Uniform sampling of distance based on specified precision.
     var distances = [0], i = 0, dt = precision / Math.max(n0, n1);
@@ -5077,6 +5393,9 @@ MG.convert.number = function(data, accessor) {
     return data;
 };
 
+MG.time_format = function(utc, specifier) {
+    return utc ? d3.time.format.utc(specifier) : d3.time.format(specifier);
+};
 
 function is_array(thing){
     return Object.prototype.toString.call(thing) === '[object Array]';
@@ -5121,7 +5440,7 @@ function preventHorizontalOverlap(labels, args) {
         if (isHorizontallyOverlapping(labels[i], labels)) {
             var node = d3.select(labels[i]);
             var newY = +node.attr('y');
-            if (newY + 8 == args.top) {
+            if (newY + 8 >= args.top) {
                 newY = args.top - 16;
             }
             node.attr('y', newY);
@@ -5252,6 +5571,7 @@ function isNumeric(n) {
 
 var each = function(obj, iterator, context) {
     // yanked out of underscore
+    var breaker = {};
     if (obj === null) return obj;
     if (Array.prototype.forEach && obj.forEach === Array.prototype.forEach) {
       obj.forEach(iterator, context);

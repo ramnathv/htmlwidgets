@@ -263,8 +263,8 @@ Requires: digest
 
 Package: metricsgraphics
 Source: CRAN
-Version: 0.8.5
-Hash: 48e12bf5406c98f7c2e9f7d99cec2415
+Version: 0.9.0
+Hash: 16aaa01d1ab8aa74472f12a2ad7d5a9f
 Requires: htmltools, htmlwidgets, magrittr
 
 Package: mime
