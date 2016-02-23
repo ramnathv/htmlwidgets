@@ -368,14 +368,10 @@ Hash: 7f8972bfb3adc6221a13cbdd80ff766a
 Requires: XML, data.table, jsonlite, yaml
 
 Package: rmarkdown
-Source: github
+Source: CRAN
 Version: 0.9.5
-Hash: 9b7c234f5aee3f1264010d6285a41169
+Hash: c47e8fb40e81162783fe1335a13a0ca3
 Requires: caTools, htmltools, knitr, yaml
-GithubRepo: rmarkdown
-GithubUsername: rstudio
-GithubRef: master
-GithubSha1: 5ec65597275312422d815f98afd1333b531adc1f
 
 Package: rstudioapi
 Source: CRAN
