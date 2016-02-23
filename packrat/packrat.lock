@@ -239,14 +239,11 @@ Version: 0.1.10
 Hash: 9679f1ac7f6bc07bc79755f34cd15e1f
 
 Package: leaflet
-Source: github
-Version: 0.0.5
-Hash: 104c7a6e4ac689b65ad34c335027d3af
-Requires: RColorBrewer, htmltools, htmlwidgets, magrittr, scales
-GithubRepo: leaflet
-GithubUsername: rstudio
-GithubRef: master
-GithubSha1: 656fcf3838cb087f96a776c4879fd1db8d261ea1
+Source: CRAN
+Version: 1.0.0
+Hash: 0176fa1090fd0c02de837564c02eb7df
+Requires: RColorBrewer, base64enc, htmltools, htmlwidgets, magrittr,
+    markdown, png, raster, scales, sp
 
 Package: magrittr
 Source: CRAN
@@ -341,6 +338,12 @@ GithubRepo: qtlcharts
 GithubUsername: kbroman
 GithubRef: master
 GithubSha1: 19d44da3275767e10b7692a3bf67064f15896601
+
+Package: raster
+Source: CRAN
+Version: 2.4-18
+Hash: dd556a78217a058faea92d064d6104db
+Requires: Rcpp, sp
 
 Package: reshape2
 Source: CRAN
