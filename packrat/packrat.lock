@@ -18,14 +18,10 @@ Version: 0.3.1
 Hash: 096699d1ac1cf530acfc646a0c90ee5d
 
 Package: DT
-Source: github
-Version: 0.0.3
-Hash: 871e6a5cf846fcb15d31d71651993b54
+Source: CRAN
+Version: 0.1
+Hash: 66d3d04d40c505e567c1328eae0409ee
 Requires: htmltools, htmlwidgets, magrittr
-GithubRepo: DT
-GithubUsername: rstudio
-GithubRef: master
-GithubSha1: 03f08307e6b7e165e1d571d43e39057afa1f4269
 
 Package: DiagrammeR
 Source: github
