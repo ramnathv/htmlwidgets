@@ -449,12 +449,12 @@
       // methods in the future, and we want them to be overrideable by
       // HTMLWidget binding definitions, then we'll need to add them to this
       // list.
-      delegateMethod(shinyBinding, bindingDef, "getId", true);
-      delegateMethod(shinyBinding, bindingDef, "onValueChange", true);
-      delegateMethod(shinyBinding, bindingDef, "onValueError", true);
-      delegateMethod(shinyBinding, bindingDef, "renderError", true);
-      delegateMethod(shinyBinding, bindingDef, "clearError", true);
-      delegateMethod(shinyBinding, bindingDef, "showProgress", true);
+      delegateMethod(shinyBinding, bindingDef, "getId");
+      delegateMethod(shinyBinding, bindingDef, "onValueChange");
+      delegateMethod(shinyBinding, bindingDef, "onValueError");
+      delegateMethod(shinyBinding, bindingDef, "renderError");
+      delegateMethod(shinyBinding, bindingDef, "clearError");
+      delegateMethod(shinyBinding, bindingDef, "showProgress");
 
       // The find, renderValue, and resize are handled differently, because we
       // want to actually decorate the behavior of the bindingDef methods.
