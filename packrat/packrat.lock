@@ -442,8 +442,8 @@ Hash: ee671992fc2cbdecd60b2c96d4c08d92
 
 Package: visNetwork
 Source: CRAN
-Version: 0.2.0
-Hash: 6aaa8938e17c500ef0d26b23c7374082
+Version: 0.2.1
+Hash: 8f6d8f5809c8f4baffa40ffa2dbd539a
 Requires: htmltools, htmlwidgets, jsonlite, magrittr
 
 Package: whisker
