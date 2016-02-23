@@ -101,20 +101,22 @@ Version: 1.2-4
 Hash: 563878773fe70148156427223b813fa2
 
 Package: d3heatmap
-Source: github
-Version: 0.5.0
-Hash: 43c5a4167ee23470b5999cb9d6bab913
-Requires: base64enc, htmlwidgets, png, scales
-GithubRepo: d3heatmap
-GithubUsername: rstudio
-GithubRef: master
-GithubSha1: 866e710d2860deced640d093b36b1ec3181c35d3
+Source: CRAN
+Version: 0.6.1
+Hash: d5d22f0d19230a03961ff841e45a031a
+Requires: base64enc, dendextend, htmlwidgets, png, scales
 
 Package: data.table
 Source: CRAN
 Version: 1.9.6
 Hash: f92ef1f73afa43bf6fd69a22f3794abd
 Requires: chron
+
+Package: dendextend
+Source: CRAN
+Version: 1.1.8
+Hash: 23add9f8b14b07e316563efff793b9ff
+Requires: magrittr, whisker
 
 Package: devtools
 Source: CRAN

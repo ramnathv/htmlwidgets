@@ -54,7 +54,7 @@ function heatmap(selector, data, options) {
   opts.xclust_height = options.xclust_height || opts.height * 0.12;
   opts.yclust_width = options.yclust_width || opts.width * 0.12;
   opts.link_color = opts.link_color || "#AAA";
-  opts.xaxis_height = options.xaxis_height || 120;
+  opts.xaxis_height = options.xaxis_height || 80;
   opts.yaxis_width = options.yaxis_width || 120;
   opts.axis_padding = options.axis_padding || 6;
   opts.show_grid = options.show_grid;
@@ -285,8 +285,19 @@ function heatmap(selector, data, options) {
           tip.style("display", "block");
         })
         .on("mousemove", function() {
-          var col = Math.floor(x.invert(d3.event.offsetX));
-          var row = Math.floor(y.invert(d3.event.offsetY));
+          var e = d3.event;
+          var offsetX = d3.event.offsetX;
+          var offsetY = d3.event.offsetY;
+          if (typeof(offsetX) === "undefined") {
+            // Firefox 38 and earlier
+            var target = e.target || e.srcElement;
+            var rect = target.getBoundingClientRect();
+            offsetX = e.clientX - rect.left,
+            offsetY = e.clientY - rect.top;
+          }
+          
+          var col = Math.floor(x.invert(offsetX));
+          var row = Math.floor(y.invert(offsetY));
           var label = merged[row*cols + col].label;
           tip.show({col: col, row: row, label: label}).style({
             top: d3.event.clientY + 15 + "px",

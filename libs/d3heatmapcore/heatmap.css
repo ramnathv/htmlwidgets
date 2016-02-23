@@ -91,4 +91,10 @@ body.theme-dark {
   background-color: white;
   color: #444;
 }
+.d3heatmap-tip table {
+  border-collapse: separate;
+  border-spacing: 2px;
+}
+.d3heatmap-tip th, .d3heatmap-tip td {
+  padding: 0 1px;
 }
