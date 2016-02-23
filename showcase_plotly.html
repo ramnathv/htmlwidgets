@@ -228,7 +228,7 @@ $(document).ready(function () {
 p &lt;- ggplot(data = diamonds, aes(x = cut, fill = clarity)) +
             geom_bar(position = &quot;dodge&quot;)
 ggplotly(p)</code></pre>
-<p><div id="htmlwidget-3078" style="width:960px;height:500px;" class="plotly"></div>
+<p><div id="htmlwidget-3078" style="width:960px;height:500px;" class="plotly html-widget"></div>
 <script type="application/json" data-for="htmlwidget-3078">{
   "x": {
     "data": [
@@ -400,7 +400,7 @@ ggplotly(p)</code></pre>
       "showlegend": true,
       "annotations": [
         {
-          "text": "<b>clarity</b>",
+          "text": "<b>clarity\u003c/b>",
           "x": 1.025554,
           "y": 0.85,
           "showarrow": false,
@@ -418,13 +418,14 @@ ggplotly(p)</code></pre>
     },
     "world_readable": true
   },
-  "evals": []
+  "evals": [],
+  "jsHooks": []
 }</script></p>
 <p>The R package also provides high-level bindings for working directly with <a href="https://plot.ly/javascript/">plotly.js</a>.</p>
 <pre class="r"><code>d &lt;- diamonds[sample(nrow(diamonds), 500), ]
 plot_ly(d, x = carat, y = price, text = paste(&quot;Clarity: &quot;, clarity),
         mode = &quot;markers&quot;, color = carat, size = carat)</code></pre>
-<p><div id="htmlwidget-7431" style="width:960px;height:500px;" class="plotly"></div>
+<p><div id="htmlwidget-7431" style="width:960px;height:500px;" class="plotly html-widget"></div>
 <script type="application/json" data-for="htmlwidget-7431">{
   "x": {
     "data": [
@@ -485,7 +486,8 @@ plot_ly(d, x = carat, y = price, text = paste(&quot;Clarity: &quot;, clarity),
     },
     "filename": "carat vs. price"
   },
-  "evals": []
+  "evals": [],
+  "jsHooks": []
 }</script></p>
 </div>
 
