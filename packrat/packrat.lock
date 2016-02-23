@@ -140,14 +140,10 @@ Hash: d7005d9f57021e610fa38635d7a0b8e0
 Requires: BH, DBI, R6, Rcpp, assertthat, lazyeval, magrittr
 
 Package: dygraphs
-Source: github
-Version: 0.2
-Hash: 9f8849eb339d3353a9f7e09660e2a308
+Source: CRAN
+Version: 0.7
+Hash: 84165a31e5cc7574fc0c4466276972fd
 Requires: htmlwidgets, magrittr, xts, zoo
-GithubRepo: dygraphs
-GithubUsername: rstudio
-GithubRef: master
-GithubSha1: b273ee118a33b395058e14cdff4e88a838132d6c
 
 Package: evaluate
 Source: CRAN
