@@ -356,9 +356,9 @@ Hash: 918960f5ba1a5e2651b26cada322c598
 
 Package: rglwidget
 Source: CRAN
-Version: 0.1.1431
-Hash: b17662d448cb9d35a8e7c2f2a5cd7c13
-Requires: htmltools, htmlwidgets, jsonlite, knitr, rgl, shiny
+Version: 0.1.1434
+Hash: 69dc1b29ba3d57ab12f6628fde8276a0
+Requires: htmltools, htmlwidgets, jsonlite, knitr, magrittr, rgl, shiny
 
 Package: rjson
 Source: CRAN

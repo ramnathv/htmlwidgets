@@ -1809,6 +1809,9 @@ rglwidgetClass = function() {
 		this.initCanvas = function(el) {
 		  this.canvas = document.createElement("canvas");
 		  this.resize(el);
+		  while (el.firstChild) {
+        el.removeChild(el.firstChild);
+      }
 		  el.appendChild(this.canvas);
 		  this.initGL0();
 		  if (!this.gl)
