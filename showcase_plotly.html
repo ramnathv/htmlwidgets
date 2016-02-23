@@ -228,7 +228,7 @@ $(document).ready(function () {
 p &lt;- ggplot(data = diamonds, aes(x = cut, fill = clarity)) +
             geom_bar(position = &quot;dodge&quot;)
 ggplotly(p)</code></pre>
-<p><div id="htmlwidget-3078" style="width:960px;height:500px;" class="plotly html-widget"></div>
+<p><div id="htmlwidget-3078" style="width:576px;height:336px;" class="plotly html-widget"></div>
 <script type="application/json" data-for="htmlwidget-3078">{
   "x": {
     "data": [
@@ -239,8 +239,13 @@ ggplotly(p)</code></pre>
         "text": [null],
         "name": "I1",
         "marker": {
-          "color": "rgb(248,118,109)"
+          "color": "rgb(248,118,109)",
+          "line": {
+            "color": "transparent",
+            "width": 0.5
+          }
         },
+        "opacity": null,
         "xaxis": "x1",
         "yaxis": "y1",
         "bargap": "default",
@@ -254,8 +259,13 @@ ggplotly(p)</code></pre>
         "text": [null],
         "name": "SI2",
         "marker": {
-          "color": "rgb(205,150,0)"
+          "color": "rgb(205,150,0)",
+          "line": {
+            "color": "transparent",
+            "width": 0.5
+          }
         },
+        "opacity": null,
         "xaxis": "x1",
         "yaxis": "y1",
         "bargap": "default",
@@ -269,8 +279,13 @@ ggplotly(p)</code></pre>
         "text": [null],
         "name": "SI1",
         "marker": {
-          "color": "rgb(124,174,0)"
+          "color": "rgb(124,174,0)",
+          "line": {
+            "color": "transparent",
+            "width": 0.5
+          }
         },
+        "opacity": null,
         "xaxis": "x1",
         "yaxis": "y1",
         "bargap": "default",
@@ -284,8 +299,13 @@ ggplotly(p)</code></pre>
         "text": [null],
         "name": "VS2",
         "marker": {
-          "color": "rgb(0,190,103)"
+          "color": "rgb(0,190,103)",
+          "line": {
+            "color": "transparent",
+            "width": 0.5
+          }
         },
+        "opacity": null,
         "xaxis": "x1",
         "yaxis": "y1",
         "bargap": "default",
@@ -299,8 +319,13 @@ ggplotly(p)</code></pre>
         "text": [null],
         "name": "VS1",
         "marker": {
-          "color": "rgb(0,191,196)"
+          "color": "rgb(0,191,196)",
+          "line": {
+            "color": "transparent",
+            "width": 0.5
+          }
         },
+        "opacity": null,
         "xaxis": "x1",
         "yaxis": "y1",
         "bargap": "default",
@@ -314,8 +339,13 @@ ggplotly(p)</code></pre>
         "text": [null],
         "name": "VVS2",
         "marker": {
-          "color": "rgb(0,169,255)"
+          "color": "rgb(0,169,255)",
+          "line": {
+            "color": "transparent",
+            "width": 0.5
+          }
         },
+        "opacity": null,
         "xaxis": "x1",
         "yaxis": "y1",
         "bargap": "default",
@@ -329,8 +359,13 @@ ggplotly(p)</code></pre>
         "text": [null],
         "name": "VVS1",
         "marker": {
-          "color": "rgb(199,124,255)"
+          "color": "rgb(199,124,255)",
+          "line": {
+            "color": "transparent",
+            "width": 0.5
+          }
         },
+        "opacity": null,
         "xaxis": "x1",
         "yaxis": "y1",
         "bargap": "default",
@@ -344,8 +379,13 @@ ggplotly(p)</code></pre>
         "text": [null],
         "name": "IF",
         "marker": {
-          "color": "rgb(255,97,204)"
+          "color": "rgb(255,97,204)",
+          "line": {
+            "color": "transparent",
+            "width": 0.5
+          }
         },
+        "opacity": null,
         "xaxis": "x1",
         "yaxis": "y1",
         "bargap": "default",
@@ -356,7 +396,7 @@ ggplotly(p)</code></pre>
     "layout": {
       "barmode": "group",
       "xaxis": {
-        "tickcolor": "rgb(127,127,127)",
+        "tickcolor": "rgb(51,51,51)",
         "gridcolor": "rgb(255,255,255)",
         "showgrid": true,
         "ticks": "outside",
@@ -367,7 +407,7 @@ ggplotly(p)</code></pre>
         "showline": false
       },
       "yaxis": {
-        "tickcolor": "rgb(127,127,127)",
+        "tickcolor": "rgb(51,51,51)",
         "gridcolor": "rgb(255,255,255)",
         "showgrid": true,
         "ticks": "outside",
@@ -377,7 +417,7 @@ ggplotly(p)</code></pre>
         "zeroline": false,
         "showline": false
       },
-      "plot_bgcolor": "rgb(229,229,229)",
+      "plot_bgcolor": "rgb(235,235,235)",
       "margin": {
         "b": 40,
         "l": 60,
@@ -425,7 +465,7 @@ ggplotly(p)</code></pre>
 <pre class="r"><code>d &lt;- diamonds[sample(nrow(diamonds), 500), ]
 plot_ly(d, x = carat, y = price, text = paste(&quot;Clarity: &quot;, clarity),
         mode = &quot;markers&quot;, color = carat, size = carat)</code></pre>
-<p><div id="htmlwidget-7431" style="width:960px;height:500px;" class="plotly html-widget"></div>
+<p><div id="htmlwidget-7431" style="width:576px;height:336px;" class="plotly html-widget"></div>
 <script type="application/json" data-for="htmlwidget-7431">{
   "x": {
     "data": [
@@ -473,9 +513,10 @@ plot_ly(d, x = carat, y = price, text = paste(&quot;Clarity: &quot;, clarity),
         "r": 10
       }
     },
-    "url": {},
-    "width": {},
-    "height": {},
+    "url": null,
+    "width": null,
+    "height": null,
+    "base_url": "https://plot.ly",
     "layout.1": {
       "xaxis": {
         "title": "carat"
