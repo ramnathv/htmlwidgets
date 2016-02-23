@@ -244,11 +244,6 @@ Source: CRAN
 Version: 1.5
 Hash: bdc4d48c3135e8f3b399536ddf160df4
 
-Package: maps
-Source: CRAN
-Version: 2.3-9
-Hash: 28d07bd51ca5f68bcda31c9570174f6a
-
 Package: markdown
 Source: CRAN
 Version: 0.7.4
@@ -317,21 +312,6 @@ Source: CRAN
 Version: 0.2.0
 Hash: 31f16614a3c69ae0c70bf6cb53737c75
 Requires: BH, Rcpp, dplyr, lazyeval, magrittr
-
-Package: qtl
-Source: CRAN
-Version: 1.36-6
-Hash: e1c4668fd3c09d428e10ee91eb15b2b3
-
-Package: qtlcharts
-Source: github
-Version: 0.5-13
-Hash: fe6114c5afe6cd6b1c541dbb7f9c596a
-Requires: htmlwidgets, jsonlite, qtl
-GithubRepo: qtlcharts
-GithubUsername: kbroman
-GithubRef: master
-GithubSha1: 19d44da3275767e10b7692a3bf67064f15896601
 
 Package: raster
 Source: CRAN
