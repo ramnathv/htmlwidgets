@@ -302,9 +302,9 @@ createWidget <- function(name,
 #' @param width,height Must be a valid CSS unit (like \code{"100\%"},
 #'   \code{"400px"}, \code{"auto"}) or a number, which will be coerced to a
 #'   string and have \code{"px"} appended.
+#' @param package Package containing widget (defaults to \code{name})
 #' @param inline use an inline (\code{span()}) or block container (\code{div()})
 #' for the output
-#' @param package Package containing widget (defaults to \code{name})
 #' @param outputFunction Shiny output function corresponding to this render
 #'   function.
 #' @param expr An expression that generates an HTML widget
@@ -333,8 +333,8 @@ createWidget <- function(name,
 #' @name htmlwidgets-shiny
 #'
 #' @export
-shinyWidgetOutput <- function(outputId, name, width, height, inline = FALSE,
-                              package = name) {
+shinyWidgetOutput <- function(outputId, name, width, height, package = name,
+                              inline = FALSE) {
 
   checkShinyVersion()
   # generate html
