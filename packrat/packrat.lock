@@ -158,9 +158,9 @@ Hash: 54c730c712edd6087972ecf99bf87c55
 
 Package: ggplot2
 Source: CRAN
-Version: 1.0.1
-Hash: 4aff1b269135bd2cdea378f4f2f2895e
-Requires: digest, gtable, plyr, proto, reshape2, scales
+Version: 2.0.0
+Hash: 5befb1e7a9c7d0692d6c35fa02a29dbf
+Requires: digest, gtable, plyr, reshape2, scales
 
 Package: gridExtra
 Source: CRAN
@@ -293,8 +293,8 @@ Hash: 29eacc43b096c5b1a82c8d54a49b030b
 
 Package: plotly
 Source: CRAN
-Version: 2.0.2
-Hash: bab6d4963f957b21bb3120c8e48829b7
+Version: 2.0.16
+Hash: d1da2fcfce97913fce2a41fa1e995049
 Requires: base64enc, digest, ggplot2, htmlwidgets, httr, jsonlite,
     magrittr, plyr, scales, viridis
 
@@ -386,8 +386,8 @@ Hash: e31a489e8019b379967fde77361af4ad
 
 Package: scales
 Source: CRAN
-Version: 0.2.5
-Hash: 3f3d08a43b113528b6f08e244b775175
+Version: 0.3.0
+Hash: 9c140be1bda3cf690f8714cfc810aa45
 Requires: RColorBrewer, Rcpp, dichromat, labeling, munsell, plyr
 
 Package: shiny
