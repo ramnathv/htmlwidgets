@@ -5,7 +5,7 @@
 \title{Save a widget to an HTML file}
 \usage{
 saveWidget(widget, file, selfcontained = TRUE, libdir = NULL,
-  background = "white")
+  background = "white", knitrOptions = list())
 }
 \arguments{
 \item{widget}{Widget to save}
@@ -19,7 +19,10 @@ placed in an adjacent directory.}
 \item{libdir}{Directory to copy HTML dependencies into (defaults to
 filename_files).}
 
-\item{background}{Text string giving the html background color of the widget. Defaults to white.}
+\item{background}{Text string giving the html background color of the widget.
+Defaults to white.}
+
+\item{knitrOptions}{A list of \pkg{knitr} chunk options.}
 }
 \description{
 Save a rendered widget to an HTML file (e.g. for sharing with others).
