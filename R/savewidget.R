@@ -9,13 +9,15 @@
 #'   placed in an adjacent directory.
 #' @param libdir Directory to copy HTML dependencies into (defaults to
 #'   filename_files).
-#' @param background Text string giving the html background color of the widget. Defaults to white.
-#'
+#' @param background Text string giving the html background color of the widget.
+#'   Defaults to white.
+#' @param knitrOptions A list of \pkg{knitr} chunk options.
 #' @export
-saveWidget <- function(widget, file, selfcontained = TRUE, libdir = NULL, background="white") {
+saveWidget <- function(widget, file, selfcontained = TRUE, libdir = NULL,
+                       background = "white", knitrOptions = list()) {
 
   # convert to HTML tags
-  html <- toHTML(widget, standalone = TRUE)
+  html <- toHTML(widget, standalone = TRUE, knitrOptions = knitrOptions)
 
   # form a path for dependenent files
   if (is.null(libdir)){
