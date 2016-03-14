@@ -5,3 +5,4 @@
 geog495.RData
 packrat/lib*/
 packrat/src/*
+.*.Rnb.cached

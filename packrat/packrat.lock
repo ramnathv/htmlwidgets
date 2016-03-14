@@ -171,6 +171,12 @@ Version: 2.0.0
 Hash: 5befb1e7a9c7d0692d6c35fa02a29dbf
 Requires: digest, gtable, plyr, reshape2, scales
 
+Package: gistr
+Source: CRAN
+Version: 0.3.6
+Hash: 2e461c85d611e127febc76a4dac88735
+Requires: assertthat, dplyr, httr, jsonlite, knitr, magrittr, rmarkdown
+
 Package: git2r
 Source: CRAN
 Version: 0.13.1
@@ -186,6 +192,11 @@ Package: gtable
 Source: CRAN
 Version: 0.1.2
 Hash: 38a0f066373a60824cd3ade2362af363
+
+Package: hexbin
+Source: CRAN
+Version: 1.27.1
+Hash: 9f94c576cc4b9e83fd714ae8387272e6
 
 Package: highcharter
 Source: CRAN
@@ -260,6 +271,11 @@ Source: CRAN
 Version: 1.5
 Hash: bdc4d48c3135e8f3b399536ddf160df4
 
+Package: maps
+Source: CRAN
+Version: 3.1.0
+Hash: aed073ec64642be40985329fe1b8c225
+
 Package: markdown
 Source: CRAN
 Version: 0.7.7
@@ -333,6 +349,12 @@ Source: CRAN
 Version: 0.3-10
 Hash: 05d7ad64db29a39d1b02c4b9f1f4edb2
 
+Package: pryr
+Source: CRAN
+Version: 0.1.2
+Hash: 165f41435294aa791ff61484b7b9e884
+Requires: Rcpp, stringr
+
 Package: purrr
 Source: CRAN
 Version: 0.2.1
@@ -344,6 +366,13 @@ Source: CRAN
 Version: 2.4-18
 Hash: dd556a78217a058faea92d064d6104db
 Requires: Rcpp, sp
+
+Package: rbokeh
+Source: CRAN
+Version: 0.4.2
+Hash: 6bb1e55e658e7524a15cf458cb9e961f
+Requires: digest, ggplot2, gistr, hexbin, htmlwidgets, jsonlite,
+    lazyeval, magrittr, maps, pryr, scales
 
 Package: reshape2
 Source: CRAN

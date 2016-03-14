@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<title>htmlwidgets: rbokeh</title>
+
+<script src="libs/jquery/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap/css/cosmo.min.css" rel="stylesheet" />
+<script src="libs/bootstrap/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap/shim/respond.min.js"></script>
+<script src="libs/htmlwidgets/htmlwidgets.js"></script>
+<link href="libs/bokehjs/bokeh.min.css" rel="stylesheet" />
+<script src="libs/bokehjs/bokeh.min.js"></script>
+<script src="libs/rbokeh-binding/rbokeh.js"></script>
+
+<!-- Styles for this site -->
+<link href="css/styles.css" rel="stylesheet">
+
+<!-- Polyfill JS -->
+<script src="js/polyfill.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/textmate.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="libs/navigation/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+<!--html_preserve-->
+
+<div class="header">
+  <nav class="navbar">
+      <h3 class="navbar-left"><strong>htmlwidgets</strong> for R</h3>
+      <ul class="nav nav-pills navbar-right">
+        <li role="presentation" id="nav-home"><a href="index.html">Home</a></li>
+        <li role="presentation" id="nav-showcase"><a href="showcase_leaflet.html">Showcase</a></li>
+        <li role="presentation" id="nav-develop" class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
+            Develop <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            <li role="presentation"><a href="develop_intro.html">Creating a widget</a></li>
+            <li role="presentation"><a href="develop_sizing.html">Widget sizing</a></li>
+            <li role="presentation"><a href="develop_advanced.html">Advanced topics</a></li>
+          </ul>
+        </li>
+        <li role="presentation" id="nav-github"><a href="https://github.com/ramnathv/htmlwidgets">GitHub</a></li>
+      </ul>
+  </nav>
+</div>
+
+<div class="showcase-header hidden">
+
+  <div id = "showcase-intro">
+    HTML widgets work just like R plots except they produce interactive web visualizations. A line or two of R code is all it takes to produce a D3 graphic or Leaflet map. HTML widgets can be used at the R console as well as embedded in R Markdown reports and Shiny web applications.
+  </div>
+
+  <div class="row">
+
+    <div class="col-sm-4">
+      <div class="list-group">
+        <a href="showcase_leaflet.html" class="list-group-item">
+          <h5 class="list-group-item-heading">Leaflet</h5>
+          <p class="list-group-item-text">Geo-spatial mapping</p>
+        </a>
+        <a href="showcase_dygraphs.html" class="list-group-item">
+          <h5 class="list-group-item-heading">dygraphs</h5>
+          <p class="list-group-item-text">Time series charting</p>
+        </a>
+        <a href="showcase_plotly.html" class="list-group-item">
+          <h5 class="list-group-item-heading">Plotly</h5>
+          <p class="list-group-item-text">Interactive graphics with D3</p>
+        </a>
+        <a href="showcase_rbokeh.html" class="list-group-item">
+          <h5 class="list-group-item-heading">rbokeh</h5>
+          <p class="list-group-item-text">R interface to Bokeh</p>
+        </a>
+        <a href="showcase_highcharts.html" class="list-group-item">
+          <h5 class="list-group-item-heading">Highcharter</h5>
+          <p class="list-group-item-text">R interface to Highcharts</p>
+        </a>
+        <a href="showcase_visNetwork.html" class="list-group-item">
+          <h5 class="list-group-item-heading">visNetwork</h5>
+          <p class="list-group-item-text">Graph data visualization with vis.js</p>
+        </a>
+        <a href="showcase_networkD3.html" class="list-group-item">
+          <h5 class="list-group-item-heading">networkD3</h5>
+          <p class="list-group-item-text">Graph data visualization with D3</p>
+        </a>
+        <a href="showcase_d3heatmap.html" class="list-group-item">
+          <h5 class="list-group-item-heading">d3heatmap</h5>
+          <p class="list-group-item-text">Interactive heatmaps with D3</p>
+        </a>
+        <a href="showcase_datatables.html" class="list-group-item">
+          <h5 class="list-group-item-heading">DataTables</h5>
+          <p class="list-group-item-text">Tabular data display</p>
+        </a>
+        <a href="showcase_threejs.html" class="list-group-item">
+          <h5 class="list-group-item-heading">threejs</h5>
+          <p class="list-group-item-text">3D scatterplots and globes</p>
+        </a>
+        <a href="showcase_rglwidget.html" class="list-group-item">
+          <h5 class="list-group-item-heading">rglwidget</h5>
+          <p class="list-group-item-text">Render scenes created with rgl</p>
+        </a>
+        <a href="showcase_diagrammer.html" class="list-group-item">
+          <h5 class="list-group-item-heading">DiagrammeR</h5>
+          <p class="list-group-item-text">Diagrams and flowcharts</p>
+        </a>
+         <a href="showcase_metricsgraphics.html" class="list-group-item">
+          <h5 class="list-group-item-heading">MetricsGraphics</h5>
+          <p class="list-group-item-text">Scatterplots and line charts with D3</p>
+        </a>
+
+      </div> <!-- list-group -->
+
+    </div> <!-- col-sm-4 -->
+
+    <div class="col-sm-8" id="showcase-body">
+
+    </div> <!-- col-sm-8 -->
+
+  </div> <!-- row -->
+
+</div> <!-- showcase-header -->
+
+<div id="page-body">
+
+<!--/html_preserve-->
+
+<div class="fluid-row" id="header">
+
+
+<h1 class="title">htmlwidgets: rbokeh</h1>
+
+</div>
+
+
+<div id="rbokeh" class="section level3">
+<h3>rbokeh</h3>
+<p><a href="http://hafen.github.io/rbokeh" class="uri">http://hafen.github.io/rbokeh</a></p>
+<p><a href="http://bokeh.pydata.org/en/latest/">Bokeh</a> is a visualization library that provides a flexible and powerful declarative framework for creating web-based plots.</p>
+<pre class="r"><code>library(rbokeh)
+figure(width = NULL, height = NULL) %&gt;%
+  ly_points(Sepal.Length, Sepal.Width, data = iris,
+    color = Species, glyph = Species,
+    hover = list(Sepal.Length, Sepal.Width))</code></pre>
+<p><div id="htmlwidget-2577" style="width:576px;height:336px;" class="rbokeh html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2577">{
+  "x": {
+    "elementid": "6a32dabfeb4eae4e4f2840535fd47aeb",
+    "modeltype": "Plot",
+    "modelid": "f1f29e15cf5ebef031af8c86f5b2be0b",
+    "docid": "afc750a6cf726da6ca82404543185b3f",
+    "docs_json": {
+      "afc750a6cf726da6ca82404543185b3f": {
+        "version": "0.11.1",
+        "title": "Bokeh Figure",
+        "roots": {
+          "root_ids": [
+            "f1f29e15cf5ebef031af8c86f5b2be0b"
+          ],
+          "references": [
+            {
+              "type": "Plot",
+              "id": "f1f29e15cf5ebef031af8c86f5b2be0b",
+              "attributes": {
+                "title": null,
+                "id": "f1f29e15cf5ebef031af8c86f5b2be0b",
+                "plot_width": [],
+                "plot_height": [],
+                "x_range": {
+                  "type": "Range1d",
+                  "id": "cb8e396d0f351b5aa4b95ec00bd38b06"
+                },
+                "y_range": {
+                  "type": "Range1d",
+                  "id": "1863b664751df4601e9ff4e71d60a6ec"
+                },
+                "left": [
+                  {
+                    "type": "LinearAxis",
+                    "id": "7523231a5696d586eb5eec90f9cbb626"
+                  }
+                ],
+                "below": [
+                  {
+                    "type": "LinearAxis",
+                    "id": "8ae0d51ccaba61463afd5cc4532e46fd"
+                  }
+                ],
+                "right": [],
+                "above": [],
+                "renderers": [
+                  {
+                    "type": "BoxAnnotation",
+                    "id": "bb7aca7115970e3f7d494edfa84a997d"
+                  },
+                  {
+                    "type": "GlyphRenderer",
+                    "id": "a7f41ceca3245f7469e792b1b05c9ff6"
+                  },
+                  {
+                    "type": "GlyphRenderer",
+                    "id": "26457cd7e14c7ce446f723f7595efcab"
+                  },
+                  {
+                    "type": "GlyphRenderer",
+                    "id": "17b63e00c58cace6af7bead4962333a6"
+                  },
+                  {
+                    "type": "GlyphRenderer",
+                    "id": "c950efbfae5b942eb523d3c8a606cd24"
+                  },
+                  {
+                    "type": "GlyphRenderer",
+                    "id": "e198ce94f66c24e111c9356a42f04744"
+                  },
+                  {
+                    "type": "GlyphRenderer",
+                    "id": "6ad356ce1e47e6f94f6106e32ca5a1fa"
+                  },
+                  {
+                    "type": "Legend",
+                    "id": "d7fd5d65d3c606639fc75ce5ab1fb962"
+                  },
+                  {
+                    "type": "LinearAxis",
+                    "id": "8ae0d51ccaba61463afd5cc4532e46fd"
+                  },
+                  {
+                    "type": "Grid",
+                    "id": "574257db05a2b24ffb1d600a1b99c27b"
+                  },
+                  {
+                    "type": "LinearAxis",
+                    "id": "7523231a5696d586eb5eec90f9cbb626"
+                  },
+                  {
+                    "type": "Grid",
+                    "id": "2e74e2157f36a359d1542023b362b54d"
+                  }
+                ],
+                "tools": [
+                  {
+                    "type": "PanTool",
+                    "id": "5a9fc1da0977d0b6328666100574879d"
+                  },
+                  {
+                    "type": "WheelZoomTool",
+                    "id": "dcb1d8da36434f9fd37c7c9e7cb49f7d"
+                  },
+                  {
+                    "type": "BoxZoomTool",
+                    "id": "30aa63cd790d3982bf263ba4810f6c02"
+                  },
+                  {
+                    "type": "ResizeTool",
+                    "id": "3918c34fc67028723df08b12c065ebb4"
+                  },
+                  {
+                    "type": "ResetTool",
+                    "id": "e41fcfe6678d4f621f0c7813580da534"
+                  },
+                  {
+                    "type": "PreviewSaveTool",
+                    "id": "695f65b1981fb26e30dde2c324726151"
+                  },
+                  {
+                    "type": "HelpTool",
+                    "id": "acc684efe71bb80cfdcc8932195d8df3"
+                  },
+                  {
+                    "type": "HoverTool",
+                    "id": "0ed372fb11782e6aec301344da3bab14"
+                  },
+                  {
+                    "type": "HoverTool",
+                    "id": "de583abc122e09f918e99242262ec9b4"
+                  },
+                  {
+                    "type": "HoverTool",
+                    "id": "b38b5d0e2b90b3afa3b3e451517e76a1"
+                  }
+                ],
+                "tool_events": {
+                  "type": "ToolEvents",
+                  "id": "97f5f8f460392ecf759841e65120f673"
+                },
+                "extra_y_ranges": {},
+                "extra_x_ranges": {},
+                "tags": [],
+                "doc": null,
+                "min_border_left": 4,
+                "min_border_right": 4,
+                "min_border_top": 4,
+                "min_border_bottom": 4,
+                "lod_threshold": null
+              },
+              "subtype": "Figure"
+            },
+            {
+              "type": "PanTool",
+              "id": "5a9fc1da0977d0b6328666100574879d",
+              "attributes": {
+                "id": "5a9fc1da0977d0b6328666100574879d",
+                "tags": [],
+                "doc": null,
+                "plot": {
+                  "type": "Plot",
+                  "id": "f1f29e15cf5ebef031af8c86f5b2be0b",
+                  "subtype": "Figure"
+                },
+                "dimensions": ["width", "height"]
+              }
+            },
+            {
+              "type": "ToolEvents",
+              "id": "97f5f8f460392ecf759841e65120f673",
+              "attributes": {
+                "id": "97f5f8f460392ecf759841e65120f673",
+                "tags": [],
+                "doc": null
+              },
+              "geometries": []
+            },
+            {
+              "type": "WheelZoomTool",
+              "id": "dcb1d8da36434f9fd37c7c9e7cb49f7d",
+              "attributes": {
+                "id": "dcb1d8da36434f9fd37c7c9e7cb49f7d",
+                "tags": [],
+                "doc": null,
+                "plot": {
+                  "type": "Plot",
+                  "id": "f1f29e15cf5ebef031af8c86f5b2be0b",
+                  "subtype": "Figure"
+                },
+                "dimensions": ["width", "height"]
+              }
+            },
+            {
+              "type": "BoxAnnotation",
+              "id": "bb7aca7115970e3f7d494edfa84a997d",
+              "attributes": {
+                "id": "bb7aca7115970e3f7d494edfa84a997d",
+                "tags": [],
+                "doc": null,
+                "line_color": {
+                  "units": "data",
+                  "value": "black"
+                },
+                "line_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "fill_color": {
+                  "units": "data",
+                  "value": "lightgrey"
+                },
+                "fill_alpha": {
+                  "units": "data",
+                  "value": 0.5
+                },
+                "line_dash": [4, 4],
+                "line_width": {
+                  "units": "data",
+                  "value": 2
+                },
+                "level": "overlay",
+                "top_units": "screen",
+                "bottom_units": "screen",
+                "left_units": "screen",
+                "right_units": "screen",
+                "render_mode": "css"
+              }
+            },
+            {
+              "type": "BoxZoomTool",
+              "id": "30aa63cd790d3982bf263ba4810f6c02",
+              "attributes": {
+                "id": "30aa63cd790d3982bf263ba4810f6c02",
+                "tags": [],
+                "doc": null,
+                "plot": {
+                  "type": "Plot",
+                  "id": "f1f29e15cf5ebef031af8c86f5b2be0b",
+                  "subtype": "Figure"
+                },
+                "overlay": {
+                  "type": "BoxAnnotation",
+                  "id": "bb7aca7115970e3f7d494edfa84a997d"
+                }
+              }
+            },
+            {
+              "type": "ResizeTool",
+              "id": "3918c34fc67028723df08b12c065ebb4",
+              "attributes": {
+                "id": "3918c34fc67028723df08b12c065ebb4",
+                "tags": [],
+                "doc": null,
+                "plot": {
+                  "type": "Plot",
+                  "id": "f1f29e15cf5ebef031af8c86f5b2be0b",
+                  "subtype": "Figure"
+                }
+              }
+            },
+            {
+              "type": "ResetTool",
+              "id": "e41fcfe6678d4f621f0c7813580da534",
+              "attributes": {
+                "id": "e41fcfe6678d4f621f0c7813580da534",
+                "tags": [],
+                "doc": null,
+                "plot": {
+                  "type": "Plot",
+                  "id": "f1f29e15cf5ebef031af8c86f5b2be0b",
+                  "subtype": "Figure"
+                }
+              }
+            },
+            {
+              "type": "PreviewSaveTool",
+              "id": "695f65b1981fb26e30dde2c324726151",
+              "attributes": {
+                "id": "695f65b1981fb26e30dde2c324726151",
+                "tags": [],
+                "doc": null,
+                "plot": {
+                  "type": "Plot",
+                  "id": "f1f29e15cf5ebef031af8c86f5b2be0b",
+                  "subtype": "Figure"
+                }
+              }
+            },
+            {
+              "type": "HelpTool",
+              "id": "acc684efe71bb80cfdcc8932195d8df3",
+              "attributes": {
+                "id": "acc684efe71bb80cfdcc8932195d8df3",
+                "tags": [],
+                "doc": null,
+                "plot": {
+                  "type": "Plot",
+                  "id": "f1f29e15cf5ebef031af8c86f5b2be0b",
+                  "subtype": "Figure"
+                },
+                "redirect": ["http://hafen.github.io/rbokeh"],
+                "help_tooltip": ["Click to learn more about rbokeh."]
+              }
+            },
+            {
+              "type": "HoverTool",
+              "id": "0ed372fb11782e6aec301344da3bab14",
+              "attributes": {
+                "id": "0ed372fb11782e6aec301344da3bab14",
+                "tags": [],
+                "doc": null,
+                "plot": {
+                  "type": "Plot",
+                  "id": "f1f29e15cf5ebef031af8c86f5b2be0b",
+                  "subtype": "Figure"
+                },
+                "renderers": [
+                  {
+                    "type": "GlyphRenderer",
+                    "id": "a7f41ceca3245f7469e792b1b05c9ff6"
+                  }
+                ],
+                "names": [],
+                "always_active": true,
+                "tooltips": [
+                  [
+                    "Sepal.Length",
+                    "@hover_col_1"
+                  ],
+                  [
+                    "Sepal.Width",
+                    "@hover_col_2"
+                  ]
+                ]
+              }
+            },
+            {
+              "type": "ColumnDataSource",
+              "id": "068743459b1d286aab932da6d42d451f",
+              "attributes": {
+                "id": "068743459b1d286aab932da6d42d451f",
+                "tags": [],
+                "doc": null,
+                "column_names": ["x", "y", "line_color", "fill_color", "hover_col_1", "hover_col_2"],
+                "selected": [],
+                "discrete_ranges": {},
+                "cont_ranges": {},
+                "data": {
+                  "x": [5.1, 4.9, 4.7, 4.6, 5, 5.4, 4.6, 5, 4.4, 4.9, 5.4, 4.8, 4.8, 4.3, 5.8, 5.7, 5.4, 5.1, 5.7, 5.1, 5.4, 5.1, 4.6, 5.1, 4.8, 5, 5, 5.2, 5.2, 4.7, 4.8, 5.4, 5.2, 5.5, 4.9, 5, 5.5, 4.9, 4.4, 5.1, 5, 4.5, 4.4, 5, 5.1, 4.8, 5.1, 4.6, 5.3, 5],
+                  "y": [3.5, 3, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1, 3.7, 3.4, 3, 3, 4, 4.4, 3.9, 3.5, 3.8, 3.8, 3.4, 3.7, 3.6, 3.3, 3.4, 3, 3.4, 3.5, 3.4, 3.2, 3.1, 3.4, 4.1, 4.2, 3.1, 3.2, 3.5, 3.6, 3, 3.4, 3.5, 2.3, 3.2, 3.5, 3.8, 3, 3.8, 3.2, 3.7, 3.3],
+                  "line_color": ["#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4"],
+                  "fill_color": ["#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4", "#1F77B4"],
+                  "hover_col_1": ["5.1", "4.9", "4.7", "4.6", "5.0", "5.4", "4.6", "5.0", "4.4", "4.9", "5.4", "4.8", "4.8", "4.3", "5.8", "5.7", "5.4", "5.1", "5.7", "5.1", "5.4", "5.1", "4.6", "5.1", "4.8", "5.0", "5.0", "5.2", "5.2", "4.7", "4.8", "5.4", "5.2", "5.5", "4.9", "5.0", "5.5", "4.9", "4.4", "5.1", "5.0", "4.5", "4.4", "5.0", "5.1", "4.8", "5.1", "4.6", "5.3", "5.0"],
+                  "hover_col_2": ["3.5", "3.0", "3.2", "3.1", "3.6", "3.9", "3.4", "3.4", "2.9", "3.1", "3.7", "3.4", "3.0", "3.0", "4.0", "4.4", "3.9", "3.5", "3.8", "3.8", "3.4", "3.7", "3.6", "3.3", "3.4", "3.0", "3.4", "3.5", "3.4", "3.2", "3.1", "3.4", "4.1", "4.2", "3.1", "3.2", "3.5", "3.6", "3.0", "3.4", "3.5", "2.3", "3.2", "3.5", "3.8", "3.0", "3.8", "3.2", "3.7", "3.3"]
+                }
+              }
+            },
+            {
+              "type": "Circle",
+              "id": "a5f7afc88892e83612e3902c335fc88d",
+              "attributes": {
+                "id": "a5f7afc88892e83612e3902c335fc88d",
+                "tags": [],
+                "doc": null,
+                "size": {
+                  "units": "screen",
+                  "value": 10
+                },
+                "visible": true,
+                "line_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "fill_alpha": {
+                  "units": "data",
+                  "value": 0.5
+                },
+                "x": {
+                  "units": "data",
+                  "field": "x"
+                },
+                "y": {
+                  "units": "data",
+                  "field": "y"
+                },
+                "line_color": {
+                  "units": "data",
+                  "field": "line_color"
+                },
+                "fill_color": {
+                  "units": "data",
+                  "field": "fill_color"
+                }
+              }
+            },
+            {
+              "type": "Circle",
+              "id": "1c50c736f55578b80ed0c021f0d175a8",
+              "attributes": {
+                "id": "1c50c736f55578b80ed0c021f0d175a8",
+                "tags": [],
+                "doc": null,
+                "size": {
+                  "units": "screen",
+                  "value": 10
+                },
+                "visible": true,
+                "line_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "fill_alpha": {
+                  "units": "data",
+                  "value": 0.5
+                },
+                "x": {
+                  "units": "data",
+                  "field": "x"
+                },
+                "y": {
+                  "units": "data",
+                  "field": "y"
+                },
+                "line_color": {
+                  "units": "data",
+                  "value": "#e1e1e1"
+                },
+                "fill_color": {
+                  "units": "data",
+                  "value": "#e1e1e1"
+                }
+              }
+            },
+            {
+              "type": "Circle",
+              "id": "e77b00e502cc4b7aa823e388ff391a08",
+              "attributes": {
+                "id": "e77b00e502cc4b7aa823e388ff391a08",
+                "tags": [],
+                "doc": null,
+                "size": {
+                  "units": "screen",
+                  "value": 10
+                },
+                "visible": true,
+                "line_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "fill_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "x": {
+                  "units": "data",
+                  "field": "x"
+                },
+                "y": {
+                  "units": "data",
+                  "field": "y"
+                },
+                "line_color": {
+                  "units": "data",
+                  "field": "line_color"
+                },
+                "fill_color": {
+                  "units": "data",
+                  "field": "fill_color"
+                }
+              }
+            },
+            {
+              "type": "GlyphRenderer",
+              "id": "a7f41ceca3245f7469e792b1b05c9ff6",
+              "attributes": {
+                "id": "a7f41ceca3245f7469e792b1b05c9ff6",
+                "tags": [],
+                "doc": null,
+                "selection_glyph": null,
+                "nonselection_glyph": {
+                  "type": "Circle",
+                  "id": "1c50c736f55578b80ed0c021f0d175a8"
+                },
+                "hover_glyph": {
+                  "type": "Circle",
+                  "id": "e77b00e502cc4b7aa823e388ff391a08"
+                },
+                "server_data_source": null,
+                "name": null,
+                "data_source": {
+                  "type": "ColumnDataSource",
+                  "id": "068743459b1d286aab932da6d42d451f"
+                },
+                "glyph": {
+                  "type": "Circle",
+                  "id": "a5f7afc88892e83612e3902c335fc88d"
+                }
+              }
+            },
+            {
+              "type": "HoverTool",
+              "id": "de583abc122e09f918e99242262ec9b4",
+              "attributes": {
+                "id": "de583abc122e09f918e99242262ec9b4",
+                "tags": [],
+                "doc": null,
+                "plot": {
+                  "type": "Plot",
+                  "id": "f1f29e15cf5ebef031af8c86f5b2be0b",
+                  "subtype": "Figure"
+                },
+                "renderers": [
+                  {
+                    "type": "GlyphRenderer",
+                    "id": "26457cd7e14c7ce446f723f7595efcab"
+                  }
+                ],
+                "names": [],
+                "always_active": true,
+                "tooltips": [
+                  [
+                    "Sepal.Length",
+                    "@hover_col_1"
+                  ],
+                  [
+                    "Sepal.Width",
+                    "@hover_col_2"
+                  ]
+                ]
+              }
+            },
+            {
+              "type": "ColumnDataSource",
+              "id": "c31ec5e7199fca3f57a617e2b397636e",
+              "attributes": {
+                "id": "c31ec5e7199fca3f57a617e2b397636e",
+                "tags": [],
+                "doc": null,
+                "column_names": ["x", "y", "line_color", "fill_color", "hover_col_1", "hover_col_2"],
+                "selected": [],
+                "discrete_ranges": {},
+                "cont_ranges": {},
+                "data": {
+                  "x": [7, 6.4, 6.9, 5.5, 6.5, 5.7, 6.3, 4.9, 6.6, 5.2, 5, 5.9, 6, 6.1, 5.6, 6.7, 5.6, 5.8, 6.2, 5.6, 5.9, 6.1, 6.3, 6.1, 6.4, 6.6, 6.8, 6.7, 6, 5.7, 5.5, 5.5, 5.8, 6, 5.4, 6, 6.7, 6.3, 5.6, 5.5, 5.5, 6.1, 5.8, 5, 5.6, 5.7, 5.7, 6.2, 5.1, 5.7],
+                  "y": [3.2, 3.2, 3.1, 2.3, 2.8, 2.8, 3.3, 2.4, 2.9, 2.7, 2, 3, 2.2, 2.9, 2.9, 3.1, 3, 2.7, 2.2, 2.5, 3.2, 2.8, 2.5, 2.8, 2.9, 3, 2.8, 3, 2.9, 2.6, 2.4, 2.4, 2.7, 2.7, 3, 3.4, 3.1, 2.3, 3, 2.5, 2.6, 3, 2.6, 2.3, 2.7, 3, 2.9, 2.9, 2.5, 2.8],
+                  "line_color": ["#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E"],
+                  "fill_color": ["#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E", "#FF7F0E"],
+                  "hover_col_1": ["7.0", "6.4", "6.9", "5.5", "6.5", "5.7", "6.3", "4.9", "6.6", "5.2", "5.0", "5.9", "6.0", "6.1", "5.6", "6.7", "5.6", "5.8", "6.2", "5.6", "5.9", "6.1", "6.3", "6.1", "6.4", "6.6", "6.8", "6.7", "6.0", "5.7", "5.5", "5.5", "5.8", "6.0", "5.4", "6.0", "6.7", "6.3", "5.6", "5.5", "5.5", "6.1", "5.8", "5.0", "5.6", "5.7", "5.7", "6.2", "5.1", "5.7"],
+                  "hover_col_2": ["3.2", "3.2", "3.1", "2.3", "2.8", "2.8", "3.3", "2.4", "2.9", "2.7", "2.0", "3.0", "2.2", "2.9", "2.9", "3.1", "3.0", "2.7", "2.2", "2.5", "3.2", "2.8", "2.5", "2.8", "2.9", "3.0", "2.8", "3.0", "2.9", "2.6", "2.4", "2.4", "2.7", "2.7", "3.0", "3.4", "3.1", "2.3", "3.0", "2.5", "2.6", "3.0", "2.6", "2.3", "2.7", "3.0", "2.9", "2.9", "2.5", "2.8"]
+                }
+              }
+            },
+            {
+              "type": "Square",
+              "id": "48fd6aadb3e8cf726553972350c618f2",
+              "attributes": {
+                "id": "48fd6aadb3e8cf726553972350c618f2",
+                "tags": [],
+                "doc": null,
+                "size": {
+                  "units": "screen",
+                  "value": 10
+                },
+                "visible": true,
+                "line_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "fill_alpha": {
+                  "units": "data",
+                  "value": 0.5
+                },
+                "x": {
+                  "units": "data",
+                  "field": "x"
+                },
+                "y": {
+                  "units": "data",
+                  "field": "y"
+                },
+                "line_color": {
+                  "units": "data",
+                  "field": "line_color"
+                },
+                "fill_color": {
+                  "units": "data",
+                  "field": "fill_color"
+                }
+              }
+            },
+            {
+              "type": "Square",
+              "id": "b433f437f199e9f03556bd2009e573cf",
+              "attributes": {
+                "id": "b433f437f199e9f03556bd2009e573cf",
+                "tags": [],
+                "doc": null,
+                "size": {
+                  "units": "screen",
+                  "value": 10
+                },
+                "visible": true,
+                "line_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "fill_alpha": {
+                  "units": "data",
+                  "value": 0.5
+                },
+                "x": {
+                  "units": "data",
+                  "field": "x"
+                },
+                "y": {
+                  "units": "data",
+                  "field": "y"
+                },
+                "line_color": {
+                  "units": "data",
+                  "value": "#e1e1e1"
+                },
+                "fill_color": {
+                  "units": "data",
+                  "value": "#e1e1e1"
+                }
+              }
+            },
+            {
+              "type": "Square",
+              "id": "517bba59b9e03f36f22dc497bc8e0fd8",
+              "attributes": {
+                "id": "517bba59b9e03f36f22dc497bc8e0fd8",
+                "tags": [],
+                "doc": null,
+                "size": {
+                  "units": "screen",
+                  "value": 10
+                },
+                "visible": true,
+                "line_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "fill_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "x": {
+                  "units": "data",
+                  "field": "x"
+                },
+                "y": {
+                  "units": "data",
+                  "field": "y"
+                },
+                "line_color": {
+                  "units": "data",
+                  "field": "line_color"
+                },
+                "fill_color": {
+                  "units": "data",
+                  "field": "fill_color"
+                }
+              }
+            },
+            {
+              "type": "GlyphRenderer",
+              "id": "26457cd7e14c7ce446f723f7595efcab",
+              "attributes": {
+                "id": "26457cd7e14c7ce446f723f7595efcab",
+                "tags": [],
+                "doc": null,
+                "selection_glyph": null,
+                "nonselection_glyph": {
+                  "type": "Square",
+                  "id": "b433f437f199e9f03556bd2009e573cf"
+                },
+                "hover_glyph": {
+                  "type": "Square",
+                  "id": "517bba59b9e03f36f22dc497bc8e0fd8"
+                },
+                "server_data_source": null,
+                "name": null,
+                "data_source": {
+                  "type": "ColumnDataSource",
+                  "id": "c31ec5e7199fca3f57a617e2b397636e"
+                },
+                "glyph": {
+                  "type": "Square",
+                  "id": "48fd6aadb3e8cf726553972350c618f2"
+                }
+              }
+            },
+            {
+              "type": "HoverTool",
+              "id": "b38b5d0e2b90b3afa3b3e451517e76a1",
+              "attributes": {
+                "id": "b38b5d0e2b90b3afa3b3e451517e76a1",
+                "tags": [],
+                "doc": null,
+                "plot": {
+                  "type": "Plot",
+                  "id": "f1f29e15cf5ebef031af8c86f5b2be0b",
+                  "subtype": "Figure"
+                },
+                "renderers": [
+                  {
+                    "type": "GlyphRenderer",
+                    "id": "17b63e00c58cace6af7bead4962333a6"
+                  }
+                ],
+                "names": [],
+                "always_active": true,
+                "tooltips": [
+                  [
+                    "Sepal.Length",
+                    "@hover_col_1"
+                  ],
+                  [
+                    "Sepal.Width",
+                    "@hover_col_2"
+                  ]
+                ]
+              }
+            },
+            {
+              "type": "ColumnDataSource",
+              "id": "eff1b60095b662f40c072acf0507019e",
+              "attributes": {
+                "id": "eff1b60095b662f40c072acf0507019e",
+                "tags": [],
+                "doc": null,
+                "column_names": ["x", "y", "line_color", "fill_color", "hover_col_1", "hover_col_2"],
+                "selected": [],
+                "discrete_ranges": {},
+                "cont_ranges": {},
+                "data": {
+                  "x": [6.3, 5.8, 7.1, 6.3, 6.5, 7.6, 4.9, 7.3, 6.7, 7.2, 6.5, 6.4, 6.8, 5.7, 5.8, 6.4, 6.5, 7.7, 7.7, 6, 6.9, 5.6, 7.7, 6.3, 6.7, 7.2, 6.2, 6.1, 6.4, 7.2, 7.4, 7.9, 6.4, 6.3, 6.1, 7.7, 6.3, 6.4, 6, 6.9, 6.7, 6.9, 5.8, 6.8, 6.7, 6.7, 6.3, 6.5, 6.2, 5.9],
+                  "y": [3.3, 2.7, 3, 2.9, 3, 3, 2.5, 2.9, 2.5, 3.6, 3.2, 2.7, 3, 2.5, 2.8, 3.2, 3, 3.8, 2.6, 2.2, 3.2, 2.8, 2.8, 2.7, 3.3, 3.2, 2.8, 3, 2.8, 3, 2.8, 3.8, 2.8, 2.8, 2.6, 3, 3.4, 3.1, 3, 3.1, 3.1, 3.1, 2.7, 3.2, 3.3, 3, 2.5, 3, 3.4, 3],
+                  "line_color": ["#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C"],
+                  "fill_color": ["#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C", "#2CA02C"],
+                  "hover_col_1": ["6.3", "5.8", "7.1", "6.3", "6.5", "7.6", "4.9", "7.3", "6.7", "7.2", "6.5", "6.4", "6.8", "5.7", "5.8", "6.4", "6.5", "7.7", "7.7", "6.0", "6.9", "5.6", "7.7", "6.3", "6.7", "7.2", "6.2", "6.1", "6.4", "7.2", "7.4", "7.9", "6.4", "6.3", "6.1", "7.7", "6.3", "6.4", "6.0", "6.9", "6.7", "6.9", "5.8", "6.8", "6.7", "6.7", "6.3", "6.5", "6.2", "5.9"],
+                  "hover_col_2": ["3.3", "2.7", "3.0", "2.9", "3.0", "3.0", "2.5", "2.9", "2.5", "3.6", "3.2", "2.7", "3.0", "2.5", "2.8", "3.2", "3.0", "3.8", "2.6", "2.2", "3.2", "2.8", "2.8", "2.7", "3.3", "3.2", "2.8", "3.0", "2.8", "3.0", "2.8", "3.8", "2.8", "2.8", "2.6", "3.0", "3.4", "3.1", "3.0", "3.1", "3.1", "3.1", "2.7", "3.2", "3.3", "3.0", "2.5", "3.0", "3.4", "3.0"]
+                }
+              }
+            },
+            {
+              "type": "Triangle",
+              "id": "789b54d166819bdb744e59bf2e4fecd8",
+              "attributes": {
+                "id": "789b54d166819bdb744e59bf2e4fecd8",
+                "tags": [],
+                "doc": null,
+                "size": {
+                  "units": "screen",
+                  "value": 10
+                },
+                "visible": true,
+                "line_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "fill_alpha": {
+                  "units": "data",
+                  "value": 0.5
+                },
+                "x": {
+                  "units": "data",
+                  "field": "x"
+                },
+                "y": {
+                  "units": "data",
+                  "field": "y"
+                },
+                "line_color": {
+                  "units": "data",
+                  "field": "line_color"
+                },
+                "fill_color": {
+                  "units": "data",
+                  "field": "fill_color"
+                }
+              }
+            },
+            {
+              "type": "Triangle",
+              "id": "d5e233124160d3f30c57bedff56399b2",
+              "attributes": {
+                "id": "d5e233124160d3f30c57bedff56399b2",
+                "tags": [],
+                "doc": null,
+                "size": {
+                  "units": "screen",
+                  "value": 10
+                },
+                "visible": true,
+                "line_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "fill_alpha": {
+                  "units": "data",
+                  "value": 0.5
+                },
+                "x": {
+                  "units": "data",
+                  "field": "x"
+                },
+                "y": {
+                  "units": "data",
+                  "field": "y"
+                },
+                "line_color": {
+                  "units": "data",
+                  "value": "#e1e1e1"
+                },
+                "fill_color": {
+                  "units": "data",
+                  "value": "#e1e1e1"
+                }
+              }
+            },
+            {
+              "type": "Triangle",
+              "id": "83cdf3865b2e271679eba1266f0e2604",
+              "attributes": {
+                "id": "83cdf3865b2e271679eba1266f0e2604",
+                "tags": [],
+                "doc": null,
+                "size": {
+                  "units": "screen",
+                  "value": 10
+                },
+                "visible": true,
+                "line_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "fill_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "x": {
+                  "units": "data",
+                  "field": "x"
+                },
+                "y": {
+                  "units": "data",
+                  "field": "y"
+                },
+                "line_color": {
+                  "units": "data",
+                  "field": "line_color"
+                },
+                "fill_color": {
+                  "units": "data",
+                  "field": "fill_color"
+                }
+              }
+            },
+            {
+              "type": "GlyphRenderer",
+              "id": "17b63e00c58cace6af7bead4962333a6",
+              "attributes": {
+                "id": "17b63e00c58cace6af7bead4962333a6",
+                "tags": [],
+                "doc": null,
+                "selection_glyph": null,
+                "nonselection_glyph": {
+                  "type": "Triangle",
+                  "id": "d5e233124160d3f30c57bedff56399b2"
+                },
+                "hover_glyph": {
+                  "type": "Triangle",
+                  "id": "83cdf3865b2e271679eba1266f0e2604"
+                },
+                "server_data_source": null,
+                "name": null,
+                "data_source": {
+                  "type": "ColumnDataSource",
+                  "id": "eff1b60095b662f40c072acf0507019e"
+                },
+                "glyph": {
+                  "type": "Triangle",
+                  "id": "789b54d166819bdb744e59bf2e4fecd8"
+                }
+              }
+            },
+            {
+              "type": "ColumnDataSource",
+              "id": "258063029fa18cd700473bf28c99cd89",
+              "attributes": {
+                "id": "258063029fa18cd700473bf28c99cd89",
+                "tags": [],
+                "doc": null,
+                "column_names": ["x", "y"],
+                "selected": [],
+                "discrete_ranges": {},
+                "cont_ranges": {},
+                "data": {
+                  "x": [null, null],
+                  "y": [null, null]
+                }
+              }
+            },
+            {
+              "type": "Circle",
+              "id": "4cd4f987eadf70f62e2077fd4e5cc42e",
+              "attributes": {
+                "id": "4cd4f987eadf70f62e2077fd4e5cc42e",
+                "tags": [],
+                "doc": null,
+                "size": {
+                  "units": "screen",
+                  "value": 0
+                },
+                "visible": true,
+                "line_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "fill_alpha": {
+                  "units": "data",
+                  "value": 0.5
+                },
+                "line_color": {
+                  "units": "data",
+                  "value": "#1F77B4"
+                },
+                "fill_color": {
+                  "units": "data",
+                  "value": "#1F77B4"
+                },
+                "x": {
+                  "units": "data",
+                  "field": "x"
+                },
+                "y": {
+                  "units": "data",
+                  "field": "y"
+                }
+              }
+            },
+            {
+              "type": "Circle",
+              "id": "bf79b6bcfba455698312609db7037a44",
+              "attributes": {
+                "id": "bf79b6bcfba455698312609db7037a44",
+                "tags": [],
+                "doc": null,
+                "size": {
+                  "units": "screen",
+                  "value": 0
+                },
+                "visible": true,
+                "line_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "fill_alpha": {
+                  "units": "data",
+                  "value": 0.5
+                },
+                "line_color": {
+                  "units": "data",
+                  "value": "#e1e1e1"
+                },
+                "fill_color": {
+                  "units": "data",
+                  "value": "#e1e1e1"
+                },
+                "x": {
+                  "units": "data",
+                  "field": "x"
+                },
+                "y": {
+                  "units": "data",
+                  "field": "y"
+                }
+              }
+            },
+            {
+              "type": "Circle",
+              "id": "c876866eb54d000e155ec657bd05fc22",
+              "attributes": {
+                "id": "c876866eb54d000e155ec657bd05fc22",
+                "tags": [],
+                "doc": null,
+                "size": {
+                  "units": "screen",
+                  "value": 0
+                },
+                "visible": true,
+                "line_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "fill_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "line_color": {
+                  "units": "data",
+                  "value": "#1F77B4"
+                },
+                "fill_color": {
+                  "units": "data",
+                  "value": "#1F77B4"
+                },
+                "x": {
+                  "units": "data",
+                  "field": "x"
+                },
+                "y": {
+                  "units": "data",
+                  "field": "y"
+                }
+              }
+            },
+            {
+              "type": "GlyphRenderer",
+              "id": "c950efbfae5b942eb523d3c8a606cd24",
+              "attributes": {
+                "id": "c950efbfae5b942eb523d3c8a606cd24",
+                "tags": [],
+                "doc": null,
+                "selection_glyph": null,
+                "nonselection_glyph": {
+                  "type": "Circle",
+                  "id": "bf79b6bcfba455698312609db7037a44"
+                },
+                "hover_glyph": {
+                  "type": "Circle",
+                  "id": "c876866eb54d000e155ec657bd05fc22"
+                },
+                "server_data_source": null,
+                "name": null,
+                "data_source": {
+                  "type": "ColumnDataSource",
+                  "id": "258063029fa18cd700473bf28c99cd89"
+                },
+                "glyph": {
+                  "type": "Circle",
+                  "id": "4cd4f987eadf70f62e2077fd4e5cc42e"
+                }
+              }
+            },
+            {
+              "type": "Square",
+              "id": "5cf61e04a4694b823822364d61f2d516",
+              "attributes": {
+                "id": "5cf61e04a4694b823822364d61f2d516",
+                "tags": [],
+                "doc": null,
+                "size": {
+                  "units": "screen",
+                  "value": 0
+                },
+                "visible": true,
+                "line_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "fill_alpha": {
+                  "units": "data",
+                  "value": 0.5
+                },
+                "line_color": {
+                  "units": "data",
+                  "value": "#FF7F0E"
+                },
+                "fill_color": {
+                  "units": "data",
+                  "value": "#FF7F0E"
+                },
+                "x": {
+                  "units": "data",
+                  "field": "x"
+                },
+                "y": {
+                  "units": "data",
+                  "field": "y"
+                }
+              }
+            },
+            {
+              "type": "Square",
+              "id": "3ef153bda7e19c6b8e0ae5051cb2c6fd",
+              "attributes": {
+                "id": "3ef153bda7e19c6b8e0ae5051cb2c6fd",
+                "tags": [],
+                "doc": null,
+                "size": {
+                  "units": "screen",
+                  "value": 0
+                },
+                "visible": true,
+                "line_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "fill_alpha": {
+                  "units": "data",
+                  "value": 0.5
+                },
+                "line_color": {
+                  "units": "data",
+                  "value": "#e1e1e1"
+                },
+                "fill_color": {
+                  "units": "data",
+                  "value": "#e1e1e1"
+                },
+                "x": {
+                  "units": "data",
+                  "field": "x"
+                },
+                "y": {
+                  "units": "data",
+                  "field": "y"
+                }
+              }
+            },
+            {
+              "type": "Square",
+              "id": "caf13c4a1e19d9b18fcabceaa7d8c0ef",
+              "attributes": {
+                "id": "caf13c4a1e19d9b18fcabceaa7d8c0ef",
+                "tags": [],
+                "doc": null,
+                "size": {
+                  "units": "screen",
+                  "value": 0
+                },
+                "visible": true,
+                "line_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "fill_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "line_color": {
+                  "units": "data",
+                  "value": "#FF7F0E"
+                },
+                "fill_color": {
+                  "units": "data",
+                  "value": "#FF7F0E"
+                },
+                "x": {
+                  "units": "data",
+                  "field": "x"
+                },
+                "y": {
+                  "units": "data",
+                  "field": "y"
+                }
+              }
+            },
+            {
+              "type": "GlyphRenderer",
+              "id": "e198ce94f66c24e111c9356a42f04744",
+              "attributes": {
+                "id": "e198ce94f66c24e111c9356a42f04744",
+                "tags": [],
+                "doc": null,
+                "selection_glyph": null,
+                "nonselection_glyph": {
+                  "type": "Square",
+                  "id": "3ef153bda7e19c6b8e0ae5051cb2c6fd"
+                },
+                "hover_glyph": {
+                  "type": "Square",
+                  "id": "caf13c4a1e19d9b18fcabceaa7d8c0ef"
+                },
+                "server_data_source": null,
+                "name": null,
+                "data_source": {
+                  "type": "ColumnDataSource",
+                  "id": "258063029fa18cd700473bf28c99cd89"
+                },
+                "glyph": {
+                  "type": "Square",
+                  "id": "5cf61e04a4694b823822364d61f2d516"
+                }
+              }
+            },
+            {
+              "type": "Triangle",
+              "id": "9a0a9b00d1d332f168e5464d880299a6",
+              "attributes": {
+                "id": "9a0a9b00d1d332f168e5464d880299a6",
+                "tags": [],
+                "doc": null,
+                "size": {
+                  "units": "screen",
+                  "value": 0
+                },
+                "visible": true,
+                "line_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "fill_alpha": {
+                  "units": "data",
+                  "value": 0.5
+                },
+                "line_color": {
+                  "units": "data",
+                  "value": "#2CA02C"
+                },
+                "fill_color": {
+                  "units": "data",
+                  "value": "#2CA02C"
+                },
+                "x": {
+                  "units": "data",
+                  "field": "x"
+                },
+                "y": {
+                  "units": "data",
+                  "field": "y"
+                }
+              }
+            },
+            {
+              "type": "Triangle",
+              "id": "553fc3c0e6dfe2b779cbdd28931c844b",
+              "attributes": {
+                "id": "553fc3c0e6dfe2b779cbdd28931c844b",
+                "tags": [],
+                "doc": null,
+                "size": {
+                  "units": "screen",
+                  "value": 0
+                },
+                "visible": true,
+                "line_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "fill_alpha": {
+                  "units": "data",
+                  "value": 0.5
+                },
+                "line_color": {
+                  "units": "data",
+                  "value": "#e1e1e1"
+                },
+                "fill_color": {
+                  "units": "data",
+                  "value": "#e1e1e1"
+                },
+                "x": {
+                  "units": "data",
+                  "field": "x"
+                },
+                "y": {
+                  "units": "data",
+                  "field": "y"
+                }
+              }
+            },
+            {
+              "type": "Triangle",
+              "id": "989d1454ebcafba99c9ab9cfce784c9d",
+              "attributes": {
+                "id": "989d1454ebcafba99c9ab9cfce784c9d",
+                "tags": [],
+                "doc": null,
+                "size": {
+                  "units": "screen",
+                  "value": 0
+                },
+                "visible": true,
+                "line_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "fill_alpha": {
+                  "units": "data",
+                  "value": 1
+                },
+                "line_color": {
+                  "units": "data",
+                  "value": "#2CA02C"
+                },
+                "fill_color": {
+                  "units": "data",
+                  "value": "#2CA02C"
+                },
+                "x": {
+                  "units": "data",
+                  "field": "x"
+                },
+                "y": {
+                  "units": "data",
+                  "field": "y"
+                }
+              }
+            },
+            {
+              "type": "GlyphRenderer",
+              "id": "6ad356ce1e47e6f94f6106e32ca5a1fa",
+              "attributes": {
+                "id": "6ad356ce1e47e6f94f6106e32ca5a1fa",
+                "tags": [],
+                "doc": null,
+                "selection_glyph": null,
+                "nonselection_glyph": {
+                  "type": "Triangle",
+                  "id": "553fc3c0e6dfe2b779cbdd28931c844b"
+                },
+                "hover_glyph": {
+                  "type": "Triangle",
+                  "id": "989d1454ebcafba99c9ab9cfce784c9d"
+                },
+                "server_data_source": null,
+                "name": null,
+                "data_source": {
+                  "type": "ColumnDataSource",
+                  "id": "258063029fa18cd700473bf28c99cd89"
+                },
+                "glyph": {
+                  "type": "Triangle",
+                  "id": "9a0a9b00d1d332f168e5464d880299a6"
+                }
+              }
+            },
+            {
+              "type": "Legend",
+              "id": "d7fd5d65d3c606639fc75ce5ab1fb962",
+              "attributes": {
+                "id": "d7fd5d65d3c606639fc75ce5ab1fb962",
+                "tags": [],
+                "doc": null,
+                "plot": {
+                  "type": "Plot",
+                  "id": "f1f29e15cf5ebef031af8c86f5b2be0b",
+                  "subtype": "Figure"
+                },
+                "legends": [
+                  [
+                    "Species",
+                    []
+                  ],
+                  [
+                    " setosa",
+                    [
+                      {
+                        "type": "GlyphRenderer",
+                        "id": "c950efbfae5b942eb523d3c8a606cd24"
+                      }
+                    ]
+                  ],
+                  [
+                    " versicolor",
+                    [
+                      {
+                        "type": "GlyphRenderer",
+                        "id": "e198ce94f66c24e111c9356a42f04744"
+                      }
+                    ]
+                  ],
+                  [
+                    " virginica",
+                    [
+                      {
+                        "type": "GlyphRenderer",
+                        "id": "6ad356ce1e47e6f94f6106e32ca5a1fa"
+                      }
+                    ]
+                  ]
+                ],
+                "location": "top_right"
+              }
+            },
+            {
+              "type": "Range1d",
+              "id": "cb8e396d0f351b5aa4b95ec00bd38b06",
+              "attributes": {
+                "id": "cb8e396d0f351b5aa4b95ec00bd38b06",
+                "tags": [],
+                "doc": null,
+                "start": 4.048,
+                "end": 8.152
+              }
+            },
+            {
+              "type": "Range1d",
+              "id": "1863b664751df4601e9ff4e71d60a6ec",
+              "attributes": {
+                "id": "1863b664751df4601e9ff4e71d60a6ec",
+                "tags": [],
+                "doc": null,
+                "start": 1.832,
+                "end": 4.568
+              }
+            },
+            {
+              "type": "LinearAxis",
+              "id": "8ae0d51ccaba61463afd5cc4532e46fd",
+              "attributes": {
+                "id": "8ae0d51ccaba61463afd5cc4532e46fd",
+                "tags": [],
+                "doc": null,
+                "plot": {
+                  "type": "Plot",
+                  "id": "f1f29e15cf5ebef031af8c86f5b2be0b",
+                  "subtype": "Figure"
+                },
+                "axis_label": "Sepal.Length",
+                "formatter": {
+                  "type": "BasicTickFormatter",
+                  "id": "92d5211527e3367b189814a27ab1c24b"
+                },
+                "ticker": {
+                  "type": "BasicTicker",
+                  "id": "e3a97e93acf6b4970f11ef0373489e80"
+                },
+                "visible": true,
+                "axis_label_text_font_size": "12pt"
+              }
+            },
+            {
+              "type": "BasicTickFormatter",
+              "id": "92d5211527e3367b189814a27ab1c24b",
+              "attributes": {
+                "id": "92d5211527e3367b189814a27ab1c24b",
+                "tags": [],
+                "doc": null
+              }
+            },
+            {
+              "type": "BasicTicker",
+              "id": "e3a97e93acf6b4970f11ef0373489e80",
+              "attributes": {
+                "id": "e3a97e93acf6b4970f11ef0373489e80",
+                "tags": [],
+                "doc": null,
+                "num_minor_ticks": 5
+              }
+            },
+            {
+              "type": "Grid",
+              "id": "574257db05a2b24ffb1d600a1b99c27b",
+              "attributes": {
+                "id": "574257db05a2b24ffb1d600a1b99c27b",
+                "tags": [],
+                "doc": null,
+                "dimension": 0,
+                "plot": {
+                  "type": "Plot",
+                  "id": "f1f29e15cf5ebef031af8c86f5b2be0b",
+                  "subtype": "Figure"
+                },
+                "ticker": {
+                  "type": "BasicTicker",
+                  "id": "e3a97e93acf6b4970f11ef0373489e80"
+                }
+              }
+            },
+            {
+              "type": "LinearAxis",
+              "id": "7523231a5696d586eb5eec90f9cbb626",
+              "attributes": {
+                "id": "7523231a5696d586eb5eec90f9cbb626",
+                "tags": [],
+                "doc": null,
+                "plot": {
+                  "type": "Plot",
+                  "id": "f1f29e15cf5ebef031af8c86f5b2be0b",
+                  "subtype": "Figure"
+                },
+                "axis_label": "Sepal.Width",
+                "formatter": {
+                  "type": "BasicTickFormatter",
+                  "id": "06dc7a910e41de8eae893b9fb5f12901"
+                },
+                "ticker": {
+                  "type": "BasicTicker",
+                  "id": "56d274d9d183bf468e88f9bfdbf2dc9f"
+                },
+                "visible": true,
+                "axis_label_text_font_size": "12pt"
+              }
+            },
+            {
+              "type": "BasicTickFormatter",
+              "id": "06dc7a910e41de8eae893b9fb5f12901",
+              "attributes": {
+                "id": "06dc7a910e41de8eae893b9fb5f12901",
+                "tags": [],
+                "doc": null
+              }
+            },
+            {
+              "type": "BasicTicker",
+              "id": "56d274d9d183bf468e88f9bfdbf2dc9f",
+              "attributes": {
+                "id": "56d274d9d183bf468e88f9bfdbf2dc9f",
+                "tags": [],
+                "doc": null,
+                "num_minor_ticks": 5
+              }
+            },
+            {
+              "type": "Grid",
+              "id": "2e74e2157f36a359d1542023b362b54d",
+              "attributes": {
+                "id": "2e74e2157f36a359d1542023b362b54d",
+                "tags": [],
+                "doc": null,
+                "dimension": 1,
+                "plot": {
+                  "type": "Plot",
+                  "id": "f1f29e15cf5ebef031af8c86f5b2be0b",
+                  "subtype": "Figure"
+                },
+                "ticker": {
+                  "type": "BasicTicker",
+                  "id": "56d274d9d183bf468e88f9bfdbf2dc9f"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "debug": false,
+    "padding": {
+      "type": "figure",
+      "y_pad": 10,
+      "x_pad": 46
+    }
+  },
+  "evals": [],
+  "jsHooks": []
+}</script></p>
+</div>
+
+
+</div> <!-- page-body -->
+
+<footer>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div class="text-muted">
+  Copyright &copy; 2014 - 2015 Ramnath Vaidyanathan, Kenton Russell, and RStudio, Inc.
+  </div>
+</footer>
+
+<script>
+// manage active state of headres and navigation based on current page
+
+$(document).ready(function () {
+  
+  // compute name of page
+  href = window.location.pathname;
+  href = href.substr(href.lastIndexOf('/') + 1);
+  if (href == "")
+    href = "index.html";
+  
+  // main navigation and headers
+  if (href.startsWith("index")) {
+    $('#nav-home').addClass('active');
+    $('.title').addClass('hidden');
+  } else if (href.startsWith("showcase")) {
+    $('#nav-showcase').addClass('active');
+    $("#page-body").detach().appendTo('#showcase-body');
+    $('.showcase-header').removeClass('hidden');
+    $('.title').addClass('hidden');
+  } else if (href.startsWith("develop")) {
+    $('#nav-develop').addClass('active');
+  }
+     
+  // submenu navigation (used by showcase and develop)
+  $('.list-group a[href="' + href + '"]').addClass('active');      
+});
+
+</script>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+
+</body>
+</html>
