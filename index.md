@@ -180,7 +180,7 @@ $(document).on("slide.bs.carousel", "#widget-carousel", function(e) {
   </div>
   <div class="row">
     <div class="col-sm-9">
-      <p>See how just a line or two of R code can be used to create interactive visualizations with Leafet (mapping), dygraphs (time-series), networkD3 (graph visualization), and more.</p>
+      <p>Just a line or two of R code can be used to create interactive visualizations. See the featured widgets in the <a href="showcase_leaflet.html">showcase</a> and browse over 50 available widgets in the <a href="http://gallery.htmlwidgets.org">gallery</a>.</p>
     </div>
     <div class="col-sm-3">
       <p><a class="btn btn-info" href="showcase_leaflet.html" role="button">See the showcase &raquo;</a></p>

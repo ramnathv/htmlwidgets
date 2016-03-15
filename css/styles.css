@@ -40,3 +40,7 @@ input[type="search"]  {
 .html-widget-static-bound {
   width: 100% !important;
 }
+
+#nav-home {
+  margin-left: 30px;
+}
