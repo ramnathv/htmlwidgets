@@ -3,6 +3,9 @@ htmlwidgets 0.7 (unreleased)
 
 * Pass knitr options to saveWidget
 
+* The resize handler also works for the JavaScript events `shown.bs.collapse`
+  and `hidden.bs.collapse` now so that widgets inside the Bootstrap collapse
+  class can be displayed
 
 htmlwidgets 0.6
 -----------------------------------------------------------------------
