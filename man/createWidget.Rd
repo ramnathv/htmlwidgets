@@ -57,6 +57,6 @@ the specified package.
 }
 \details{
 For additional details on developing widgets, see package vignettes:
-\code{vignette("htmlwidgets-intro", package = "htmlwidgets")}.
+\code{vignette("develop_intro", package = "htmlwidgets")}.
 }
 

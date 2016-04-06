@@ -228,7 +228,7 @@ widget_data <- function(x, id, ...){
 #' the specified package.
 #'
 #' For additional details on developing widgets, see package vignettes:
-#' \code{vignette("htmlwidgets-intro", package = "htmlwidgets")}.
+#' \code{vignette("develop_intro", package = "htmlwidgets")}.
 #'
 #' @param name Widget name (should match the base name of the YAML and
 #'   JavaScript files used to implement the widget)

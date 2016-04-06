@@ -7,6 +7,8 @@ htmlwidgets 0.7 (unreleased)
   and `hidden.bs.collapse` now so that widgets inside the Bootstrap collapse
   class can be displayed
 
+* Fix references to vignettes in documentation
+
 htmlwidgets 0.6
 -----------------------------------------------------------------------
 

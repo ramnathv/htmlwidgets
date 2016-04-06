@@ -14,9 +14,9 @@ The \pkg{htmlwidgets} package provides a framework for easily creating R binding
 To get started creating your own HTML widgets, see the documentation available in the package vignettes:
 
 \preformatted{
-   vignette("htmlwidgets-intro")
-   vignette("htmlwidgets-sizing")
-   vignette("htmlwidgets-advanced")
+   vignette("develop_intro", package = "htmlwidgets")
+   vignette("develop_sizing", package = "htmlwidgets")
+   vignette("develop_advanced", package = "htmlwidgets")
 }
 
 Source code for the package is available on GitHub:

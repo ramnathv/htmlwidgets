@@ -99,6 +99,6 @@ incorporates padding. In this case you might specify \code{viewer.padding =
 
 For additional details on widget sizing:
 
-\code{vignette("htmlwidgets-sizing")}
+\code{vignette("develop_sizing", package = "htmlwidgets")}
 }
 
