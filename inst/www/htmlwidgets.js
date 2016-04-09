@@ -588,20 +588,13 @@
               "hidden.htmlwidgets hidden.bs.tab.htmlwidgets hidden.bs.collapse.htmlwidgets",
               resizeHandler
             );
-          }
 
-          // This is needed for the specific case of ioslides, which
-          // flips slides between display:none and display:block.
-          // Ideally we would not have to have ioslide-specific code
-          // here, but rather have ioslides raise a generic event,
-          // but the rmarkdown package just went to CRAN so the
-          // window to getting that fixed may be long.
-          if (window.addEventListener) {
-            // It's OK to limit this to window.addEventListener
-            // browsers because ioslides itself only supports
-            // such browsers.
-            on(document, "slideenter", resizeHandler);
-            on(document, "slideleave", resizeHandler);
+            // subscribe to custom shown event fired by ioslides and reveal.js (and
+            // perhaps other slide frameworks). This is necessary because some widgets
+            // (e.g. dygraphs) which start out as display:none have height == 0 and
+            // width == 0 and this doesn't change when it becomes visible
+            window.jQuery(el).closest('slide').on('shown', resizeHandler);
+            window.jQuery(el).closest('section.slide').on('shown', resizeHandler);
           }
         }
 
