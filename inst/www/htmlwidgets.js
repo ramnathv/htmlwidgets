@@ -589,6 +589,7 @@
               resizeHandler
             );
           }
+        }
 
         var scriptData = document.querySelector("script[data-for='" + el.id + "'][type='application/json']");
         if (scriptData) {
