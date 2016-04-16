@@ -76,15 +76,23 @@ appendContent <- function(x, ...) {
 #'
 #' @param x An HTML Widget object
 #' @param jsCode Character vector containing JavaScript code (see Details)
+#' @param data An additional argument to pass to the \code{jsCode} function.
+#'   This can be any R object that can be serialized to JSON. If you have
+#'   multiple objects to pass to the function, use a named list.
 #' @return The modified widget object
 #'
 #' @details The \code{jsCode} parameter must be a valid JavaScript expression
 #'   that returns a function.
 #'
-#'   The function will be invoked with two arguments: the first is the widget's
+#'   The function will be invoked with three arguments: the first is the widget's
 #'   main HTML element, and the second is the data to be rendered (the \code{x}
-#'   parameter in \code{createWidget}). When the function is invoked, the
-#'   \code{this} will be the widget instance object.
+#'   parameter in \code{createWidget}). The third argument is the JavaScript
+#'   equivalent of the R object passed into \code{onRender} as the \code{data}
+#'   argument; this is an easy way to transfer e.g. data frames without having
+#'   to manually do the JSON encoding.
+#'
+#'   When the function is invoked, the \code{this} keyword will refer to the
+#'   widget instance object.
 #'
 #' @seealso \code{\link{onStaticRenderComplete}}, for writing custom JavaScript
 #'   that involves multiple widgets.
@@ -93,6 +101,9 @@ appendContent <- function(x, ...) {
 #' \dontrun{
 #' library(leaflet)
 #'
+#' # This example uses browser geolocation. RStudio users:
+#' # this won't work in the Viewer pane; try popping it
+#' # out into your system web browser.
 #' leaflet() %>% addTiles() %>%
 #'   onRender("
 #'     function(el, x) {
@@ -100,21 +111,46 @@ appendContent <- function(x, ...) {
 #'       this.locate({setView: true});
 #'     }
 #'   ")
+#'
+#'
+#' # This example shows how you can make an R data frame available
+#' # to your JavaScript code.
+#'
+#' meh <- "&#x1F610;";
+#' yikes <- "&#x1F628;";
+#'
+#' df <- data.frame(
+#'   lng = quakes$long,
+#'   lat = quakes$lat,
+#'   html = ifelse(quakes$mag < 5.5, meh, yikes),
+#'   stringsAsFactors = FALSE
+#' )
+#'
+#' leaflet() %>% addTiles() %>%
+#'   fitBounds(min(df$lng), min(df$lat), max(df$lng), max(df$lat)) %>%
+#'   onRender("
+#'     function(el, x, data) {
+#'       for (var i = 0; i < data.lng.length; i++) {
+#'         var icon = L.divIcon({className: '', html: data.html[i]});
+#'         L.marker([data.lat[i], data.lng[i]], {icon: icon}).addTo(this);
+#'       }
+#'     }
+#'   ", data = df)
 #' }
 #'
 #' @export
-onRender <- function(x, jsCode) {
-  addHook(x, "render", jsCode)
+onRender <- function(x, jsCode, data = NULL) {
+  addHook(x, "render", jsCode, data)
 }
 
-addHook <- function(x, hookName, jsCode) {
+addHook <- function(x, hookName, jsCode, data = NULL) {
   if (length(jsCode) == 0)
     return(x)
 
   if (length(jsCode) > 1)
     jsCode <- paste(jsCode, collapse = "\n")
 
-  x$jsHooks[[hookName]] <- c(x$jsHooks[[hookName]], list(jsCode))
+  x$jsHooks[[hookName]] <- c(x$jsHooks[[hookName]], list(list(code = jsCode, data = data)))
   x
 }
 

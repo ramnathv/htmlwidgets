@@ -216,7 +216,11 @@
 
   // @param tasks Array of strings (or falsy value, in which case no-op).
   //   Each element must be a valid JavaScript expression that yields a
-  //   function.
+  //   function. Or, can be an array of objects with "code" and "data"
+  //   properties; in this case, the "code" property should be a string
+  //   of JS that's an expr that yields a function, and "data" should be
+  //   an object that will be added as an additional argument when that
+  //   function is called.
   // @param target The object that will be "this" for each function
   //   execution.
   // @param args Array of arguments to be passed to the functions. (The
@@ -224,11 +228,16 @@
   function evalAndRun(tasks, target, args) {
     if (tasks) {
       forEach(tasks, function(task) {
+        var theseArgs = args;
+        if (typeof(task) === "object") {
+          theseArgs = theseArgs.concat([task.data]);
+          task = task.code;
+        }
         var taskFunc = eval("(" + task + ")");
         if (typeof(taskFunc) !== "function") {
           throw new Error("Task must be a function! Source:\n" + task);
         }
-        taskFunc.apply(target, args);
+        taskFunc.apply(target, theseArgs);
       });
     }
   }
