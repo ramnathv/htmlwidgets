@@ -19,7 +19,8 @@ VignetteBuilder: knitr
 Imports:
     htmltools (>= 0.3),
     jsonlite (>= 0.9.16),
-    yaml
+    yaml,
+    uuid
 Suggests:
     knitr (>= 1.8)
 Enhances: shiny (>= 0.12)
