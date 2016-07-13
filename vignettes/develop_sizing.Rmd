@@ -142,12 +142,26 @@ In the [forceNetwork](http://christophergandrud.github.io/networkD3/#force) widg
 factory: function(el, width, height) {
 
   var el = el;
+  var force = d3.layout.force();
 
   d3.select(el).append("svg")
-      .attr("width", width)
-      .attr("height", height);
+    .attr("width", width)
+    .attr("height", height);
       
-  // ... additional code excluded ...
+  return {
+    renderValue: function(x) {
+      // implementation excluded
+    },
+      
+    resize: function(width, height) {
+         
+      d3.select(el).select("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+      force.size([width, height]).resume();
+    }
+  };
 }
 ```
 
