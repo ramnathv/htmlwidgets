@@ -7,7 +7,7 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
 
 
 
@@ -21,7 +21,7 @@
 <script src="libs/bootstrap/shim/respond.min.js"></script>
 <script src="libs/htmlwidgets/htmlwidgets.js"></script>
 <link href="libs/vis/vis.min.css" rel="stylesheet" />
-<script src="libs/vis/vis.min.js"></script>
+<script src="libs/vis/vis-network.min.js"></script>
 <script src="libs/visNetwork-binding/visNetwork.js"></script>
 
 <!-- Styles for this site -->
@@ -50,25 +50,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 
 
-
-</head>
-
-<body>
-
-<style type = "text/css">
-.main-container {
-  max-width: 940px;
-  margin-left: auto;
-  margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
-img {
-  max-width:100%;
-  height: auto;
-}
+<style type="text/css">
 h1 {
   font-size: 34px;
 }
@@ -89,6 +71,30 @@ h5 {
 }
 h6 {
   font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -223,7 +229,8 @@ $(document).ready(function () {
 <div class="fluid-row" id="header">
 
 
-<h1 class="title">htmlwidgets: visNetwork</h1>
+
+<h1 class="title toc-ignore">htmlwidgets: visNetwork</h1>
 
 </div>
 
@@ -239,7 +246,7 @@ nodes &lt;- data.frame(id = 1:6, title = paste(&quot;node&quot;, 1:6),
 edges &lt;- data.frame(from = 1:5, to = c(5, 4, 6, 3, 3))
 visNetwork(nodes, edges) %&gt;%
   visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE)</code></pre>
-<p><div id="htmlwidget-3078" style="width:576px;height:336px;" class="visNetwork html-widget"></div>
+<div id="htmlwidget-3078" style="width:576px;height:336px;" class="visNetwork html-widget"></div>
 <script type="application/json" data-for="htmlwidget-3078">{
   "x": {
     "nodes": {
@@ -274,14 +281,20 @@ visNetwork(nodes, edges) %&gt;%
     },
     "byselection": {
       "enabled": false,
-      "style": "width: 150px; height: 26px"
+      "style": "width: 150px; height: 26px",
+      "multiple": false
     },
-    "highlight": true,
-    "degree": 1
+    "main": null,
+    "highlight": {
+      "enabled": true,
+      "hoverNearest": false,
+      "degree": 1,
+      "algorithm": "all"
+    }
   },
   "evals": [],
   "jsHooks": []
-}</script></p>
+}</script>
 </div>
 
 

@@ -53,7 +53,8 @@ HTMLWidgets.widget({
         })
       }
       x.matrix.merged = merged;
-      
+      //console.log(JSON.stringify({merged: x.matrix.merged}, null, "  "));
+
       var hm = heatmap(el, x, x.options);
       if (window.Shiny) {
         var id = self.getId(el);

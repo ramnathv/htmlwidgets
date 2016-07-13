@@ -13,12 +13,14 @@ HTMLWidgets.widget(
     var r = render_init(el, width, height, false);
     var c = new THREE.PerspectiveCamera(39, r.domElement.width/r.domElement.height, 1E-5, 10);
     var s = new THREE.Scene();
-    return {renderer:r, camera:c, scene: s, width: parseInt(width), height: parseInt(height)};
+    return {renderer: r, camera: c, scene: s, width: parseInt(width), height: parseInt(height)};
   },
 
   resize: function(el, width, height, stuff)
   {
     stuff.renderer.clear();
+    stuff.width = width;
+    stuff.height = height;
     stuff.renderer.setSize(parseInt(width), parseInt(height));
     stuff.camera.projectionMatrix = new THREE.Matrix4().makePerspective(stuff.camera.fov,  stuff.renderer.domElement.width/stuff.renderer.domElement.height, stuff.camera.near, stuff.camera.far);
     stuff.camera.lookAt(stuff.scene.position);
@@ -49,13 +51,15 @@ function render_init(el, width, height, choice, labelmargin)
   }
   r.setSize(parseInt(width), parseInt(height));
   r.setClearColor("white");
-  d3.select(el).node().innerHTML="";
-  d3.select(el).node().appendChild(r.domElement);
-  d3.select(el).append("div").text(" ").attr("id","coordinate_label");
-  document.getElementById("coordinate_label").style.zIndex = "100";
-  document.getElementById("coordinate_label").style.position = "absolute";
-  document.getElementById("coordinate_label").style.top = "0";
-  document.getElementById("coordinate_label").style.margin = labelmargin;
+    el.innerHTML = "";
+  var coordLabel = document.createElement("div");
+  coordLabel.setAttribute("name","coordinate_label");
+  coordLabel.style.zIndex = "100";
+  coordLabel.style.position = "absolute";
+  coordLabel.style.margin = labelmargin;
+  el.appendChild(coordLabel);
+  el.appendChild(r.domElement);
+
   return r;
 }
 
@@ -95,6 +99,7 @@ function scatter(el, x, obj)
   obj.scene.add( pointgroup );
   obj.raycaster = new THREE.Raycaster();
   obj.raycaster.params.PointCloud.threshold = 0.05; // XXX Investigate these units...
+HOMER=obj;
 
 
 // program for drawing a Canvas point
@@ -295,8 +300,8 @@ function scatter(el, x, obj)
   el.onmouseup = function(){ down = false; };
   function mousewheel(event)
   {
-    var fovMAX = 100;
-    var fovMIN = 2;
+    var fovMAX = 180;
+    var fovMIN = 1;
     event.wheelDeltaY = event.wheelDeltaY || -10*event.detail || event.wheelDelta;
     if(GL) obj.camera.fov -= event.wheelDeltaY * 0.02;
     else obj.camera.fov -= event.wheelDeltaY * 0.0075;
@@ -313,8 +318,8 @@ function scatter(el, x, obj)
     ev.preventDefault();
 
     var canvasRect = this.getBoundingClientRect();
-    mouse.x = 2 * ( ev.pageX - canvasRect.left ) / canvasRect.width - 1;
-    mouse.y = -2 * ( ev.pageY - canvasRect.top ) / canvasRect.height + 1;
+    mouse.x = 2 * ( ev.clientX - canvasRect.left ) / canvasRect.width - 1;
+    mouse.y = -2 * ( ev.clientY - canvasRect.top ) / canvasRect.height + 1;
 
     if (down) {
       var dx = ev.clientX - sx;
@@ -358,7 +363,12 @@ function scatter(el, x, obj)
         label = intersects[0].object.name;
       }
     }
-    document.getElementById("coordinate_label").innerHTML = label;
+    //This actually synchronises all scatter plot labels, but I don't know how to 
+    //get a unique name 
+    var labels = document.getElementsByName("coordinate_label");
+    for(var i =0 ; i < labels.length ; i++){
+      labels[i].innerHTML = label;
+    }
   }
 
   function render()

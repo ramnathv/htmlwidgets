@@ -7,7 +7,7 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
 
 
 
@@ -20,14 +20,21 @@
 <script src="libs/bootstrap/shim/html5shiv.min.js"></script>
 <script src="libs/bootstrap/shim/respond.min.js"></script>
 <script src="libs/htmlwidgets/htmlwidgets.js"></script>
-<script src="libs/highcharts/highcharts.js"></script>
+<script src="libs/highcharts/highstock.js"></script>
 <script src="libs/highcharts/highcharts-more.js"></script>
 <script src="libs/highcharts/highcharts-3d.js"></script>
 <script src="libs/highcharts/modules/exporting.js"></script>
 <script src="libs/highcharts/modules/drilldown.js"></script>
 <script src="libs/highcharts/modules/heatmap.js"></script>
+<script src="libs/highcharts/modules/map.js"></script>
 <script src="libs/highcharts/modules/treemap.js"></script>
+<script src="libs/highcharts/modules/funnel.js"></script>
+<script src="libs/highcharts/modules/solid-gauge.js"></script>
 <script src="libs/highcharts/modules/reset.js"></script>
+<script src="libs/highcharts/plugins/draggable-points.js"></script>
+<script src="libs/highcharts/plugins/pattern-fill-v2.js"></script>
+<script src="libs/highcharts/plugins/text-symbols.js"></script>
+<link href="libs/fontawesome/font-awesome.min.css" rel="stylesheet" />
 <script src="libs/highchart-binding/highchart.js"></script>
 
 <!-- Styles for this site -->
@@ -56,25 +63,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 
 
-
-</head>
-
-<body>
-
-<style type = "text/css">
-.main-container {
-  max-width: 940px;
-  margin-left: auto;
-  margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
-img {
-  max-width:100%;
-  height: auto;
-}
+<style type="text/css">
 h1 {
   font-size: 34px;
 }
@@ -95,6 +84,30 @@ h5 {
 }
 h6 {
   font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -229,7 +242,8 @@ $(document).ready(function () {
 <div class="fluid-row" id="header">
 
 
-<h1 class="title">htmlwidgets: Highcharter</h1>
+
+<h1 class="title toc-ignore">htmlwidgets: Highcharter</h1>
 
 </div>
 
@@ -244,8 +258,8 @@ highchart() %&gt;%
   hc_title(text = &quot;Scatter chart with size and color&quot;) %&gt;% 
   hc_add_serie_scatter(mtcars$wt, mtcars$mpg,
                        mtcars$drat, mtcars$hp)</code></pre>
-<p><div id="htmlwidget-2577" style="width:100%;height:100%;" class="highchart html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2577">{
+<div id="htmlwidget-3078" style="width:100%;height:500px;" class="highchart html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3078">{
   "x": {
     "hc_opts": {
       "title": {
@@ -257,6 +271,11 @@ highchart() %&gt;%
       "exporting": {
         "enabled": false
       },
+      "plotOptions": {
+        "series": {
+          "turboThreshold": 0
+        }
+      },
       "series": [
         {
           "data": [
@@ -265,228 +284,231 @@ highchart() %&gt;%
               "y": 21,
               "z": 3.9,
               "valuecolor": 110,
-              "color": "#26818EFF"
+              "color": "#26828E"
             },
             {
               "x": 2.875,
               "y": 21,
               "z": 3.9,
               "valuecolor": 110,
-              "color": "#26818EFF"
+              "color": "#26828E"
             },
             {
               "x": 2.32,
               "y": 22.8,
               "z": 3.85,
               "valuecolor": 93,
-              "color": "#3F4989FF"
+              "color": "#3E4989"
             },
             {
               "x": 3.215,
               "y": 21.4,
               "z": 3.08,
               "valuecolor": 110,
-              "color": "#26818EFF"
+              "color": "#26828E"
             },
             {
               "x": 3.44,
               "y": 18.7,
               "z": 3.15,
               "valuecolor": 175,
-              "color": "#3EBC74FF"
+              "color": "#3EBC74"
             },
             {
               "x": 3.46,
               "y": 18.1,
               "z": 2.76,
               "valuecolor": 105,
-              "color": "#33628DFF"
+              "color": "#33628D"
             },
             {
               "x": 3.57,
               "y": 14.3,
               "z": 3.21,
               "valuecolor": 245,
-              "color": "#D5E21AFF"
+              "color": "#D6E21A"
             },
             {
               "x": 3.19,
               "y": 24.4,
               "z": 3.69,
               "valuecolor": 62,
-              "color": "#48186AFF"
+              "color": "#481769"
             },
             {
               "x": 3.15,
               "y": 22.8,
               "z": 3.92,
               "valuecolor": 95,
-              "color": "#3B528BFF"
+              "color": "#3B528B"
             },
             {
               "x": 3.44,
               "y": 19.2,
               "z": 3.92,
               "valuecolor": 123,
-              "color": "#1F978BFF"
+              "color": "#1F978B"
             },
             {
               "x": 3.44,
               "y": 17.8,
               "z": 3.92,
               "valuecolor": 123,
-              "color": "#1F978BFF"
+              "color": "#1F978B"
             },
             {
               "x": 4.07,
               "y": 16.4,
               "z": 3.07,
               "valuecolor": 180,
-              "color": "#6ECE58FF"
+              "color": "#6ECE58"
             },
             {
               "x": 3.73,
               "y": 17.3,
               "z": 3.07,
               "valuecolor": 180,
-              "color": "#6ECE58FF"
+              "color": "#6ECE58"
             },
             {
               "x": 3.78,
               "y": 15.2,
               "z": 3.07,
               "valuecolor": 180,
-              "color": "#6ECE58FF"
+              "color": "#6ECE58"
             },
             {
               "x": 5.25,
               "y": 10.4,
               "z": 2.93,
               "valuecolor": 205,
-              "color": "#81D34DFF"
+              "color": "#81D34D"
             },
             {
               "x": 5.424,
               "y": 10.4,
               "z": 3,
               "valuecolor": 215,
-              "color": "#96D83FFF"
+              "color": "#95D840"
             },
             {
               "x": 5.345,
               "y": 14.7,
               "z": 3.23,
               "valuecolor": 230,
-              "color": "#ABDC32FF"
+              "color": "#AADC32"
             },
             {
               "x": 2.2,
               "y": 32.4,
               "z": 4.08,
               "valuecolor": 66,
-              "color": "#453681FF"
+              "color": "#453681"
             },
             {
               "x": 1.615,
               "y": 30.4,
               "z": 4.93,
               "valuecolor": 52,
-              "color": "#470C5FFF"
+              "color": "#470C5F"
             },
             {
               "x": 1.835,
               "y": 33.9,
               "z": 4.22,
               "valuecolor": 65,
-              "color": "#482273FF"
+              "color": "#482374"
             },
             {
               "x": 2.465,
               "y": 21.5,
               "z": 3.7,
               "valuecolor": 97,
-              "color": "#375A8CFF"
+              "color": "#375A8C"
             },
             {
               "x": 3.52,
               "y": 15.5,
               "z": 2.76,
               "valuecolor": 150,
-              "color": "#21A685FF"
+              "color": "#21A685"
             },
             {
               "x": 3.435,
               "y": 15.2,
               "z": 3.15,
               "valuecolor": 150,
-              "color": "#21A685FF"
+              "color": "#21A685"
             },
             {
               "x": 3.84,
               "y": 13.3,
               "z": 3.73,
               "valuecolor": 245,
-              "color": "#D5E21AFF"
+              "color": "#D6E21A"
             },
             {
               "x": 3.845,
               "y": 19.2,
               "z": 3.08,
               "valuecolor": 175,
-              "color": "#3EBC74FF"
+              "color": "#3EBC74"
             },
             {
               "x": 1.935,
               "y": 27.3,
               "z": 4.08,
               "valuecolor": 66,
-              "color": "#453681FF"
+              "color": "#453681"
             },
             {
               "x": 2.14,
               "y": 26,
               "z": 4.43,
               "valuecolor": 91,
-              "color": "#424086FF"
+              "color": "#424086"
             },
             {
               "x": 1.513,
               "y": 30.4,
               "z": 3.77,
               "valuecolor": 113,
-              "color": "#23898EFF"
+              "color": "#23888E"
             },
             {
               "x": 3.17,
               "y": 15.8,
               "z": 4.22,
               "valuecolor": 264,
-              "color": "#EAE51AFF"
+              "color": "#EAE51A"
             },
             {
               "x": 2.77,
               "y": 19.7,
               "z": 3.62,
               "valuecolor": 175,
-              "color": "#3EBC74FF"
+              "color": "#3EBC74"
             },
             {
               "x": 3.57,
               "y": 15,
               "z": 3.54,
               "valuecolor": 335,
-              "color": "#FDE725FF"
+              "color": "#FDE725"
             },
             {
               "x": 2.78,
               "y": 21.4,
               "z": 4.11,
               "valuecolor": 109,
-              "color": "#306A8EFF"
+              "color": "#2F6B8E"
             }
           ],
           "type": "bubble",
-          "showInLegend": false
+          "showInLegend": false,
+          "dataLabels": {
+            "enabled": false
+          }
         }
       ]
     },
@@ -507,7 +529,7 @@ highchart() %&gt;%
         "downloadPDF": "Download PDF document",
         "downloadPNG": "Download PNG image",
         "downloadSVG": "Download SVG vector image",
-        "drillUpText": "Back to list(series.name)",
+        "drillUpText": "Back to {series.name}",
         "invalidDate": null,
         "loading": "Loading...",
         "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
@@ -521,12 +543,13 @@ highchart() %&gt;%
         "weekdays": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
       }
     },
-    "debug": false,
-    "fonts": []
+    "type": "chart",
+    "fonts": [],
+    "debug": false
   },
   "evals": [],
   "jsHooks": []
-}</script></p>
+}</script>
 </div>
 
 

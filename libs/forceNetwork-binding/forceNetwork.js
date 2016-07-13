@@ -102,7 +102,8 @@ HTMLWidgets.widget({
       .data(force.links())
       .enter().append("line")
       .attr("class", "link")
-      .style("stroke", options.linkColour)
+      .style("stroke", function(d) { return d.colour ; })
+      //.style("stroke", options.linkColour)
       .style("opacity", options.opacity)
       .style("stroke-width", eval("(" + options.linkWidth + ")"))
       .on("mouseover", function(d) {

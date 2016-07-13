@@ -7,7 +7,7 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
 
 
 
@@ -71,25 +71,7 @@ code > span.in { color: #808080; font-weight: bold; font-style: italic; } /* Inf
 </style>
 
 
-
-</head>
-
-<body>
-
-<style type = "text/css">
-.main-container {
-  max-width: 940px;
-  margin-left: auto;
-  margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
-img {
-  max-width:100%;
-  height: auto;
-}
+<style type="text/css">
 h1 {
   font-size: 34px;
 }
@@ -110,6 +92,30 @@ h5 {
 }
 h6 {
   font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -244,7 +250,8 @@ $(document).ready(function () {
 <div class="fluid-row" id="header">
 
 
-<h1 class="title">Advanced topics</h1>
+
+<h1 class="title toc-ignore">Advanced topics</h1>
 
 </div>
 
@@ -357,16 +364,17 @@ $(document).ready(function () {
 <p>You may find it necessary to customize the JSON serialization of widget data when the default serializer in <strong>htmlwidgets</strong> does not work in the way you have expected. For widget package authors, there are two levels of customization for the JSON serialization: you can either customize the default values of arguments for <code>jsonlite::toJSON()</code>, or just customize the whole function.</p>
 <ol style="list-style-type: decimal">
 <li><p><code>jsonlite::toJSON()</code> has a lot of arguments, and we have already changed some of its default values. Below is the JSON serializer we use in <strong>htmlwidgets</strong> at the moment:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">function (x, ..., <span class="dt">dataframe =</span> <span class="st">&quot;columns&quot;</span>, <span class="dt">null =</span> <span class="st">&quot;null&quot;</span>, <span class="dt">na =</span> <span class="st">&quot;null&quot;</span>, 
-    <span class="dt">auto_unbox =</span> <span class="ot">TRUE</span>, <span class="dt">digits =</span> <span class="kw">getOption</span>(<span class="st">&quot;shiny.json.digits&quot;</span>, 
-        <span class="dv">16</span>), <span class="dt">use_signif =</span> <span class="ot">TRUE</span>, <span class="dt">force =</span> <span class="ot">TRUE</span>, <span class="dt">POSIXt =</span> <span class="st">&quot;ISO8601&quot;</span>, 
-    <span class="dt">UTC =</span> <span class="ot">TRUE</span>, <span class="dt">rownames =</span> <span class="ot">FALSE</span>, <span class="dt">keep_vec_names =</span> <span class="ot">TRUE</span>) 
-{
-    jsonlite::<span class="kw">toJSON</span>(<span class="kw">I</span>(x), <span class="dt">dataframe =</span> dataframe, <span class="dt">null =</span> null, 
-        <span class="dt">na =</span> na, <span class="dt">auto_unbox =</span> auto_unbox, <span class="dt">digits =</span> digits, <span class="dt">use_signif =</span> use_signif, 
-        <span class="dt">force =</span> force, <span class="dt">POSIXt =</span> POSIXt, <span class="dt">UTC =</span> UTC, <span class="dt">rownames =</span> rownames, 
-        <span class="dt">keep_vec_names =</span> keep_vec_names, <span class="dt">json_verbatim =</span> <span class="ot">TRUE</span>, 
-        ...)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">function(
+  x, ...,  <span class="dt">dataframe =</span> <span class="st">&quot;columns&quot;</span>, <span class="dt">null =</span> <span class="st">&quot;null&quot;</span>, <span class="dt">na =</span> <span class="st">&quot;null&quot;</span>, <span class="dt">auto_unbox =</span> <span class="ot">TRUE</span>,
+  <span class="dt">digits =</span> <span class="kw">getOption</span>(<span class="st">&quot;shiny.json.digits&quot;</span>, <span class="dv">16</span>), <span class="dt">use_signif =</span> <span class="ot">TRUE</span>, <span class="dt">force =</span> <span class="ot">TRUE</span>,
+  <span class="dt">POSIXt =</span> <span class="st">&quot;ISO8601&quot;</span>, <span class="dt">UTC =</span> <span class="ot">TRUE</span>, <span class="dt">rownames =</span> <span class="ot">FALSE</span>, <span class="dt">keep_vec_names =</span> <span class="ot">TRUE</span>
+) {
+  jsonlite::<span class="kw">toJSON</span>(
+    <span class="kw">I</span>(x), <span class="dt">dataframe =</span> dataframe, <span class="dt">null =</span> null, <span class="dt">na =</span> na, <span class="dt">auto_unbox =</span> auto_unbox,
+    <span class="dt">digits =</span> digits, <span class="dt">use_signif =</span> use_signif, <span class="dt">force =</span> force, <span class="dt">POSIXt =</span> POSIXt,
+    <span class="dt">UTC =</span> UTC, <span class="dt">rownames =</span> rownames, <span class="dt">keep_vec_names =</span> keep_vec_names,
+    <span class="dt">json_verbatim =</span> <span class="ot">TRUE</span>, ...
+  )
 }</code></pre></div>
 <p>For example, we convert data frames to JSON by columns instead of rows (the latter is <code>jsonlite::toJSON</code>’s default). If you want to change the default values of any arguments, you can attach an attribute <code>TOJSON_ARGS</code> to the widget data to be passed to <code>createWidget()</code>, e.g.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fooWidget &lt;-<span class="st"> </span>function(data, name, ...) {

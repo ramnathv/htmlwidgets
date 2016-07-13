@@ -7,7 +7,7 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
 
 
 
@@ -20,6 +20,7 @@
 <script src="libs/bootstrap/shim/html5shiv.min.js"></script>
 <script src="libs/bootstrap/shim/respond.min.js"></script>
 <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+<link href="libs/plotlyjs/plotly-htmlwidgets.css" rel="stylesheet" />
 <script src="libs/plotlyjs/plotly-latest.min.js"></script>
 <script src="libs/plotly-binding/plotly.js"></script>
 
@@ -49,25 +50,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 
 
-
-</head>
-
-<body>
-
-<style type = "text/css">
-.main-container {
-  max-width: 940px;
-  margin-left: auto;
-  margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
-img {
-  max-width:100%;
-  height: auto;
-}
+<style type="text/css">
 h1 {
   font-size: 34px;
 }
@@ -88,6 +71,30 @@ h5 {
 }
 h6 {
   font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -222,7 +229,8 @@ $(document).ready(function () {
 <div class="fluid-row" id="header">
 
 
-<h1 class="title">htmlwidgets: Plotly</h1>
+
+<h1 class="title toc-ignore">htmlwidgets: Plotly</h1>
 
 </div>
 
@@ -235,250 +243,336 @@ $(document).ready(function () {
 p &lt;- ggplot(data = diamonds, aes(x = cut, fill = clarity)) +
             geom_bar(position = &quot;dodge&quot;)
 ggplotly(p)</code></pre>
-<p><div id="htmlwidget-3078" style="width:576px;height:336px;" class="plotly html-widget"></div>
+<div id="htmlwidget-3078" style="width:576px;height:336px;" class="plotly html-widget"></div>
 <script type="application/json" data-for="htmlwidget-3078">{
   "x": {
     "data": [
       {
-        "x": ["Fair", "Good", "Very Good", "Premium", "Ideal"],
+        "x": [0.60625, 1.60625, 2.60625, 3.60625, 4.60625],
         "y": [210, 96, 84, 205, 146],
+        "text": ["cut: Fair<br>clarity: I1<br>count: 210", "cut: Good<br>clarity: I1<br>count: 96", "cut: Very Good<br>clarity: I1<br>count: 84", "cut: Premium<br>clarity: I1<br>count: 205", "cut: Ideal<br>clarity: I1<br>count: 146"],
+        "key": null,
         "type": "bar",
-        "text": [null],
+        "marker": {
+          "autocolorscale": false,
+          "color": "rgba(248,118,109,1)",
+          "line": {
+            "width": 1.88976377952756,
+            "color": "transparent"
+          }
+        },
         "name": "I1",
-        "marker": {
-          "color": "rgb(248,118,109)",
-          "line": {
-            "color": "transparent",
-            "width": 0.5
-          }
-        },
-        "opacity": null,
-        "xaxis": "x1",
-        "yaxis": "y1",
-        "bargap": "default",
-        "barmode": "group",
-        "showlegend": true
+        "legendgroup": "I1",
+        "showlegend": true,
+        "xaxis": "x",
+        "yaxis": "y",
+        "hoverinfo": "text"
       },
       {
-        "x": ["Fair", "Good", "Very Good", "Premium", "Ideal"],
+        "x": [0.71875, 1.71875, 2.71875, 3.71875, 4.71875],
         "y": [466, 1081, 2100, 2949, 2598],
+        "text": ["cut: Fair<br>clarity: SI2<br>count: 466", "cut: Good<br>clarity: SI2<br>count: 1081", "cut: Very Good<br>clarity: SI2<br>count: 2100", "cut: Premium<br>clarity: SI2<br>count: 2949", "cut: Ideal<br>clarity: SI2<br>count: 2598"],
+        "key": null,
         "type": "bar",
-        "text": [null],
+        "marker": {
+          "autocolorscale": false,
+          "color": "rgba(205,150,0,1)",
+          "line": {
+            "width": 1.88976377952756,
+            "color": "transparent"
+          }
+        },
         "name": "SI2",
-        "marker": {
-          "color": "rgb(205,150,0)",
-          "line": {
-            "color": "transparent",
-            "width": 0.5
-          }
-        },
-        "opacity": null,
-        "xaxis": "x1",
-        "yaxis": "y1",
-        "bargap": "default",
-        "barmode": "group",
-        "showlegend": true
+        "legendgroup": "SI2",
+        "showlegend": true,
+        "xaxis": "x",
+        "yaxis": "y",
+        "hoverinfo": "text"
       },
       {
-        "x": ["Fair", "Good", "Very Good", "Premium", "Ideal"],
+        "x": [0.83125, 1.83125, 2.83125, 3.83125, 4.83125],
         "y": [408, 1560, 3240, 3575, 4282],
+        "text": ["cut: Fair<br>clarity: SI1<br>count: 408", "cut: Good<br>clarity: SI1<br>count: 1560", "cut: Very Good<br>clarity: SI1<br>count: 3240", "cut: Premium<br>clarity: SI1<br>count: 3575", "cut: Ideal<br>clarity: SI1<br>count: 4282"],
+        "key": null,
         "type": "bar",
-        "text": [null],
+        "marker": {
+          "autocolorscale": false,
+          "color": "rgba(124,174,0,1)",
+          "line": {
+            "width": 1.88976377952756,
+            "color": "transparent"
+          }
+        },
         "name": "SI1",
-        "marker": {
-          "color": "rgb(124,174,0)",
-          "line": {
-            "color": "transparent",
-            "width": 0.5
-          }
-        },
-        "opacity": null,
-        "xaxis": "x1",
-        "yaxis": "y1",
-        "bargap": "default",
-        "barmode": "group",
-        "showlegend": true
+        "legendgroup": "SI1",
+        "showlegend": true,
+        "xaxis": "x",
+        "yaxis": "y",
+        "hoverinfo": "text"
       },
       {
-        "x": ["Fair", "Good", "Very Good", "Premium", "Ideal"],
+        "x": [0.94375, 1.94375, 2.94375, 3.94375, 4.94375],
         "y": [261, 978, 2591, 3357, 5071],
+        "text": ["cut: Fair<br>clarity: VS2<br>count: 261", "cut: Good<br>clarity: VS2<br>count: 978", "cut: Very Good<br>clarity: VS2<br>count: 2591", "cut: Premium<br>clarity: VS2<br>count: 3357", "cut: Ideal<br>clarity: VS2<br>count: 5071"],
+        "key": null,
         "type": "bar",
-        "text": [null],
+        "marker": {
+          "autocolorscale": false,
+          "color": "rgba(0,190,103,1)",
+          "line": {
+            "width": 1.88976377952756,
+            "color": "transparent"
+          }
+        },
         "name": "VS2",
-        "marker": {
-          "color": "rgb(0,190,103)",
-          "line": {
-            "color": "transparent",
-            "width": 0.5
-          }
-        },
-        "opacity": null,
-        "xaxis": "x1",
-        "yaxis": "y1",
-        "bargap": "default",
-        "barmode": "group",
-        "showlegend": true
+        "legendgroup": "VS2",
+        "showlegend": true,
+        "xaxis": "x",
+        "yaxis": "y",
+        "hoverinfo": "text"
       },
       {
-        "x": ["Fair", "Good", "Very Good", "Premium", "Ideal"],
+        "x": [1.05625, 2.05625, 3.05625, 4.05625, 5.05625],
         "y": [170, 648, 1775, 1989, 3589],
+        "text": ["cut: Fair<br>clarity: VS1<br>count: 170", "cut: Good<br>clarity: VS1<br>count: 648", "cut: Very Good<br>clarity: VS1<br>count: 1775", "cut: Premium<br>clarity: VS1<br>count: 1989", "cut: Ideal<br>clarity: VS1<br>count: 3589"],
+        "key": null,
         "type": "bar",
-        "text": [null],
+        "marker": {
+          "autocolorscale": false,
+          "color": "rgba(0,191,196,1)",
+          "line": {
+            "width": 1.88976377952756,
+            "color": "transparent"
+          }
+        },
         "name": "VS1",
-        "marker": {
-          "color": "rgb(0,191,196)",
-          "line": {
-            "color": "transparent",
-            "width": 0.5
-          }
-        },
-        "opacity": null,
-        "xaxis": "x1",
-        "yaxis": "y1",
-        "bargap": "default",
-        "barmode": "group",
-        "showlegend": true
+        "legendgroup": "VS1",
+        "showlegend": true,
+        "xaxis": "x",
+        "yaxis": "y",
+        "hoverinfo": "text"
       },
       {
-        "x": ["Fair", "Good", "Very Good", "Premium", "Ideal"],
+        "x": [1.16875, 2.16875, 3.16875, 4.16875, 5.16875],
         "y": [69, 286, 1235, 870, 2606],
+        "text": ["cut: Fair<br>clarity: VVS2<br>count: 69", "cut: Good<br>clarity: VVS2<br>count: 286", "cut: Very Good<br>clarity: VVS2<br>count: 1235", "cut: Premium<br>clarity: VVS2<br>count: 870", "cut: Ideal<br>clarity: VVS2<br>count: 2606"],
+        "key": null,
         "type": "bar",
-        "text": [null],
+        "marker": {
+          "autocolorscale": false,
+          "color": "rgba(0,169,255,1)",
+          "line": {
+            "width": 1.88976377952756,
+            "color": "transparent"
+          }
+        },
         "name": "VVS2",
-        "marker": {
-          "color": "rgb(0,169,255)",
-          "line": {
-            "color": "transparent",
-            "width": 0.5
-          }
-        },
-        "opacity": null,
-        "xaxis": "x1",
-        "yaxis": "y1",
-        "bargap": "default",
-        "barmode": "group",
-        "showlegend": true
+        "legendgroup": "VVS2",
+        "showlegend": true,
+        "xaxis": "x",
+        "yaxis": "y",
+        "hoverinfo": "text"
       },
       {
-        "x": ["Fair", "Good", "Very Good", "Premium", "Ideal"],
+        "x": [1.28125, 2.28125, 3.28125, 4.28125, 5.28125],
         "y": [17, 186, 789, 616, 2047],
+        "text": ["cut: Fair<br>clarity: VVS1<br>count: 17", "cut: Good<br>clarity: VVS1<br>count: 186", "cut: Very Good<br>clarity: VVS1<br>count: 789", "cut: Premium<br>clarity: VVS1<br>count: 616", "cut: Ideal<br>clarity: VVS1<br>count: 2047"],
+        "key": null,
         "type": "bar",
-        "text": [null],
-        "name": "VVS1",
         "marker": {
-          "color": "rgb(199,124,255)",
+          "autocolorscale": false,
+          "color": "rgba(199,124,255,1)",
           "line": {
-            "color": "transparent",
-            "width": 0.5
+            "width": 1.88976377952756,
+            "color": "transparent"
           }
         },
-        "opacity": null,
-        "xaxis": "x1",
-        "yaxis": "y1",
-        "bargap": "default",
-        "barmode": "group",
-        "showlegend": true
+        "name": "VVS1",
+        "legendgroup": "VVS1",
+        "showlegend": true,
+        "xaxis": "x",
+        "yaxis": "y",
+        "hoverinfo": "text"
       },
       {
-        "x": ["Fair", "Good", "Very Good", "Premium", "Ideal"],
+        "x": [1.39375, 2.39375, 3.39375, 4.39375, 5.39375],
         "y": [9, 71, 268, 230, 1212],
+        "text": ["cut: Fair<br>clarity: IF<br>count: 9", "cut: Good<br>clarity: IF<br>count: 71", "cut: Very Good<br>clarity: IF<br>count: 268", "cut: Premium<br>clarity: IF<br>count: 230", "cut: Ideal<br>clarity: IF<br>count: 1212"],
+        "key": null,
         "type": "bar",
-        "text": [null],
-        "name": "IF",
         "marker": {
-          "color": "rgb(255,97,204)",
+          "autocolorscale": false,
+          "color": "rgba(255,97,204,1)",
           "line": {
-            "color": "transparent",
-            "width": 0.5
+            "width": 1.88976377952756,
+            "color": "transparent"
           }
         },
-        "opacity": null,
-        "xaxis": "x1",
-        "yaxis": "y1",
-        "bargap": "default",
-        "barmode": "group",
-        "showlegend": true
+        "name": "IF",
+        "legendgroup": "IF",
+        "showlegend": true,
+        "xaxis": "x",
+        "yaxis": "y",
+        "hoverinfo": "text"
       }
     ],
     "layout": {
-      "barmode": "group",
+      "margin": {
+        "b": 42.4787997390737,
+        "l": 48.9497716894977,
+        "t": 28.5244618395303,
+        "r": 7.30593607305936
+      },
+      "plot_bgcolor": "rgba(235,235,235,1)",
+      "paper_bgcolor": "rgba(255,255,255,1)",
+      "font": {
+        "color": "rgba(0,0,0,1)",
+        "family": "",
+        "size": 14.6118721461187
+      },
       "xaxis": {
-        "tickcolor": "rgb(51,51,51)",
-        "gridcolor": "rgb(255,255,255)",
-        "showgrid": true,
+        "type": "linear",
+        "autorange": false,
+        "tickmode": "array",
+        "range": [0.4, 5.6],
+        "ticktext": ["Fair", "Good", "Very Good", "Premium", "Ideal"],
+        "tickvals": [1, 2, 3, 4, 5],
         "ticks": "outside",
+        "tickcolor": "rgba(51,51,51,1)",
+        "ticklen": 3.65296803652968,
+        "tickwidth": 0.66417600664176,
         "showticklabels": true,
-        "type": "category",
-        "title": "cut",
+        "tickfont": {
+          "color": "rgba(77,77,77,1)",
+          "family": "",
+          "size": 11.689497716895
+        },
+        "tickangle": -0,
+        "showline": false,
+        "linecolor": null,
+        "linewidth": 0,
+        "showgrid": true,
+        "domain": [0, 1],
+        "gridcolor": "rgba(255,255,255,1)",
+        "gridwidth": 0.66417600664176,
         "zeroline": false,
-        "showline": false
+        "anchor": "y",
+        "title": "cut",
+        "titlefont": {
+          "color": "rgba(0,0,0,1)",
+          "family": "",
+          "size": 14.6118721461187
+        },
+        "hoverformat": ".2f"
       },
       "yaxis": {
-        "tickcolor": "rgb(51,51,51)",
-        "gridcolor": "rgb(255,255,255)",
-        "showgrid": true,
-        "ticks": "outside",
-        "showticklabels": true,
         "type": "linear",
-        "title": "count",
-        "zeroline": false,
-        "showline": false
-      },
-      "plot_bgcolor": "rgb(235,235,235)",
-      "margin": {
-        "b": 40,
-        "l": 60,
-        "t": 25,
-        "r": 10
-      },
-      "legend": {
-        "bordercolor": "transparent",
-        "x": 1.01,
-        "y": 0.75,
-        "xref": "paper",
-        "yref": "paper",
-        "xanchor": "left",
-        "yanchor": "top",
-        "font": {
-          "family": ""
+        "autorange": false,
+        "tickmode": "array",
+        "range": [-253.55, 5324.55],
+        "ticktext": ["0", "1000", "2000", "3000", "4000", "5000"],
+        "tickvals": [0, 1000, 2000, 3000, 4000, 5000],
+        "ticks": "outside",
+        "tickcolor": "rgba(51,51,51,1)",
+        "ticklen": 3.65296803652968,
+        "tickwidth": 0.66417600664176,
+        "showticklabels": true,
+        "tickfont": {
+          "color": "rgba(77,77,77,1)",
+          "family": "",
+          "size": 11.689497716895
         },
-        "bgcolor": "rgb(255,255,255)"
+        "tickangle": -0,
+        "showline": false,
+        "linecolor": null,
+        "linewidth": 0,
+        "showgrid": true,
+        "domain": [0, 1],
+        "gridcolor": "rgba(255,255,255,1)",
+        "gridwidth": 0.66417600664176,
+        "zeroline": false,
+        "anchor": "x",
+        "title": "count",
+        "titlefont": {
+          "color": "rgba(0,0,0,1)",
+          "family": "",
+          "size": 14.6118721461187
+        },
+        "hoverformat": ".2f"
       },
-      "showlegend": true,
-      "annotations": [
+      "shapes": [
         {
-          "text": "<b>clarity\u003c/b>",
-          "x": 1.025554,
-          "y": 0.85,
-          "showarrow": false,
-          "xref": "paper",
+          "type": "rect",
+          "fillcolor": null,
+          "line": {
+            "color": null,
+            "width": 0,
+            "linetype": []
+          },
           "yref": "paper",
-          "xanchor": "left",
-          "yanchor": "top",
-          "textangle": 0
+          "xref": "paper",
+          "x0": 0,
+          "x1": 1,
+          "y0": 0,
+          "y1": 1
         }
       ],
-      "titlefont": {
-        "family": ""
+      "showlegend": true,
+      "legend": {
+        "bgcolor": "rgba(255,255,255,1)",
+        "bordercolor": "transparent",
+        "borderwidth": 1.88976377952756,
+        "font": {
+          "color": "rgba(0,0,0,1)",
+          "family": "",
+          "size": 11.689497716895
+        },
+        "y": 0.876265466816648
       },
-      "paper_bgcolor": "rgb(255,255,255)"
+      "annotations": [
+        {
+          "text": "clarity",
+          "x": 1.02,
+          "y": 1,
+          "showarrow": false,
+          "ax": 0,
+          "ay": 0,
+          "font": {
+            "color": "rgba(0,0,0,1)",
+            "family": "",
+            "size": 14.6118721461187
+          },
+          "xref": "paper",
+          "yref": "paper",
+          "textangle": -0,
+          "xanchor": "left",
+          "yanchor": "top"
+        }
+      ],
+      "barmode": "stack",
+      "bargap": 0,
+      "hovermode": "closest"
     },
-    "world_readable": true
+    "source": "A",
+    "config": {
+      "modeBarButtonsToRemove": ["sendDataToCloud"]
+    },
+    "base_url": "https://plot.ly"
   },
   "evals": [],
   "jsHooks": []
-}</script></p>
+}</script>
 <p>The R package also provides high-level bindings for working directly with <a href="https://plot.ly/javascript/">plotly.js</a>.</p>
 <pre class="r"><code>d &lt;- diamonds[sample(nrow(diamonds), 500), ]
 plot_ly(d, x = carat, y = price, text = paste(&quot;Clarity: &quot;, clarity),
         mode = &quot;markers&quot;, color = carat, size = carat)</code></pre>
-<p><div id="htmlwidget-7431" style="width:576px;height:336px;" class="plotly html-widget"></div>
+<div id="htmlwidget-7431" style="width:576px;height:336px;" class="plotly html-widget"></div>
 <script type="application/json" data-for="htmlwidget-7431">{
   "x": {
     "data": [
       {
         "type": "scatter",
-        "inherit": true,
+        "inherit": false,
         "x": [0.9, 0.3, 0.3, 1.58, 1.56, 0.51, 1.16, 0.32, 1.08, 0.3, 0.51, 1.07, 1.7, 0.44, 0.4, 0.91, 1, 1.47, 0.31, 0.3, 0.5, 0.31, 0.53, 1.51, 1.01, 0.42, 0.52, 0.35, 1.21, 1.71, 0.6, 1.51, 0.74, 0.35, 0.71, 1.06, 0.37, 0.7, 1.36, 1.52, 0.3, 0.49, 0.53, 0.4, 2.3, 0.56, 0.31, 1, 1, 1.01, 1.09, 0.26, 1.22, 0.3, 1.27, 0.9, 0.28, 0.35, 0.34, 2.01, 0.3, 0.65, 0.31, 1.51, 1.57, 1.28, 1.5, 1.02, 0.51, 1.5, 1.16, 0.33, 0.71, 0.31, 0.32, 0.5, 0.41, 0.5, 0.97, 1.73, 0.26, 0.59, 0.7, 0.79, 0.43, 0.41, 0.32, 1.07, 0.41, 0.55, 1.14, 1, 1.54, 0.56, 1.36, 0.31, 0.33, 0.73, 0.5, 1.5, 0.7, 1.02, 1.42, 0.43, 0.42, 0.72, 0.38, 0.75, 0.41, 0.54, 0.5, 0.8, 1.05, 0.7, 0.9, 0.75, 0.48, 1.31, 0.52, 1.73, 1.56, 2.02, 0.3, 1.72, 0.74, 0.9, 0.71, 0.4, 0.9, 1.13, 0.5, 0.4, 2.25, 0.32, 0.7, 2.05, 0.78, 1.91, 0.3, 0.36, 0.71, 0.26, 0.71, 1.19, 0.54, 0.57, 0.76, 0.25, 0.96, 2.01, 0.56, 0.9, 1.01, 0.28, 0.58, 0.54, 0.5, 0.75, 0.51, 0.52, 0.31, 2.01, 1.09, 0.92, 1.06, 0.9, 0.34, 0.3, 0.55, 1.86, 1.2, 0.34, 0.55, 0.5, 1.05, 0.72, 0.3, 1.52, 0.32, 1.02, 0.57, 0.32, 0.32, 1, 0.27, 0.85, 0.91, 1.01, 0.63, 0.7, 2.29, 1.21, 0.71, 0.41, 0.3, 0.77, 0.31, 0.99, 0.54, 1.01, 0.71, 0.51, 0.51, 1.06, 0.46, 0.52, 0.4, 0.77, 1.53, 1.06, 0.53, 1.08, 0.29, 0.83, 0.23, 0.71, 0.51, 2.18, 0.9, 0.31, 2, 0.36, 0.73, 1.17, 0.41, 0.74, 0.7, 1.2, 1.46, 0.35, 2.68, 0.55, 0.41, 1.21, 1.02, 1.52, 0.33, 0.55, 0.58, 1.03, 0.51, 0.42, 0.23, 1.02, 0.32, 0.38, 0.72, 0.76, 1, 1.03, 0.72, 1.2, 1.23, 0.54, 0.53, 1.01, 1, 0.31, 0.43, 1.02, 0.77, 1.17, 0.32, 0.47, 0.7, 1.19, 1.27, 0.62, 0.76, 0.33, 0.41, 1.34, 0.9, 0.43, 0.3, 2.16, 1.25, 0.32, 1.4, 1.34, 1.03, 0.76, 1.5, 0.38, 0.32, 0.41, 0.31, 1.09, 1.52, 1, 0.33, 1.33, 0.3, 1.02, 0.9, 0.3, 0.36, 0.31, 0.3, 0.52, 0.44, 0.76, 0.39, 1.38, 0.82, 2.19, 0.39, 0.32, 0.71, 1.02, 0.71, 2.18, 2.14, 0.3, 0.31, 0.31, 0.52, 0.3, 0.33, 1.52, 0.41, 0.43, 0.72, 0.33, 0.71, 0.56, 2.01, 2.01, 0.72, 1.01, 1.01, 1.55, 0.3, 1.05, 1, 0.36, 1.16, 0.3, 0.4, 0.41, 2.01, 0.33, 0.32, 1.7, 0.36, 0.36, 0.75, 2.5, 0.4, 0.71, 1.06, 0.3, 1.01, 1.21, 1.5, 0.7, 1.01, 0.73, 0.71, 1.01, 1.02, 0.37, 0.72, 0.42, 0.33, 1.01, 1.54, 0.5, 0.79, 0.41, 0.41, 1.55, 1.02, 1.21, 1.24, 0.93, 1.51, 1.02, 0.42, 1.26, 1.2, 1.5, 0.91, 0.52, 0.25, 1.23, 0.43, 0.76, 0.36, 1.51, 1, 0.72, 1.5, 0.33, 0.41, 0.9, 1.04, 0.4, 1.19, 0.34, 1.01, 1, 1.86, 0.61, 0.42, 0.32, 0.55, 0.54, 2, 1.13, 0.4, 0.3, 0.71, 1.09, 0.73, 0.31, 0.38, 0.37, 0.5, 0.51, 1.51, 0.33, 0.55, 0.9, 2, 0.94, 0.71, 0.87, 1.13, 0.51, 0.32, 1.5, 1.07, 1.09, 0.71, 0.53, 0.7, 1.51, 0.53, 0.74, 1.22, 2.01, 0.31, 2.01, 0.4, 0.33, 1.2, 0.34, 1.03, 1.01, 2.01, 0.41, 0.41, 0.92, 0.34, 0.52, 0.3, 1.08, 1.04, 0.48, 0.67, 0.54, 0.61, 1.1, 0.52, 0.9, 1, 1.12, 1.06, 1.01, 1.53, 1.58, 2.03, 0.61, 0.79, 0.23, 0.72, 0.4, 0.3, 1, 1.58, 0.71, 0.78, 0.77, 2.14, 0.71, 0.7, 0.3, 1.19, 0.3, 1.46, 1.37, 1.28, 0.91, 0.37, 1.27, 0.7, 0.71, 1.24, 1],
         "y": [5656, 709, 565, 13917, 15334, 1443, 8520, 702, 4544, 838, 1875, 6076, 9586, 1196, 925, 4919, 8002, 8055, 975, 684, 1020, 687, 1132, 10696, 4559, 1235, 1872, 706, 6031, 15829, 2201, 7693, 2374, 984, 1917, 4654, 844, 2656, 4158, 7186, 526, 1261, 1607, 798, 16062, 1270, 530, 4956, 6612, 7179, 4849, 599, 5966, 776, 5588, 4093, 598, 788, 596, 13498, 878, 2406, 942, 12141, 8001, 12841, 12156, 5456, 983, 10256, 7113, 743, 2458, 907, 834, 1746, 1243, 1632, 3729, 13102, 453, 2125, 2591, 3107, 754, 1079, 602, 6471, 1079, 2030, 4980, 8008, 12308, 2026, 9178, 652, 579, 3014, 1237, 7098, 2741, 3142, 8102, 739, 958, 2493, 1000, 2840, 683, 1637, 1415, 3603, 5361, 2443, 3105, 2093, 1061, 4864, 1656, 9494, 9295, 14182, 764, 7802, 2999, 2693, 2386, 707, 3841, 5338, 1755, 1090, 16575, 756, 2872, 14111, 3159, 13367, 844, 933, 3674, 580, 2036, 4078, 1065, 2339, 3170, 558, 4849, 17433, 2167, 4232, 4525, 458, 1453, 1665, 1306, 2903, 988, 1446, 734, 14837, 4456, 3697, 4465, 2974, 1014, 499, 1743, 11520, 10454, 765, 1580, 1332, 7056, 2383, 886, 13001, 801, 6220, 1037, 540, 477, 4704, 620, 4089, 3911, 6407, 1641, 2657, 11502, 4880, 2416, 904, 608, 4039, 789, 4052, 1304, 8416, 2368, 2063, 1574, 6856, 1834, 1369, 807, 3488, 10698, 7541, 1132, 5078, 607, 7889, 465, 1917, 1107, 12853, 3084, 734, 11600, 789, 2337, 5842, 899, 3537, 3472, 8442, 6387, 706, 8419, 1668, 827, 9541, 6432, 8810, 992, 2312, 1234, 5087, 1029, 908, 485, 6047, 1018, 904, 3140, 3363, 6048, 6479, 2364, 9139, 8509, 1662, 1678, 6843, 4170, 816, 1318, 7351, 1996, 4826, 505, 1143, 2042, 6944, 3665, 2041, 2358, 922, 1107, 11640, 3992, 935, 1069, 15166, 4543, 936, 5723, 7453, 4974, 2873, 8649, 721, 943, 1107, 544, 4465, 6982, 4172, 854, 7148, 878, 6499, 3470, 905, 1163, 707, 684, 1689, 883, 2326, 816, 15968, 2499, 15801, 889, 783, 2308, 8303, 1826, 12631, 16390, 639, 816, 791, 1280, 709, 1207, 9781, 647, 661, 2642, 631, 2667, 1286, 18640, 17014, 2731, 5751, 4578, 9557, 684, 5433, 8602, 753, 4958, 506, 855, 1079, 11526, 752, 603, 13256, 587, 810, 2363, 14502, 1125, 2913, 4541, 857, 4479, 7826, 4704, 1935, 5317, 2565, 2922, 3897, 5430, 1041, 3043, 700, 946, 6425, 9055, 1068, 2389, 1163, 755, 13171, 7861, 8877, 4916, 4229, 9069, 5773, 992, 9907, 5765, 9573, 4816, 1591, 363, 9319, 739, 2443, 878, 7208, 7146, 2265, 8770, 723, 647, 4229, 5353, 1028, 6363, 647, 5988, 8020, 11416, 1368, 653, 482, 1667, 1662, 9193, 4371, 855, 605, 2145, 4395, 2393, 553, 1004, 839, 1220, 1895, 17936, 1114, 2132, 3724, 16291, 4817, 2633, 3090, 5052, 1882, 576, 8316, 4458, 4496, 2450, 1408, 2326, 9513, 1690, 3388, 6469, 15675, 871, 17838, 1333, 723, 7761, 895, 5337, 5756, 18736, 1079, 1241, 3986, 803, 2012, 844, 5927, 7738, 918, 1981, 1057, 2075, 8796, 1694, 3288, 5557, 8251, 8003, 6041, 9022, 7592, 6002, 1356, 2633, 493, 2720, 772, 755, 5322, 12530, 2637, 3613, 3253, 15913, 3281, 2306, 844, 5825, 552, 7931, 8424, 7109, 3863, 746, 7176, 2777, 2623, 8299, 5082],
         "text": ["Clarity:  SI1<br>carat (size): 0.9", "Clarity:  SI1<br>carat (size): 0.3", "Clarity:  VS1<br>carat (size): 0.3", "Clarity:  VS2<br>carat (size): 1.58", "Clarity:  VVS1<br>carat (size): 1.56", "Clarity:  SI1<br>carat (size): 0.51", "Clarity:  VS2<br>carat (size): 1.16", "Clarity:  VS1<br>carat (size): 0.32", "Clarity:  SI2<br>carat (size): 1.08", "Clarity:  VVS1<br>carat (size): 0.3", "Clarity:  VVS2<br>carat (size): 0.51", "Clarity:  VS1<br>carat (size): 1.07", "Clarity:  VS2<br>carat (size): 1.7", "Clarity:  VVS1<br>carat (size): 0.44", "Clarity:  VS2<br>carat (size): 0.4", "Clarity:  SI1<br>carat (size): 0.91", "Clarity:  IF<br>carat (size): 1", "Clarity:  VVS2<br>carat (size): 1.47", "Clarity:  VVS1<br>carat (size): 0.31", "Clarity:  VVS2<br>carat (size): 0.3", "Clarity:  SI2<br>carat (size): 0.5", "Clarity:  VVS1<br>carat (size): 0.31", "Clarity:  SI1<br>carat (size): 0.53", "Clarity:  SI1<br>carat (size): 1.51", "Clarity:  SI1<br>carat (size): 1.01", "Clarity:  VVS1<br>carat (size): 0.42", "Clarity:  VS1<br>carat (size): 0.52", "Clarity:  VS1<br>carat (size): 0.35", "Clarity:  SI2<br>carat (size): 1.21", "Clarity:  VS2<br>carat (size): 1.71", "Clarity:  VS1<br>carat (size): 0.6", "Clarity:  SI2<br>carat (size): 1.51", "Clarity:  VS2<br>carat (size): 0.74", "Clarity:  VVS1<br>carat (size): 0.35", "Clarity:  SI1<br>carat (size): 0.71", "Clarity:  SI2<br>carat (size): 1.06", "Clarity:  VVS2<br>carat (size): 0.37", "Clarity:  SI1<br>carat (size): 0.7", "Clarity:  SI2<br>carat (size): 1.36", "Clarity:  VS1<br>carat (size): 1.52", "Clarity:  SI1<br>carat (size): 0.3", "Clarity:  VS2<br>carat (size): 0.49", "Clarity:  VS1<br>carat (size): 0.53", "Clarity:  SI2<br>carat (size): 0.4", "Clarity:  VS2<br>carat (size): 2.3", "Clarity:  SI1<br>carat (size): 0.56", "Clarity:  SI1<br>carat (size): 0.31", "Clarity:  SI1<br>carat (size): 1", "Clarity:  VS2<br>carat (size): 1", "Clarity:  VS2<br>carat (size): 1.01", "Clarity:  SI1<br>carat (size): 1.09", "Clarity:  VVS2<br>carat (size): 0.26", "Clarity:  VS1<br>carat (size): 1.22", "Clarity:  VVS2<br>carat (size): 0.3", "Clarity:  VS1<br>carat (size): 1.27", "Clarity:  VS2<br>carat (size): 0.9", "Clarity:  VS1<br>carat (size): 0.28", "Clarity:  SI1<br>carat (size): 0.35", "Clarity:  VS2<br>carat (size): 0.34", "Clarity:  SI2<br>carat (size): 2.01", "Clarity:  VVS2<br>carat (size): 0.3", "Clarity:  VS1<br>carat (size): 0.65", "Clarity:  VS2<br>carat (size): 0.31", "Clarity:  SI1<br>carat (size): 1.51", "Clarity:  SI2<br>carat (size): 1.57", "Clarity:  VVS2<br>carat (size): 1.28", "Clarity:  VS2<br>carat (size): 1.5", "Clarity:  SI1<br>carat (size): 1.02", "Clarity:  SI2<br>carat (size): 0.51", "Clarity:  VS1<br>carat (size): 1.5", "Clarity:  VS2<br>carat (size): 1.16", "Clarity:  VS1<br>carat (size): 0.33", "Clarity:  SI1<br>carat (size): 0.71", "Clarity:  VVS2<br>carat (size): 0.31", "Clarity:  VVS2<br>carat (size): 0.32", "Clarity:  VS2<br>carat (size): 0.5", "Clarity:  VVS2<br>carat (size): 0.41", "Clarity:  VS2<br>carat (size): 0.5", "Clarity:  SI2<br>carat (size): 0.97", "Clarity:  VS2<br>carat (size): 1.73", "Clarity:  VS1<br>carat (size): 0.26", "Clarity:  VVS2<br>carat (size): 0.59", "Clarity:  VS2<br>carat (size): 0.7", "Clarity:  SI1<br>carat (size): 0.79", "Clarity:  SI1<br>carat (size): 0.43", "Clarity:  VS1<br>carat (size): 0.41", "Clarity:  VS1<br>carat (size): 0.32", "Clarity:  VS2<br>carat (size): 1.07", "Clarity:  VS1<br>carat (size): 0.41", "Clarity:  VS2<br>carat (size): 0.55", "Clarity:  SI1<br>carat (size): 1.14", "Clarity:  VVS1<br>carat (size): 1", "Clarity:  VS2<br>carat (size): 1.54", "Clarity:  VS1<br>carat (size): 0.56", "Clarity:  VS1<br>carat (size): 1.36", "Clarity:  IF<br>carat (size): 0.31", "Clarity:  VS2<br>carat (size): 0.33", "Clarity:  SI1<br>carat (size): 0.73", "Clarity:  SI1<br>carat (size): 0.5", "Clarity:  SI2<br>carat (size): 1.5", "Clarity:  VS1<br>carat (size): 0.7", "Clarity:  SI2<br>carat (size): 1.02", "Clarity:  SI1<br>carat (size): 1.42", "Clarity:  SI1<br>carat (size): 0.43", "Clarity:  VS2<br>carat (size): 0.42", "Clarity:  VVS1<br>carat (size): 0.72", "Clarity:  VS1<br>carat (size): 0.38", "Clarity:  SI2<br>carat (size): 0.75", "Clarity:  SI2<br>carat (size): 0.41", "Clarity:  VS2<br>carat (size): 0.54", "Clarity:  VVS1<br>carat (size): 0.5", "Clarity:  VS1<br>carat (size): 0.8", "Clarity:  SI1<br>carat (size): 1.05", "Clarity:  VS1<br>carat (size): 0.7", "Clarity:  SI2<br>carat (size): 0.9", "Clarity:  SI2<br>carat (size): 0.75", "Clarity:  VVS2<br>carat (size): 0.48", "Clarity:  SI2<br>carat (size): 1.31", "Clarity:  SI1<br>carat (size): 0.52", "Clarity:  SI2<br>carat (size): 1.73", "Clarity:  VS2<br>carat (size): 1.56", "Clarity:  VS2<br>carat (size): 2.02", "Clarity:  VVS1<br>carat (size): 0.3", "Clarity:  I1<br>carat (size): 1.72", "Clarity:  VS1<br>carat (size): 0.74", "Clarity:  SI2<br>carat (size): 0.9", "Clarity:  VVS2<br>carat (size): 0.71", "Clarity:  SI1<br>carat (size): 0.4", "Clarity:  SI1<br>carat (size): 0.9", "Clarity:  SI1<br>carat (size): 1.13", "Clarity:  VS1<br>carat (size): 0.5", "Clarity:  VVS2<br>carat (size): 0.4", "Clarity:  SI2<br>carat (size): 2.25", "Clarity:  SI1<br>carat (size): 0.32", "Clarity:  SI1<br>carat (size): 0.7", "Clarity:  VS2<br>carat (size): 2.05", "Clarity:  VS2<br>carat (size): 0.78", "Clarity:  SI1<br>carat (size): 1.91", "Clarity:  VS2<br>carat (size): 0.3", "Clarity:  VS2<br>carat (size): 0.36", "Clarity:  SI1<br>carat (size): 0.71", "Clarity:  VS1<br>carat (size): 0.26", "Clarity:  SI2<br>carat (size): 0.71", "Clarity:  SI2<br>carat (size): 1.19", "Clarity:  SI1<br>carat (size): 0.54", "Clarity:  VVS1<br>carat (size): 0.57", "Clarity:  SI1<br>carat (size): 0.76", "Clarity:  VS1<br>carat (size): 0.25", "Clarity:  SI1<br>carat (size): 0.96", "Clarity:  VS2<br>carat (size): 2.01", "Clarity:  VS2<br>carat (size): 0.56", "Clarity:  SI1<br>carat (size): 0.9", "Clarity:  SI1<br>carat (size): 1.01", "Clarity:  VS1<br>carat (size): 0.28", "Clarity:  SI1<br>carat (size): 0.58", "Clarity:  VS1<br>carat (size): 0.54", "Clarity:  VS2<br>carat (size): 0.5", "Clarity:  SI1<br>carat (size): 0.75", "Clarity:  VS1<br>carat (size): 0.51", "Clarity:  VS2<br>carat (size): 0.52", "Clarity:  VS2<br>carat (size): 0.31", "Clarity:  SI1<br>carat (size): 2.01", "Clarity:  SI2<br>carat (size): 1.09", "Clarity:  SI2<br>carat (size): 0.92", "Clarity:  SI2<br>carat (size): 1.06", "Clarity:  SI1<br>carat (size): 0.9", "Clarity:  VVS1<br>carat (size): 0.34", "Clarity:  SI1<br>carat (size): 0.3", "Clarity:  VS1<br>carat (size): 0.55", "Clarity:  SI2<br>carat (size): 1.86", "Clarity:  VVS2<br>carat (size): 1.2", "Clarity:  VS2<br>carat (size): 0.34", "Clarity:  SI1<br>carat (size): 0.55", "Clarity:  VS2<br>carat (size): 0.5", "Clarity:  VS2<br>carat (size): 1.05", "Clarity:  VS2<br>carat (size): 0.72", "Clarity:  IF<br>carat (size): 0.3", "Clarity:  VS2<br>carat (size): 1.52", "Clarity:  VVS1<br>carat (size): 0.32", "Clarity:  VS2<br>carat (size): 1.02", "Clarity:  SI1<br>carat (size): 0.57", "Clarity:  SI2<br>carat (size): 0.32", "Clarity:  SI2<br>carat (size): 0.32", "Clarity:  SI2<br>carat (size): 1", "Clarity:  VVS2<br>carat (size): 0.27", "Clarity:  SI1<br>carat (size): 0.85", "Clarity:  SI1<br>carat (size): 0.91", "Clarity:  VS1<br>carat (size): 1.01", "Clarity:  VS2<br>carat (size): 0.63", "Clarity:  VS2<br>carat (size): 0.7", "Clarity:  SI2<br>carat (size): 2.29", "Clarity:  SI2<br>carat (size): 1.21", "Clarity:  SI1<br>carat (size): 0.71", "Clarity:  SI1<br>carat (size): 0.41", "Clarity:  VS1<br>carat (size): 0.3", "Clarity:  VS1<br>carat (size): 0.77", "Clarity:  VVS1<br>carat (size): 0.31", "Clarity:  SI2<br>carat (size): 0.99", "Clarity:  VS1<br>carat (size): 0.54", "Clarity:  VS1<br>carat (size): 1.01", "Clarity:  VS1<br>carat (size): 0.71", "Clarity:  IF<br>carat (size): 0.51", "Clarity:  VS2<br>carat (size): 0.51", "Clarity:  VS2<br>carat (size): 1.06", "Clarity:  VS1<br>carat (size): 0.46", "Clarity:  SI1<br>carat (size): 0.52", "Clarity:  VS1<br>carat (size): 0.4", "Clarity:  VS1<br>carat (size): 0.77", "Clarity:  SI2<br>carat (size): 1.53", "Clarity:  VS2<br>carat (size): 1.06", "Clarity:  SI2<br>carat (size): 0.53", "Clarity:  SI1<br>carat (size): 1.08", "Clarity:  VVS1<br>carat (size): 0.29", "Clarity:  IF<br>carat (size): 0.83", "Clarity:  VVS2<br>carat (size): 0.23", "Clarity:  VS2<br>carat (size): 0.71", "Clarity:  SI1<br>carat (size): 0.51", "Clarity:  SI2<br>carat (size): 2.18", "Clarity:  SI2<br>carat (size): 0.9", "Clarity:  VS2<br>carat (size): 0.31", "Clarity:  SI2<br>carat (size): 2", "Clarity:  VS2<br>carat (size): 0.36", "Clarity:  VS2<br>carat (size): 0.73", "Clarity:  SI2<br>carat (size): 1.17", "Clarity:  VS1<br>carat (size): 0.41", "Clarity:  VVS1<br>carat (size): 0.74", "Clarity:  VS1<br>carat (size): 0.7", "Clarity:  VS1<br>carat (size): 1.2", "Clarity:  SI2<br>carat (size): 1.46", "Clarity:  VVS2<br>carat (size): 0.35", "Clarity:  I1<br>carat (size): 2.68", "Clarity:  SI1<br>carat (size): 0.55", "Clarity:  VS2<br>carat (size): 0.41", "Clarity:  VS1<br>carat (size): 1.21", "Clarity:  VS2<br>carat (size): 1.02", "Clarity:  SI2<br>carat (size): 1.52", "Clarity:  IF<br>carat (size): 0.33", "Clarity:  VVS2<br>carat (size): 0.55", "Clarity:  SI2<br>carat (size): 0.58", "Clarity:  SI1<br>carat (size): 1.03", "Clarity:  SI2<br>carat (size): 0.51", "Clarity:  VS2<br>carat (size): 0.42", "Clarity:  IF<br>carat (size): 0.23", "Clarity:  SI1<br>carat (size): 1.02", "Clarity:  IF<br>carat (size): 0.32", "Clarity:  VVS1<br>carat (size): 0.38", "Clarity:  VS2<br>carat (size): 0.72", "Clarity:  VVS1<br>carat (size): 0.76", "Clarity:  VS2<br>carat (size): 1", "Clarity:  VS1<br>carat (size): 1.03", "Clarity:  SI1<br>carat (size): 0.72", "Clarity:  VVS1<br>carat (size): 1.2", "Clarity:  VVS2<br>carat (size): 1.23", "Clarity:  VS2<br>carat (size): 0.54", "Clarity:  VS1<br>carat (size): 0.53", "Clarity:  VS2<br>carat (size): 1.01", "Clarity:  SI2<br>carat (size): 1", "Clarity:  VVS1<br>carat (size): 0.31", "Clarity:  IF<br>carat (size): 0.43", "Clarity:  VS1<br>carat (size): 1.02", "Clarity:  SI2<br>carat (size): 0.77", "Clarity:  SI2<br>carat (size): 1.17", "Clarity:  VS2<br>carat (size): 0.32", "Clarity:  VS1<br>carat (size): 0.47", "Clarity:  SI1<br>carat (size): 0.7", "Clarity:  VS2<br>carat (size): 1.19", "Clarity:  I1<br>carat (size): 1.27", "Clarity:  VS2<br>carat (size): 0.62", "Clarity:  SI1<br>carat (size): 0.76", "Clarity:  VVS2<br>carat (size): 0.33", "Clarity:  VVS1<br>carat (size): 0.41", "Clarity:  VVS1<br>carat (size): 1.34", "Clarity:  SI1<br>carat (size): 0.9", "Clarity:  SI2<br>carat (size): 0.43", "Clarity:  VVS1<br>carat (size): 0.3", "Clarity:  SI2<br>carat (size): 2.16", "Clarity:  SI2<br>carat (size): 1.25", "Clarity:  VVS2<br>carat (size): 0.32", "Clarity:  SI2<br>carat (size): 1.4", "Clarity:  SI2<br>carat (size): 1.34", "Clarity:  SI2<br>carat (size): 1.03", "Clarity:  VS2<br>carat (size): 0.76", "Clarity:  SI2<br>carat (size): 1.5", "Clarity:  VVS2<br>carat (size): 0.38", "Clarity:  IF<br>carat (size): 0.32", "Clarity:  VS2<br>carat (size): 0.41", "Clarity:  VS2<br>carat (size): 0.31", "Clarity:  SI1<br>carat (size): 1.09", "Clarity:  VS2<br>carat (size): 1.52", "Clarity:  VS2<br>carat (size): 1", "Clarity:  VS2<br>carat (size): 0.33", "Clarity:  VS2<br>carat (size): 1.33", "Clarity:  VVS1<br>carat (size): 0.3", "Clarity:  VS2<br>carat (size): 1.02", "Clarity:  SI2<br>carat (size): 0.9", "Clarity:  VVS1<br>carat (size): 0.3", "Clarity:  IF<br>carat (size): 0.36", "Clarity:  SI1<br>carat (size): 0.31", "Clarity:  VVS2<br>carat (size): 0.3", "Clarity:  VS2<br>carat (size): 0.52", "Clarity:  SI1<br>carat (size): 0.44", "Clarity:  SI1<br>carat (size): 0.76", "Clarity:  VS2<br>carat (size): 0.39", "Clarity:  VVS1<br>carat (size): 1.38", "Clarity:  SI2<br>carat (size): 0.82", "Clarity:  SI1<br>carat (size): 2.19", "Clarity:  VS2<br>carat (size): 0.39", "Clarity:  IF<br>carat (size): 0.32", "Clarity:  SI1<br>carat (size): 0.71", "Clarity:  VS1<br>carat (size): 1.02", "Clarity:  SI2<br>carat (size): 0.71", "Clarity:  SI2<br>carat (size): 2.18", "Clarity:  VS2<br>carat (size): 2.14", "Clarity:  VVS1<br>carat (size): 0.3", "Clarity:  VVS2<br>carat (size): 0.31", "Clarity:  VVS2<br>carat (size): 0.31", "Clarity:  SI1<br>carat (size): 0.52", "Clarity:  VVS1<br>carat (size): 0.3", "Clarity:  VVS1<br>carat (size): 0.33", "Clarity:  SI2<br>carat (size): 1.52", "Clarity:  VS1<br>carat (size): 0.41", "Clarity:  SI2<br>carat (size): 0.43", "Clarity:  SI1<br>carat (size): 0.72", "Clarity:  SI2<br>carat (size): 0.33", "Clarity:  SI2<br>carat (size): 0.71", "Clarity:  SI2<br>carat (size): 0.56", "Clarity:  VS2<br>carat (size): 2.01", "Clarity:  SI2<br>carat (size): 2.01", "Clarity:  SI1<br>carat (size): 0.72", "Clarity:  SI1<br>carat (size): 1.01", "Clarity:  SI1<br>carat (size): 1.01", "Clarity:  SI2<br>carat (size): 1.55", "Clarity:  VVS2<br>carat (size): 0.3", "Clarity:  SI1<br>carat (size): 1.05", "Clarity:  VVS2<br>carat (size): 1", "Clarity:  VS1<br>carat (size): 0.36", "Clarity:  VS2<br>carat (size): 1.16", "Clarity:  VS1<br>carat (size): 0.3", "Clarity:  SI2<br>carat (size): 0.4", "Clarity:  VS1<br>carat (size): 0.41", "Clarity:  VS1<br>carat (size): 2.01", "Clarity:  VVS2<br>carat (size): 0.33", "Clarity:  VS2<br>carat (size): 0.32", "Clarity:  SI1<br>carat (size): 1.7", "Clarity:  VS2<br>carat (size): 0.36", "Clarity:  VS1<br>carat (size): 0.36", "Clarity:  SI1<br>carat (size): 0.75", "Clarity:  SI2<br>carat (size): 2.5", "Clarity:  VS1<br>carat (size): 0.4", "Clarity:  SI1<br>carat (size): 0.71", "Clarity:  SI2<br>carat (size): 1.06", "Clarity:  VS2<br>carat (size): 0.3", "Clarity:  SI2<br>carat (size): 1.01", "Clarity:  VS2<br>carat (size): 1.21", "Clarity:  SI2<br>carat (size): 1.5", "Clarity:  SI2<br>carat (size): 0.7", "Clarity:  VS2<br>carat (size): 1.01", "Clarity:  VVS2<br>carat (size): 0.73", "Clarity:  VS2<br>carat (size): 0.71", "Clarity:  SI2<br>carat (size): 1.01", "Clarity:  SI1<br>carat (size): 1.02", "Clarity:  VS2<br>carat (size): 0.37", "Clarity:  VVS2<br>carat (size): 0.72", "Clarity:  SI1<br>carat (size): 0.42", "Clarity:  IF<br>carat (size): 0.33", "Clarity:  VS2<br>carat (size): 1.01", "Clarity:  SI2<br>carat (size): 1.54", "Clarity:  SI2<br>carat (size): 0.5", "Clarity:  SI1<br>carat (size): 0.79", "Clarity:  VS2<br>carat (size): 0.41", "Clarity:  SI1<br>carat (size): 0.41", "Clarity:  SI1<br>carat (size): 1.55", "Clarity:  VVS1<br>carat (size): 1.02", "Clarity:  VS2<br>carat (size): 1.21", "Clarity:  SI1<br>carat (size): 1.24", "Clarity:  SI1<br>carat (size): 0.93", "Clarity:  SI1<br>carat (size): 1.51", "Clarity:  SI1<br>carat (size): 1.02", "Clarity:  SI1<br>carat (size): 0.42", "Clarity:  VS1<br>carat (size): 1.26", "Clarity:  VS1<br>carat (size): 1.2", "Clarity:  SI1<br>carat (size): 1.5", "Clarity:  SI1<br>carat (size): 0.91", "Clarity:  VS2<br>carat (size): 0.52", "Clarity:  SI1<br>carat (size): 0.25", "Clarity:  VS1<br>carat (size): 1.23", "Clarity:  SI1<br>carat (size): 0.43", "Clarity:  SI1<br>carat (size): 0.76", "Clarity:  VS2<br>carat (size): 0.36", "Clarity:  SI2<br>carat (size): 1.51", "Clarity:  VS2<br>carat (size): 1", "Clarity:  VS1<br>carat (size): 0.72", "Clarity:  SI1<br>carat (size): 1.5", "Clarity:  VS2<br>carat (size): 0.33", "Clarity:  VS1<br>carat (size): 0.41", "Clarity:  VS2<br>carat (size): 0.9", "Clarity:  VS2<br>carat (size): 1.04", "Clarity:  VVS2<br>carat (size): 0.4", "Clarity:  VS2<br>carat (size): 1.19", "Clarity:  SI1<br>carat (size): 0.34", "Clarity:  VS2<br>carat (size): 1.01", "Clarity:  VS1<br>carat (size): 1", "Clarity:  SI2<br>carat (size): 1.86", "Clarity:  SI2<br>carat (size): 0.61", "Clarity:  SI2<br>carat (size): 0.42", "Clarity:  SI1<br>carat (size): 0.32", "Clarity:  VS1<br>carat (size): 0.55", "Clarity:  VS2<br>carat (size): 0.54", "Clarity:  SI1<br>carat (size): 2", "Clarity:  SI2<br>carat (size): 1.13", "Clarity:  SI1<br>carat (size): 0.4", "Clarity:  VS2<br>carat (size): 0.3", "Clarity:  VS2<br>carat (size): 0.71", "Clarity:  SI2<br>carat (size): 1.09", "Clarity:  VS1<br>carat (size): 0.73", "Clarity:  SI1<br>carat (size): 0.31", "Clarity:  VS1<br>carat (size): 0.38", "Clarity:  VVS2<br>carat (size): 0.37", "Clarity:  VS2<br>carat (size): 0.5", "Clarity:  VVS2<br>carat (size): 0.51", "Clarity:  VS1<br>carat (size): 1.51", "Clarity:  IF<br>carat (size): 0.33", "Clarity:  VS1<br>carat (size): 0.55", "Clarity:  SI1<br>carat (size): 0.9", "Clarity:  VS2<br>carat (size): 2", "Clarity:  SI1<br>carat (size): 0.94", "Clarity:  SI2<br>carat (size): 0.71", "Clarity:  SI2<br>carat (size): 0.87", "Clarity:  SI2<br>carat (size): 1.13", "Clarity:  VS2<br>carat (size): 0.51", "Clarity:  VS2<br>carat (size): 0.32", "Clarity:  VS2<br>carat (size): 1.5", "Clarity:  VS2<br>carat (size): 1.07", "Clarity:  SI2<br>carat (size): 1.09", "Clarity:  VVS2<br>carat (size): 0.71", "Clarity:  SI1<br>carat (size): 0.53", "Clarity:  SI2<br>carat (size): 0.7", "Clarity:  SI2<br>carat (size): 1.51", "Clarity:  VS2<br>carat (size): 0.53", "Clarity:  VVS1<br>carat (size): 0.74", "Clarity:  VS1<br>carat (size): 1.22", "Clarity:  VS2<br>carat (size): 2.01", "Clarity:  IF<br>carat (size): 0.31", "Clarity:  VS1<br>carat (size): 2.01", "Clarity:  IF<br>carat (size): 0.4", "Clarity:  VS2<br>carat (size): 0.33", "Clarity:  SI1<br>carat (size): 1.2", "Clarity:  VVS1<br>carat (size): 0.34", "Clarity:  SI1<br>carat (size): 1.03", "Clarity:  VS2<br>carat (size): 1.01", "Clarity:  SI1<br>carat (size): 2.01", "Clarity:  VS1<br>carat (size): 0.41", "Clarity:  VVS1<br>carat (size): 0.41", "Clarity:  SI1<br>carat (size): 0.92", "Clarity:  SI1<br>carat (size): 0.34", "Clarity:  VVS2<br>carat (size): 0.52", "Clarity:  VS2<br>carat (size): 0.3", "Clarity:  SI1<br>carat (size): 1.08", "Clarity:  VVS1<br>carat (size): 1.04", "Clarity:  SI2<br>carat (size): 0.48", "Clarity:  VS1<br>carat (size): 0.67", "Clarity:  SI1<br>carat (size): 0.54", "Clarity:  VS2<br>carat (size): 0.61", "Clarity:  VS1<br>carat (size): 1.1", "Clarity:  VS2<br>carat (size): 0.52", "Clarity:  VVS2<br>carat (size): 0.9", "Clarity:  VS1<br>carat (size): 1", "Clarity:  VS2<br>carat (size): 1.12", "Clarity:  VVS2<br>carat (size): 1.06", "Clarity:  VS2<br>carat (size): 1.01", "Clarity:  SI1<br>carat (size): 1.53", "Clarity:  VVS2<br>carat (size): 1.58", "Clarity:  I1<br>carat (size): 2.03", "Clarity:  SI1<br>carat (size): 0.61", "Clarity:  SI1<br>carat (size): 0.79", "Clarity:  VS1<br>carat (size): 0.23", "Clarity:  VVS2<br>carat (size): 0.72", "Clarity:  SI1<br>carat (size): 0.4", "Clarity:  VS1<br>carat (size): 0.3", "Clarity:  VS2<br>carat (size): 1", "Clarity:  VS1<br>carat (size): 1.58", "Clarity:  VS1<br>carat (size): 0.71", "Clarity:  VS2<br>carat (size): 0.78", "Clarity:  SI1<br>carat (size): 0.77", "Clarity:  SI1<br>carat (size): 2.14", "Clarity:  VS1<br>carat (size): 0.71", "Clarity:  SI1<br>carat (size): 0.7", "Clarity:  VS1<br>carat (size): 0.3", "Clarity:  SI1<br>carat (size): 1.19", "Clarity:  SI1<br>carat (size): 0.3", "Clarity:  SI2<br>carat (size): 1.46", "Clarity:  VS1<br>carat (size): 1.37", "Clarity:  SI1<br>carat (size): 1.28", "Clarity:  VS1<br>carat (size): 0.91", "Clarity:  VS2<br>carat (size): 0.37", "Clarity:  VS2<br>carat (size): 1.27", "Clarity:  SI1<br>carat (size): 0.7", "Clarity:  VS2<br>carat (size): 0.71", "Clarity:  VS1<br>carat (size): 1.24", "Clarity:  SI1<br>carat (size): 1"],
@@ -493,11 +587,11 @@ plot_ly(d, x = carat, y = price, text = paste(&quot;Clarity: &quot;, clarity),
             [0.111111111111111, "#482878"],
             [0.222222222222222, "#3E4A89"],
             [0.333333333333333, "#31688E"],
-            [0.444444444444444, "#26838E"],
-            [0.555555555555556, "#1F9D89"],
+            [0.444444444444444, "#26828E"],
+            [0.555555555555556, "#1F9E89"],
             [0.666666666666667, "#35B779"],
-            [0.777777777777778, "#6CCE59"],
-            [0.888888888888889, "#B4DD2C"],
+            [0.777777777777778, "#6DCD59"],
+            [0.888888888888889, "#B4DE2C"],
             [1, "#FDE725"]
           ],
           "color": [0.9, 0.3, 0.3, 1.58, 1.56, 0.51, 1.16, 0.32, 1.08, 0.3, 0.51, 1.07, 1.7, 0.44, 0.4, 0.91, 1, 1.47, 0.31, 0.3, 0.5, 0.31, 0.53, 1.51, 1.01, 0.42, 0.52, 0.35, 1.21, 1.71, 0.6, 1.51, 0.74, 0.35, 0.71, 1.06, 0.37, 0.7, 1.36, 1.52, 0.3, 0.49, 0.53, 0.4, 2.3, 0.56, 0.31, 1, 1, 1.01, 1.09, 0.26, 1.22, 0.3, 1.27, 0.9, 0.28, 0.35, 0.34, 2.01, 0.3, 0.65, 0.31, 1.51, 1.57, 1.28, 1.5, 1.02, 0.51, 1.5, 1.16, 0.33, 0.71, 0.31, 0.32, 0.5, 0.41, 0.5, 0.97, 1.73, 0.26, 0.59, 0.7, 0.79, 0.43, 0.41, 0.32, 1.07, 0.41, 0.55, 1.14, 1, 1.54, 0.56, 1.36, 0.31, 0.33, 0.73, 0.5, 1.5, 0.7, 1.02, 1.42, 0.43, 0.42, 0.72, 0.38, 0.75, 0.41, 0.54, 0.5, 0.8, 1.05, 0.7, 0.9, 0.75, 0.48, 1.31, 0.52, 1.73, 1.56, 2.02, 0.3, 1.72, 0.74, 0.9, 0.71, 0.4, 0.9, 1.13, 0.5, 0.4, 2.25, 0.32, 0.7, 2.05, 0.78, 1.91, 0.3, 0.36, 0.71, 0.26, 0.71, 1.19, 0.54, 0.57, 0.76, 0.25, 0.96, 2.01, 0.56, 0.9, 1.01, 0.28, 0.58, 0.54, 0.5, 0.75, 0.51, 0.52, 0.31, 2.01, 1.09, 0.92, 1.06, 0.9, 0.34, 0.3, 0.55, 1.86, 1.2, 0.34, 0.55, 0.5, 1.05, 0.72, 0.3, 1.52, 0.32, 1.02, 0.57, 0.32, 0.32, 1, 0.27, 0.85, 0.91, 1.01, 0.63, 0.7, 2.29, 1.21, 0.71, 0.41, 0.3, 0.77, 0.31, 0.99, 0.54, 1.01, 0.71, 0.51, 0.51, 1.06, 0.46, 0.52, 0.4, 0.77, 1.53, 1.06, 0.53, 1.08, 0.29, 0.83, 0.23, 0.71, 0.51, 2.18, 0.9, 0.31, 2, 0.36, 0.73, 1.17, 0.41, 0.74, 0.7, 1.2, 1.46, 0.35, 2.68, 0.55, 0.41, 1.21, 1.02, 1.52, 0.33, 0.55, 0.58, 1.03, 0.51, 0.42, 0.23, 1.02, 0.32, 0.38, 0.72, 0.76, 1, 1.03, 0.72, 1.2, 1.23, 0.54, 0.53, 1.01, 1, 0.31, 0.43, 1.02, 0.77, 1.17, 0.32, 0.47, 0.7, 1.19, 1.27, 0.62, 0.76, 0.33, 0.41, 1.34, 0.9, 0.43, 0.3, 2.16, 1.25, 0.32, 1.4, 1.34, 1.03, 0.76, 1.5, 0.38, 0.32, 0.41, 0.31, 1.09, 1.52, 1, 0.33, 1.33, 0.3, 1.02, 0.9, 0.3, 0.36, 0.31, 0.3, 0.52, 0.44, 0.76, 0.39, 1.38, 0.82, 2.19, 0.39, 0.32, 0.71, 1.02, 0.71, 2.18, 2.14, 0.3, 0.31, 0.31, 0.52, 0.3, 0.33, 1.52, 0.41, 0.43, 0.72, 0.33, 0.71, 0.56, 2.01, 2.01, 0.72, 1.01, 1.01, 1.55, 0.3, 1.05, 1, 0.36, 1.16, 0.3, 0.4, 0.41, 2.01, 0.33, 0.32, 1.7, 0.36, 0.36, 0.75, 2.5, 0.4, 0.71, 1.06, 0.3, 1.01, 1.21, 1.5, 0.7, 1.01, 0.73, 0.71, 1.01, 1.02, 0.37, 0.72, 0.42, 0.33, 1.01, 1.54, 0.5, 0.79, 0.41, 0.41, 1.55, 1.02, 1.21, 1.24, 0.93, 1.51, 1.02, 0.42, 1.26, 1.2, 1.5, 0.91, 0.52, 0.25, 1.23, 0.43, 0.76, 0.36, 1.51, 1, 0.72, 1.5, 0.33, 0.41, 0.9, 1.04, 0.4, 1.19, 0.34, 1.01, 1, 1.86, 0.61, 0.42, 0.32, 0.55, 0.54, 2, 1.13, 0.4, 0.3, 0.71, 1.09, 0.73, 0.31, 0.38, 0.37, 0.5, 0.51, 1.51, 0.33, 0.55, 0.9, 2, 0.94, 0.71, 0.87, 1.13, 0.51, 0.32, 1.5, 1.07, 1.09, 0.71, 0.53, 0.7, 1.51, 0.53, 0.74, 1.22, 2.01, 0.31, 2.01, 0.4, 0.33, 1.2, 0.34, 1.03, 1.01, 2.01, 0.41, 0.41, 0.92, 0.34, 0.52, 0.3, 1.08, 1.04, 0.48, 0.67, 0.54, 0.61, 1.1, 0.52, 0.9, 1, 1.12, 1.06, 1.01, 1.53, 1.58, 2.03, 0.61, 0.79, 0.23, 0.72, 0.4, 0.3, 1, 1.58, 0.71, 0.78, 0.77, 2.14, 0.71, 0.7, 0.3, 1.19, 0.3, 1.46, 1.37, 1.28, 0.91, 0.37, 1.27, 0.7, 0.71, 1.24, 1],
@@ -513,6 +607,7 @@ plot_ly(d, x = carat, y = price, text = paste(&quot;Clarity: &quot;, clarity),
       "yaxis": {
         "title": "price"
       },
+      "hovermode": "closest",
       "margin": {
         "b": 40,
         "l": 60,
@@ -523,20 +618,15 @@ plot_ly(d, x = carat, y = price, text = paste(&quot;Clarity: &quot;, clarity),
     "url": null,
     "width": null,
     "height": null,
-    "base_url": "https://plot.ly",
-    "layout.1": {
-      "xaxis": {
-        "title": "carat"
-      },
-      "yaxis": {
-        "title": "price"
-      }
+    "source": "A",
+    "config": {
+      "modeBarButtonsToRemove": ["sendDataToCloud"]
     },
-    "filename": "carat vs. price"
+    "base_url": "https://plot.ly"
   },
   "evals": [],
   "jsHooks": []
-}</script></p>
+}</script>
 </div>
 
 

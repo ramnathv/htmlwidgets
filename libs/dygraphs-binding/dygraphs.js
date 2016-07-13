@@ -20,7 +20,6 @@ if (!Array.prototype.indexOf) {
   };
 }
 
-
 HTMLWidgets.widget({
 
   name: "dygraphs",
@@ -104,6 +103,18 @@ HTMLWidgets.widget({
     this.addShadingCallback(x);
     this.addEventCallback(x);
     this.addZoomCallback(x, instance);
+    
+    // disable y-axis touch events on mobile phones
+    if (attrs.mobileDisableYTouch !== false && this.isMobilePhone()) {
+      // create default interaction model if necessary
+      if (!attrs.interactionModel)
+        attrs.interactionModel = Dygraph.Interaction.defaultModel;
+      // disable y touch direction
+      attrs.interactionModel.touchstart = function(event, dygraph, context) {
+        Dygraph.defaultInteractionModel.touchstart(event, dygraph, context);
+        context.touchDirections = { x: true, y: false };
+      };
+    }
 
     // if there is no existing instance perform one-time initialization
     if (!instance.dygraph) {
@@ -124,7 +135,7 @@ HTMLWidgets.widget({
       });
       
       // redraw on R Markdown {.tabset} tab visibility changed
-      var tab = $(el).closest('div.tabbed-pane');
+      var tab = $(el).closest('div.tab-pane');
       if (tab !== null) {
         var tabID = tab.attr('id');
         var tabAnchor = $('a[data-toggle="tab"][href="#' + tabID + '"]');
@@ -135,7 +146,6 @@ HTMLWidgets.widget({
           });
         }
       }
-
       // add default font for viewer mode
       if (this.queryVar("viewer_pane") === "1")
         document.body.style.fontFamily = "Arial, sans-serif";
@@ -670,6 +680,17 @@ HTMLWidgets.widget({
       date = new Date(localAsUTC);
     }
     return date;
+  },
+  
+  // safely detect rendering on a mobile phone
+  isMobilePhone: function() {
+    try
+    {
+      return ! window.matchMedia("only screen and (min-width: 768px)").matches;
+    }
+    catch(e) {
+      return false;
+    }
   }
   
 });

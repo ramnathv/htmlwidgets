@@ -1,7 +1,87 @@
 function heatmap(selector, data, options) {
+
+  // ==== BEGIN HELPERS =================================
+  
   function htmlEscape(str) {
     return (str+"").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
+  
+  // Given a list of widths/heights and a total width/height, provides
+  // easy access to the absolute top/left/width/height of any individual
+  // grid cell. Optionally, a single cell can be specified as a "fill"
+  // cell, meaning it will take up any remaining width/height.
+  // 
+  // rows and cols are arrays that contain numeric pixel dimensions,
+  // and up to one "*" value.
+  function GridSizer(widths, heights, /*optional*/ totalWidth, /*optional*/ totalHeight) {
+    this.widths = widths;
+    this.heights = heights;
+  
+    var fillColIndex = null;
+    var fillRowIndex = null;
+    var usedWidth = 0;
+    var usedHeight = 0;
+    var i;
+    for (i = 0; i < widths.length; i++) {
+      if (widths[i] === "*") {
+        if (fillColIndex !== null) {
+          throw new Error("Only one column can be designated as fill");
+        }
+        fillColIndex = i;
+      } else {
+        usedWidth += widths[i];
+      }
+    }
+    if (fillColIndex !== null) {
+      widths[fillColIndex] = totalWidth - usedWidth;
+    } else {
+      if (typeof(totalWidth) === "number" && totalWidth !== usedWidth) {
+        throw new Error("Column widths don't add up to total width");
+      }
+    }
+    for (i = 0; i < heights.length; i++) {
+      if (heights[i] === "*") {
+        if (fillRowIndex !== null) {
+          throw new Error("Only one row can be designated as fill");
+        }
+        fillRowIndex = i;
+      } else {
+        usedHeight += heights[i];
+      }
+    }
+    if (fillRowIndex !== null) {
+      heights[fillRowIndex] = totalHeight - usedHeight;
+    } else {
+      if (typeof(totalHeight) === "number" && totalHeight !== usedHeight) {
+        throw new Error("Column heights don't add up to total height");
+      }
+    }
+  }
+  
+  GridSizer.prototype.getCellBounds = function(x, y) {
+    if (x < 0 || x >= this.widths.length || y < 0 || y >= this.heights.length)
+      throw new Error("Invalid cell bounds");
+  
+    var left = 0;
+    for (var i = 0; i < x; i++) {
+      left += this.widths[i];
+    }
+  
+    var top = 0;
+    for (var j = 0; j < y; j++) {
+      top += this.heights[j];
+    }
+  
+    return {
+      width: this.widths[x],
+      height: this.heights[y],
+      top: top,
+      left: left
+    }
+  }
+  
+  // ==== END HELPERS ===================================
+
 
   var el = d3.select(selector);
 
@@ -75,46 +155,23 @@ function heatmap(selector, data, options) {
   if (!data.cols) {
     opts.xclust_height = 0;
   }
+  
+  var gridSizer = new GridSizer(
+    [opts.yclust_width, "*", opts.yaxis_width],
+    [opts.xclust_height, "*", opts.xaxis_height],
+    opts.width,
+    opts.height
+  );
 
-  var colormapBounds = {
-    position: "absolute",
-    left: opts.yclust_width,
-    top: opts.xclust_height,
-    width: opts.width - opts.yclust_width - opts.yaxis_width,
-    height: opts.height - opts.xclust_height - opts.xaxis_height
-  };
-  var colDendBounds = {
-    position: "absolute",
-    left: colormapBounds.left,
-    top: 0,
-    width: colormapBounds.width,
-    height: opts.xclust_height
-  };
-  var rowDendBounds = {
-    position: "absolute",
-    left: 0,
-    top: colormapBounds.top,
-    width: opts.yclust_width,
-    height: colormapBounds.height
-  };
-  var yaxisBounds = {
-    position: "absolute",
-    top: colormapBounds.top,
-    left: colormapBounds.left + colormapBounds.width,
-    width: opts.yaxis_width,
-    height: colormapBounds.height
-  };
-  var xaxisBounds = {
-    position: "absolute",
-    top: colormapBounds.top + colormapBounds.height,
-    left: colormapBounds.left,
-    width: colormapBounds.width,
-    height: opts.xaxis_height
-  };
+  var colormapBounds = gridSizer.getCellBounds(1, 1);
+  var colDendBounds = gridSizer.getCellBounds(1, 0);
+  var rowDendBounds = gridSizer.getCellBounds(0, 1);
+  var yaxisBounds = gridSizer.getCellBounds(2, 1);
+  var xaxisBounds = gridSizer.getCellBounds(1, 2);
 
   function cssify(styles) {
     return {
-      position: styles.position,
+      position: "absolute",
       top: styles.top + "px",
       left: styles.left + "px",
       width: styles.width + "px",

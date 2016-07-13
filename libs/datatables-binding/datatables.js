@@ -1,7 +1,80 @@
+(function() {
+
+// some helper functions: using a global object DTWidget so that it can be used
+// in JS() code, e.g. datatable(options = list(foo = JS('code'))); unlike R's
+// dynamic scoping, when 'code' is eval()'ed, JavaScript does not know objects
+// from the "parent frame", e.g. JS('DTWidget') will not work unless it was made
+// a global object
+var DTWidget = {};
+
+DTWidget.formatCurrency = function(thiz, row, data, col, currency, digits, interval, mark, decMark, before) {
+  var d = parseFloat(data[col]);
+  if (isNaN(d)) return;
+  // 123456666.7890 -> 123,456,666.7890
+  var markInterval = function(x, interval, mark) {
+    if (!/^-?[\d.]+$/.test(x)) return x;
+    var xv = x.split('.');
+    if (xv.length > 2) return x;  // should have at most one decimal point
+    xv[0] = xv[0].replace(new RegExp('\\B(?=(\\d{' + interval + '})+(?!\\d))', 'g'), mark);
+    return xv.join(decMark);
+  };
+  d = d.toFixed(digits);
+  var res = markInterval(d, interval, mark);
+  res = before ? (/^-/.test(res) ? '-' + currency + res.replace(/^-/, '') : currency + res) :
+    res + currency;
+  $(thiz.api().cell(row, col).node()).html(res);
+};
+
+DTWidget.formatString = function(thiz, row, data, col, prefix, suffix) {
+  var d = data[col];
+  if (d == null) return;
+  $(thiz.api().cell(row, col).node()).html(prefix + d + suffix);
+};
+
+DTWidget.formatPercentage = function(thiz, row, data, col, digits) {
+  var d = parseFloat(data[col]);
+  if (isNaN(d)) return;
+  $(thiz.api().cell(row, col).node()).html((d * 100).toFixed(digits) + '%');
+};
+
+DTWidget.formatRound = function(thiz, row, data, col, digits) {
+  var d = parseFloat(data[col]);
+  if (isNaN(d)) return;
+  $(thiz.api().cell(row, col).node()).html(d.toFixed(digits));
+};
+
+DTWidget.formatSignif = function(thiz, row, data, col, digits) {
+  var d = parseFloat(data[col]);
+  if (isNaN(d)) return;
+  $(thiz.api().cell(row, col).node()).html(d.toPrecision(digits));
+};
+
+DTWidget.formatDate = function(thiz, row, data, col, method) {
+  var d = data[col];
+  if (d === null) return;
+  d = new Date(d);
+  $(thiz.api().cell(row, col).node()).html(d[method]());
+};
+
+window.DTWidget = DTWidget;
+
+var transposeArray2D = function(a) {
+  return a.length === 0 ? a : HTMLWidgets.transposeArray2D(a);
+};
+
 HTMLWidgets.widget({
   name: "datatables",
   type: "output",
-  renderValue: function(el, data) {
+  initialize: function(el, width, height) {
+    $(el).html('&nbsp;');
+    return { data: null };
+  },
+  renderValue: function(el, data, instance) {
+    if (el.offsetWidth === 0 || el.offsetHeight === 0) {
+      instance.data = data;
+      return;
+    }
+    instance.data = null;
     var $el = $(el);
     $el.empty();
 
@@ -9,13 +82,35 @@ HTMLWidgets.widget({
       return;
     }
 
+    // If we are in a flexdashboard scroll layout then we:
+    //  (a) Always want to use pagination (otherwise we'll have
+    //      a "double scroll bar" effect on the phone); and
+    //  (b) Never want to fill the container (we want the pagination
+    //      level to determine the size of the container)
+    if (window.FlexDashboard && !window.FlexDashboard.isFillPage()) {
+      data.options.bPaginate = true;
+      data.fillContainer = false;
+    }
+
+    // propagate fillContainer to instance (so we have it in resize)
+    instance.fillContainer = data.fillContainer;
+
     var cells = data.data;
 
-    if (cells instanceof Array) cells = HTMLWidgets.transposeArray2D(cells);
+    if (cells instanceof Array) cells = transposeArray2D(cells);
 
     $el.append(data.container);
     var $table = $el.find('table');
+    if (data.class) $table.addClass(data.class);
     if (data.caption) $table.prepend(data.caption);
+
+    if (HTMLWidgets.shinyMode && data.selection.mode !== 'none' &&
+        data.selection.target === 'row+column') {
+      if ($table.children('tfoot').length === 0) {
+        $table.append($('<tfoot>'));
+        $table.find('thead tr').clone().appendTo($table.find('tfoot'));
+      }
+    }
 
     // column filters
     var filterRow;
@@ -34,10 +129,51 @@ HTMLWidgets.widget({
     }
 
     var options = { searchDelay: 1000 };
-    if (cells !== null) options = {
+    if (cells !== null) $.extend(options, {
       data: cells
-    };
-    $.extend(options, data.options || {});
+    });
+
+    // options for fillContainer
+    var bootstrapActive = typeof($.fn.popover) != 'undefined';
+    if (instance.fillContainer) {
+
+      // force scrollX/scrollY and turn off autoWidth
+      options.scrollX = true;
+      options.scrollY = "100px"; // can be any value, we'll adjust below
+
+      // if we aren't paginating then move around the info/filter controls
+      // to save space at the bottom and rephrase the info callback
+      if (data.options.bPaginate === false) {
+
+        // we know how to do this cleanly for bootstrap, not so much
+        // for other themes/layouts
+        if (bootstrapActive) {
+          options.dom = "<'row'<'col-sm-4'i><'col-sm-8'f>>" +
+                        "<'row'<'col-sm-12'tr>>";
+        }
+
+        options.fnInfoCallback = function(oSettings, iStart, iEnd,
+                                           iMax, iTotal, sPre) {
+          return Number(iTotal).toLocaleString() + " records";
+        };
+      }
+    }
+
+    // auto hide navigation if requested
+    if (data.autoHideNavigation === true) {
+      if (bootstrapActive && data.options.bPaginate !== false) {
+        // strip all nav if length >= cells
+        if ((cells instanceof Array) && data.options.iDisplayLength >= cells.length)
+          options.dom = "<'row'<'col-sm-12'tr>>";
+        // alternatively lean things out for flexdashboard mobile portrait
+        else if (window.FlexDashboard && window.FlexDashboard.isMobilePhone())
+          options.dom = "<'row'<'col-sm-12'f>>" +
+                        "<'row'<'col-sm-12'tr>>"  +
+                        "<'row'<'col-sm-12'p>>";
+      }
+    }
+
+    $.extend(true, options, data.options || {});
 
     var searchCols = options.searchCols;
     if (searchCols) {
@@ -48,13 +184,32 @@ HTMLWidgets.widget({
       delete options.searchCols;
     }
 
-    var table = $table.DataTable(options);
-
     // server-side processing?
-    var server = data.options.serverSide === true;
+    var server = options.serverSide === true;
+
+    // use the dataSrc function to pre-process JSON data returned from R
+    var DT_rows_all = [], DT_rows_current = [];
+    if (server && HTMLWidgets.shinyMode && typeof options.ajax === 'object' &&
+        /^session\/[\da-z]+\/dataobj/.test(options.ajax.url) && !options.ajax.dataSrc) {
+      options.ajax.dataSrc = function(json) {
+        DT_rows_all = $.makeArray(json.DT_rows_all);
+        DT_rows_current = $.makeArray(json.DT_rows_current);
+        return json.data;
+      };
+    }
+
+    var table = $table.DataTable(options);
+    $el.data('datatable', table);
 
     var inArray = function(val, array) {
-      return $.inArray(val, array) > -1;
+      return $.inArray(val, $.makeArray(array)) > -1;
+    };
+
+    // encode + to %2B when searching in the table on server side, because
+    // shiny::parseQueryString() treats + as spaces, and DataTables does not
+    // encode + to %2B (or % to %25) when sending the request
+    var encode_plus = function(x) {
+      return server ? x.replace(/%/g, '%25').replace(/\+/g, '%2B') : x;
     };
 
     if (data.filter !== 'none') {
@@ -63,6 +218,7 @@ HTMLWidgets.widget({
 
         var $td = $(td), type = $td.data('type'), filter;
         var $input = $td.children('div').first().children('input');
+        $input.prop('disabled', !table.settings()[0].aoColumns[i].bSearchable || type === 'disabled');
         $input.on('input blur', function() {
           $input.next('span').toggle(Boolean($input.val()));
         });
@@ -78,16 +234,31 @@ HTMLWidgets.widget({
         });
         var $x = $td.children('div').last();
 
+        // remove the overflow: hidden attribute of the scrollHead
+        // (otherwise the scrolling table body obscures the filters)
+        var scrollHead = $(el).find('.dataTables_scrollHead,.dataTables_scrollFoot');
+        var cssOverflow = scrollHead.css('overflow');
+        if (cssOverflow === 'hidden') {
+          $x.on('show hide', function(e) {
+            scrollHead.css('overflow', e.type === 'show' ? '' : cssOverflow);
+          });
+          $x.css('z-index', 25);
+        }
+
         if (inArray(type, ['factor', 'logical'])) {
           $input.on({
             click: function() {
-              $input.parent().hide(); $x.show(); filter[0].selectize.focus();
+              $input.parent().hide(); $x.show().trigger('show'); filter[0].selectize.focus();
             },
             input: function() {
               if ($input.val() === '') filter[0].selectize.setValue([]);
             }
           });
-          filter = $x.children('select').selectize({
+          var $input2 = $x.children('select');
+          filter = $input2.selectize({
+            options: $input2.data('options').map(function(v, i) {
+              return ({text: v, value: v});
+            }),
             plugins: ['remove_button'],
             hideSelected: true,
             onChange: function(value) {
@@ -95,7 +266,7 @@ HTMLWidgets.widget({
               if (value) $input.trigger('input');
               $input.attr('title', $input.val());
               if (server) {
-                table.column(i).search(value ? JSON.stringify(value) : '').draw();
+                table.column(i).search(value ? encode_plus(JSON.stringify(value)) : '').draw();
                 return;
               }
               // turn off filter if nothing selected
@@ -106,7 +277,7 @@ HTMLWidgets.widget({
           // an ugly hack to deal with shiny: for some reason, the onBlur event
           // of selectize does not work in shiny
           $x.find('div > div.selectize-input > input').on('blur', function() {
-            $x.hide(); $input.parent().show();
+            $x.hide().trigger('hide'); $input.parent().show();
           });
           filter.next('div').css('margin-bottom', 'auto');
         } else if (type === 'character') {
@@ -116,7 +287,7 @@ HTMLWidgets.widget({
               regex = options.search.regex,
               ci = options.search.caseInsensitive !== false;
             }
-            table.column(i).search($input.val(), regex, !regex, ci).draw();
+            table.column(i).search(encode_plus($input.val()), regex, !regex, ci).draw();
           };
           if (server) {
             fun = $.fn.dataTable.util.throttle(fun, options.searchDelay);
@@ -137,9 +308,19 @@ HTMLWidgets.widget({
           });
           var $span1 = $spans.first(), $span2 = $spans.last();
           var r1 = +$x.data('min'), r2 = +$x.data('max');
+          // when the numbers are too small or have many decimal places, the
+          // slider may have numeric precision problems (#150)
+          var scale = Math.pow(10, Math.max(0, +$x.data('scale') || 0));
+          r1 = Math.round(r1 * scale); r2 = Math.round(r2 * scale);
+          var scaleBack = function(x, scale) {
+            if (scale === 1) return x;
+            var d = Math.round(Math.log(scale) / Math.log(10));
+            // to avoid problems like 3.423/100 -> 0.034230000000000003
+            return (x / scale).toFixed(d);
+          };
           $input.on({
             focus: function() {
-              $x0.show();
+              $x0.show().trigger('show');
               // first, make sure the slider div leaves at least 20px between
               // the two (slider value) span's
               $x0.width(Math.max(160, $span1.outerWidth() + $span2.outerWidth() + 20));
@@ -156,7 +337,7 @@ HTMLWidgets.widget({
               }
             },
             blur: function() {
-              $x0.hide();
+              $x0.hide().trigger('hide');
             },
             input: function() {
               if ($input.val() === '') filter.val([r1, r2]);
@@ -186,10 +367,13 @@ HTMLWidgets.widget({
                 v[0] = strTime(v[0]);
                 v[1] = strTime(v[1]);
               }
+              if (v[0] != r1) v[0] *= scale;
+              if (v[1] != r2) v[1] *= scale;
               filter.val(v);
             }
           });
           var formatDate = function(d) {
+            d = scaleBack(d, scale);
             if (type === 'number') return d;
             if (type === 'integer') return parseInt(d);
             var x = new Date(+d);
@@ -210,11 +394,30 @@ HTMLWidgets.widget({
             range: {min: r1, max: r2},
             connect: true
           }, opts));
+          if (scale > 1) (function() {
+            var t1 = r1, t2 = r2;
+            var val = filter.val();
+            while (val[0] > r1 || val[1] < r2) {
+              if (val[0] > r1) {
+                t1 -= val[0] - r1;
+              }
+              if (val[1] < r2) {
+                t2 += r2 - val[1];
+              }
+              filter = $x.noUiSlider($.extend({
+                start: [t1, t2],
+                range: {min: t1, max: t2},
+                connect: true
+              }, opts), true);
+              val = filter.val();
+            }
+            r1  = t1; r2 = t2;
+          })();
           $span1.text(formatDate(r1)); $span2.text(formatDate(r2));
           var updateSlider = function(e) {
             var val = filter.val();
             // turn off filter if in full range
-            $td.data('filter', val[0] != r1 || val[1] != r2);
+            $td.data('filter', val[0] > r1 || val[1] < r2);
             var v1 = formatDate(val[0]), v2 = formatDate(val[1]), ival;
             if ($td.data('filter')) {
               ival = v1 + ' ... ' + v2;
@@ -241,7 +444,7 @@ HTMLWidgets.widget({
         // processing
         if (server) {
           // if a search string has been pre-set, search now
-          if (searchCol) table.column(i).search(searchCol).draw();
+          if (searchCol) table.column(i).search(encode_plus(searchCol)).draw();
           return;
         }
 
@@ -261,11 +464,12 @@ HTMLWidgets.widget({
             v = parseFloat(data[i]);
             // how to handle NaN? currently exclude these rows
             if (isNaN(v)) return(false);
-            r0 = parseFloat(r[0]); r1 = parseFloat(r[1]);
+            r0 = parseFloat(scaleBack(r[0], scale))
+            r1 = parseFloat(scaleBack(r[1], scale));
             if (v >= r0 && v <= r1) return true;
           } else if (type === 'date' || type === 'time') {
             v = new Date(data[i]);
-            r0 = new Date(+r[0]); r1 = new Date(+r[1]);
+            r0 = new Date(r[0] / scale); r1 = new Date(r[1] / scale);
             if (v >= r0 && v <= r1) return true;
           } else if (type === 'factor') {
             if (r.length === 0 || inArray(data[i], r)) return true;
@@ -327,19 +531,41 @@ HTMLWidgets.widget({
       highlight();
     }
 
-    // initialize extensions
-    for (var ext in data.extOptions) {
-      new $.fn.dataTable[ext](table, data.extOptions[ext] || {});
-    }
-
     // run the callback function on the table instance
     if (typeof data.callback === 'function') data.callback(table);
+    this.adjustWidth(el);
+
+     // fillContainer = TRUE behavior
+    if (instance.fillContainer) {
+
+      // we need to wait just a bit to do this so DT can completely
+      // finish laying itself out
+      var thiz = this;
+      setTimeout(function() {
+
+        // calculate correct height
+        thiz.fillAvailableHeight(el, $(el).innerHeight());
+
+        // we need to force DT to recalculate column widths
+        // (otherwise all the columns are the same size)
+        table.columns.adjust();
+      }, 200);
+    }
 
     // interaction with shiny
     if (!HTMLWidgets.shinyMode) return;
 
-    var changeInput = function(id, data) {
-      Shiny.onInputChange(el.id + '_' + id, data);
+    var methods = {};
+    var shinyData = {};
+
+    var changeInput = function(id, data, type) {
+      id = el.id + '_' + id;
+      if (type) id = id + ':' + type;
+      // do not update if the new data is the same as old data
+      if (shinyData.hasOwnProperty(id) && shinyData[id] === JSON.stringify(data))
+        return;
+      shinyData[id] = JSON.stringify(data);
+      Shiny.onInputChange(id, data);
     };
 
     var addOne = function(x) {
@@ -354,71 +580,197 @@ HTMLWidgets.widget({
       return ux;
     }
 
-    // selected rows
-    var selected = [], selectedRows = function() {
-      var rows = table.rows('.selected', {search: 'applied'});
-      // return the first column in server mode, and row indices in client mode
-      if (!server) return addOne(rows.indexes().toArray());
-      var ids = rows.data().toArray().map(function(d) {
-        return d[0];  // assume the first column is row names
-      });
-      selected = unique(selected.concat(ids));
-      return selected;
-    };
-    var selection = inArray(data.selection, ['single', 'multiple']);
-    var selClass = data.style === 'bootstrap' ? 'active' : 'selected';
-    if (selection) table.on('click.dt', 'tr', function() {
-      var $this = $(this), thisRow = table.row(this);
-      if (data.selection === 'multiple') {
-        $this.toggleClass(selClass);
+    // change the row index of a cell
+    var tweakCellIndex = function(cell) {
+      var info = cell.index();
+      if (server) {
+        info.row = DT_rows_current[info.row];
       } else {
-        if ($this.hasClass(selClass)) {
-          $this.removeClass(selClass);
-        } else {
+        info.row += 1;
+      }
+      return {row: info.row, col: info.column};
+    }
+
+    var selMode = data.selection.mode, selTarget = data.selection.target;
+    if (inArray(selMode, ['single', 'multiple'])) {
+      var selClass = data.style === 'bootstrap' ? 'active' : 'selected';
+      var selected = data.selection.selected, selected1, selected2;
+      if (selected === null) {
+        selected1 = selected2 = [];
+      } else if (selTarget === 'row') {
+        selected1 = $.makeArray(selected);
+      } else if (selTarget === 'column') {
+        selected2 = $.makeArray(selected);
+      } else if (selTarget === 'row+column') {
+        selected1 = $.makeArray(selected.rows);
+        selected2 = $.makeArray(selected.cols);
+      }
+      // row, column, or cell selection
+      if (inArray(selTarget, ['row', 'row+column'])) {
+        var selectedRows = function() {
+          var rows = table.rows('.' + selClass, {search: 'applied'});
+          var idx = rows.indexes().toArray();
+          if (!server) return addOne(idx);
+          idx = idx.map(function(i) {
+            return DT_rows_current[i];
+          });
+          selected1 = selMode === 'multiple' ? unique(selected1.concat(idx)) : idx;
+          return selected1;
+        }
+        table.on('click.dt', 'tbody tr', function() {
+          var $this = $(this), thisRow = table.row(this);
+          if (selMode === 'multiple') {
+            $this.toggleClass(selClass);
+          } else {
+            if ($this.hasClass(selClass)) {
+              $this.removeClass(selClass);
+            } else {
+              table.$('tr.' + selClass).removeClass(selClass);
+              $this.addClass(selClass);
+            }
+          }
+          if (server && !$this.hasClass(selClass)) {
+            var id = DT_rows_current[thisRow.index()];
+            // remove id from selected1 since its class .selected has been removed
+            selected1.splice($.inArray(id, selected1), 1);
+          }
+          changeInput('rows_selected', selectedRows());
+          changeInput('row_last_clicked', server ?
+                      DT_rows_current[thisRow.index()] : thisRow.index() + 1);
+        });
+        changeInput('rows_selected', selected1);
+        var selectRows = function() {
           table.$('tr.' + selClass).removeClass(selClass);
-          $this.addClass(selClass);
+          if (selected1.length === 0) return;
+          if (server) {
+            table.rows({page: 'current'}).every(function() {
+              if (inArray(DT_rows_current[this.index()], selected1)) {
+                $(this.node()).addClass(selClass);
+              }
+            });
+          } else {
+            var selected0 = selected1.map(function(i) { return i - 1; });
+            $(table.rows(selected0).nodes()).addClass(selClass);
+          }
+        }
+        selectRows();  // in case users have specified pre-selected rows
+        // restore selected rows after the table is redrawn (e.g. sort/search/page);
+        // client-side tables will preserve the selections automatically; for
+        // server-side tables, we have to *real* row indices are in `selected1`
+        if (server) table.on('draw.dt', selectRows);
+        methods.selectRows = function(selected) {
+          selected1 = selected ? selected : [];
+          selectRows();
+          changeInput('rows_selected', selected1);
         }
       }
-      if (server && !$this.hasClass(selClass)) {
-        var id = thisRow.data()[0];
-        // remove id from selected since its class .selected has been removed
-        selected.splice($.inArray(id, selected), 1);
-      }
-      changeInput('rows_selected', selectedRows());
-      changeInput('row_last_clicked', server ? thisRow.data()[0] : thisRow.index() + 1);
-    });
-    changeInput('rows_selected', selectedRows());
-    // restore selected rows after the table is redrawn (e.g. sort/search/page);
-    // client-side tables will preserve the selections automatically; for
-    // server-side tables, we have to check if the row name is in `selected`
-    if (server) table.on('draw.dt', function() {
-      table.rows({page: 'current'}).every(function() {
-        if (inArray(this.data()[0], selected)) {
-          $(this.node()).addClass(selClass);
+
+      if (inArray(selTarget, ['column', 'row+column'])) {
+        if (selTarget === 'row+column') {
+          $(table.columns().footer()).css('cursor', 'pointer');
         }
-      });
-    });
+        table.on('click.dt', selTarget === 'column' ? 'tbody td' : 'tfoot tr th', function() {
+          var colIdx = selTarget === 'column' ? table.cell(this).index().column :
+              $.inArray(this, table.columns().footer()),
+              thisCol = $(table.column(colIdx).nodes());
+          if (colIdx === -1) return;
+          if (thisCol.hasClass(selClass)) {
+            thisCol.removeClass(selClass);
+            selected2.splice($.inArray(colIdx, selected2), 1);
+          } else {
+            if (selMode === 'single') $(table.cells().nodes()).removeClass(selClass);
+            thisCol.addClass(selClass);
+            selected2 = selMode === 'single' ? [colIdx] : unique(selected2.concat([colIdx]));
+          }
+          changeInput('columns_selected', selected2);
+        });
+        changeInput('columns_selected', selected2);
+        var selectCols = function() {
+          table.columns().nodes().flatten().to$().removeClass(selClass);
+          if (selected2.length > 0)
+            table.columns(selected2).nodes().flatten().to$().addClass(selClass);
+        }
+        selectCols();  // in case users have specified pre-selected columns
+        if (server) table.on('draw.dt', selectCols);
+        methods.selectColumns = function(selected) {
+          selected2 = selected ? selected : [];
+          selectCols();
+          changeInput('columns_selected', selected2);
+        }
+      }
+
+      if (selTarget === 'cell') {
+        var selected3;
+        if (selected === null) {
+          selected3 = [];
+        } else {
+          selected3 = selected;
+        }
+        var findIndex = function(ij) {
+          for (var i = 0; i < selected3.length; i++) {
+            if (ij[0] === selected3[i][0] && ij[1] === selected3[i][1]) return i;
+          }
+          return -1;
+        }
+        table.on('click.dt', 'tbody td', function() {
+          var $this = $(this), info = tweakCellIndex(table.cell(this));
+          if ($this.hasClass(selClass)) {
+            $this.removeClass(selClass);
+            selected3.splice(findIndex([info.row, info.col]), 1);
+          } else {
+            if (selMode === 'single') $(table.cells().nodes()).removeClass(selClass);
+            $this.addClass(selClass);
+            selected3 = selMode === 'single' ? [[info.row, info.col]] :
+              unique(selected3.concat([[info.row, info.col]]));
+          }
+          changeInput('cells_selected', transposeArray2D(selected3), 'shiny.matrix');
+        });
+        changeInput('cells_selected', transposeArray2D(selected3), 'shiny.matrix');
+        var selectCells = function() {
+          table.$('td.' + selClass).removeClass(selClass);
+          if (selected3.length === 0) return;
+          if (server) {
+            table.cells({page: 'current'}).every(function() {
+              var info = tweakCellIndex(this);
+              if (findIndex([info.row, info.col], selected3) > -1)
+                $(this.node()).addClass(selClass);
+            });
+          } else {
+            selected3.map(function(ij) {
+              $(table.cell(ij[0] - 1, ij[1]).node()).addClass(selClass);
+            });
+          }
+        };
+        selectCells();  // in case users have specified pre-selected columns
+        if (server) table.on('draw.dt', selectCells);
+        methods.selectCells = function(selected) {
+          selected3 = selected ? selected : [];
+          selectCells();
+          changeInput('cells_selected', transposeArray2D(selected3), 'shiny.matrix');
+        }
+      }
+    }
 
     // expose some table info to Shiny
     var updateTableInfo = function(e, settings) {
       // TODO: is anyone interested in the page info?
       // changeInput('page_info', table.page.info());
       var updateRowInfo = function(id, modifier) {
-        var rows = table.rows($.extend({
-          search: 'applied',
-          page: 'all'
-        }, modifier));
         var idx;
         if (server) {
-          idx = rows.data().toArray().map(function(x) { return x[0]; });
+          idx = modifier.page === 'current' ? DT_rows_current : DT_rows_all;
         } else {
+          var rows = table.rows($.extend({
+            search: 'applied',
+            page: 'all'
+          }, modifier));
           idx = addOne(rows.indexes().toArray());
         }
         changeInput('rows' + '_' + id, idx);
       };
       updateRowInfo('current', {page: 'current'});
       updateRowInfo('all', {});
-    };
+    }
     table.on('draw.dt', updateTableInfo);
     updateTableInfo();
 
@@ -437,5 +789,81 @@ HTMLWidgets.widget({
     }
     table.on('draw.dt', updateSearchInfo);
     updateSearchInfo();
+
+    // the current cell clicked on
+    table.on('click.dt', 'tbody td', function() {
+      var info = tweakCellIndex(table.cell(this));
+      info.value = table.cell(this).data();
+      changeInput('cell_clicked', info);
+    })
+    changeInput('cell_clicked', {});
+
+    methods.addRow = function(data, rowname) {
+      var data0 = table.row(0).data(), n = data0.length, d = n - data.length;
+      if (d === 1) {
+        data = rowname.concat(data)
+      } else if (d !== 0) {
+        console.log(data);
+        console.log(data0);
+        throw 'New data must be of the same length as current data (' + n + ')';
+      };
+      table.row.add(data).draw();
+    }
+
+    table.shinyMethods = methods;
+  },
+  resize: function(el, width, height, instance) {
+    if (instance.data) this.renderValue(el, instance.data, instance);
+
+    // dynamically adjust height if fillContainer = TRUE
+    if (instance.fillContainer)
+      this.fillAvailableHeight(el, height);
+
+    this.adjustWidth(el);
+  },
+
+  // dynamically set the scroll body to fill available height
+  // (used with fillContainer = TRUE)
+  fillAvailableHeight: function(el, availableHeight) {
+
+    // see how much of the table is occupied by header/footer elements
+    // and use that to compute a target scroll body height
+    var dtWrapper = $(el).find('div.dataTables_wrapper');
+    var dtScrollBody = $(el).find($('div.dataTables_scrollBody'));
+    var framingHeight = dtWrapper.innerHeight() - dtScrollBody.innerHeight();
+    var scrollBodyHeight = availableHeight - framingHeight;
+
+    // set the height
+    dtScrollBody.height(scrollBodyHeight + 'px');
+  },
+
+  // adjust the width of columns; remove the hard-coded widths on table and the
+  // scroll header when scrollX/Y are enabled
+  adjustWidth: function(el) {
+    var $el = $(el), table = $el.data('datatable');
+    if (table) table.columns.adjust();
+    $el.find('.dataTables_scrollHeadInner').css('width', '')
+        .children('table').css('margin-left', '');
   }
 });
+
+  if (!HTMLWidgets.shinyMode) return;
+
+  Shiny.addCustomMessageHandler('datatable-calls', function(data) {
+    var id = data.id;
+    var el = document.getElementById(id);
+    var table = el ? $(el).data('datatable') : null;
+    if (!table) {
+      console.log("Couldn't find table with id " + id);
+      return;
+    }
+
+    var methods = table.shinyMethods, call = data.call;
+    if (methods[call.method]) {
+      methods[call.method].apply(table, call.args);
+    } else {
+      console.log("Unknown method " + call.method);
+    }
+  });
+
+})();

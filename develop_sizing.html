@@ -7,7 +7,7 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
 
 
 
@@ -71,25 +71,7 @@ code > span.in { color: #808080; font-weight: bold; font-style: italic; } /* Inf
 </style>
 
 
-
-</head>
-
-<body>
-
-<style type = "text/css">
-.main-container {
-  max-width: 940px;
-  margin-left: auto;
-  margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
-img {
-  max-width:100%;
-  height: auto;
-}
+<style type="text/css">
 h1 {
   font-size: 34px;
 }
@@ -110,6 +92,30 @@ h5 {
 }
 h6 {
   font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -244,7 +250,8 @@ $(document).ready(function () {
 <div class="fluid-row" id="header">
 
 
-<h1 class="title">Widget sizing</h1>
+
+<h1 class="title toc-ignore">Widget sizing</h1>
 
 </div>
 
@@ -312,74 +319,74 @@ $(document).ready(function () {
 </colgroup>
 <thead>
 <tr class="header">
-<th align="left">Option</th>
-<th align="left">Description</th>
+<th>Option</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left"><strong>defaultWidth</strong></td>
-<td align="left">The default width used to display the widget. This parameter specifies the default width for viewing in all contexts (browser, viewer, and knitr) unless it is specifically overridden with e.g. browser.defaultWidth.</td>
+<td><strong>defaultWidth</strong></td>
+<td>The default width used to display the widget. This parameter specifies the default width for viewing in all contexts (browser, viewer, and knitr) unless it is specifically overridden with e.g. browser.defaultWidth.</td>
 </tr>
 <tr class="even">
-<td align="left"><strong>defaultHeight</strong></td>
-<td align="left">The default height used to display the widget. This parameter specifies the default height for viewing in all contexts (browser, viewer, and knitr) unless it is specifically overridden with e.g. browser.defaultHeight.</td>
+<td><strong>defaultHeight</strong></td>
+<td>The default height used to display the widget. This parameter specifies the default height for viewing in all contexts (browser, viewer, and knitr) unless it is specifically overridden with e.g. browser.defaultHeight.</td>
 </tr>
 <tr class="odd">
-<td align="left"><strong>padding</strong></td>
-<td align="left">Padding around the widget (in pixels). This parameter specifies the padding for viewing in all contexts (browser and viewer) unless it is specifically overridden by e.g. browser.padding.</td>
+<td><strong>padding</strong></td>
+<td>Padding around the widget (in pixels). This parameter specifies the padding for viewing in all contexts (browser and viewer) unless it is specifically overridden by e.g. browser.padding.</td>
 </tr>
 <tr class="even">
-<td align="left"><strong>viewer.defaultWidth</strong></td>
-<td align="left">The default width used to display the widget within the RStudio Viewer.</td>
+<td><strong>viewer.defaultWidth</strong></td>
+<td>The default width used to display the widget within the RStudio Viewer.</td>
 </tr>
 <tr class="odd">
-<td align="left"><strong>viewer.defaultHeight</strong></td>
-<td align="left">The default height used to display the widget within the RStudio Viewer.</td>
+<td><strong>viewer.defaultHeight</strong></td>
+<td>The default height used to display the widget within the RStudio Viewer.</td>
 </tr>
 <tr class="even">
-<td align="left"><strong>viewer.padding</strong></td>
-<td align="left">Padding around the widget when displayed in the RStudio Viewer (defaults to 15 pixels).</td>
+<td><strong>viewer.padding</strong></td>
+<td>Padding around the widget when displayed in the RStudio Viewer (defaults to 15 pixels).</td>
 </tr>
 <tr class="odd">
-<td align="left"><strong>viewer.fill</strong></td>
-<td align="left">When displayed in the RStudio Viewer, automatically size the widget to the viewer dimensions (note that viewer.padding is still applied). Default to TRUE.</td>
+<td><strong>viewer.fill</strong></td>
+<td>When displayed in the RStudio Viewer, automatically size the widget to the viewer dimensions (note that viewer.padding is still applied). Default to TRUE.</td>
 </tr>
 <tr class="even">
-<td align="left"><strong>viewer.suppress</strong></td>
-<td align="left">Never display the widget within the RStudio Viewer (useful for widgets that require a large amount of space for rendering). Defaults to FALSE.</td>
+<td><strong>viewer.suppress</strong></td>
+<td>Never display the widget within the RStudio Viewer (useful for widgets that require a large amount of space for rendering). Defaults to FALSE.</td>
 </tr>
 <tr class="odd">
-<td align="left"><strong>viewer.paneHeight</strong></td>
-<td align="left">Request that the RStudio Viewer be forced to a specific height when displaying this widget.</td>
+<td><strong>viewer.paneHeight</strong></td>
+<td>Request that the RStudio Viewer be forced to a specific height when displaying this widget.</td>
 </tr>
 <tr class="even">
-<td align="left"><strong>browser.defaultWidth</strong></td>
-<td align="left">The default width used to display the widget within a standalone web browser.</td>
+<td><strong>browser.defaultWidth</strong></td>
+<td>The default width used to display the widget within a standalone web browser.</td>
 </tr>
 <tr class="odd">
-<td align="left"><strong>browser.defaultHeight</strong></td>
-<td align="left">The default height used to display the widget within a standalone web browser.</td>
+<td><strong>browser.defaultHeight</strong></td>
+<td>The default height used to display the widget within a standalone web browser.</td>
 </tr>
 <tr class="even">
-<td align="left"><strong>browser.padding</strong></td>
-<td align="left">Padding around the widget when displayed in a standalone browser (defaults to 40 pixels).</td>
+<td><strong>browser.padding</strong></td>
+<td>Padding around the widget when displayed in a standalone browser (defaults to 40 pixels).</td>
 </tr>
 <tr class="odd">
-<td align="left"><strong>browser.fill</strong></td>
-<td align="left">When displayed in a standalone web browser, automatically size the widget to the browser dimensions (note that browser.padding is still applied). Defaults to FALSE.</td>
+<td><strong>browser.fill</strong></td>
+<td>When displayed in a standalone web browser, automatically size the widget to the browser dimensions (note that browser.padding is still applied). Defaults to FALSE.</td>
 </tr>
 <tr class="even">
-<td align="left"><strong>knitr.defaultWidth</strong></td>
-<td align="left">The default width used to display the widget within documents generated by knitr (e.g. R Markdown).</td>
+<td><strong>knitr.defaultWidth</strong></td>
+<td>The default width used to display the widget within documents generated by knitr (e.g. R Markdown).</td>
 </tr>
 <tr class="odd">
-<td align="left"><strong>knitr.defaultHeight</strong></td>
-<td align="left">The default height used to display the widget within documents generated by knitr (e.g. R Markdown).</td>
+<td><strong>knitr.defaultHeight</strong></td>
+<td>The default height used to display the widget within documents generated by knitr (e.g. R Markdown).</td>
 </tr>
 <tr class="even">
-<td align="left"><strong>knitr.figure</strong></td>
-<td align="left">Apply the default knitr fig.width and fig.height to the widget when it’s rendered within R Markdown documents. Defaults to TRUE.</td>
+<td><strong>knitr.figure</strong></td>
+<td>Apply the default knitr fig.width and fig.height to the widget when it’s rendered within R Markdown documents. Defaults to TRUE.</td>
 </tr>
 </tbody>
 </table>

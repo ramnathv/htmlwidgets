@@ -7,7 +7,7 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
 
 
 
@@ -21,8 +21,8 @@
 <script src="libs/bootstrap/shim/respond.min.js"></script>
 <script src="libs/htmlwidgets/htmlwidgets.js"></script>
 <script src="libs/d3/./d3.min.js"></script>
-<link href="libs/d3heatmapcore/heatmap.css" rel="stylesheet" />
-<script src="libs/d3heatmapcore/heatmap.js"></script>
+<link href="libs/d3heatmapcore/heatmapcore.css" rel="stylesheet" />
+<script src="libs/d3heatmapcore/heatmapcore.js"></script>
 <script src="libs/d3-tip/index.js"></script>
 <script src="libs/d3heatmap-binding/d3heatmap.js"></script>
 
@@ -52,25 +52,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 
 
-
-</head>
-
-<body>
-
-<style type = "text/css">
-.main-container {
-  max-width: 940px;
-  margin-left: auto;
-  margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
-img {
-  max-width:100%;
-  height: auto;
-}
+<style type="text/css">
 h1 {
   font-size: 34px;
 }
@@ -91,6 +73,30 @@ h5 {
 }
 h6 {
   font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -225,7 +231,8 @@ $(document).ready(function () {
 <div class="fluid-row" id="header">
 
 
-<h1 class="title">htmlwidgets: d3heatmap</h1>
+
+<h1 class="title toc-ignore">htmlwidgets: d3heatmap</h1>
 
 </div>
 
@@ -236,7 +243,7 @@ $(document).ready(function () {
 <p>Interactive heatmaps with D3 including support for row/column highlighting and zooming.</p>
 <pre class="r"><code>library(d3heatmap)
 d3heatmap(mtcars, scale=&quot;column&quot;, colors=&quot;Blues&quot;)</code></pre>
-<p><div id="htmlwidget-3078" style="width:576px;height:336px;" class="d3heatmap html-widget"></div>
+<div id="htmlwidget-3078" style="width:576px;height:336px;" class="d3heatmap html-widget"></div>
 <script type="application/json" data-for="htmlwidget-3078">{
   "x": {
     "rows": {
@@ -768,7 +775,7 @@ d3heatmap(mtcars, scale=&quot;column&quot;, colors=&quot;Blues&quot;)</code></pr
   },
   "evals": [],
   "jsHooks": []
-}</script></p>
+}</script>
 </div>
 
 
