@@ -50,7 +50,7 @@ htmlwidgets:::toJSON2(head(iris, 3), dataframe = 'row', pretty = TRUE)
 As a real example, the [simpleNetwork](http://christophergandrud.github.io/networkD3/#simple) widget accepts a data frame containing network links on the R side, then transforms it to a d3 representation within the JavaScript `renderValue` function:
 
 ```javascript
-renderValue: function(el, x, instance) {
+renderValue: function(x) {
 
   // convert links data frame to d3 friendly format
   var links = HTMLWidgets.dataframeToD3(x.links);
@@ -77,12 +77,12 @@ htmlwidgets:::toJSON2(head(iris, 8), dataframe = 'values', pretty = TRUE)
 As a real example, the [dygraphs](http://rstudio.github.io/dygraphs) widget uses this function to transpose the "file" (data) argument it gets from the R side before passing it on to the dygraphs library:
 
 ```javascript
-renderValue: function(el, x, instance) {
+renderValue: function(x) {
    
     // ... code excluded ...
     
     // transpose array
-    attrs.file = HTMLWidgets.transposeArray2D(attrs.file);
+    x.attrs.file = HTMLWidgets.transposeArray2D(x.attrs.file);
     
     // ... more code excluded ...
 }
@@ -142,36 +142,6 @@ You may find it necessary to customize the JSON serialization of widget data whe
     Here `MY_OWN_JSON_FUNCTION` can be an arbitrary R function that converts R objects to JSON. If you have also specified the `TOJSON_ARGS` attribute, it will be passed to your custom JSON function as well.
 
 Note these features about custom JSON serializers require the **shiny** version to be greater than 0.11.1 if you render the widgets in Shiny apps.
-
-## Widget instance data
-
-You may have noticed that the JavaScript binding for a widget consists of a set of JavaScript functions rather than a class which has its own instance data. Many widgets do not require instance data, but if yours does (e.g. you need to save a JS library provided object, reference to a DOM element, or any other computed data) there is a mechanism available to do so.
-
-Here is how it works: return an object from the `initialize` method and that object will subsequently be passed to the `renderValue` and `resize` methods. For example:
-
-```javascript
-HTMLWidgets.widget({
-  
-  name: "demo",
-  
-  type: "output",
-  
-  initialize: function(el, width, height) {
-    // object we'll use for instance data
-    return {};
-  },
-
-  renderValue: function(el, x, instance) {
-    // access instance as necessary
-  },
-
-  resize: function(el, width, height, instance) { 
-    // access instance as necessary
-  }
-});
-```
-
-A real-life example of using instance data is in the [dygraphs](http://rstudio.github.io/dygraphs) widget, which uses the instance to store the actual Dygraph object for later manipulation. You can see [the code](https://github.com/rstudio/dygraphs/blob/master/inst/htmlwidgets/dygraphs.js) for the dygraphs JavaScript binding that takes advantage of instance data.
 
 ## Passing JavaScript functions
 
