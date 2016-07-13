@@ -48,7 +48,7 @@ addWidgetConstructor <- function(name, package, edit){
   } else {
     message(file_, " already exists")
   }
-  if (edit) file.edit(file_)
+  if (edit) fileEdit(file_)
 }
 
 addWidgetYAML <- function(name, bowerPkg, edit){
@@ -75,7 +75,7 @@ addWidgetYAML <- function(name, bowerPkg, edit){
   } else {
     message(file_, " already exists")
   }
-  if (edit) file.edit(file_)
+  if (edit) fileEdit(file_)
 }
 
 addWidgetJS <- function(name, edit){
@@ -91,7 +91,7 @@ addWidgetJS <- function(name, edit){
   } else {
     message(file_, " already exists")
   }
-  if (edit) file.edit(file_)
+  if (edit) fileEdit(file_)
 }
 
 # Install bower package to inst/htmlwidgets/lib
@@ -183,3 +183,11 @@ getMinified <- function(x, name, src = 'inst/htmlwidgets/lib'){
     }
   })
 }
+
+# invoke file.edit in a way that will bind to the RStudio editor
+# when running inside RStudio
+fileEdit <- function(file) {
+  fileEditFunc <- eval(parse(text = "file.edit"), envir = globalenv())
+  fileEditFunc(file)
+}
+
