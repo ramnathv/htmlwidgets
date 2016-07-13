@@ -93,21 +93,22 @@ Every JavaScript library handles dynamic sizing a bit differently. Some do it au
 
 ```javascript
 HTMLWidgets.widget({
-  
+
   name: "demo",
   
   type: "output",
   
-  initialize: function(el, width, height) {
+  factory: function(el, width, height) {
   
-  },
-
-  renderValue: function(el, x, instance) {
-    
-  },
-
-  resize: function(el, width, height, instance) { 
-  
+    return {
+      renderValue: function(x) {
+      
+      },
+      
+      resize: function(width, height) {
+        
+      }
+    };
   }
 });
 ```
@@ -121,9 +122,9 @@ What you do with the passed width and height is up to you and depends on the re-
 In the [dygraphs](http://rstudio.github.io/dygraphs) widget the implementation of re-sizing is relatively simple since the **dygraphs** library includes a resize() method to automatically size the graph to it's enclosing HTML element:
 
 ```javascript
-resize: function(el, width, height, instance) {
-  if (instance.dygraph)
-    instance.dygraph.resize();
+resize: function(width, height) {
+  if (dygraph)
+    dygraph.resize();
 }
 ```
 
@@ -132,31 +133,33 @@ resize: function(el, width, height, instance) {
 In the [forceNetwork](http://christophergandrud.github.io/networkD3/#force) widget, the passed width and height are applied to the `<svg>` element that hosts the d3 network visualization, as well as forwarded on to the underlying d3 force simulation object:
 
 ```javascript
-initialize: function(el, width, height) {
+factory: function(el, width, height) {
+
+  // instance data
+  var el = el;
+  var force = d3.layout.force();
 
   d3.select(el).append("svg")
-      .attr("width", width)
-      .attr("height", height);
-
+    .attr("width", width)
+    .attr("height", height);
+      
   return {
-    force: d3.layout.force();
-  }
-  
-},
+    renderValue: function(x) {
+      // implementation excluded
+    },
+      
+    resize: function(width, height) {
+         
+      d3.select(el).select("svg")
+        .attr("width", width)
+        .attr("height", height);
 
-resize: function(el, width, height, instance) {
-
-  d3.select(el).select("svg")
-      .attr("width", width)
-      .attr("height", height);
-
-  instance.force.size([width, height]).resume();
-  
-},
+      force.size([width, height]).resume();
+    }
+  };
+}
 ```
 
 As you can see, re-sizing is handled in a wide variety of fashions in different JavaScript libraries. The `resize` method is intended to provide a flexible way to map the automatic sizing logic of **htmlwidgets** directly into the underlying library.
 
-A final note: you may have noticed the `instance` parameter passed to the resize method in the examples above. This is a special variable used to track instance specific widget data (the Dygraph object and the d3 force object, respectively). Utilizing per-widget instance data is covered in the 
-[advanced topics](develop_advanced.html) article.
 

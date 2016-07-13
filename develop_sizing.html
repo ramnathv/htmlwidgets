@@ -397,21 +397,22 @@ $(document).ready(function () {
 <p>Specifying a sizing policy allows htmlwidgets to calculate the width and height of your widget based on where it’s being displayed. However, you still need to forward this sizing information on to the underlying JavaScript library you are creating a widget for.</p>
 <p>Every JavaScript library handles dynamic sizing a bit differently. Some do it automatically, some have a resize() call to force a layout, and some require that size be set only along with data and other options. Whatever the case, the <strong>htmlwidgets</strong> framework will pass the computed sizes to both your <code>initialize</code> function and <code>resize</code> function. Here’s an empty JavaScript binding that illustrates:</p>
 <div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="va">HTMLWidgets</span>.<span class="at">widget</span>(<span class="op">{</span>
-  
+
   <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;demo&quot;</span><span class="op">,</span>
   
   <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;output&quot;</span><span class="op">,</span>
   
-  <span class="dt">initialize</span><span class="op">:</span> <span class="kw">function</span>(el<span class="op">,</span> width<span class="op">,</span> height) <span class="op">{</span>
+  <span class="dt">factory</span><span class="op">:</span> <span class="kw">function</span>(el<span class="op">,</span> width<span class="op">,</span> height) <span class="op">{</span>
   
-  <span class="op">},</span>
-
-  <span class="dt">renderValue</span><span class="op">:</span> <span class="kw">function</span>(el<span class="op">,</span> x<span class="op">,</span> instance) <span class="op">{</span>
-    
-  <span class="op">},</span>
-
-  <span class="dt">resize</span><span class="op">:</span> <span class="kw">function</span>(el<span class="op">,</span> width<span class="op">,</span> height<span class="op">,</span> instance) <span class="op">{</span> 
-  
+    <span class="cf">return</span> <span class="op">{</span>
+      <span class="dt">renderValue</span><span class="op">:</span> <span class="kw">function</span>(x) <span class="op">{</span>
+      
+      <span class="op">},</span>
+      
+      <span class="dt">resize</span><span class="op">:</span> <span class="kw">function</span>(width<span class="op">,</span> height) <span class="op">{</span>
+        
+      <span class="op">}</span>
+    <span class="op">};</span>
   <span class="op">}</span>
 <span class="op">}</span>)<span class="op">;</span></code></pre></div>
 <p>What you do with the passed width and height is up to you and depends on the re-sizing semantics of the underlying JavaScript library you are creating a widget for. A couple of illustrative examples are included in the next section.</p>
@@ -420,37 +421,40 @@ $(document).ready(function () {
 <div id="dygraphs" class="section level4">
 <h4>dygraphs</h4>
 <p>In the <a href="http://rstudio.github.io/dygraphs">dygraphs</a> widget the implementation of re-sizing is relatively simple since the <strong>dygraphs</strong> library includes a resize() method to automatically size the graph to it’s enclosing HTML element:</p>
-<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript">resize<span class="op">:</span> <span class="kw">function</span>(el<span class="op">,</span> width<span class="op">,</span> height<span class="op">,</span> instance) <span class="op">{</span>
-  <span class="cf">if</span> (<span class="va">instance</span>.<span class="at">dygraph</span>)
-    <span class="va">instance</span>.<span class="va">dygraph</span>.<span class="at">resize</span>()<span class="op">;</span>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript">resize<span class="op">:</span> <span class="kw">function</span>(width<span class="op">,</span> height) <span class="op">{</span>
+  <span class="cf">if</span> (dygraph)
+    <span class="va">dygraph</span>.<span class="at">resize</span>()<span class="op">;</span>
 <span class="op">}</span></code></pre></div>
 </div>
 <div id="forcenetwork" class="section level4">
 <h4>forceNetwork</h4>
 <p>In the <a href="http://christophergandrud.github.io/networkD3/#force">forceNetwork</a> widget, the passed width and height are applied to the <code>&lt;svg&gt;</code> element that hosts the d3 network visualization, as well as forwarded on to the underlying d3 force simulation object:</p>
-<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript">initialize<span class="op">:</span> <span class="kw">function</span>(el<span class="op">,</span> width<span class="op">,</span> height) <span class="op">{</span>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript">factory<span class="op">:</span> <span class="kw">function</span>(el<span class="op">,</span> width<span class="op">,</span> height) <span class="op">{</span>
+
+  <span class="co">// instance data</span>
+  <span class="kw">var</span> el <span class="op">=</span> el<span class="op">;</span>
+  <span class="kw">var</span> force <span class="op">=</span> <span class="va">d3</span>.<span class="va">layout</span>.<span class="at">force</span>()<span class="op">;</span>
 
   <span class="va">d3</span>.<span class="at">select</span>(el).<span class="at">append</span>(<span class="st">&quot;svg&quot;</span>)
-      .<span class="at">attr</span>(<span class="st">&quot;width&quot;</span><span class="op">,</span> width)
-      .<span class="at">attr</span>(<span class="st">&quot;height&quot;</span><span class="op">,</span> height)<span class="op">;</span>
-
+    .<span class="at">attr</span>(<span class="st">&quot;width&quot;</span><span class="op">,</span> width)
+    .<span class="at">attr</span>(<span class="st">&quot;height&quot;</span><span class="op">,</span> height)<span class="op">;</span>
+      
   <span class="cf">return</span> <span class="op">{</span>
-    <span class="dt">force</span><span class="op">:</span> <span class="va">d3</span>.<span class="va">layout</span>.<span class="at">force</span>()<span class="op">;</span>
-  <span class="op">}</span>
-  
-<span class="op">},</span>
+    <span class="dt">renderValue</span><span class="op">:</span> <span class="kw">function</span>(x) <span class="op">{</span>
+      <span class="co">// implementation excluded</span>
+    <span class="op">},</span>
+      
+    <span class="dt">resize</span><span class="op">:</span> <span class="kw">function</span>(width<span class="op">,</span> height) <span class="op">{</span>
+         
+      <span class="va">d3</span>.<span class="at">select</span>(el).<span class="at">select</span>(<span class="st">&quot;svg&quot;</span>)
+        .<span class="at">attr</span>(<span class="st">&quot;width&quot;</span><span class="op">,</span> width)
+        .<span class="at">attr</span>(<span class="st">&quot;height&quot;</span><span class="op">,</span> height)<span class="op">;</span>
 
-resize<span class="op">:</span> <span class="kw">function</span>(el<span class="op">,</span> width<span class="op">,</span> height<span class="op">,</span> instance) <span class="op">{</span>
-
-  <span class="va">d3</span>.<span class="at">select</span>(el).<span class="at">select</span>(<span class="st">&quot;svg&quot;</span>)
-      .<span class="at">attr</span>(<span class="st">&quot;width&quot;</span><span class="op">,</span> width)
-      .<span class="at">attr</span>(<span class="st">&quot;height&quot;</span><span class="op">,</span> height)<span class="op">;</span>
-
-  <span class="va">instance</span>.<span class="va">force</span>.<span class="at">size</span>([width<span class="op">,</span> height]).<span class="at">resume</span>()<span class="op">;</span>
-  
-<span class="op">},</span></code></pre></div>
+      <span class="va">force</span>.<span class="at">size</span>([width<span class="op">,</span> height]).<span class="at">resume</span>()<span class="op">;</span>
+    <span class="op">}</span>
+  <span class="op">};</span>
+<span class="op">}</span></code></pre></div>
 <p>As you can see, re-sizing is handled in a wide variety of fashions in different JavaScript libraries. The <code>resize</code> method is intended to provide a flexible way to map the automatic sizing logic of <strong>htmlwidgets</strong> directly into the underlying library.</p>
-<p>A final note: you may have noticed the <code>instance</code> parameter passed to the resize method in the examples above. This is a special variable used to track instance specific widget data (the Dygraph object and the d3 force object, respectively). Utilizing per-widget instance data is covered in the <a href="develop_advanced.html">advanced topics</a> article.</p>
 </div>
 </div>
 </div>

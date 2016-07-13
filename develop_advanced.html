@@ -263,7 +263,6 @@ $(document).ready(function () {
 <li><a href="#htmlwidgets.transposearray2d">HTMLWidgets.transposeArray2D()</a></li>
 <li><a href="#custom-json-serializer">Custom JSON serializer</a></li>
 </ul></li>
-<li><a href="#widget-instance-data">Widget instance data</a></li>
 <li><a href="#passing-javascript-functions">Passing JavaScript functions</a></li>
 <li><a href="#custom-widget-html">Custom widget HTML</a></li>
 </ul>
@@ -318,7 +317,7 @@ $(document).ready(function () {
   }
 ] </code></pre>
 <p>As a real example, the <a href="http://christophergandrud.github.io/networkD3/#simple">simpleNetwork</a> widget accepts a data frame containing network links on the R side, then transforms it to a d3 representation within the JavaScript <code>renderValue</code> function:</p>
-<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript">renderValue<span class="op">:</span> <span class="kw">function</span>(el<span class="op">,</span> x<span class="op">,</span> instance) <span class="op">{</span>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript">renderValue<span class="op">:</span> <span class="kw">function</span>(x) <span class="op">{</span>
 
   <span class="co">// convert links data frame to d3 friendly format</span>
   <span class="kw">var</span> links <span class="op">=</span> <span class="va">HTMLWidgets</span>.<span class="at">dataframeToD3</span>(<span class="va">x</span>.<span class="at">links</span>)<span class="op">;</span>
@@ -349,12 +348,12 @@ $(document).ready(function () {
   [5, 3.4, 1.5, 0.2, &quot;setosa&quot;]
 ] </code></pre>
 <p>As a real example, the <a href="http://rstudio.github.io/dygraphs">dygraphs</a> widget uses this function to transpose the “file” (data) argument it gets from the R side before passing it on to the dygraphs library:</p>
-<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript">renderValue<span class="op">:</span> <span class="kw">function</span>(el<span class="op">,</span> x<span class="op">,</span> instance) <span class="op">{</span>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript">renderValue<span class="op">:</span> <span class="kw">function</span>(x) <span class="op">{</span>
    
     <span class="co">// ... code excluded ...</span>
     
     <span class="co">// transpose array</span>
-    <span class="va">attrs</span>.<span class="at">file</span> <span class="op">=</span> <span class="va">HTMLWidgets</span>.<span class="at">transposeArray2D</span>(<span class="va">attrs</span>.<span class="at">file</span>)<span class="op">;</span>
+    <span class="va">x</span>.<span class="va">attrs</span>.<span class="at">file</span> <span class="op">=</span> <span class="va">HTMLWidgets</span>.<span class="at">transposeArray2D</span>(<span class="va">x</span>.<span class="va">attrs</span>.<span class="at">file</span>)<span class="op">;</span>
     
     <span class="co">// ... more code excluded ...</span>
 <span class="op">}</span></code></pre></div>
@@ -406,31 +405,6 @@ $(document).ready(function () {
 </ol>
 <p>Note these features about custom JSON serializers require the <strong>shiny</strong> version to be greater than 0.11.1 if you render the widgets in Shiny apps.</p>
 </div>
-</div>
-<div id="widget-instance-data" class="section level2">
-<h2>Widget instance data</h2>
-<p>You may have noticed that the JavaScript binding for a widget consists of a set of JavaScript functions rather than a class which has its own instance data. Many widgets do not require instance data, but if yours does (e.g. you need to save a JS library provided object, reference to a DOM element, or any other computed data) there is a mechanism available to do so.</p>
-<p>Here is how it works: return an object from the <code>initialize</code> method and that object will subsequently be passed to the <code>renderValue</code> and <code>resize</code> methods. For example:</p>
-<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="va">HTMLWidgets</span>.<span class="at">widget</span>(<span class="op">{</span>
-  
-  <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;demo&quot;</span><span class="op">,</span>
-  
-  <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;output&quot;</span><span class="op">,</span>
-  
-  <span class="dt">initialize</span><span class="op">:</span> <span class="kw">function</span>(el<span class="op">,</span> width<span class="op">,</span> height) <span class="op">{</span>
-    <span class="co">// object we&#39;ll use for instance data</span>
-    <span class="cf">return</span> <span class="op">{};</span>
-  <span class="op">},</span>
-
-  <span class="dt">renderValue</span><span class="op">:</span> <span class="kw">function</span>(el<span class="op">,</span> x<span class="op">,</span> instance) <span class="op">{</span>
-    <span class="co">// access instance as necessary</span>
-  <span class="op">},</span>
-
-  <span class="dt">resize</span><span class="op">:</span> <span class="kw">function</span>(el<span class="op">,</span> width<span class="op">,</span> height<span class="op">,</span> instance) <span class="op">{</span> 
-    <span class="co">// access instance as necessary</span>
-  <span class="op">}</span>
-<span class="op">}</span>)<span class="op">;</span></code></pre></div>
-<p>A real-life example of using instance data is in the <a href="http://rstudio.github.io/dygraphs">dygraphs</a> widget, which uses the instance to store the actual Dygraph object for later manipulation. You can see <a href="https://github.com/rstudio/dygraphs/blob/master/inst/htmlwidgets/dygraphs.js">the code</a> for the dygraphs JavaScript binding that takes advantage of instance data.</p>
 </div>
 <div id="passing-javascript-functions" class="section level2">
 <h2>Passing JavaScript functions</h2>
