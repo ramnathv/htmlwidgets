@@ -1,4 +1,4 @@
-htmlwidgets 0.7 (unreleased)
+htmlwidgets 0.7
 -----------------------------------------------------------------------
 
 * Pass knitr options to saveWidget
