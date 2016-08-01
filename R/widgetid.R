@@ -18,7 +18,7 @@ setWidgetIdSeed <- function(seed, kind = NULL, normal.kind = NULL) {
 }
 
 # create a new unique widget id
-createWidgetId <- function(bytes = 8) {
+createWidgetId <- function(bytes = 10) {
 
   # Note what the system's random seed is before we start, so we can restore it after
   sysSeed <- .GlobalEnv$.Random.seed
