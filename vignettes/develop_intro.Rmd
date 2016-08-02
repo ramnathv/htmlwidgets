@@ -15,7 +15,7 @@ vignette: >
 
 ## Overview
 
-The **[htmlwidgets](https://cran.r-project.org/web/packages/htmlwidgets/index.html)** package provides a framework for creating R bindings to JavaScript libraries. HTML Widgets can be:
+The **[htmlwidgets](https://cran.r-project.org/package=htmlwidgets)** package provides a framework for creating R bindings to JavaScript libraries. HTML Widgets can be:
 
 * Used at the R console for data analysis just like conventional R plots.
 * Embedded within [R Markdown](http://rmarkdown.rstudio.com) documents
