@@ -143,6 +143,10 @@ You may find it necessary to customize the JSON serialization of widget data whe
 
 Note these features about custom JSON serializers require the **shiny** version to be greater than 0.11.1 if you render the widgets in Shiny apps.
 
+## Preserving Widget State
+
+Many htmlwidgets allow the user to alter the appearance of the widget using the user's mouse.  Ordinarily these changes are lost when the web page is closed.  However if a htmlwidget wants its state preserved then it can use the `stateChanged` function that is passed as an extra parameter to its `factory` function.  Anything passed to this function will be given back to the object when it is next loaded, via an extra `state` parameter given to `renderValue`.
+
 ## Passing JavaScript functions
 
 As you would expect, character vectors passed from R to JavaScript are converted to JavaScript strings. However, what if you want to allow users to provide custom JavaScript functions for formatting, drawing, or event handling? For this case, the **htmlwidgets** package includes a `JS()` function that allows you to request that a character value is evaluated as JavaScript when it is received on the client.
