@@ -555,11 +555,19 @@
           return;
         el.className = el.className + " html-widget-static-bound";
 
+        var localStorageKey = 'htmlwidget.'+el.id+'.state'
+        var widgetStateChanged = function(state) {
+          if (state && window.localStorage)
+            window.localStorage.setItem(localStorageKey, state.toString())
+        }
+        var initialState = window.localStorage ? window.localStorage.getItem(localStorageKey) : null;
+
         var initResult;
         if (binding.initialize) {
           initResult = binding.initialize(el,
             sizeObj ? sizeObj.getWidth() : el.offsetWidth,
-            sizeObj ? sizeObj.getHeight() : el.offsetHeight
+            sizeObj ? sizeObj.getHeight() : el.offsetHeight,
+            widgetStateChanged
           );
           elementData(el, "init_result", initResult);
         }
@@ -622,7 +630,7 @@
           for (var k = 0; data.evals && k < data.evals.length; k++) {
             window.HTMLWidgets.evaluateStringMember(data.x, data.evals[k]);
           }
-          binding.renderValue(el, data.x, initResult);
+          binding.renderValue(el, data.x, initResult, initialState);
           evalAndRun(data.jsHooks.render, initResult, [el, data.x]);
         }
       });
@@ -812,11 +820,11 @@
     var result = {
       name: defn.name,
       type: defn.type,
-      initialize: function(el, width, height) {
-        return defn.factory(el, width, height);
+      initialize: function(el, width, height, stateChanged) {
+        return defn.factory(el, width, height, stateChanged);
       },
-      renderValue: function(el, x, instance) {
-        return instance.renderValue(x);
+      renderValue: function(el, x, instance, state) {
+        return instance.renderValue(x, state);
       },
       resize: function(el, width, height, instance) {
         return instance.resize(width, height);
