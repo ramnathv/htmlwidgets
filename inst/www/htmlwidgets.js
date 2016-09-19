@@ -557,10 +557,20 @@
 
         var localStorageKey = 'htmlwidget.'+el.id+'.state'
         var widgetStateChanged = function(state) {
-          if (state && window.localStorage)
-            window.localStorage.setItem(localStorageKey, state.toString())
+          if (window.localStorage)
+            else
+              if (state)
+                window.localStorage.setItem(localStorageKey, state.toString())
+              else
+                window.localStorage.removeItem(localStorageKey)
         }
-        var initialState = window.localStorage ? window.localStorage.getItem(localStorageKey) : null;
+        var initialState;
+        var initialStateData = document.querySelector("script[data-for='" + el.id + "'][type='application/htmlwidget-state']");
+        if (initialStateData) {
+          initialState = JSON.parse(initialStateData.textContent || initialStateData.text);
+        } else {
+          var initialState = window.localStorage ? window.localStorage.getItem(localStorageKey) : null;
+        }
 
         var initResult;
         if (binding.initialize) {
