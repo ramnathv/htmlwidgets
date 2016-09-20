@@ -558,6 +558,8 @@
         var localStorageKey = 'htmlwidget.'+el.id+'.state'
         var widgetStateChanged = function(state) {
           if (window.localStorage)
+            if (window.HTMLWidgets.stateChangedHook)
+              window.HTMLWidgets.stateChangedHook(state)
             else
               if (state)
                 window.localStorage.setItem(localStorageKey, state.toString())
