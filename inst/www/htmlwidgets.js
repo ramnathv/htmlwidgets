@@ -562,7 +562,7 @@
           } else {
             if (window.localStorage) {
               if (state)
-                window.localStorage.setItem(localStorageKey, state.toString())
+                window.localStorage.setItem(localStorageKey, JSON.stringify(state))
               else
                 window.localStorage.removeItem(localStorageKey)
             }
@@ -573,7 +573,7 @@
         if (initialStateData) {
           initialState = JSON.parse(initialStateData.textContent || initialStateData.text);
         } else {
-          var initialState = window.localStorage ? window.localStorage.getItem(localStorageKey) : null;
+          initialState = window.localStorage ? JSON.parse(window.localStorage.getItem(localStorageKey)) : null;
         }
 
         var initResult;
