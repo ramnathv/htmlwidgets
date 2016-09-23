@@ -12,7 +12,10 @@ setWidgetIdSeed <- function(seed, kind = NULL, normal.kind = NULL) {
   sysSeed <- .GlobalEnv$.Random.seed
   on.exit({
     .globals$idSeed <- .GlobalEnv$.Random.seed
-    .GlobalEnv$.Random.seed <- sysSeed
+    if (!is.null(sysSeed))
+      .GlobalEnv$.Random.seed <- sysSeed
+    else
+      rm(".Random.seed", envir = .GlobalEnv)
   })
   set.seed(seed, kind = kind, normal.kind = normal.kind)
 }
