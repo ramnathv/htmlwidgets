@@ -1,3 +1,9 @@
+htmlwidgets 0.8 (unreleased)
+-----------------------------------------------------------------------
+
+* `onRender` hooks were firing too early when used in Shiny apps.
+
+
 htmlwidgets 0.7
 -----------------------------------------------------------------------
 
