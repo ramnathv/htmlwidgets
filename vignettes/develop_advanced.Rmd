@@ -184,6 +184,9 @@ HTMLWidgets.widget({
 });
 ```
 
+### Support for Preserving Widget State
+Widget state will be preserved in browser local storage when you export your widget to a static web page.  Other types of containers (e.g. Shiny) will need to provide their own storage system.
+
 ## Passing JavaScript functions
 
 As you would expect, character vectors passed from R to JavaScript are converted to JavaScript strings. However, what if you want to allow users to provide custom JavaScript functions for formatting, drawing, or event handling? For this case, the **htmlwidgets** package includes a `JS()` function that allows you to request that a character value is evaluated as JavaScript when it is received on the client.
