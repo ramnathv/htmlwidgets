@@ -226,7 +226,9 @@ widget_html <- function(name, package, id, style, class, inline = FALSE, ...){
 
   # call the custom function if we have one, otherwise create a div
   if (is.function(fn)) {
-    fn(id = id, style = style, class = class, ...)
+    renderTags(
+      fn(id = id, style = style, class = class, ...)
+    )
   } else if (inline) {
     tags$span(id = id, style = style, class = class)
   } else {
