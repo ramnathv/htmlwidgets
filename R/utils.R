@@ -34,6 +34,11 @@ toJSON <- function(x) {
   structure(res, class = 'json')
 }
 
+#' Get js and css dependencies for  a htmlwidget
+#'
+#' @param name name of the widget.
+#' @param package name of the package, defaults to the widget name.
+#' @export
 getDependency <- function(name, package = name){
   config = sprintf("htmlwidgets/%s.yaml", name)
   jsfile = sprintf("htmlwidgets/%s.js", name)
