@@ -83,7 +83,7 @@ dependencies:
       - plugins/sigma.parsers.gexf.min.js
 ```
 
-The dependency `src` specification refers to the directory that contains the library and `script` refers to specific JavaScript files. If your library contains multiple JavaScript files specify each one on a line beginning with `-` as shown here. You can also add `stylesheet` entries and even `meta` or `head` entries. Multiple dependencies may be specified in one YAML file. See the documentation on the `htmlDependency` function in the [**htmltools**](http://cran.r-project.org/package=htmltools) package for additional details.
+The dependency `src` specification refers to the directory that contains the library and `script` refers to specific JavaScript files. If your library contains multiple JavaScript files specify each one on a line beginning with `-` as shown here. You can also add `stylesheet` entries and even `meta` or `head` entries. Multiple dependencies may be specified in one YAML file. See the documentation on the `htmlDependency` function in the [**htmltools**](https://cran.r-project.org/package=htmltools) package for additional details.
 
 ### R binding
 
@@ -272,7 +272,7 @@ To create a new widget you can call the `scaffoldWidget` function to generate th
 
 * Create the .R, .js, and .yaml files required for your widget;
 
-* If provided, take a [Bower](http://bower.io/) package name and automatically download the JavaScript library (and its dependencies) and add the required entries to the .yaml file.
+* If provided, take a [Bower](https://bower.io/) package name and automatically download the JavaScript library (and its dependencies) and add the required entries to the .yaml file.
 
 This method is highly recommended as it ensures that you get started with the right file structure. Here's an example that assumes you want to create a widget named 'mywidget' in a new package of the same name:
 

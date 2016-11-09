@@ -19,7 +19,7 @@ In the spirit of HTML widgets working just like plots in R, it's important that 
 
 This sizing mechanism is designed to address the following constraints that affect the natural size of a widget:
 
-- **The kind of widget it is.** Some widgets may only be designed to look good at small, fixed sizes (like [sparklines](https://github.com/htmlwidgets/sparkline)) while other widgets may want every pixel that can be spared (like [network graphs](http://christophergandrud.github.io/d3Network/)).
+- **The kind of widget it is.** Some widgets may only be designed to look good at small, fixed sizes (like [sparklines](https://github.com/htmlwidgets/sparkline)) while other widgets may want every pixel that can be spared (like [network graphs](http://christophergandrud.github.io/networkD3/)).
 
 - **The context into which the widget is rendered.** While a given widget might look great at 960px by 480px in an R Markdown document, the same widget would look silly at that size in the RStudio Viewer pane, which is typically much smaller.
 

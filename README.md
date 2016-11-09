@@ -9,10 +9,10 @@ The **htmlwidgets** package provides a framework for easily creating R bindings 
 There are already several R packages based on **htmlwidgets**, including:
 
 * [leaflet](https://github.com/rstudio/leaflet) -- Interactive maps with OpenStreetMap
-* [dygraphs](http://rstudio.github.io/dygraphs/) --- Interactive time series visualization
-* [networkD3](http://christophergandrud.github.io/networkD3/) --- Network visualization with D3
-* [sparkline](https://github.com/htmlwidgets/sparkline) --- Small inline charts
-* [DT](http://rstudio.github.io/DT/) --- Tabular data via DataTables
+* [dygraphs](https://rstudio.github.io/dygraphs/) --- Interactive time series visualization
+* [networkD3](https://christophergandrud.github.io/networkD3/) --- Network visualization with D3
+* [sparkline](httpss://github.com/htmlwidgets/sparkline) --- Small inline charts
+* [DT](https://rstudio.github.io/DT/) --- Tabular data via DataTables
 * [rthreejs](https://github.com/bwlewis/rthreejs) -- Interactive 3D graphics
 
 The package was created in collaboration by Ramnath Vaidyanathan, Joe Cheng, JJ Allaire, Yihui Xie, and Kenton Russell. We've all spent countless hours building bindings between R and the web, and were motivated to create a framework that made this as easy as possible for all R developers. 
