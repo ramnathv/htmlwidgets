@@ -448,7 +448,14 @@ checkShinyVersion <- function(error = TRUE) {
     f("Please upgrade the 'shiny' package to (at least) version ", v)
 }
 
-# Helper function to create payload
+#' Create payload for conversion into JSON and to then run in the
+#' the browser.
+#'
+#' @param instance An htmlwidget.
+#'
+#' @return Something on which to call toJSON and give to the browser.
+#'
+#' @export
 createPayload <- function(instance){
   if (!is.null(instance$preRenderHook)){
     instance <- instance$preRenderHook(instance)
