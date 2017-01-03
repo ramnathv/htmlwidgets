@@ -1,0 +1,125 @@
+#' Scaffold simple widgets
+#'
+#' @export
+scaffoldSimpleWidget <- function(name, bowerPkg = NULL, edit = interactive(),
+    dir_){
+  if (!file.exists(dir_)){
+    dir.create(dir_)
+    dir.create(file.path(dir_, 'htmlwidgets'))
+    cwd = getwd(); setwd(dir_);
+  }
+	dir_ = "."
+  package = normalizePath(dir_)
+
+  tpl <- paste(readLines(
+  	system.file('templates/widget_r.txt', package = 'htmlwidgets')
+  ), collapse = "\n")
+
+  capName = function(name){
+    paste0(toupper(substring(name, 1, 1)), substring(name, 2))
+  }
+  if (!file.exists(file_ <- file.path(dir_, paste0(name, '.R')))){
+    cat(
+      sprintf(tpl, name, name, package, name, name, name, name, name, name,
+              package, name, capName(name), name),
+      file = file_
+    )
+    message('Created boilerplate for widget constructor ', file_)
+  } else {
+    message(file_, " already exists")
+  }
+  if (edit) fileEdit(file_)
+  tpl <- "# (uncomment to add a dependency)
+  # dependencies:
+  #  - name:
+  #    version:
+  #    src:
+  #    script:
+  #    stylesheet:
+  "
+  if (!is.null(bowerPkg)){
+  	installBowerPkg(bowerPkg, simple = TRUE)
+  	tpl <- getConfig(bowerPkg, src = 'htmlwidgets/lib')
+  }
+  if (!file.exists(file_ <- sprintf('%s/htmlwidgets/%s.yaml', dir_, name))){
+    cat(paste(tpl, "\n"), file = file_)
+    message('Created boilerplate for widget dependencies at ',
+      sprintf('%s/htmlwidgets/%s.yaml', dir_, name)
+    )
+  } else {
+    message(file_, " already exists")
+  }
+  if (edit) fileEdit(file_)
+
+  tpl <- paste(readLines(
+  	system.file('templates/widget_js.txt', package = 'htmlwidgets')
+  ), collapse = "\n")
+
+  if (!file.exists(file_ <- sprintf('%s/htmlwidgets/%s.js', dir_, name))){
+    cat(sprintf(tpl, name), file = file_)
+    message('Created boilerplate for widget dependencies at ',
+      sprintf('%s/htmlwidgets/%s.js', dir_, name)
+    )
+  } else {
+    message(file_, " already exists")
+  }
+
+  if (!file.exists('index.R')){
+  	x = sprintf("source('%s.R')\nhtml <- %s('World')", name, name)
+  	cat(x, file = file.path(dir_, "index.R"))
+  }
+  if (!file.exists("Makefile")){
+  	f <- system.file('templates/Makefile', package = 'htmlwidgets')
+  	f2 <- gsub('hello', name, paste(readLines(f), collapse = '\n'))
+  	cat(f2, file = file.path(dir_, 'Makefile'))
+  }
+  if (edit) fileEdit(file_)
+  if (edit){
+  	fileEdit('index.R')
+    servr::make()
+  } else {
+  	on.exit(setwd(cwd))
+  }
+}
+
+#' Save simple widget html
+#'
+#' @export
+save_html2 <- function (html, file = 'index.html', background = "white", libdir = "."){
+  options(htmlwidgets.copybindingdir = FALSE)
+  on.exit(options(htmlwidgets.copybindingdir = TRUE))
+  rendered <- renderTags(html)
+  deps <- lapply(rendered$dependencies, function(dep) {
+    dep <- if (dep$name == 'htmlwidgets'){
+      dep <- copyDependencyToDir(dep, file.path(libdir, 'htmlwidgets'), FALSE)
+      dep <- makeDependencyRelative(dep, libdir, FALSE)
+    } else {
+      dep <- makeDependencyRelative(dep, libdir, FALSE)
+    }
+    dep
+  })
+  html <- c("<!DOCTYPE html>", "<html>", "<head>", "<meta charset=\"utf-8\"/>",
+    renderDependencies(deps, c("href", "file")), rendered$head,
+    "</head>", sprintf("<body style=\"background-color:%s;\">",
+    htmlEscape(background)), rendered$html, "</body>",
+    "</html>"
+  )
+  writeLines(html, file, useBytes = TRUE)
+}
+
+
+system_file <- function(..., package){
+  if (file.exists(package)){
+    file.path(package, ...)
+  } else {
+    system.file(..., package = package)
+  }
+}
+
+binding_version <- function(package){
+  if (file.exists(package)){
+    '0.1'
+  } else {
+    packageVersion(package)
+  }
+}
