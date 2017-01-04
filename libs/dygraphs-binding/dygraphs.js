@@ -136,11 +136,6 @@ HTMLWidgets.widget({
         if (x.plotter) {
           attrs.plotter = Dygraph.Plotters[x.plotter];
         }
-
-        // custom data handler
-        if (x.dataHandler) {
-          attrs.dataHandler = Dygraph.DataHandlers[x.dataHandler];
-        }
     
         // if there is no existing dygraph perform initialization
         if (!dygraph) {
@@ -391,11 +386,9 @@ HTMLWidgets.widget({
                        
         return function(millis) {
           var mmnt = moment(millis).tz(tz);
-          if (scale == "yearly")
-            return mmnt.format('YYYY') + ' (' + mmnt.zoneAbbr() + ')';
-          else if (scale == "quarterly")
-            return mmnt.fquarter(1) + ' (' + mmnt.zoneAbbr() + ')';
-            else if (scale == "monthly")
+            if (scale == "yearly")
+              return mmnt.format('YYYY') + ' (' + mmnt.zoneAbbr() + ')';
+            else if (scale == "monthly" || scale == "quarterly")
               return mmnt.format('MMM, YYYY')+ ' (' + mmnt.zoneAbbr() + ')';
             else if (scale == "daily" || scale == "weekly")
               return mmnt.format('MMM, DD, YYYY')+ ' (' + mmnt.zoneAbbr() + ')';
@@ -411,18 +404,16 @@ HTMLWidgets.widget({
                           
         return function(millis) {
           var date = new Date(millis);
-          if (scale == "yearly")
-            return date.getFullYear();
-          else if (scale == "quarterly")
-            return moment(millis).fquarter(1);
-          else if (scale == "monthly")
-            return monthNames[date.getMonth()] + ', ' + date.getFullYear(); 
-          else if (scale == "daily" || scale == "weekly")
-            return monthNames[date.getMonth()] + ', ' + 
-                              date.getDate() + ', ' + 
-                              date.getFullYear();
-          else
-            return date.toLocaleString();
+            if (scale == "yearly")
+              return date.getFullYear();
+            else if (scale == "monthly" || scale == "quarterly")
+              return monthNames[date.getMonth()] + ', ' + date.getFullYear(); 
+            else if (scale == "daily" || scale == "weekly")
+              return monthNames[date.getMonth()] + ', ' + 
+                               date.getDate() + ', ' + 
+                               date.getFullYear();
+            else
+              return date.toLocaleString();
         }
       },
       

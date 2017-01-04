@@ -30,11 +30,11 @@ if (!Function.prototype.bind) {
 //--------------------------------------------
 
 // for edges
-function resetEdges(edges){
+function resetEdges(edges, hideColor){
   var edgesHardToRead = edges.get({
     fields: ['id', 'color'],
     filter: function (item) {
-      return item.color === 'rgba(200,200,200,0.5)';
+      return item.color === hideColor;
     },
     returnType :'Array'
   });
@@ -184,13 +184,13 @@ function resetAllNodes(allNodes, update, nodes, groups, options){
 //--------------------------------------------
 
 // for classic node
-function simpleNodeAsHardToRead(node){
+function simpleNodeAsHardToRead(node, hideColor1, hideColor2){
   // saving color information (if we have)
-  if (node.hiddenColor === undefined & node.color !== 'rgba(200,200,200,0.5)') {
+  if (node.hiddenColor === undefined & node.color !== hideColor1 & node.color !== hideColor2) {
     node.hiddenColor = node.color;
   }
   // set "hard to read" color
-  node.color = 'rgba(200,200,200,0.5)';
+  node.color = hideColor1;
   // reset and save label
   if (node.hiddenLabel === undefined) {
     node.hiddenLabel = node.label;
@@ -199,12 +199,12 @@ function simpleNodeAsHardToRead(node){
 }
 
 // for icon node
-function iconsNodeAsHardToRead(node){
+function iconsNodeAsHardToRead(node, hideColor1, hideColor2){
   // individual information
   if(node.icon !== undefined){
     node.iconDefined = true;
 	// saving color information (if we have)
-    if (node.hiddenColor === undefined & node.icon.color !== 'rgba(200,200,200,0.5)') {
+    if (node.hiddenColor === undefined & node.color !== hideColor1 & node.color !== hideColor2) {
       node.hiddenColor = node.icon.color;
     }
   } else { // information in group : have to as individual
@@ -212,13 +212,13 @@ function iconsNodeAsHardToRead(node){
     node.iconDefined = false;
   }
   // set "hard to read" color
-  node.icon.color = 'rgba(200,200,200,0.5)';
+  node.icon.color = hideColor1;
   // for edges....saving color information (if we have)
-  if (node.hiddenColorForLabel === undefined & node.color !== 'rgba(200,200,200,0.5)') {
+  if (node.hiddenColorForLabel === undefined & node.color !== hideColor1 & node.color !== hideColor2) {
     node.hiddenColorForLabel = node.color;
   }
   // set "hard to read" color
-  node.color = 'rgba(200,200,200,0.5)';
+  node.color = hideColor1;
   // reset and save label
   if (node.hiddenLabel === undefined) {
     node.hiddenLabel = node.label;
@@ -227,13 +227,13 @@ function iconsNodeAsHardToRead(node){
 }
 
 // for image node
-function imageNodeAsHardToRead(node, type){
+function imageNodeAsHardToRead(node, type, hideColor1, hideColor2){
   // saving color information (if we have)
-  if (node.hiddenColor === undefined & node.color !== 'rgba(200,200,200,0.5)') {
+  if (node.hiddenColor === undefined & node.color !== hideColor1 & node.color !== hideColor2) {
     node.hiddenColor = node.color;
   }
   // set "hard to read" color
-  node.color = 'rgba(200,200,200,0.5)';
+  node.color = hideColor1;
   // reset and save label
   if (node.hiddenLabel === undefined) {
     node.hiddenLabel = node.label;
@@ -250,7 +250,7 @@ function imageNodeAsHardToRead(node, type){
 }
 
 // Global function to set one node as hard to read
-function nodeAsHardToRead(node, groups, options){
+function nodeAsHardToRead(node, groups, options, hideColor1, hideColor2){
   var final_shape;
   var shape_group = false;
   // have a group information & a shape defined in group ?
@@ -278,13 +278,13 @@ function nodeAsHardToRead(node, groups, options){
   }
   // and call good function
   if(final_shape === "icon"){
-    iconsNodeAsHardToRead(node);
+    iconsNodeAsHardToRead(node, hideColor1, hideColor2);
   } else if(final_shape === "image"){
-    imageNodeAsHardToRead(node, "image");
+    imageNodeAsHardToRead(node, "image", hideColor1, hideColor2);
   } else if(final_shape === "circularImage"){
-    imageNodeAsHardToRead(node, "circularImage");
+    imageNodeAsHardToRead(node, "circularImage", hideColor1, hideColor2);
   } else {
-    simpleNodeAsHardToRead(node);
+    simpleNodeAsHardToRead(node, hideColor1, hideColor2);
   }
   // finally set isHardToRead
   node.isHardToRead = true;
@@ -481,6 +481,16 @@ if (HTMLWidgets.shinyMode){
       var el = document.getElementById("graph"+data.id);
       if(el){
         var network = el.chart;
+        
+        // reset selection
+        document.getElementById("nodeSelect"+data.id).value = "";
+        document.getElementById("nodeSelect"+data.id).onchange();
+        
+        if(document.getElementById(data.id).selectActive === true){
+            document.getElementById("selectedBy"+data.id).value = "";
+            document.getElementById("selectedBy"+data.id).onchange();
+        }
+        
         network.unselectAll();
       }
   });
@@ -600,6 +610,9 @@ if (HTMLWidgets.shinyMode){
       // get container id
       var el = document.getElementById("graph"+data.id);
       if(el){
+        if(data.addCoordinates){
+          el.chart.storePositions();
+        }
         var current_nodes = el.nodes.getDataSet();
         // return data in shiny
         Shiny.onInputChange(data.input, current_nodes._data);
@@ -691,6 +704,7 @@ if (HTMLWidgets.shinyMode){
             document.getElementById(el.id).highlight = data.options.highlight.enabled;
             document.getElementById(el.id).degree = data.options.highlight.degree;
             document.getElementById(el.id).hoverNearest = data.options.highlight.hoverNearest;
+            document.getElementById(el.id).highlightColor = data.options.highlight.hideColor;
             document.getElementById(el.id).highlightAlgorithm = data.options.highlight.algorithm;
           }
 
@@ -699,6 +713,9 @@ if (HTMLWidgets.shinyMode){
             if(data.options.byselection.selected !== undefined){
               document.getElementById("selectedBy"+data.id).value = data.options.byselection.selected;
               document.getElementById("selectedBy"+data.id).onchange();
+            }
+            if(data.options.byselection.hideColor){
+              document.getElementById(el.id).byselectionColor = data.options.byselection.hideColor;
             }
           }
           
@@ -969,7 +986,6 @@ HTMLWidgets.widget({
   },
   
   renderValue: function(el, x, instance) {
-
     var data;
     var nodes;
     var edges;
@@ -987,7 +1003,7 @@ HTMLWidgets.widget({
     
     // legend control
     var addlegend = false;
-    
+
     // clear el.id (for shiny...)
     document.getElementById(el.id).innerHTML = "";  
     
@@ -1000,16 +1016,23 @@ HTMLWidgets.widget({
     
     if(x.highlight !== undefined){
       document.getElementById(el.id).highlight = x.highlight.enabled;
+      document.getElementById(el.id).highlightColor = x.highlight.hideColor;
       document.getElementById(el.id).hoverNearest = x.highlight.hoverNearest;
       document.getElementById(el.id).degree = x.highlight.degree;
       document.getElementById(el.id).highlightAlgorithm = x.highlight.algorithm;
     } else {
       document.getElementById(el.id).highlight = false;
       document.getElementById(el.id).hoverNearest = false;
+      document.getElementById(el.id).highlightColor = 'rgba(200,200,200,0.5)';
       document.getElementById(el.id).degree = 1;
       document.getElementById(el.id).highlightAlgorithm = "all";
     }
 
+    if(x.byselection.enabled){
+      document.getElementById(el.id).byselectionColor = x.byselection.hideColor;
+    } else {
+      document.getElementById(el.id).byselectionColor = 'rgba(200,200,200,0.5)';
+    }
     
     var changeInput = function(id, data) {
             Shiny.onInputChange(el.id + '_' + id, data);
@@ -1288,25 +1311,75 @@ HTMLWidgets.widget({
         }
       };
       
+      function range(start, length, step, rep){
+        var a=[], b=start;
+        while(a.length < length){
+          for (var i = 0; i < rep; i++){
+            a.push(b);
+            if(a.length === length){
+              break;
+            }
+          }
+          b+=step;
+        }
+        return a;
+      };
+      
       var mynetwork = document.getElementById('legend'+el.id);
-      var lx = - mynetwork.clientWidth / 2 + 50;
-      var ly = - mynetwork.clientHeight / 2 + 50;
-      var step = 70;
+      var lx = mynetwork.clientWidth / 2 + 50;
+      var ly = mynetwork.clientHeight / 2 + 50;
+      var edge_ly = ly;
+      var ncol = x.legend.ncol;
+      var step_x = x.legend.stepX;
+      var step_y = x.legend.stepY;
       var tmp_ly;
       var tmp_lx = lx;
       var tmp_lx2;
+      var all_tmp_y = [];
       if(tmp_lx === 0){
         tmp_lx = 1
       }
+      
+      // construct nodes data if needed
+      if(x.legend.nodes !== undefined){
+        if(x.legend.nodesToDataframe){ // data in data.frame
+          tmpnodes = visNetworkdataframeToD3(x.legend.nodes, "nodes")
+        } else { // data in list
+          tmpnodes = x.legend.nodes;
+        }
+        // only one element   
+        if(tmpnodes.length === undefined){
+          tmpnodes = new Array(tmpnodes);
+        }
+      }
+      
+      // array of y position 
+      if(x.groups && x.legend.useGroups && x.legend.nodes !== undefined){
+        all_tmp_y = range(ly, x.groups.length + tmpnodes.length, step_y, ncol);
+      } else if(x.groups && x.legend.useGroups && x.legend.nodes === undefined){
+        all_tmp_y = range(ly, x.groups.length, step_y, ncol);
+      } else if(x.legend.useGroups === false && x.legend.nodes !== undefined){
+        all_tmp_y = range(ly, tmpnodes.length, step_y, ncol);
+      }
+      
       // want to view groups in legend
       if(x.groups && x.legend.useGroups){
         // create data
         for (var g1 = 0; g1 < x.groups.length; g1++){
-          tmp_ly =ly+g1*step;
+          
+          if(g1 === 0){
+            tmp_lx = lx;
+          } else {
+            tmp_lx = lx + g1%ncol * step_x;
+          }
+          
+          tmp_ly = all_tmp_y[g1];
           if(tmp_ly === 0){
             tmp_ly = 1
           }
+          
           legendnodes.add({id: null, x : tmp_lx, y : tmp_ly, label: x.groups[g1], group: x.groups[g1], value: 1, mass:0});
+          edge_ly = tmp_ly;
         }
         // control icon size
         if(x.options.groups){
@@ -1320,29 +1393,36 @@ HTMLWidgets.widget({
       }
       // want to add custom nodes
       if(x.legend.nodes !== undefined){
-        if(x.legend.nodesToDataframe){ // data in data.frame
-          tmpnodes = visNetworkdataframeToD3(x.legend.nodes, "nodes")
-        } else { // data in list
-          tmpnodes = x.legend.nodes;
-        }
-        // only one element   
-        if(tmpnodes.length === undefined){
-          tmpnodes = new Array(tmpnodes);
-        }
+        
         // control icon
         for (var nd in tmpnodes){
           if(tmpnodes[nd].icon  && !x.legend.nodesToDataframe){
             tmpnodes[nd].icon.code = JSON.parse( '"'+'\\u' + tmpnodes[nd].icon.code + '"');
           }
         }
+        // group control for y
+        var add_gr_y = 0;
+        if(x.groups && x.legend.useGroups){
+          add_gr_y = x.groups.length;
+        }
         // set coordinates
         for (var g = 0; g < tmpnodes.length; g++){
-          tmpnodes[g].x = tmp_lx;
-          tmp_ly = ly+(g+legendnodes.length)*step;
+          if((g+legendnodes.length) === 0){
+            tmp_lx = lx;
+          } else {
+            tmp_lx = lx + (g+legendnodes.length)%ncol * step_x;
+          }
+          
+          tmp_ly = all_tmp_y[add_gr_y + g];
+          if(tmp_lx === 0){
+            tmp_lx = 1
+          }
           if(tmp_ly === 0){
             tmp_ly = 1
           }
+          tmpnodes[g].x = tmp_lx;
           tmpnodes[g].y = tmp_ly;
+          
           if(tmpnodes[g].value === undefined && tmpnodes[g].size === undefined){
             tmpnodes[g].value = 1;
           }
@@ -1350,6 +1430,7 @@ HTMLWidgets.widget({
             tmpnodes[g].id = null;
           }
           tmpnodes[g].mass = 0;
+          edge_ly = tmp_ly;
         }
         legendnodes.add(tmpnodes);
       }
@@ -1365,7 +1446,6 @@ HTMLWidgets.widget({
           legendedges = new Array(legendedges);
         }
 
-        var ctrl = legendnodes.length;
         // set coordinates and options
         for (var edg = 0; edg < (legendedges.length); edg++){
           
@@ -1383,24 +1463,29 @@ HTMLWidgets.widget({
             legendedges[edg].width = 1;
           }
 
-          tmp_ly = ly+ctrl*step;
+          tmp_ly = edge_ly + (edg+1)*step_y;
           if(tmp_ly === 0){
             tmp_ly = 1
           }
           
-          tmp_lx = lx - mynetwork.clientWidth/3;
+          if(ncol === 1){
+            tmp_lx = lx - mynetwork.clientWidth/3;
+            tmp_lx2 = lx + mynetwork.clientWidth/3;
+          } else {
+            tmp_lx = lx;
+            tmp_lx2 = lx + (ncol-1) * step_x;
+          }
+          
           if(tmp_lx === 0){
             tmp_lx = 1
           }
           
-          tmp_lx2 = lx + mynetwork.clientWidth/3;
           if(tmp_lx2 === 0){
             tmp_lx2 = 1
           }
           
           legendnodes.add({id: edg*2+1, x : tmp_lx, y : tmp_ly, size : 0.0001, hidden : false, shape : "square", mass:0});
           legendnodes.add({id: edg*2+2, x : tmp_lx2, y : tmp_ly, size : 0.0001, hidden : false, shape : "square", mass:0});
-          ctrl = ctrl+1;
         }
       }
       
@@ -1409,7 +1494,7 @@ HTMLWidgets.widget({
         nodes: legendnodes, 
         edges: legendedges       
       };
-          
+
       instance.legend = new vis.Network(document.getElementById("legend"+el.id), datalegend, optionslegend);
     }
     
@@ -1422,20 +1507,48 @@ HTMLWidgets.widget({
       nodes = new vis.DataSet();
       edges = new vis.DataSet();
       
-      var tmpnodes = visNetworkdataframeToD3(x.nodes, "nodes");
-      
+      var tmpnodes;
+      if(x.nodesToDataframe){ // data in data.frame
+        tmpnodes = visNetworkdataframeToD3(x.nodes, "nodes")
+      } else { // data in list
+        tmpnodes = x.nodes;
+      }
+      // only one element   
+      if(tmpnodes.length === undefined){
+        tmpnodes = new Array(tmpnodes);
+      }
+        
       // update coordinates if igraph
       if(x.igraphlayout !== undefined){
         // to improved
         var zoomLevel = -232.622349 / (tmpnodes.length + 91.165919)  +2.516861;
-        var factor = document.getElementById("graph"+el.id).clientWidth / 1890;
-        zoomLevel = zoomLevel/factor;
+        var igclientWidth = document.getElementById("graph"+el.id).clientWidth;
+        var scalex = 100;
+        var scaley = 100;
         
-        var scalex = (document.getElementById("graph"+el.id).clientWidth / 2) * zoomLevel;
-        var scaley = scalex;
-        if(x.igraphlayout.type !== "square"){
-          scaley = (document.getElementById("graph"+el.id).clientHeight / 2) * zoomLevel;
+        // current div visibled
+        if(igclientWidth !== 0){
+          var factor = igclientWidth / 1890;
+          zoomLevel = zoomLevel/factor;
+          var scalex = (igclientWidth / 2) * zoomLevel;
+          var scaley = scalex;
+          if(x.igraphlayout.type !== "square"){
+            scaley = (document.getElementById("graph"+el.id).clientHeight / 2) * zoomLevel;
+          }
+        } else {
+          // current div not visibled....
+          igclientWidth = parseInt(document.getElementById(el.id).style.width);
+          if(igclientWidth !== 0){
+            var factor = igclientWidth / 1890;
+            zoomLevel = zoomLevel/factor;
+            var scalex = (igclientWidth / 2) * zoomLevel;
+            var scaley = scalex;
+            if(x.igraphlayout.type !== "square"){
+              scaley = (parseInt(document.getElementById(el.id).style.height) / 2) * zoomLevel;
+            }
+          }
         }
+        
         for (var nd in tmpnodes) {
           tmpnodes[nd].x = tmpnodes[nd].x * scalex;
           tmpnodes[nd].y = tmpnodes[nd].y * scaley;
@@ -1443,8 +1556,19 @@ HTMLWidgets.widget({
       }
       
       nodes.add(tmpnodes);
-      edges.add(visNetworkdataframeToD3(x.edges, "edges"));
       
+      var tmpedges;
+      if(x.edgesToDataframe){ // data in data.frame
+        tmpedges = visNetworkdataframeToD3(x.edges, "edges")
+      } else { // data in list
+        tmpedges = x.edges;
+      }
+      // only one element   
+      if(tmpedges.length === undefined){
+        tmpedges = new Array(tmpedges);
+      }
+      edges.add(tmpedges);
+
       // reset tmpnodes
       tmpnodes = null;
       
@@ -1554,6 +1678,135 @@ HTMLWidgets.widget({
     // create network
     instance.network = new vis.Network(document.getElementById("graph"+el.id), data, options);
     
+    /////////
+    // popup
+    /////////
+    
+    // Temporary variables to hold mouse x-y pos.s
+    var tempX = 0
+    var tempY = 0
+
+    // Main function to retrieve mouse x-y pos.s
+    function getMouseXY(e) {
+      tempX = e.clientX
+      tempY = e.clientY
+      // catch possible negative values in NS
+      if (tempX < 0){tempX = 0}
+      if (tempY < 0){tempY = 0}
+    }
+
+    document.addEventListener('mousemove', getMouseXY);
+
+   //this.body.emitter.emit("showPopup",{id:this.popupObj.id,x:t.x+3,y:t.y-5}))
+
+    // popup for title
+    var popupState = false;
+    var popupTimeout = null;
+    var vispopup = document.createElement("div");
+    var popupStyle = 'position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2)'
+    if(x.tooltipStyle !== undefined){
+      popupStyle = x.tooltipStyle
+    }
+    var popupStay = 300;
+    if(x.tooltipStay !== undefined){
+      popupStay = x.tooltipStay
+    }
+    vispopup.setAttribute('style', popupStyle)
+    
+    document.getElementById("graph"+el.id).appendChild(vispopup);
+    
+    // add some event listeners to avoid it disappearing when the mouse if over it.
+    vispopup.addEventListener('mouseover',function () {
+      if (popupTimeout !== null) {
+        clearTimeout(popupTimeout);
+        popupTimeout = null;
+      }
+    });
+  
+    // set the timeout when the mouse leaves it.
+    vispopup.addEventListener('mouseout',function () {
+      if (popupTimeout === null) {
+        myHidePopup(100);
+      }
+    });
+    
+    // use the popup event to show
+    instance.network.on("showPopup", function(params) {
+      popupState = true;  
+      myShowPopup(params);
+    })
+  
+    // use the hide event to hide it
+    instance.network.on("hidePopup", function(params) {
+      // avoid double firing of this event, bug in 4.2.0
+      if (popupState === true) {
+        popupState = false;
+        myHidePopup(popupStay);
+      }
+    })
+  
+    // hiding the popup through css and a timeout
+    function myHidePopup(delay) {
+      popupTimeout = setTimeout(function() {vispopup.style.visibility = 'hidden';}, delay);
+    }
+  
+    // showing the popup
+    function myShowPopup(id) {
+      // get the data from the vis.DataSet
+      
+      var nodeData = nodes.get([id]);
+      
+      if(nodeData[0] !== null && nodeData[0] !== undefined){
+        
+        vispopup.innerHTML = nodeData[0].title;
+        /*
+        // get the position of the node
+        var posCanvas = instance.network.getPositions([id])[id];
+        // convert coordinates to the DOM space
+        var posDOM = instance.network.canvasToDOM(posCanvas);
+      
+        var height = vispopup.clientHeight;
+        var width = vispopup.clientWidth;
+        var maxHeight = document.getElementById("graph"+el.id).clientHeight;
+        var maxWidth = document.getElementById("graph"+el.id).clientWidth;
+        var padding = 5;
+        
+        var top = params.y - height;
+        if (top + height + padding > maxHeight) {
+          top = maxHeight - height - padding;
+        }
+        
+        if (top < padding) {
+          top = padding;
+        }
+
+        var left = params.x;
+        if (left + width + padding > maxWidth) {
+          left = maxWidth - width - padding;
+        }
+        
+        if (left < padding) {
+          left = padding;
+        }*/
+
+        // show and place the tooltip.
+        vispopup.style.visibility = 'visible';
+        vispopup.style.top = tempY - 20 +  "px";
+        vispopup.style.left = tempX + 5 + "px";
+        
+      } else {
+         // so it's perhaps a edge ?
+        var edgeData = edges.get([id]);
+        if(edgeData[0] !== null && edgeData[0] !== undefined){
+          vispopup.innerHTML = edgeData[0].title;
+          // show and place the tooltip.
+          vispopup.style.visibility = 'visible';
+          vispopup.style.top = tempY - 20 +  "px";
+          vispopup.style.left = tempX + 5 + "px";
+        }
+      }
+    }
+  
     //save data for re-use and update
     document.getElementById("graph"+el.id).chart = instance.network;
     document.getElementById("graph"+el.id).options = options;
@@ -1597,6 +1850,7 @@ HTMLWidgets.widget({
       if(document.getElementById(el.id).updateNodes){
         document.getElementById(el.id).updateNodes = false;
         allNodes = nodesDataset.get({returnType:"Object"});
+        
       }
       // get variable
       var sel = document.getElementById(el.id).byselection_variable;
@@ -1639,7 +1893,7 @@ HTMLWidgets.widget({
             }
           }
           if(value_in === false){ // not in selection, so as hard to read
-            nodeAsHardToRead(allNodes[nodeId], instance.network.groups, options);
+            nodeAsHardToRead(allNodes[nodeId], instance.network.groups, options, document.getElementById(el.id).byselectionColor, document.getElementById(el.id).highlightColor);
           } else { // in selection, so reset if needed
             resetOneNode(allNodes[nodeId], instance.network.groups, options);
           }
@@ -1721,7 +1975,7 @@ HTMLWidgets.widget({
           
           // mark all nodes as hard to read.
           for (var nodeId in allNodes) {
-            nodeAsHardToRead(allNodes[nodeId], instance.network.groups, options);
+            nodeAsHardToRead(allNodes[nodeId], instance.network.groups, options, document.getElementById(el.id).highlightColor, document.getElementById(el.id).byselectionColor);
             allNodes[nodeId].x = undefined;
             allNodes[nodeId].y = undefined;
           }
@@ -1768,7 +2022,7 @@ HTMLWidgets.widget({
           } else if(algorithm === "hierarchical"){
             
             // first resetEdges
-            resetEdges(edges);
+            resetEdges(edges, document.getElementById(el.id).highlightColor);
             
             var degree_from = degrees.from;
             var degree_to = degrees.to;
@@ -1891,7 +2145,7 @@ HTMLWidgets.widget({
             
             // all in degree nodes get their own color and their label back
             for (i = 0; i < edgesHardToRead.length; i++) {
-              edgesHardToRead[i].color = 'rgba(200,200,200,0.5)';
+              edgesHardToRead[i].color = document.getElementById(el.id).highlightColor;
             }
             
             edges.update(edgesHardToRead);
@@ -1924,7 +2178,7 @@ HTMLWidgets.widget({
           resetAllNodes(allNodes, update, nodesDataset, instance.network.groups, options)
           if(algorithm === "hierarchical"){
             // resetEdges
-            resetEdges(edges);
+            resetEdges(edges, document.getElementById(el.id).highlightColor);
           }
           document.getElementById(el.id).highlightActive = false;
           is_clicked = false;
@@ -2066,15 +2320,31 @@ HTMLWidgets.widget({
         addHeightExport = addHeightExport + 15;
       }
 
-           html2canvas(document.getElementById(el.id), {
-             background: x.export.background,
-             height : addHeightExport,
-              onrendered: function(canvas) {
-                canvas.toBlob(function(blob) {
-                            saveAs(blob, x.export.name);
-                                    }, "image/"+x.export.type);
-            }
+      if(x.export.type !== "pdf"){
+        html2canvas(document.getElementById(el.id), {
+          background: x.export.background,
+          height : addHeightExport,
+          onrendered: function(canvas) {
+            canvas.toBlobHD(function(blob) {
+              saveAs(blob, x.export.name);
+            }, "image/"+x.export.type);
+          }
         });
+      } else {
+        html2canvas(document.getElementById(el.id), {
+          background: x.export.background,
+          height : addHeightExport,
+          onrendered: function(canvas) {
+            var myImage = canvas.toDataURL("image/png", 1.0);
+            //var imgWidth = (canvas.width * 25.4) / 24;
+            //var imgHeight = (canvas.height * 25.4) / 24; 
+            var table = new jsPDF('l', 'pt', [canvas.width, canvas.height]);
+            table.addImage(myImage, 'JPEG', 0, 0, canvas.width, canvas.height);
+            table.save(x.export.name);
+          } 
+        });
+      }
+
       };
     }
 
