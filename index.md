@@ -187,13 +187,58 @@ $(document).on("slide.bs.carousel", "#widget-carousel", function(e) {
     </div>
   </div>
   <hr/>
+  
+  
+  <h3>Interactive dashboards</h3>
+  <div class="row">
+    <div class="col-sm-9">
+      <div class="row showcase-teaser">
+        <div class="col-xs-6 col-sm-3">
+          <a href="https://beta.rstudioconnect.com/jjallaire/htmlwidgets-showcase-storyboard/htmlwidgets-showcase-storyboard.html"><img src="http://rmarkdown.rstudio.com/flexdashboard/images/htmlwidgets-showcase-storyboard.png"/></a>
+        </div>
+        <div class="col-xs-6 col-sm-3">
+          <a href="https://beta.rstudioconnect.com/jjallaire/htmlwidgets-d3heatmap/htmlwidgets-d3heatmap.html"><img src="http://rmarkdown.rstudio.com/flexdashboard/images/htmlwidgets-d3heatmap.png"/></a>
+        </div>
+       
+        <div class="col-xs-6 col-sm-3">
+          <a href="https://beta.rstudioconnect.com/jjallaire/htmlwidgets-metricsgraphics-tor/htmlwidgets-metricsgraphics-tor.html"><img src="http://rmarkdown.rstudio.com/flexdashboard/images/htmlwidgets-metricsgraphics-tor.png"/></a>
+        </div>
+        <div class="col-xs-6 col-sm-3">
+          <a href="http://jkunst.com/flexdashboard-highcharter-examples/pokemon/"><img src="http://rmarkdown.rstudio.com/flexdashboard/images/highcharter-pokemon.png"/></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-9">
+      <p>You can easily compose multiple htmlwidgets into a dashboard using the <a href="http://rmarkdown.rstudio.com/flexdashboard">flexdashboard</a> package, which features flexible and easy to specify row and column-based layouts for multiple widgets.</p>
+    </div>
+    <div class="col-sm-3">
+      <p><a class="btn btn-success" href="http://rmarkdown.rstudio.com/flexdashboard/" role="button">Create a dashboard &raquo;</a></p>
+    </div>
+  </div>
+  <hr/>
+  
+  
+  <h3>Widgets in harmony</h3>
+  <div class="row">
+    <div class="col-sm-9">
+      <p>Widgets can be wired together using the <a href="https://rstudio.github.io/crosstalk">crosstalk</a> package. Linked brushing between widgets and client side filtering are currently supported. Use Shiny to create more sophisticated interactions.</p>
+    </div>
+    <div class="col-sm-3">
+      <p><a class="btn btn-warning" href="develop_intro.html" role="button">Learn about crosstalk  &raquo;</a></p>
+    </div>
+  </div>
+  
+  <hr/>
+  
   <h3>Creating widgets</h3>
   <div class="row">
     <div class="col-sm-9">
       <p>Learn how to create an R binding for your favorite JavaScript library and enable use of it in the R console, in R Markdown documents, and in Shiny web applications.</p>
     </div>
     <div class="col-sm-3">
-      <p><a class="btn btn-success" href="develop_intro.html" role="button">Develop a widget &raquo;</a></p>
+      <p><a class="btn btn-primary" href="develop_intro.html" role="button">Develop a widget &raquo;</a></p>
     </div>
   </div>
 </div>

@@ -44,3 +44,7 @@ input[type="search"]  {
 #nav-home {
   margin-left: 30px;
 }
+
+.below-lead .btn {
+  min-width: 185px;
+}
