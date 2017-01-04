@@ -7,11 +7,11 @@ title: "htmlwidgets: Highcharter"
 
 Highcharter provides a rich R interface to the popular [Highcharts](http://www.highcharts.com/) JavaScript graphics library. Note that Highcharts is free for non-commercial use but otherwise requires a license.
 
-```{r}
+```{r, message = FALSE}
 library(magrittr)
 library(highcharter)
 highchart() %>% 
   hc_title(text = "Scatter chart with size and color") %>% 
-  hc_add_serie_scatter(mtcars$wt, mtcars$mpg,
-                       mtcars$drat, mtcars$hp)
+  hc_add_series_scatter(mtcars$wt, mtcars$mpg,
+                        mtcars$drat, mtcars$hp)
 ```

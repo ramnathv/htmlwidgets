@@ -19,6 +19,7 @@
 <script src="libs/bootstrap/js/bootstrap.min.js"></script>
 <script src="libs/bootstrap/shim/html5shiv.min.js"></script>
 <script src="libs/bootstrap/shim/respond.min.js"></script>
+<script src="libs/navigation/tabsets.js"></script>
 
 <!-- Styles for this site -->
 <link href="css/styles.css" rel="stylesheet">
@@ -126,10 +127,10 @@ button.code-folding-btn:focus {
 </style>
 
 
+
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script src="libs/navigation/tabsets.js"></script>
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
@@ -366,10 +367,12 @@ $(document).ready(function () {
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">function(
   x, ...,  <span class="dt">dataframe =</span> <span class="st">&quot;columns&quot;</span>, <span class="dt">null =</span> <span class="st">&quot;null&quot;</span>, <span class="dt">na =</span> <span class="st">&quot;null&quot;</span>, <span class="dt">auto_unbox =</span> <span class="ot">TRUE</span>,
   <span class="dt">digits =</span> <span class="kw">getOption</span>(<span class="st">&quot;shiny.json.digits&quot;</span>, <span class="dv">16</span>), <span class="dt">use_signif =</span> <span class="ot">TRUE</span>, <span class="dt">force =</span> <span class="ot">TRUE</span>,
-  <span class="dt">POSIXt =</span> <span class="st">&quot;ISO8601&quot;</span>, <span class="dt">UTC =</span> <span class="ot">TRUE</span>, <span class="dt">rownames =</span> <span class="ot">FALSE</span>, <span class="dt">keep_vec_names =</span> <span class="ot">TRUE</span>
+  <span class="dt">POSIXt =</span> <span class="st">&quot;ISO8601&quot;</span>, <span class="dt">UTC =</span> <span class="ot">TRUE</span>, <span class="dt">rownames =</span> <span class="ot">FALSE</span>, <span class="dt">keep_vec_names =</span> <span class="ot">TRUE</span>,
+  <span class="dt">strict_atomic =</span> <span class="ot">TRUE</span>
 ) {
+  if (strict_atomic) x &lt;-<span class="st"> </span><span class="kw">I</span>(x)
   jsonlite::<span class="kw">toJSON</span>(
-    <span class="kw">I</span>(x), <span class="dt">dataframe =</span> dataframe, <span class="dt">null =</span> null, <span class="dt">na =</span> na, <span class="dt">auto_unbox =</span> auto_unbox,
+    x, <span class="dt">dataframe =</span> dataframe, <span class="dt">null =</span> null, <span class="dt">na =</span> na, <span class="dt">auto_unbox =</span> auto_unbox,
     <span class="dt">digits =</span> digits, <span class="dt">use_signif =</span> use_signif, <span class="dt">force =</span> force, <span class="dt">POSIXt =</span> POSIXt,
     <span class="dt">UTC =</span> UTC, <span class="dt">rownames =</span> rownames, <span class="dt">keep_vec_names =</span> keep_vec_names,
     <span class="dt">json_verbatim =</span> <span class="ot">TRUE</span>, ...
@@ -490,9 +493,13 @@ $(document).ready(function () {
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 

@@ -292,7 +292,7 @@ function nodeAsHardToRead(node, groups, options){
 
 //----------------------------------------------------------------
 // Revrite HTMLWidgets.dataframeToD3() for passing custom
-// properties directly in data.frame (color.background for example
+// properties directly in data.frame (color.background) for example
 //----------------------------------------------------------------
 function visNetworkdataframeToD3(df, type) {
 
@@ -339,7 +339,11 @@ function visNetworkdataframeToD3(df, type) {
       for (var col = 0; col < names.length; col++) {
         if(df[colnames[col]][row] !== null){
           if(names[col].length === 1){
-            item[names[col]] = df[colnames[col]][row];
+            if(names[col][0] === "dashes"){
+              item[names[col]] = eval(df[colnames[col]][row]);
+            } else {
+              item[names[col]] = df[colnames[col]][row];
+            }
           } else if(names[col].length === 2){
             if(item[names[col][0]] === undefined){
               item[names[col][0]] = {};
@@ -580,6 +584,28 @@ if (HTMLWidgets.shinyMode){
       }
   });
   
+  // get edges data
+  Shiny.addCustomMessageHandler('visShinyGetEdges', function(data){
+      // get container id
+      var el = document.getElementById("graph"+data.id);
+      if(el){
+        var current_edges = el.edges.getDataSet();
+        // return data in shiny
+        Shiny.onInputChange(data.input, current_edges._data);
+      }
+  });
+  
+  // get nodes data
+  Shiny.addCustomMessageHandler('visShinyGetNodes', function(data){
+      // get container id
+      var el = document.getElementById("graph"+data.id);
+      if(el){
+        var current_nodes = el.nodes.getDataSet();
+        // return data in shiny
+        Shiny.onInputChange(data.input, current_nodes._data);
+      }
+  });
+  
   // Redraw the network
   Shiny.addCustomMessageHandler('visShinyRedraw', function(data){
       // get container id
@@ -590,84 +616,7 @@ if (HTMLWidgets.shinyMode){
       }
   });
   
-  // udpate nodes data
-  Shiny.addCustomMessageHandler('visShinyUpdateNodes', function(data){
-      // get container id
-      var el = document.getElementById("graph"+data.id);
-      var main_el = document.getElementById(data.id);
-      
-      if(el){
-        // get & transform nodes object
-        var tmpnodes = visNetworkdataframeToD3(data.nodes, "nodes");
-        
-        // reset some parameters / data before
-        if (main_el.selectActive === true | main_el.highlightActive === true) {
-          //reset nodes
-          var allNodes = el.nodes.get({returnType:"Object"});
-          resetAllNodes(allNodes, true, el.nodes, el.chart.groups, el.options);
-          
-          if (main_el.selectActive === true){
-            main_el.selectActive = false;
-            resetList('selectedBy', data.id, 'selectedBy');
-          }
-          if (main_el.highlightActive === true){
-            main_el.highlightActive = false;
-            resetList('nodeSelect', data.id, 'selected');
-          }
-        }
-        // update nodes
-        el.nodes.update(tmpnodes);
-        main_el.updateNodes = true;
-      }
-  });
 
-  // udpate edges data
-  Shiny.addCustomMessageHandler('visShinyUpdateEdges', function(data){
-      // get container id
-      var el = document.getElementById("graph"+data.id);
-      if(el){
-        // get edges object
-        var tmpedges = visNetworkdataframeToD3(data.edges, "edges");
-        el.edges.update(tmpedges);
-      }
-  });
-  
-  // remove nodes
-  Shiny.addCustomMessageHandler('visShinyRemoveNodes', function(data){
-      // get container id
-      var el = document.getElementById("graph"+data.id);
-      var main_el = document.getElementById(data.id);
-      if(el){
-        // reset some parameters / date before
-        if (main_el.selectActive === true | main_el.highlightActive === true) {
-          //reset nodes
-          var allNodes = el.nodes.get({returnType:"Object"});
-          resetAllNodes(allNodes, true, el.nodes, el.chart.groups, el.options);
-          
-          if (main_el.selectActive === true){
-            main_el.selectActive = false;
-            resetList('selectedBy', data.id, 'selectedBy');
-          }
-          if (main_el.highlightActive === true){
-            main_el.highlightActive = false;
-            resetList('nodeSelect', data.id, 'selected');
-          }
-        }
-        // remove nodes
-        el.nodes.remove(data.rmid);
-        main_el.updateNodes = true;
-      }
-  });
-  
-  // remove edges
-  Shiny.addCustomMessageHandler('visShinyRemoveEdges', function(data){
-      // get container id
-      var el = document.getElementById("graph"+data.id);
-      if(el){
-        el.edges.remove(data.rmid);
-      }
-  });
-  
   // select nodes
   Shiny.addCustomMessageHandler('visShinySelectNodes', function(data){
       // get container id
@@ -718,7 +667,7 @@ if (HTMLWidgets.shinyMode){
       }
   });
   
-  Shiny.addCustomMessageHandler('visShinyCustomOptions', function(data){
+  function updateVisOptions(data){
         // get container id
         var graph = document.getElementById("graph"+data.id);
         var el = document.getElementById(data.id);
@@ -755,8 +704,6 @@ if (HTMLWidgets.shinyMode){
           
           if(data.options.idselection !== undefined){
             if(data.options.idselection.enabled === true && data.options.idselection.selected !== undefined){
-              //console.info(data.options.idselection)
-              //console.info("ok")
               document.getElementById("nodeSelect"+data.id).value = data.options.idselection.selected;
               document.getElementById("nodeSelect"+data.id).onchange();
             }
@@ -793,7 +740,9 @@ if (HTMLWidgets.shinyMode){
               el.byselection_variable = data.options.byselection.variable;
               el.byselection_multiple = data.options.byselection.multiple;
               selectList2.style.display = 'inline';
-              selectList2.setAttribute('style', data.options.byselection.style);
+              if(data.options.byselection.style !== undefined){
+                selectList2.setAttribute('style', data.options.byselection.style);
+              }
               el.byselection = true;
             } else {
               selectList2.style.display = 'none';
@@ -821,7 +770,9 @@ if (HTMLWidgets.shinyMode){
               option.text = "Select by id";
               selectList.appendChild(option);
               selectList.style.display = 'inline';
-              selectList.setAttribute('style', data.options.idselection.style);
+              if(data.options.idselection.style !== undefined){
+                selectList.setAttribute('style', data.options.idselection.style);
+              }
               el.idselection = true;
               do_loop_id = true;
             } else {
@@ -861,7 +812,7 @@ if (HTMLWidgets.shinyMode){
                   if(addid){
                     option = document.createElement("option");
                     option.value = allNodes[nodeId].id;
-                  if(allNodes[nodeId].label){
+                  if(allNodes[nodeId].label && data.options.idselection.useLabels){
                     option.text = allNodes[nodeId].label;
                   }else{
                     option.text = allNodes[nodeId].id;
@@ -872,7 +823,135 @@ if (HTMLWidgets.shinyMode){
               } 
           }
         }
-      });
+      };
+      
+  Shiny.addCustomMessageHandler('visShinyCustomOptions', updateVisOptions);
+  
+    // udpate nodes data
+  Shiny.addCustomMessageHandler('visShinyUpdateNodes', function(data){
+      // get container id
+      var el = document.getElementById("graph"+data.id);
+      var main_el = document.getElementById(data.id);
+      
+      if(el){
+        // get & transform nodes object
+        var tmpnodes = visNetworkdataframeToD3(data.nodes, "nodes");
+        
+        // reset some parameters / data before
+        if (main_el.selectActive === true | main_el.highlightActive === true) {
+          //reset nodes
+          var allNodes = el.nodes.get({returnType:"Object"});
+          resetAllNodes(allNodes, true, el.nodes, el.chart.groups, el.options);
+          
+          if (main_el.selectActive === true){
+            main_el.selectActive = false;
+            resetList('selectedBy', data.id, 'selectedBy');
+          }
+          if (main_el.highlightActive === true){
+            main_el.highlightActive = false;
+            resetList('nodeSelect', data.id, 'selected');
+          }
+        }
+        // update nodes
+        el.nodes.update(tmpnodes);
+        main_el.updateNodes = true;
+        
+        // update options ?
+        if(data.updateOptions){
+          var dataOptions = {};
+          dataOptions.options = {};
+        
+          var updateOpts = false;
+          if(document.getElementById("nodeSelect"+data.id).style.display === 'inline'){
+            updateOpts = true;
+            dataOptions.id  = data.id;
+            dataOptions.options.idselection = {enabled : true};
+          }
+    
+          if(document.getElementById("selectedBy"+data.id).style.display === 'inline'){
+            updateOpts = true;
+            dataOptions.id  = data.id;
+            dataOptions.options.byselection = {enabled : true, variable : main_el.byselection_variable, multiple : main_el.byselection_multiple};
+          }
+        
+          if(updateOpts){
+            updateVisOptions(dataOptions);
+          }
+        }
+
+      }
+  });
+
+  // udpate edges data
+  Shiny.addCustomMessageHandler('visShinyUpdateEdges', function(data){
+      // get container id
+      var el = document.getElementById("graph"+data.id);
+      if(el){
+        // get edges object
+        var tmpedges = visNetworkdataframeToD3(data.edges, "edges");
+        el.edges.update(tmpedges);
+      }
+  });
+  
+  // remove nodes
+  Shiny.addCustomMessageHandler('visShinyRemoveNodes', function(data){
+      // get container id
+      var el = document.getElementById("graph"+data.id);
+      var main_el = document.getElementById(data.id);
+      if(el){
+        // reset some parameters / date before
+        if (main_el.selectActive === true | main_el.highlightActive === true) {
+          //reset nodes
+          var allNodes = el.nodes.get({returnType:"Object"});
+          resetAllNodes(allNodes, true, el.nodes, el.chart.groups, el.options);
+          
+          if (main_el.selectActive === true){
+            main_el.selectActive = false;
+            resetList('selectedBy', data.id, 'selectedBy');
+          }
+          if (main_el.highlightActive === true){
+            main_el.highlightActive = false;
+            resetList('nodeSelect', data.id, 'selected');
+          }
+        }
+        // remove nodes
+        el.nodes.remove(data.rmid);
+        main_el.updateNodes = true;
+        
+        // update options ?
+        if(data.updateOptions){
+          var dataOptions = {};
+          dataOptions.options = {};
+        
+          var updateOpts = false;
+          if(document.getElementById("nodeSelect"+data.id).style.display === 'inline'){
+            updateOpts = true;
+            dataOptions.id  = data.id;
+            dataOptions.options.idselection = {enabled : true};
+          }
+    
+          if(document.getElementById("selectedBy"+data.id).style.display === 'inline'){
+            updateOpts = true;
+            dataOptions.id  = data.id;
+            dataOptions.options.byselection = {enabled : true, variable : main_el.byselection_variable, multiple : main_el.byselection_multiple};
+          }
+        
+          if(updateOpts){
+            updateVisOptions(dataOptions);
+          }
+        }
+      }
+  });
+  
+  // remove edges
+  Shiny.addCustomMessageHandler('visShinyRemoveEdges', function(data){
+      // get container id
+      var el = document.getElementById("graph"+data.id);
+      if(el){
+        el.edges.remove(data.rmid);
+      }
+  });
+  
 }
 
 //----------------------------------------------------------------
@@ -894,7 +973,7 @@ HTMLWidgets.widget({
     var data;
     var nodes;
     var edges;
-    
+
     // highlight nearest variables & selectedBy
     var allNodes;
     var nodesDataset;
@@ -918,6 +997,7 @@ HTMLWidgets.widget({
     document.getElementById(el.id).updateNodes = false;
     document.getElementById(el.id).idselection = x.idselection.enabled;
     document.getElementById(el.id).byselection = x.byselection.enabled;
+    
     if(x.highlight !== undefined){
       document.getElementById(el.id).highlight = x.highlight.enabled;
       document.getElementById(el.id).hoverNearest = x.highlight.hoverNearest;
@@ -943,6 +1023,16 @@ HTMLWidgets.widget({
       div_title.innerHTML = x.main.text;
       div_title.setAttribute('style',  x.main.style);
       document.getElementById(el.id).appendChild(div_title);  
+    }
+    
+    //*************************
+    //subtitle
+    //*************************
+    if(x.submain !== null){
+      var div_subtitle = document.createElement('div');
+      div_subtitle.innerHTML = x.submain.text;
+      div_subtitle.setAttribute('style',  x.submain.style);
+      document.getElementById(el.id).appendChild(div_subtitle);  
     }
  
     //*************************
@@ -1022,7 +1112,7 @@ HTMLWidgets.widget({
         if(addid){
           option = document.createElement("option");
           option.value = selnodes[i].id;
-          if(selnodes[i].label){
+          if(selnodes[i].label && x.idselection.useLabels){
             option.text = selnodes[i].label;
           }else{
             option.text = selnodes[i].id;
@@ -1378,7 +1468,7 @@ HTMLWidgets.widget({
     } 
     
     var options = x.options;
-    
+
     //*************************
     //manipulation
     //*************************
@@ -1931,6 +2021,16 @@ HTMLWidgets.widget({
     });
     
     //*************************
+    //footer
+    //*************************
+    if(x.footer !== null){
+      var div_footer = document.createElement('div');
+      div_footer.innerHTML = x.footer.text;
+      div_footer.setAttribute('style',  x.footer.style);
+      document.getElementById("graph"+el.id).appendChild(div_footer);  
+    }
+    
+    //*************************
     // export
     //*************************
     if(x.export !== undefined){
@@ -1951,9 +2051,24 @@ HTMLWidgets.widget({
       document.getElementById("maindiv"+el.id).appendChild(downloaddiv);
       
       document.getElementById("download"+el.id).onclick = function() {
-           
+
+      // height control for export
+      var addHeightExport = document.getElementById("graph" + el.id).offsetHeight + idList.offsetHeight + byList.offsetHeight + downloaddiv.offsetHeight;
+      if(x.main !== null){
+        addHeightExport = addHeightExport + div_title.offsetHeight;
+      }
+      if(x.submain !== null){
+        addHeightExport = addHeightExport + div_subtitle.offsetHeight;
+      }
+      if(x.footer !== null){
+        addHeightExport = addHeightExport + div_footer.offsetHeight;
+      } else {
+        addHeightExport = addHeightExport + 15;
+      }
+
            html2canvas(document.getElementById(el.id), {
              background: x.export.background,
+             height : addHeightExport,
               onrendered: function(canvas) {
                 canvas.toBlob(function(blob) {
                             saveAs(blob, x.export.name);

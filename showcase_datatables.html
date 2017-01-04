@@ -19,6 +19,9 @@
 <script src="libs/bootstrap/js/bootstrap.min.js"></script>
 <script src="libs/bootstrap/shim/html5shiv.min.js"></script>
 <script src="libs/bootstrap/shim/respond.min.js"></script>
+<script src="libs/navigation/tabsets.js"></script>
+<link href="libs/highlightjs/textmate.css" rel="stylesheet" />
+<script src="libs/highlightjs/highlight.js"></script>
 <script src="libs/htmlwidgets/htmlwidgets.js"></script>
 <script src="libs/datatables-binding/datatables.js"></script>
 <link href="libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
@@ -32,10 +35,6 @@
 <script src="js/polyfill.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<link rel="stylesheet"
-      href="libs/highlight/textmate.css"
-      type="text/css" />
-<script src="libs/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -106,10 +105,10 @@ button.code-folding-btn:focus {
 </style>
 
 
+
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script src="libs/navigation/tabsets.js"></script>
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
@@ -242,8 +241,8 @@ $(document).ready(function () {
 <p>DataTables displays R matrices or data frames as interactive HTML tables that support filtering, pagination, and sorting.</p>
 <pre class="r"><code>library(DT)
 datatable(iris, options = list(pageLength = 5))</code></pre>
-<div id="htmlwidget-3078" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-3078">{
+<div id="htmlwidget-4e418d0e777bcf5e8b2b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4e418d0e777bcf5e8b2b">{
   "x": {
     "filter": "none",
     "data": [
@@ -326,9 +325,13 @@ $(document).ready(function () {
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 

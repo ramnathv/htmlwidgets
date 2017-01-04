@@ -19,6 +19,9 @@
 <script src="libs/bootstrap/js/bootstrap.min.js"></script>
 <script src="libs/bootstrap/shim/html5shiv.min.js"></script>
 <script src="libs/bootstrap/shim/respond.min.js"></script>
+<script src="libs/navigation/tabsets.js"></script>
+<link href="libs/highlightjs/textmate.css" rel="stylesheet" />
+<script src="libs/highlightjs/highlight.js"></script>
 <script src="libs/htmlwidgets/htmlwidgets.js"></script>
 <script src="libs/viz/viz.js"></script>
 <link href="libs/DiagrammeR-styles/styles.css" rel="stylesheet" />
@@ -31,10 +34,6 @@
 <script src="js/polyfill.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<link rel="stylesheet"
-      href="libs/highlight/textmate.css"
-      type="text/css" />
-<script src="libs/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -105,10 +104,10 @@ button.code-folding-btn:focus {
 </style>
 
 
+
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script src="libs/navigation/tabsets.js"></script>
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
@@ -246,8 +245,8 @@ grViz(&quot;
     node [shape = circle]
     A -&gt; {B C D} 
   }&quot;)</code></pre>
-<div id="htmlwidget-3078" style="width:576px;height:240px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-3078">{
+<div id="htmlwidget-4e418d0e777bcf5e8b2b" style="width:576px;height:240px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4e418d0e777bcf5e8b2b">{
   "x": {
     "diagram": "\n  digraph {\n    layout = twopi\n    node [shape = circle]\n    A -> {B C D} \n  }",
     "config": {
@@ -308,9 +307,13 @@ $(document).ready(function () {
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 

@@ -7,9 +7,9 @@ title: "htmlwidgets: rbokeh"
 
 [Bokeh](http://bokeh.pydata.org/en/latest/) is a visualization library that provides a flexible and powerful declarative framework for creating web-based plots.
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, fig.height = 5, fig.width=5}
 library(rbokeh)
-figure(width = NULL, height = NULL) %>%
+figure() %>%
   ly_points(Sepal.Length, Sepal.Width, data = iris,
     color = Species, glyph = Species,
     hover = list(Sepal.Length, Sepal.Width))

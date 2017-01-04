@@ -27,7 +27,7 @@ DTWidget.formatCurrency = function(thiz, row, data, col, currency, digits, inter
 
 DTWidget.formatString = function(thiz, row, data, col, prefix, suffix) {
   var d = data[col];
-  if (d == null) return;
+  if (d === null) return;
   $(thiz.api().cell(row, col).node()).html(prefix + d + suffix);
 };
 
@@ -90,6 +90,15 @@ HTMLWidgets.widget({
     if (window.FlexDashboard && !window.FlexDashboard.isFillPage()) {
       data.options.bPaginate = true;
       data.fillContainer = false;
+    }
+
+    // if we are in the viewer then we always want to fillContainer and
+    // and autoHideNavigation (unless the user has explicitly set these)
+    if (window.HTMLWidgets.viewerMode) {
+      if (!data.hasOwnProperty("fillContainer"))
+        data.fillContainer = true;
+      if (!data.hasOwnProperty("autoHideNavigation"))
+        data.autoHideNavigation = true;
     }
 
     // propagate fillContainer to instance (so we have it in resize)
@@ -222,16 +231,16 @@ HTMLWidgets.widget({
         $input.on('input blur', function() {
           $input.next('span').toggle(Boolean($input.val()));
         });
-        var searchCol;  // search string for this column
-        if (searchCols && searchCols[i]) {
-          searchCol = searchCols[i];
-          $input.val(searchCol);
-        }
         // Bootstrap sets pointer-events to none and we won't be able to click
         // the clear button
         $input.next('span').css('pointer-events', 'auto').hide().click(function() {
           $(this).hide().prev('input').val('').trigger('input').focus();
         });
+        var searchCol;  // search string for this column
+        if (searchCols && searchCols[i]) {
+          searchCol = searchCols[i];
+          $input.val(searchCol).trigger('input');
+        }
         var $x = $td.children('div').last();
 
         // remove the overflow: hidden attribute of the scrollHead
@@ -262,22 +271,24 @@ HTMLWidgets.widget({
             plugins: ['remove_button'],
             hideSelected: true,
             onChange: function(value) {
-              $input.val(value === null ? '' : JSON.stringify(value));
-              if (value) $input.trigger('input');
+              if (value === null) value = []; // compatibility with jQuery 3.0
+              $input.val(value.length ? JSON.stringify(value) : '');
+              if (value.length) $input.trigger('input');
               $input.attr('title', $input.val());
               if (server) {
-                table.column(i).search(value ? encode_plus(JSON.stringify(value)) : '').draw();
+                table.column(i).search(value.length ? encode_plus(JSON.stringify(value)) : '').draw();
                 return;
               }
               // turn off filter if nothing selected
-              $td.data('filter', value !== null && value.length > 0);
+              $td.data('filter', value.length > 0);
               table.draw();  // redraw table, and filters will be applied
             }
           });
+          if (searchCol) filter[0].selectize.setValue(JSON.parse(searchCol));
           // an ugly hack to deal with shiny: for some reason, the onBlur event
           // of selectize does not work in shiny
           $x.find('div > div.selectize-input > input').on('blur', function() {
-            $x.hide().trigger('hide'); $input.parent().show();
+            $x.hide().trigger('hide'); $input.parent().show(); $input.trigger('blur');
           });
           filter.next('div').css('margin-bottom', 'auto');
         } else if (type === 'character') {
@@ -558,6 +569,11 @@ HTMLWidgets.widget({
     var methods = {};
     var shinyData = {};
 
+    methods.updateCaption = function(caption) {
+      if (!caption) return;
+      $table.children('caption').replaceWith(caption);
+    }
+
     var changeInput = function(id, data, type) {
       id = el.id + '_' + id;
       if (type) id = id + ':' + type;
@@ -775,7 +791,7 @@ HTMLWidgets.widget({
     updateTableInfo();
 
     // state info
-    table.on('draw.dt', function() {
+    table.on('draw.dt column-visibility.dt', function() {
       changeInput('state', table.state());
     });
     changeInput('state', table.state());
@@ -798,6 +814,11 @@ HTMLWidgets.widget({
     })
     changeInput('cell_clicked', {});
 
+    // do not trigger table selection when clicking on links unless they have classes
+    table.on('click.dt', 'tbody td a', function(e) {
+      if (this.className === '') e.stopPropagation();
+    });
+
     methods.addRow = function(data, rowname) {
       var data0 = table.row(0).data(), n = data0.length, d = n - data.length;
       if (d === 1) {
@@ -808,6 +829,39 @@ HTMLWidgets.widget({
         throw 'New data must be of the same length as current data (' + n + ')';
       };
       table.row.add(data).draw();
+    }
+
+    methods.updateSearch = function(keywords) {
+      if (keywords.global !== null)
+        $(table.table().container()).find('input[type=search]').first()
+             .val(keywords.global).trigger('input');
+      var columns = keywords.columns;
+      if (!filterRow || columns === null) return;
+      filterRow.toArray().map(function(td, i) {
+        var v = typeof columns === 'string' ? columns : columns[i];
+        if (typeof v === 'undefined') {
+          console.log('The search keyword for column ' + i + ' is undefined')
+          return;
+        }
+        $(td).find('input').first().val(v);
+        table.column(i).search(v);
+      });
+      table.draw();
+    }
+
+    methods.selectPage = function(page) {
+      if (table.page.info().pages < page || page < 1) {
+        throw 'Selected page is out of range';
+      };
+      table.page(page - 1).draw(false);
+    }
+
+    methods.reloadData = function(resetPaging, clearSelection) {
+      // empty selections first if necessary
+      if (methods.selectRows && inArray('row', clearSelection)) methods.selectRows([]);
+      if (methods.selectColumns && inArray('column', clearSelection)) methods.selectColumns([]);
+      if (methods.selectCells && inArray('cell', clearSelection)) methods.selectCells([]);
+      table.ajax.reload(null, resetPaging);
     }
 
     table.shinyMethods = methods;

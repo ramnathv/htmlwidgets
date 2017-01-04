@@ -19,11 +19,15 @@
 <script src="libs/bootstrap/js/bootstrap.min.js"></script>
 <script src="libs/bootstrap/shim/html5shiv.min.js"></script>
 <script src="libs/bootstrap/shim/respond.min.js"></script>
+<script src="libs/navigation/tabsets.js"></script>
+<link href="libs/highlightjs/textmate.css" rel="stylesheet" />
+<script src="libs/highlightjs/highlight.js"></script>
 <script src="libs/htmlwidgets/htmlwidgets.js"></script>
 <link href="libs/dygraphs/dygraph.css" rel="stylesheet" />
 <script src="libs/dygraphs/dygraph-combined.js"></script>
 <script src="libs/moment/moment.js"></script>
 <script src="libs/moment-timezone/moment-timezone-with-data.js"></script>
+<script src="libs/moment-fquarter/moment-fquarter.min.js"></script>
 <script src="libs/dygraphs-binding/dygraphs.js"></script>
 
 <!-- Styles for this site -->
@@ -33,10 +37,6 @@
 <script src="js/polyfill.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<link rel="stylesheet"
-      href="libs/highlight/textmate.css"
-      type="text/css" />
-<script src="libs/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -107,10 +107,10 @@ button.code-folding-btn:focus {
 </style>
 
 
+
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script src="libs/navigation/tabsets.js"></script>
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
@@ -244,8 +244,8 @@ $(document).ready(function () {
 <pre class="r"><code>library(dygraphs)
 dygraph(nhtemp, main = &quot;New Haven Temperatures&quot;) %&gt;% 
   dyRangeSelector(dateWindow = c(&quot;1920-01-01&quot;, &quot;1960-01-01&quot;))</code></pre>
-<div id="htmlwidget-3078" style="width:576px;height:336px;" class="dygraphs html-widget"></div>
-<script type="application/json" data-for="htmlwidget-3078">{
+<div id="htmlwidget-4e418d0e777bcf5e8b2b" style="width:576px;height:336px;" class="dygraphs html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4e418d0e777bcf5e8b2b">{
   "x": {
     "attrs": {
       "title": "New Haven Temperatures",
@@ -258,7 +258,7 @@ dygraph(nhtemp, main = &quot;New Haven Temperatures&quot;) %&gt;%
         }
       },
       "showRangeSelector": true,
-      "dateWindow": ["1920-01-01T00:00:00Z", "1960-01-01T00:00:00Z"],
+      "dateWindow": ["1920-01-01T00:00:00.000Z", "1960-01-01T00:00:00.000Z"],
       "rangeSelectorHeight": 40,
       "rangeSelectorPlotFillColor": " #A7B1C4",
       "rangeSelectorPlotStrokeColor": "#808FAB",
@@ -270,7 +270,7 @@ dygraph(nhtemp, main = &quot;New Haven Temperatures&quot;) %&gt;%
     "events": [],
     "format": "date",
     "data": [
-      ["1912-01-01T00:00:00Z", "1913-01-01T00:00:00Z", "1914-01-01T00:00:00Z", "1915-01-01T00:00:00Z", "1916-01-01T00:00:00Z", "1917-01-01T00:00:00Z", "1918-01-01T00:00:00Z", "1919-01-01T00:00:00Z", "1920-01-01T00:00:00Z", "1921-01-01T00:00:00Z", "1922-01-01T00:00:00Z", "1923-01-01T00:00:00Z", "1924-01-01T00:00:00Z", "1925-01-01T00:00:00Z", "1926-01-01T00:00:00Z", "1927-01-01T00:00:00Z", "1928-01-01T00:00:00Z", "1929-01-01T00:00:00Z", "1930-01-01T00:00:00Z", "1931-01-01T00:00:00Z", "1932-01-01T00:00:00Z", "1933-01-01T00:00:00Z", "1934-01-01T00:00:00Z", "1935-01-01T00:00:00Z", "1936-01-01T00:00:00Z", "1937-01-01T00:00:00Z", "1938-01-01T00:00:00Z", "1939-01-01T00:00:00Z", "1940-01-01T00:00:00Z", "1941-01-01T00:00:00Z", "1942-01-01T00:00:00Z", "1943-01-01T00:00:00Z", "1944-01-01T00:00:00Z", "1945-01-01T00:00:00Z", "1946-01-01T00:00:00Z", "1947-01-01T00:00:00Z", "1948-01-01T00:00:00Z", "1949-01-01T00:00:00Z", "1950-01-01T00:00:00Z", "1951-01-01T00:00:00Z", "1952-01-01T00:00:00Z", "1953-01-01T00:00:00Z", "1954-01-01T00:00:00Z", "1955-01-01T00:00:00Z", "1956-01-01T00:00:00Z", "1957-01-01T00:00:00Z", "1958-01-01T00:00:00Z", "1959-01-01T00:00:00Z", "1960-01-01T00:00:00Z", "1961-01-01T00:00:00Z", "1962-01-01T00:00:00Z", "1963-01-01T00:00:00Z", "1964-01-01T00:00:00Z", "1965-01-01T00:00:00Z", "1966-01-01T00:00:00Z", "1967-01-01T00:00:00Z", "1968-01-01T00:00:00Z", "1969-01-01T00:00:00Z", "1970-01-01T00:00:00Z", "1971-01-01T00:00:00Z"],
+      ["1912-01-01T00:00:00.000Z", "1913-01-01T00:00:00.000Z", "1914-01-01T00:00:00.000Z", "1915-01-01T00:00:00.000Z", "1916-01-01T00:00:00.000Z", "1917-01-01T00:00:00.000Z", "1918-01-01T00:00:00.000Z", "1919-01-01T00:00:00.000Z", "1920-01-01T00:00:00.000Z", "1921-01-01T00:00:00.000Z", "1922-01-01T00:00:00.000Z", "1923-01-01T00:00:00.000Z", "1924-01-01T00:00:00.000Z", "1925-01-01T00:00:00.000Z", "1926-01-01T00:00:00.000Z", "1927-01-01T00:00:00.000Z", "1928-01-01T00:00:00.000Z", "1929-01-01T00:00:00.000Z", "1930-01-01T00:00:00.000Z", "1931-01-01T00:00:00.000Z", "1932-01-01T00:00:00.000Z", "1933-01-01T00:00:00.000Z", "1934-01-01T00:00:00.000Z", "1935-01-01T00:00:00.000Z", "1936-01-01T00:00:00.000Z", "1937-01-01T00:00:00.000Z", "1938-01-01T00:00:00.000Z", "1939-01-01T00:00:00.000Z", "1940-01-01T00:00:00.000Z", "1941-01-01T00:00:00.000Z", "1942-01-01T00:00:00.000Z", "1943-01-01T00:00:00.000Z", "1944-01-01T00:00:00.000Z", "1945-01-01T00:00:00.000Z", "1946-01-01T00:00:00.000Z", "1947-01-01T00:00:00.000Z", "1948-01-01T00:00:00.000Z", "1949-01-01T00:00:00.000Z", "1950-01-01T00:00:00.000Z", "1951-01-01T00:00:00.000Z", "1952-01-01T00:00:00.000Z", "1953-01-01T00:00:00.000Z", "1954-01-01T00:00:00.000Z", "1955-01-01T00:00:00.000Z", "1956-01-01T00:00:00.000Z", "1957-01-01T00:00:00.000Z", "1958-01-01T00:00:00.000Z", "1959-01-01T00:00:00.000Z", "1960-01-01T00:00:00.000Z", "1961-01-01T00:00:00.000Z", "1962-01-01T00:00:00.000Z", "1963-01-01T00:00:00.000Z", "1964-01-01T00:00:00.000Z", "1965-01-01T00:00:00.000Z", "1966-01-01T00:00:00.000Z", "1967-01-01T00:00:00.000Z", "1968-01-01T00:00:00.000Z", "1969-01-01T00:00:00.000Z", "1970-01-01T00:00:00.000Z", "1971-01-01T00:00:00.000Z"],
       [49.9, 52.3, 49.4, 51.1, 49.4, 47.9, 49.8, 50.9, 49.3, 51.9, 50.8, 49.6, 49.3, 50.6, 48.4, 50.7, 50.9, 50.6, 51.5, 52.8, 51.8, 51.1, 49.8, 50.2, 50.4, 51.6, 51.8, 50.9, 48.8, 51.7, 51, 50.6, 51.7, 51.5, 52.1, 51.3, 51, 54, 51.4, 52.7, 53.1, 54.6, 52, 52, 50.9, 52.6, 50.2, 52.6, 51.6, 51.9, 50.5, 50.9, 51.7, 51.4, 51.7, 50.8, 51.9, 51.8, 51.9, 53]
     ]
   },
@@ -327,9 +327,13 @@ $(document).ready(function () {
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 

@@ -22,18 +22,18 @@ rglwidgetClass = function() {
     };
 
     this.vlen = function(v) {
-		  return Math.sqrt(this.dotprod(v, v));
-		};
+      return Math.sqrt(this.dotprod(v, v));
+    };
 
     this.dotprod = function(a, b) {
       return a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
-    }
+    };
 
-		this.xprod = function(a, b) {
-			return [a[1]*b[2] - a[2]*b[1],
-			    a[2]*b[0] - a[0]*b[2],
-			    a[0]*b[1] - a[1]*b[0]];
-		};
+    this.xprod = function(a, b) {
+      return [a[1]*b[2] - a[2]*b[1],
+          a[2]*b[0] - a[0]*b[2],
+          a[0]*b[1] - a[1]*b[0]];
+    };
 
     this.cbind = function(a, b) {
       return a.map(function(currentValue, index, array) {
@@ -115,33 +115,33 @@ rglwidgetClass = function() {
     };
 
     this.getPowerOfTwo = function(value) {
-	    var pow = 1;
-	    while(pow<value) {
-	      pow *= 2;
-	    }
-	    return pow;
-	  };
+      var pow = 1;
+      while(pow<value) {
+        pow *= 2;
+      }
+      return pow;
+    };
 
-	  this.unique = function(arr) {
-	    arr = [].concat(arr);
-	    return arr.filter(function(value, index, self) {
-	      return self.indexOf(value) === index;
-	    });
-	  };
+    this.unique = function(arr) {
+      arr = [].concat(arr);
+      return arr.filter(function(value, index, self) {
+        return self.indexOf(value) === index;
+      });
+    };
 
-	  this.repeatToLen = function(arr, len) {
-	    arr = [].concat(arr);
-	    while (arr.length < len/2)
-	      arr = arr.concat(arr);
-	    return arr.concat(arr.slice(0, len - arr.length));
-	  };
+    this.repeatToLen = function(arr, len) {
+      arr = [].concat(arr);
+      while (arr.length < len/2)
+        arr = arr.concat(arr);
+      return arr.concat(arr.slice(0, len - arr.length));
+    };
 
-	  this.alertOnce = function(msg) {
-	    if (typeof this.alerted !== "undefined")
-	      return;
-	    this.alerted = true;
-	    alert(msg);
-	  };
+    this.alertOnce = function(msg) {
+      if (typeof this.alerted !== "undefined")
+        return;
+      this.alerted = true;
+      alert(msg);
+    };
 
     this.f_is_lit = 1;
     this.f_is_smooth = 2;
@@ -172,7 +172,7 @@ rglwidgetClass = function() {
 
     this.getObj = function(id) {
       if (typeof id !== "number") {
-		    this.alertOnce("getObj id is "+typeof id);
+        this.alertOnce("getObj id is "+typeof id);
       }
       return this.scene.objects[id];
     };
@@ -196,7 +196,7 @@ rglwidgetClass = function() {
         }
       }
       return result;
-	  };
+    };
 
     this.getMaterial = function(id, property) {
       var obj = this.getObj(id),
@@ -232,7 +232,7 @@ rglwidgetClass = function() {
       var thelist,
           thesub = this.getObj(subscene),
           obj = this.getObj(id),
-          ids = [id], i, newIds;
+          ids = [id], i;
       if (typeof obj.newIds !== "undefined")
         ids = ids.concat(obj.newIds);
       for (j=0; j<ids.length;j++) {
@@ -261,211 +261,223 @@ rglwidgetClass = function() {
       return this.getObj(subscene).subscenes;
     };
 
+    this.startDrawing = function() {
+    	var value = this.drawing;
+    	this.drawing = true;
+    	return value;
+    }
+    
+    this.stopDrawing = function(saved) {
+      this.drawing = saved;
+      if (!saved && this.gl && this.gl.isContextLost())
+        this.restartCanvas();
+    }
+    
     this.getVertexShader = function(id) {
-	    var obj = this.getObj(id),
-	        flags = obj.flags,
-	        type = obj.type,
+      var obj = this.getObj(id),
+          flags = obj.flags,
+          type = obj.type,
           is_lit = flags & this.f_is_lit,
-		      has_texture = flags & this.f_has_texture,
-		      fixed_quads = flags & this.f_fixed_quads,
-		      sprites_3d = flags & this.f_sprites_3d,
-		      sprite_3d = flags & this.f_sprite_3d,
-		      nclipplanes = this.countClipplanes(),
-		      result;
+          has_texture = flags & this.f_has_texture,
+          fixed_quads = flags & this.f_fixed_quads,
+          sprites_3d = flags & this.f_sprites_3d,
+          sprite_3d = flags & this.f_sprite_3d,
+          nclipplanes = this.countClipplanes(),
+          result;
 
-		  if (type === "clipplanes" || sprites_3d) return;
+      if (type === "clipplanes" || sprites_3d) return;
 
-		  result = "	/* ****** "+type+" object "+id+" vertex shader ****** */\n"+
-			"	attribute vec3 aPos;\n"+
-		  "	attribute vec4 aCol;\n"+
-			" uniform mat4 mvMatrix;\n"+
-			" uniform mat4 prMatrix;\n"+
-			" varying vec4 vCol;\n"+
-			" varying vec4 vPosition;\n";
+      result = "  /* ****** "+type+" object "+id+" vertex shader ****** */\n"+
+      "  attribute vec3 aPos;\n"+
+      "  attribute vec4 aCol;\n"+
+      " uniform mat4 mvMatrix;\n"+
+      " uniform mat4 prMatrix;\n"+
+      " varying vec4 vCol;\n"+
+      " varying vec4 vPosition;\n";
 
-			if (is_lit && !fixed_quads)
-				result = result + "	attribute vec3 aNorm;\n"+
-			                    " uniform mat4 normMatrix;\n"+
-			                    " varying vec3 vNormal;\n";
+      if ((is_lit && !fixed_quads) || sprite_3d)
+        result = result + "  attribute vec3 aNorm;\n"+
+                          " uniform mat4 normMatrix;\n"+
+                          " varying vec3 vNormal;\n";
 
-			if (has_texture || type === "text")
-				result = result + " attribute vec2 aTexcoord;\n"+
-			                    " varying vec2 vTexcoord;\n";
+      if (has_texture || type === "text")
+        result = result + " attribute vec2 aTexcoord;\n"+
+                          " varying vec2 vTexcoord;\n";
 
-			if (type === "text")
-				result = result + "	uniform vec2 textScale;\n";
+      if (type === "text")
+        result = result + "  uniform vec2 textScale;\n";
 
-			if (fixed_quads)
-				result = result + "	attribute vec2 aOfs;\n";
-			else if (sprite_3d)
-				result = result + "	uniform vec3 uOrig;\n"+
-			                    " uniform float uSize;\n"+
-			                    " uniform mat4 usermat;\n";
+      if (fixed_quads)
+        result = result + "  attribute vec2 aOfs;\n";
+      else if (sprite_3d)
+        result = result + "  uniform vec3 uOrig;\n"+
+                          " uniform float uSize;\n"+
+                          " uniform mat4 usermat;\n";
 
-			result = result + "	void main(void) {\n";
+      result = result + "  void main(void) {\n";
 
-			if (nclipplanes || (!fixed_quads && !sprite_3d))
-				result = result + "	  vPosition = mvMatrix * vec4(aPos, 1.);\n";
+      if (nclipplanes || (!fixed_quads && !sprite_3d))
+        result = result + "    vPosition = mvMatrix * vec4(aPos, 1.);\n";
 
-			if (!fixed_quads && !sprite_3d)
-				result = result + "	  gl_Position = prMatrix * vPosition;\n";
+      if (!fixed_quads && !sprite_3d)
+        result = result + "    gl_Position = prMatrix * vPosition;\n";
 
-			if (type == "points") {
-			  var size = this.getMaterial(id, "size");
-				result = result + "	  gl_PointSize = "+size.toFixed(1)+";\n";
-			}
+      if (type == "points") {
+        var size = this.getMaterial(id, "size");
+        result = result + "    gl_PointSize = "+size.toFixed(1)+";\n";
+      }
 
-			result = result + "	  vCol = aCol;\n";
+      result = result + "    vCol = aCol;\n";
 
-			if (is_lit && !fixed_quads && !sprite_3d)
-				result = result + "	  vNormal = normalize((normMatrix * vec4(aNorm, 1.)).xyz);\n";
+      if (is_lit && !fixed_quads && !sprite_3d)
+        result = result + "    vNormal = normalize((normMatrix * vec4(aNorm, 1.)).xyz);\n";
 
-			if (has_texture || type === "text")
-				result = result + "	  vTexcoord = aTexcoord;\n";
+      if (has_texture || type === "text")
+        result = result + "    vTexcoord = aTexcoord;\n";
 
-			if (type == "text")
-				result = result + "	  vec4 pos = prMatrix * mvMatrix * vec4(aPos, 1.);\n"+
-			                    "   pos = pos/pos.w;\n"+
-			                    "   gl_Position = pos + vec4(aOfs*textScale, 0.,0.);\n";
+      if (type == "text")
+        result = result + "    vec4 pos = prMatrix * mvMatrix * vec4(aPos, 1.);\n"+
+                          "   pos = pos/pos.w;\n"+
+                          "   gl_Position = pos + vec4(aOfs*textScale, 0.,0.);\n";
 
-			if (type == "sprites")
-				result = result + "	  vec4 pos = mvMatrix * vec4(aPos, 1.);\n"+
-			                    "   pos = pos/pos.w + vec4(aOfs, 0., 0.);\n"+
-			                    "   gl_Position = prMatrix*pos;\n";
+      if (type == "sprites")
+        result = result + "    vec4 pos = mvMatrix * vec4(aPos, 1.);\n"+
+                          "   pos = pos/pos.w + vec4(aOfs, 0., 0.);\n"+
+                          "   gl_Position = prMatrix*pos;\n";
 
-			if (sprite_3d)
-				result = result + "	  vNormal = normalize((normMatrix * vec4(aNorm, 1.)).xyz);\n"+
-			                    "   vec4 pos = mvMatrix * vec4(uOrig, 1.);\n"+
-			                    "   vPosition = pos/pos.w + vec4(uSize*(vec4(aPos, 1.)*usermat).xyz,0.);\n"+
-			                    "   gl_Position = prMatrix * vPosition;\n";
+      if (sprite_3d)
+        result = result + "    vNormal = normalize((normMatrix * vec4(aNorm, 1.)).xyz);\n"+
+                          "   vec4 pos = mvMatrix * vec4(uOrig, 1.);\n"+
+                          "   vPosition = pos/pos.w + vec4(uSize*(vec4(aPos, 1.)*usermat).xyz,0.);\n"+
+                          "   gl_Position = prMatrix * vPosition;\n";
 
-			result = result + "	}\n";
-			return result;
+      result = result + "  }\n";
+      return result;
     };
 
     this.getFragmentShader = function(id) {
-	    var obj = this.getObj(id),
-	        flags = obj.flags,
-	        type = obj.type,
+      var obj = this.getObj(id),
+          flags = obj.flags,
+          type = obj.type,
           is_lit = flags & this.f_is_lit,
-		      has_texture = flags & this.f_has_texture,
-		      fixed_quads = flags & this.f_fixed_quads,
-		      sprites_3d = flags & this.f_sprites_3d,
-		      nclipplanes = this.countClipplanes(), i,
+          has_texture = flags & this.f_has_texture,
+          fixed_quads = flags & this.f_fixed_quads,
+          sprites_3d = flags & this.f_sprites_3d,
+          nclipplanes = this.countClipplanes(), i,
           texture_format, nlights,
           result;
 
-		  if (type === "clipplanes" || sprites_3d) return;
+      if (type === "clipplanes" || sprites_3d) return;
 
-		  if (has_texture)
-			  texture_format = this.getMaterial(id, "textype");
+      if (has_texture)
+        texture_format = this.getMaterial(id, "textype");
 
-		  result = "/* ****** "+type+" object "+id+" fragment shader ****** */\n"+
-		  				 "#ifdef GL_ES\n"+
-				       "  precision highp float;\n"+
-				       "#endif\n"+
-				       "  varying vec4 vCol; // carries alpha\n"+
-				       "  varying vec4 vPosition;\n";
+      result = "/* ****** "+type+" object "+id+" fragment shader ****** */\n"+
+               "#ifdef GL_ES\n"+
+               "  precision highp float;\n"+
+               "#endif\n"+
+               "  varying vec4 vCol; // carries alpha\n"+
+               "  varying vec4 vPosition;\n";
 
-			if (has_texture || type === "text")
-				result = result + "	varying vec2 vTexcoord;\n"+
-			                    " uniform sampler2D uSampler;\n";
+      if (has_texture || type === "text")
+        result = result + "  varying vec2 vTexcoord;\n"+
+                          " uniform sampler2D uSampler;\n";
 
-			if (is_lit && !fixed_quads)
-				result = result + "	varying vec3 vNormal;\n";
+      if (is_lit && !fixed_quads)
+        result = result + "  varying vec3 vNormal;\n";
 
-			for (i = 0; i < nclipplanes; i++)
-				result = result + "	uniform vec4 vClipplane"+i+";\n";
+      for (i = 0; i < nclipplanes; i++)
+        result = result + "  uniform vec4 vClipplane"+i+";\n";
 
-			if (is_lit) {
-			  nlights = this.countLights();
-			  if (nlights)
-			      result = result + "	uniform mat4 mvMatrix;\n";
-			  else
-			      is_lit = false;
-			}
+      if (is_lit) {
+        nlights = this.countLights();
+        if (nlights)
+            result = result + "  uniform mat4 mvMatrix;\n";
+        else
+            is_lit = false;
+      }
 
-			if (is_lit) {
-				result = result + "	  uniform vec3 emission;\n"+
-				                  "   uniform float shininess;\n";
+      if (is_lit) {
+        result = result + "    uniform vec3 emission;\n"+
+                          "   uniform float shininess;\n";
 
-				for (i=0; i < nlights; i++) {
-					result = result + "	  uniform vec3 ambient" + i + ";\n"+
-						                "   uniform vec3 specular" + i +"; // light*material\n"+
-						                "   uniform vec3 diffuse" + i + ";\n"+
-						                "   uniform vec3 lightDir" + i + ";\n"+
-						                "   uniform bool viewpoint" + i + ";\n"+
-						                "   uniform bool finite" + i + ";\n";
-				}
-			}
-
-			result = result + "	void main(void) {\n";
-
-			for (i=0; i < nclipplanes;i++)
-			  result = result + "	  if (dot(vPosition, vClipplane"+i+") < 0.0) discard;\n";
-
-			if (is_lit) {
-				result = result + "	  vec3 eye = normalize(-vPosition.xyz);\n"+
-				                  "   vec3 lightdir;\n"+
-				                  "   vec4 colDiff;\n"+
-				                  "   vec3 halfVec;\n"+
-				                  "   vec4 lighteffect = vec4(emission, 0.);\n"+
-				                  "   vec3 col;\n"+
-				                  "   float nDotL;\n";
-				if (fixed_quads) {
-					result = result +   "	  vec3 n = vec3(0., 0., 1.);\n";
-				}
-				else {
-					result = result +   "	  vec3 n = normalize(vNormal);\n"+
-						                  "   n = -faceforward(n, n, eye);\n";
-				}
         for (i=0; i < nlights; i++) {
-					result = result + "   colDiff = vec4(vCol.rgb * diffuse" + i + ", vCol.a);\n"+
-					                  "   lightdir = lightDir" + i + ";\n"+
-					                  "   if (!viewpoint" + i +")\n"+
-						                "     lightdir = (mvMatrix * vec4(lightdir, 1.)).xyz;\n"+
-						                "   if (!finite" + i + ") {\n"+
-						                "     halfVec = normalize(lightdir + eye);\n"+
-					                  "   } else {\n"+
-						                "     lightdir = normalize(lightdir - vPosition.xyz);\n"+
-									          "     halfVec = normalize(lightdir + eye);\n"+
-					                  "   }\n"+
-					                  "	  col = ambient" + i + ";\n"+
-						                "   nDotL = dot(n, lightdir);\n"+
-						                "   col = col + max(nDotL, 0.) * colDiff.rgb;\n"+
-						                "   col = col + pow(max(dot(halfVec, n), 0.), shininess) * specular" + i + ";\n"+
-						                "   lighteffect = lighteffect + vec4(col, colDiff.a);\n";
-				}
+          result = result + "    uniform vec3 ambient" + i + ";\n"+
+                            "   uniform vec3 specular" + i +"; // light*material\n"+
+                            "   uniform vec3 diffuse" + i + ";\n"+
+                            "   uniform vec3 lightDir" + i + ";\n"+
+                            "   uniform bool viewpoint" + i + ";\n"+
+                            "   uniform bool finite" + i + ";\n";
+        }
+      }
 
-		  } else {
-				result = result +   "   vec4 colDiff = vCol;\n"+
-                            "	  vec4 lighteffect = colDiff;\n";
-			}
+      result = result + "  void main(void) {\n";
 
-			if ((has_texture && texture_format === "rgba") || type === "text")
-				result = result +   "	  vec4 textureColor = lighteffect*texture2D(uSampler, vTexcoord);\n";
+      for (i=0; i < nclipplanes;i++)
+        result = result + "    if (dot(vPosition, vClipplane"+i+") < 0.0) discard;\n";
 
-			if (has_texture) {
-			  result = result + {
-						rgb:            "   vec4 textureColor = lighteffect*vec4(texture2D(uSampler, vTexcoord).rgb, 1.);\n",
-						alpha:          "   vec4 textureColor = texture2D(uSampler, vTexcoord);\n"+
+      if (is_lit) {
+        result = result + "    vec3 eye = normalize(-vPosition.xyz);\n"+
+                          "   vec3 lightdir;\n"+
+                          "   vec4 colDiff;\n"+
+                          "   vec3 halfVec;\n"+
+                          "   vec4 lighteffect = vec4(emission, 0.);\n"+
+                          "   vec3 col;\n"+
+                          "   float nDotL;\n";
+        if (fixed_quads) {
+          result = result +   "    vec3 n = vec3(0., 0., 1.);\n";
+        }
+        else {
+          result = result +   "    vec3 n = normalize(vNormal);\n"+
+                              "   n = -faceforward(n, n, eye);\n";
+        }
+        for (i=0; i < nlights; i++) {
+          result = result + "   colDiff = vec4(vCol.rgb * diffuse" + i + ", vCol.a);\n"+
+                            "   lightdir = lightDir" + i + ";\n"+
+                            "   if (!viewpoint" + i +")\n"+
+                            "     lightdir = (mvMatrix * vec4(lightdir, 1.)).xyz;\n"+
+                            "   if (!finite" + i + ") {\n"+
+                            "     halfVec = normalize(lightdir + eye);\n"+
+                            "   } else {\n"+
+                            "     lightdir = normalize(lightdir - vPosition.xyz);\n"+
+                            "     halfVec = normalize(lightdir + eye);\n"+
+                            "   }\n"+
+                            "    col = ambient" + i + ";\n"+
+                            "   nDotL = dot(n, lightdir);\n"+
+                            "   col = col + max(nDotL, 0.) * colDiff.rgb;\n"+
+                            "   col = col + pow(max(dot(halfVec, n), 0.), shininess) * specular" + i + ";\n"+
+                            "   lighteffect = lighteffect + vec4(col, colDiff.a);\n";
+        }
+
+      } else {
+        result = result +   "   vec4 colDiff = vCol;\n"+
+                            "    vec4 lighteffect = colDiff;\n";
+      }
+
+      if ((has_texture && texture_format === "rgba") || type === "text")
+        result = result +   "    vec4 textureColor = lighteffect*texture2D(uSampler, vTexcoord);\n";
+
+      if (has_texture) {
+        result = result + {
+            rgb:            "   vec4 textureColor = lighteffect*vec4(texture2D(uSampler, vTexcoord).rgb, 1.);\n",
+            alpha:          "   vec4 textureColor = texture2D(uSampler, vTexcoord);\n"+
                             "   float luminance = dot(vec3(1.,1.,1.), textureColor.rgb)/3.;\n"+
                             "   textureColor =  vec4(lighteffect.rgb, lighteffect.a*luminance);\n",
-						luminance:      "   vec4 textureColor = vec4(lighteffect.rgb*dot(texture2D(uSampler, vTexcoord).rgb, vec3(1.,1.,1.))/3., lighteffect.a);\n",
-					"luminance.alpha":"	  vec4 textureColor = texture2D(uSampler, vTexcoord);\n"+
-						                "   float luminance = dot(vec3(1.,1.,1.),textureColor.rgb)/3.;\n"+
-						                "   textureColor = vec4(lighteffect.rgb*luminance, lighteffect.a*textureColor.a);\n"
-			    }[texture_format]+
+            luminance:      "   vec4 textureColor = vec4(lighteffect.rgb*dot(texture2D(uSampler, vTexcoord).rgb, vec3(1.,1.,1.))/3., lighteffect.a);\n",
+          "luminance.alpha":"    vec4 textureColor = texture2D(uSampler, vTexcoord);\n"+
+                            "   float luminance = dot(vec3(1.,1.,1.),textureColor.rgb)/3.;\n"+
+                            "   textureColor = vec4(lighteffect.rgb*luminance, lighteffect.a*textureColor.a);\n"
+          }[texture_format]+
                             "   gl_FragColor = textureColor;\n";
-			} else if (type === "text") {
-			  result = result +   "	  if (textureColor.a < 0.1)\n"+
+      } else if (type === "text") {
+        result = result +   "    if (textureColor.a < 0.1)\n"+
                             "     discard;\n"+
                             "   else\n"+
                             "     gl_FragColor = textureColor;\n";
-			} else
-			  result = result +   "   gl_FragColor = lighteffect;\n";
+      } else
+        result = result +   "   gl_FragColor = lighteffect;\n";
 
-			result = result + "	}\n";
+      result = result + "  }\n";
       return result;
     };
 
@@ -474,63 +486,63 @@ rglwidgetClass = function() {
         shader = gl.createShader(shaderType);
         gl.shaderSource(shader, code);
         gl.compileShader(shader);
-        if (gl.getShaderParameter(shader, gl.COMPILE_STATUS) === 0)
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS) && !gl.isContextLost())
             alert(gl.getShaderInfoLog(shader));
         return shader;
     };
 
-    this.handleLoadedTexture = function(texture, textureCanvas) {
-	    var gl = this.gl;
-	    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    this.handleLoadedTexture = function(texture, textureCanvas) { 
+      var gl = this.gl || this.initGL();
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 
-	    gl.bindTexture(gl.TEXTURE_2D, texture);
-	    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textureCanvas);
-	    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-	    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
-	    gl.generateMipmap(gl.TEXTURE_2D);
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textureCanvas);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+      gl.generateMipmap(gl.TEXTURE_2D);
 
-	    gl.bindTexture(gl.TEXTURE_2D, null);
-	  };
+      gl.bindTexture(gl.TEXTURE_2D, null);
+    };
 
-	  this.loadImageToTexture = function(uri, texture) {
-	    var canvas = this.textureCanvas,
-	        ctx = canvas.getContext("2d"),
-	        image = new Image(),
-	        self = this;
+    this.loadImageToTexture = function(uri, texture) {
+      var canvas = this.textureCanvas,
+          ctx = canvas.getContext("2d"),
+          image = new Image(),
+          self = this;
 
-	     image.onload = function() {
-	       var w = image.width,
-	           h = image.height,
-	           canvasX = self.getPowerOfTwo(w),
-	           canvasY = self.getPowerOfTwo(h),
-	           gl = self.gl,
-	           maxTexSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
-	       if (maxTexSize > 4096) maxTexSize = 4096;
-	       while (canvasX > 1 && canvasY > 1 && (canvasX > maxTexSize || canvasY > maxTexSize)) {
-	         canvasX /= 2;
-	         canvasY /= 2;
-	       }
-	       canvas.width = canvasX;
-	       canvas.height = canvasY;
-	       ctx.imageSmoothingEnabled = true;
-	       ctx.drawImage(image, 0, 0, canvasX, canvasY);
-	       self.handleLoadedTexture(texture, canvas);
-	       self.drawScene();
-	     };
-	     image.src = uri;
-	   };
+       image.onload = function() {
+         var w = image.width,
+             h = image.height,
+             canvasX = self.getPowerOfTwo(w),
+             canvasY = self.getPowerOfTwo(h),
+             gl = self.gl || self.initGL(),
+             maxTexSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+         if (maxTexSize > 4096) maxTexSize = 4096;
+         while (canvasX > 1 && canvasY > 1 && (canvasX > maxTexSize || canvasY > maxTexSize)) {
+           canvasX /= 2;
+           canvasY /= 2;
+         }
+         canvas.width = canvasX;
+         canvas.height = canvasY;
+         ctx.imageSmoothingEnabled = true;
+         ctx.drawImage(image, 0, 0, canvasX, canvasY);
+         self.handleLoadedTexture(texture, canvas);
+         self.drawScene();
+       };
+       image.src = uri;
+     };
 
     this.drawTextToCanvas = function(text, cex, family, font) {
-	     var canvasX, canvasY,
-	         textY,
+       var canvasX, canvasY,
+           textY,
            scaling = 20,
-	         textColour = "white",
+           textColour = "white",
 
-	         backgroundColour = "rgba(0,0,0,0)",
+           backgroundColour = "rgba(0,0,0,0)",
            canvas = this.textureCanvas,
-	         ctx = canvas.getContext("2d"),
+           ctx = canvas.getContext("2d"),
            i, textHeights = [], widths = [], offset = 0, offsets = [],
-	         fontStrings = [],
+           fontStrings = [],
            getFontString = function(i) {
              textHeights[i] = scaling*cex[i];
              var fontString = textHeights[i] + "px",
@@ -551,48 +563,49 @@ rglwidgetClass = function() {
        family = this.repeatToLen(family, text.length);
        font = this.repeatToLen(font, text.length);
 
-	     canvasX = 1;
-	     for (i = 0; i < text.length; i++)  {
-	       ctx.font = fontStrings[i] = getFontString(i);
-	       widths[i] = ctx.measureText(text[i]).width;
-	       offset = offsets[i] = offset + 2*textHeights[i];
-	       canvasX = (widths[i] > canvasX) ? widths[i] : canvasX;
-	     }
-	     canvasX = this.getPowerOfTwo(canvasX);
-	     canvasY = this.getPowerOfTwo(offset);
+       canvasX = 1;
+       for (i = 0; i < text.length; i++)  {
+         ctx.font = fontStrings[i] = getFontString(i);
+         widths[i] = ctx.measureText(text[i]).width;
+         offset = offsets[i] = offset + 2*textHeights[i];
+         canvasX = (widths[i] > canvasX) ? widths[i] : canvasX;
+       }
+       canvasX = this.getPowerOfTwo(canvasX);
+       canvasY = this.getPowerOfTwo(offset);
 
-	     canvas.width = canvasX;
-	     canvas.height = canvasY;
+       canvas.width = canvasX;
+       canvas.height = canvasY;
 
-	     ctx.fillStyle = backgroundColour;
-	     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+       ctx.fillStyle = backgroundColour;
+       ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-	     ctx.textBaseline = "alphabetic";
-	     for(i = 0; i < text.length; i++) {
-	       textY = offsets[i];
-	       ctx.font = fontStrings[i];
-	       ctx.fillStyle = textColour;
-	       ctx.textAlign = "left";
-	       ctx.fillText(text[i], 0,  textY);
-	     }
-	     return {canvasX:canvasX, canvasY:canvasY,
-	             widths:widths, textHeights:textHeights,
-	             offsets:offsets};
-	   };
+       ctx.textBaseline = "alphabetic";
+       for(i = 0; i < text.length; i++) {
+         textY = offsets[i];
+         ctx.font = fontStrings[i];
+         ctx.fillStyle = textColour;
+         ctx.textAlign = "left";
+         ctx.fillText(text[i], 0,  textY);
+       }
+       return {canvasX:canvasX, canvasY:canvasY,
+               widths:widths, textHeights:textHeights,
+               offsets:offsets};
+     };
 
     this.setViewport = function(id) {
-	     var gl = this.gl,
-	       vp = this.getObj(id).par3d.viewport,
-	       x = vp.x*this.canvas.width,
-	       y = vp.y*this.canvas.height,
-	       width = vp.width*this.canvas.width,
-	       height = vp.height*this.canvas.height;
-	     this.vp = {x:x, y:y, width:width, height:height};
-	     gl.viewport(x, y, width, height);
-	     gl.scissor(x, y, width, height);
-	   };
+       var gl = this.gl || this.initGL(),
+         vp = this.getObj(id).par3d.viewport,
+         x = vp.x*this.canvas.width,
+         y = vp.y*this.canvas.height,
+         width = vp.width*this.canvas.width,
+         height = vp.height*this.canvas.height;
+       this.vp = {x:x, y:y, width:width, height:height};
+       gl.viewport(x, y, width, height);
+       gl.scissor(x, y, width, height);
+       gl.enable(gl.SCISSOR_TEST);
+     };
 
-	  this.setprMatrix = function(id) {
+    this.setprMatrix = function(id) {
        var subscene = this.getObj(id),
           embedding = subscene.embeddings.projection;
        if (embedding === "replace")
@@ -611,51 +624,62 @@ rglwidgetClass = function() {
        if (radius <= 0) radius = 1;
        var observer = subscene.par3d.observer,
            distance = observer[2],
-	         t = Math.tan(subscene.par3d.FOV*Math.PI/360),
-	         near = distance - radius,
-	         far = distance + radius,
-	         hlen = t*near,
-	         aspect = this.vp.width/this.vp.height,
-	         z = subscene.par3d.zoom;
-	     if (aspect > 1)
-	       this.prMatrix.frustum(-hlen*aspect*z, hlen*aspect*z,
-	                        -hlen*z, hlen*z, near, far);
-	     else
-	       this.prMatrix.frustum(-hlen*z, hlen*z,
-	                        -hlen*z/aspect, hlen*z/aspect,
-	                        near, far);
-	   };
+           FOV = subscene.par3d.FOV, ortho = FOV === 0,
+           t = ortho ? 1 : Math.tan(FOV*Math.PI/360),
+           near = distance - radius,
+           far = distance + radius,
+           hlen = t*near,
+           aspect = this.vp.width/this.vp.height,
+           z = subscene.par3d.zoom;
+       if (ortho) {
+         if (aspect > 1)
+           this.prMatrix.ortho(-hlen*aspect*z, hlen*aspect*z,
+                          -hlen*z, hlen*z, near, far);
+         else
+           this.prMatrix.ortho(-hlen*z, hlen*z,
+                          -hlen*z/aspect, hlen*z/aspect,
+                          near, far);
+       } else {
+         if (aspect > 1)
+           this.prMatrix.frustum(-hlen*aspect*z, hlen*aspect*z,
+                          -hlen*z, hlen*z, near, far);
+         else
+           this.prMatrix.frustum(-hlen*z, hlen*z,
+                          -hlen*z/aspect, hlen*z/aspect,
+                          near, far);
+       }
+     };
 
-	  this.setmvMatrix = function(id) {
-	     var observer = this.getObj(id).par3d.observer;
-	     this.mvMatrix.makeIdentity();
-	     this.setmodelMatrix(id);
-	     this.mvMatrix.translate(-observer[0], -observer[1], -observer[2]);
+    this.setmvMatrix = function(id) {
+       var observer = this.getObj(id).par3d.observer;
+       this.mvMatrix.makeIdentity();
+       this.setmodelMatrix(id);
+       this.mvMatrix.translate(-observer[0], -observer[1], -observer[2]);
 
-	   };
+     };
 
     this.setmodelMatrix = function(id) {
-	    var subscene = this.getObj(id),
-	        embedding = subscene.embeddings.model;
-	    if (embedding !== "inherit") {
-	      var scale = subscene.par3d.scale,
-	          bbox = subscene.par3d.bbox,
-	          center = [(bbox[0]+bbox[1])/2,
-	                    (bbox[2]+bbox[3])/2,
-	                    (bbox[4]+bbox[5])/2];
-	       this.mvMatrix.translate(-center[0], -center[1], -center[2]);
-	       this.mvMatrix.scale(scale[0], scale[1], scale[2]);
-	       this.mvMatrix.multRight( subscene.par3d.userMatrix );
-	     }
-	     if (embedding !== "replace")
-	       this.setmodelMatrix(subscene.parent);
-	   };
+      var subscene = this.getObj(id),
+          embedding = subscene.embeddings.model;
+      if (embedding !== "inherit") {
+        var scale = subscene.par3d.scale,
+            bbox = subscene.par3d.bbox,
+            center = [(bbox[0]+bbox[1])/2,
+                      (bbox[2]+bbox[3])/2,
+                      (bbox[4]+bbox[5])/2];
+         this.mvMatrix.translate(-center[0], -center[1], -center[2]);
+         this.mvMatrix.scale(scale[0], scale[1], scale[2]);
+         this.mvMatrix.multRight( subscene.par3d.userMatrix );
+       }
+       if (embedding !== "replace")
+         this.setmodelMatrix(subscene.parent);
+     };
 
-	  this.setnormMatrix = function(subsceneid) {
-	     var self = this,
-	     recurse = function(id) {
-	       var sub = self.getObj(id),
-	           embedding = sub.embeddings.model;
+    this.setnormMatrix = function(subsceneid) {
+       var self = this,
+       recurse = function(id) {
+         var sub = self.getObj(id),
+             embedding = sub.embeddings.model;
          if (embedding !== "inherit") {
            var scale = sub.par3d.scale;
            self.normMatrix.scale(1/scale[0], 1/scale[1], 1/scale[2]);
@@ -666,12 +690,12 @@ rglwidgetClass = function() {
        };
        self.normMatrix.makeIdentity();
        recurse(subsceneid);
-	   };
+     };
 
-	  this.setprmvMatrix = function() {
-	     this.prmvMatrix = new CanvasMatrix4( this.mvMatrix );
-	     this.prmvMatrix.multRight( this.prMatrix );
-	   };
+    this.setprmvMatrix = function() {
+       this.prmvMatrix = new CanvasMatrix4( this.mvMatrix );
+       this.prmvMatrix.multRight( this.prMatrix );
+     };
 
     this.countClipplanes = function() {
       return this.countObjs("clipplanes");
@@ -722,8 +746,11 @@ rglwidgetClass = function() {
 
     this.copyObj = function(id, reuse) {
       var obj = this.getObj(id),
-      	  prev = document.getElementById(reuse).rglinstance,
-      	  prevobj = prev.getObj(id),
+          prev = document.getElementById(reuse);
+      if (prev !== null) {
+        prev = prev.rglinstance;
+        var
+          prevobj = prev.getObj(id),
           fields = ["flags", "type",
                     "colors", "vertices", "centers",
                     "normals", "offsets",
@@ -736,10 +763,12 @@ rglwidgetClass = function() {
                     "par3d", "userMatrix",
                     "viewpoint", "finite"],
           i;
-      for (i = 0; i < fields.length; i++) {
-        if (typeof prevobj[fields[i]] !== "undefined")
-          obj[fields[i]] = prevobj[fields[i]];
-      }
+        for (i = 0; i < fields.length; i++) {
+          if (typeof prevobj[fields[i]] !== "undefined")
+            obj[fields[i]] = prevobj[fields[i]];
+        }
+      } else
+        console.warn("copyObj failed");
     };
 
     this.planeUpdateTriangles = function(id, bbox) {
@@ -763,19 +792,19 @@ rglwidgetClass = function() {
               u = perms[0][i];
               v = perms[1][i];
               w = perms[2][i];
-              if (A[w] != 0.0) {
+              if (A[w] !== 0.0) {
                 intersect = -(d + A[u]*bbox[j+2*u] + A[v]*bbox[k+2*v])/A[w];
-  	            if (bbox[2*w] < intersect && intersect < bbox[1+2*w]) {
-  	              xrow = [];
-  	              xrow[u] = bbox[j+2*u];
-  	              xrow[v] = bbox[k+2*v];
-  	              xrow[w] = intersect;
-  	              x.push(xrow);
-  	              face1[nhits] = j + 2*u;
-  	              face2[nhits] = k + 2*v;
-  	              nhits++;
-  	            }
-  	          }
+                if (bbox[2*w] < intersect && intersect < bbox[1+2*w]) {
+                  xrow = [];
+                  xrow[u] = bbox[j+2*u];
+                  xrow[v] = bbox[k+2*v];
+                  xrow[w] = intersect;
+                  x.push(xrow);
+                  face1[nhits] = j + 2*u;
+                  face2[nhits] = k + 2*v;
+                  nhits++;
+                }
+              }
             }
 
             if (nhits > 3) {
@@ -783,8 +812,8 @@ rglwidgetClass = function() {
               for (i=0; i<nhits-2; i++) {
                 which = 0; /* initialize to suppress warning */
                 for (j=i+1; j<nhits; j++) {
-                  if (face1[i] == face1[j] || face1[i] == face2[j]
-                      || face2[i] == face1[j] || face2[i] == face2[j] ) {
+                  if (face1[i] == face1[j] || face1[i] == face2[j] ||
+                      face2[i] == face1[j] || face2[i] == face2[j] ) {
                     which = j;
                     break;
                   }
@@ -818,17 +847,17 @@ rglwidgetClass = function() {
     };
 
     this.initObj = function(id) {
-	    var obj = this.getObj(id),
-	        flags = obj.flags,
-	        type = obj.type,
-	        is_indexed = flags & this.f_is_indexed,
+      var obj = this.getObj(id),
+          flags = obj.flags,
+          type = obj.type,
+          is_indexed = flags & this.f_is_indexed,
           is_lit = flags & this.f_is_lit,
-		      has_texture = flags & this.f_has_texture,
-		      fixed_quads = flags & this.f_fixed_quads,
-		      depth_sort = flags & this.f_depth_sort,
-		      sprites_3d = flags & this.f_sprites_3d,
-		      sprite_3d = flags & this.f_sprite_3d,
-		      gl = this.gl,
+          has_texture = flags & this.f_has_texture,
+          fixed_quads = flags & this.f_fixed_quads,
+          depth_sort = flags & this.f_depth_sort,
+          sprites_3d = flags & this.f_sprites_3d,
+          sprite_3d = flags & this.f_sprite_3d,
+          gl = this.gl || this.initGL(),
           texinfo, drawtype, nclipplanes, f, frowsize, nrows,
           i,j,v, mat, uri, matobj;
 
@@ -838,7 +867,7 @@ rglwidgetClass = function() {
 
     obj.initialized = true;
 
-    if (type === "background" || type === "bboxdeco" || type === "subscene")
+    if (type === "bboxdeco" || type === "subscene")
       return;
 
     if (type === "light") {
@@ -854,110 +883,120 @@ rglwidgetClass = function() {
       return;
     }
 
-		if (!sprites_3d) {
-			obj.prog = gl.createProgram();
-			gl.attachShader(obj.prog, this.getShader( gl.VERTEX_SHADER,
-			  this.getVertexShader(id) ));
-			gl.attachShader(obj.prog, this.getShader( gl.FRAGMENT_SHADER,
-			                this.getFragmentShader(id) ));
-			//  Force aPos to location 0, aCol to location 1
-			gl.bindAttribLocation(obj.prog, 0, "aPos");
-			gl.bindAttribLocation(obj.prog, 1, "aCol");
-			gl.linkProgram(obj.prog);
-      var linked = gl.getProgramParameter(obj.prog, gl.LINK_STATUS);
-      if (!linked) {
+    if (type == "background" && typeof obj.ids !== "undefined") {
+      obj.quad = this.flatten([].concat(obj.ids));
+      return;
+    }
 
-        // An error occurred while linking
-        var lastError = gl.getProgramInfoLog(program);
-        console.warn("Error in program linking:" + lastError);
-
-        gl.deleteProgram(program);
-      }
-		}
-
-		if (type === "text") {
-      texinfo = this.drawTextToCanvas(obj.texts,
-                                      this.flatten(obj.cex),
-                                      this.flatten(obj.family),
-                                      this.flatten(obj.family));
-		}
-
-		if (fixed_quads && !sprites_3d) {
-		  obj.ofsLoc = gl.getAttribLocation(obj.prog, "aOfs");
-		}
-
-		if (sprite_3d) {
-			obj.origLoc = gl.getUniformLocation(obj.prog, "uOrig");
-			obj.sizeLoc = gl.getUniformLocation(obj.prog, "uSize");
-			obj.usermatLoc = gl.getUniformLocation(obj.prog, "usermat");
-		}
-
-		if (has_texture || type == "text") {
-		  obj.texture = gl.createTexture();
-			obj.texLoc = gl.getAttribLocation(obj.prog, "aTexcoord");
-			obj.sampler = gl.getUniformLocation(obj.prog, "uSampler");
-		}
-
-		if (has_texture) {
-		  mat = obj.material;
-		  if (typeof mat.uri !== "undefined")
-		    uri = mat.uri;
-		  else if (typeof mat.uriElementId === "undefined") {
-		    matobj = this.getObj(mat.uriId);
-		    if (typeof matobj !== "undefined") {
-		      uri = matobj.material.uri;
-		    } else {
-		      uri = "";
-		    }
-		  } else
-		    uri = document.getElementById(mat.uriElementId).rglinstance.getObj(mat.uriId).material.uri;
-
-			this.loadImageToTexture(uri, obj.texture);
-		}
-
-		if (type === "text") {
-		  this.handleLoadedTexture(obj.texture, this.textureCanvas);
-		}
+    if (typeof obj.vertices === "undefined")
+      obj.vertices = [];
 
     v = obj.vertices;
     obj.vertexCount = v.length;
     if (!obj.vertexCount) return;
 
+    if (!sprites_3d) {
+      if (gl.isContextLost()) return;
+      obj.prog = gl.createProgram();
+      gl.attachShader(obj.prog, this.getShader( gl.VERTEX_SHADER,
+        this.getVertexShader(id) ));
+      gl.attachShader(obj.prog, this.getShader( gl.FRAGMENT_SHADER,
+                      this.getFragmentShader(id) ));
+      //  Force aPos to location 0, aCol to location 1
+      gl.bindAttribLocation(obj.prog, 0, "aPos");
+      gl.bindAttribLocation(obj.prog, 1, "aCol");
+      gl.linkProgram(obj.prog);
+      var linked = gl.getProgramParameter(obj.prog, gl.LINK_STATUS);
+      if (!linked) {
+
+        // An error occurred while linking
+        var lastError = gl.getProgramInfoLog(obj.prog);
+        console.warn("Error in program linking:" + lastError);
+
+        gl.deleteProgram(obj.prog);
+        return;
+      }
+    }
+
+    if (type === "text") {
+      texinfo = this.drawTextToCanvas(obj.texts,
+                                      this.flatten(obj.cex),
+                                      this.flatten(obj.family),
+                                      this.flatten(obj.family));
+    }
+
+    if (fixed_quads && !sprites_3d) {
+      obj.ofsLoc = gl.getAttribLocation(obj.prog, "aOfs");
+    }
+
+    if (sprite_3d) {
+      obj.origLoc = gl.getUniformLocation(obj.prog, "uOrig");
+      obj.sizeLoc = gl.getUniformLocation(obj.prog, "uSize");
+      obj.usermatLoc = gl.getUniformLocation(obj.prog, "usermat");
+    }
+
+    if (has_texture || type == "text") {
+      obj.texture = gl.createTexture();
+      obj.texLoc = gl.getAttribLocation(obj.prog, "aTexcoord");
+      obj.sampler = gl.getUniformLocation(obj.prog, "uSampler");
+    }
+
+    if (has_texture) {
+      mat = obj.material;
+      if (typeof mat.uri !== "undefined")
+        uri = mat.uri;
+      else if (typeof mat.uriElementId === "undefined") {
+        matobj = this.getObj(mat.uriId);
+        if (typeof matobj !== "undefined") {
+          uri = matobj.material.uri;
+        } else {
+          uri = "";
+        }
+      } else
+        uri = document.getElementById(mat.uriElementId).rglinstance.getObj(mat.uriId).material.uri;
+
+      this.loadImageToTexture(uri, obj.texture);
+    }
+
+    if (type === "text") {
+      this.handleLoadedTexture(obj.texture, this.textureCanvas);
+    }
+
     var stride = 3, nc, cofs, nofs, radofs, oofs, tofs, vnew, v1;
 
     nc = obj.colorCount = obj.colors.length;
     if (nc > 1) {
-    	cofs = stride;
-    	stride = stride + 4;
-    	v = this.cbind(v, obj.colors);
+      cofs = stride;
+      stride = stride + 4;
+      v = this.cbind(v, obj.colors);
     } else {
-    	cofs = -1;
-    	obj.onecolor = this.flatten(obj.colors);
+      cofs = -1;
+      obj.onecolor = this.flatten(obj.colors);
     }
 
     if (typeof obj.normals !== "undefined") {
-    	nofs = stride;
-    	stride = stride + 3;
-    	v = this.cbind(v, typeof obj.pnormals !== "undefined" ? obj.pnormals : obj.normals);
+      nofs = stride;
+      stride = stride + 3;
+      v = this.cbind(v, typeof obj.pnormals !== "undefined" ? obj.pnormals : obj.normals);
     } else
-    	nofs = -1;
+      nofs = -1;
 
     if (typeof obj.radii !== "undefined") {
-    	radofs = stride;
-    	stride = stride + 1;
-    	if (obj.radii.length === v.length) {
-    	  v = this.cbind(v, obj.radii);
-    	} else if (obj.radii.length === 1) {
-    	  v = v.map(function(row, i, arr) { return row.concat(obj.radii[0]);});
-    	}
+      radofs = stride;
+      stride = stride + 1;
+      if (obj.radii.length === v.length) {
+        v = this.cbind(v, obj.radii);
+      } else if (obj.radii.length === 1) {
+        v = v.map(function(row, i, arr) { return row.concat(obj.radii[0]);});
+      }
     } else
-    	radofs = -1;
+      radofs = -1;
 
     if (type == "sprites" && !sprites_3d) {
       tofs = stride;
       stride += 2;
-    	oofs = stride;
-    	stride += 2;
+      oofs = stride;
+      stride += 2;
       vnew = new Array(4*v.length);
       var size = obj.radii, s = size[0]/2;
       for (i=0; i < v.length; i++) {
@@ -984,22 +1023,22 @@ rglwidgetClass = function() {
         for (j=0; j < 4; j++) {
           v1 = vnew[4*i+j];
           v1[tofs+2] = 2*(v1[tofs]-v1[tofs+2])*texinfo.widths[i];
-	        v1[tofs+3] = 2*(v1[tofs+1]-v1[tofs+3])*texinfo.textHeights[i];
-	        v1[tofs] *= texinfo.widths[i]/texinfo.canvasX;
-	        v1[tofs+1] = 1.0-(texinfo.offsets[i] -
-	            v1[tofs+1]*texinfo.textHeights[i])/texinfo.canvasY;
-	        vnew[4*i+j] = v1;
+          v1[tofs+3] = 2*(v1[tofs+1]-v1[tofs+3])*texinfo.textHeights[i];
+          v1[tofs] *= texinfo.widths[i]/texinfo.canvasX;
+          v1[tofs+1] = 1.0-(texinfo.offsets[i] -
+              v1[tofs+1]*texinfo.textHeights[i])/texinfo.canvasY;
+          vnew[4*i+j] = v1;
         }
       }
       v = vnew;
       obj.vertexCount = v.length;
     } else if (typeof obj.texcoords !== "undefined") {
-    	tofs = stride;
-    	stride += 2;
-    	oofs = -1;
-    	v = this.cbind(v, obj.texcoords);
+      tofs = stride;
+      stride += 2;
+      oofs = -1;
+      v = this.cbind(v, obj.texcoords);
     } else {
-     	tofs = -1;
+       tofs = -1;
       oofs = -1;
     }
 
@@ -1012,47 +1051,47 @@ rglwidgetClass = function() {
     obj.values = new Float32Array(this.flatten(v));
 
     if (sprites_3d) {
-			obj.userMatrix = new CanvasMatrix4(obj.userMatrix);
-			obj.objects = this.flatten([].concat(obj.ids));
-			is_lit = false;
+      obj.userMatrix = new CanvasMatrix4(obj.userMatrix);
+      obj.objects = this.flatten([].concat(obj.ids));
+      is_lit = false;
     }
 
     if (is_lit && !fixed_quads) {
-			 obj.normLoc = gl.getAttribLocation(obj.prog, "aNorm");
+       obj.normLoc = gl.getAttribLocation(obj.prog, "aNorm");
     }
 
     nclipplanes = this.countClipplanes();
-		if (nclipplanes && !sprites_3d) {
-		  obj.clipLoc = [];
-		  for (i=0; i < nclipplanes; i++)
+    if (nclipplanes && !sprites_3d) {
+      obj.clipLoc = [];
+      for (i=0; i < nclipplanes; i++)
         obj.clipLoc[i] = gl.getUniformLocation(obj.prog,"vClipplane" + i);
-		}
+    }
 
-		if (is_lit) {
-		  obj.emissionLoc = gl.getUniformLocation(obj.prog, "emission");
-		  obj.emission = new Float32Array(this.stringToRgb(this.getMaterial(id, "emission")));
-		  obj.shininessLoc = gl.getUniformLocation(obj.prog, "shininess");
-		  obj.shininess = this.getMaterial(id, "shininess");
-		  obj.nlights = this.countLights();
-		  obj.ambientLoc = [];
-		  obj.ambient = new Float32Array(this.stringToRgb(this.getMaterial(id, "ambient")));
-		  obj.specularLoc = [];
-		  obj.specular = new Float32Array(this.stringToRgb(this.getMaterial(id, "specular")));
-		  obj.diffuseLoc = [];
-		  obj.lightDirLoc = [];
-		  obj.viewpointLoc = [];
-		  obj.finiteLoc = [];
-		  for (i=0; i < obj.nlights; i++) {
-		    obj.ambientLoc[i] = gl.getUniformLocation(obj.prog, "ambient" + i);
-		    obj.specularLoc[i] = gl.getUniformLocation(obj.prog, "specular" + i);
-		    obj.diffuseLoc[i] = gl.getUniformLocation(obj.prog, "diffuse" + i);
-		    obj.lightDirLoc[i] = gl.getUniformLocation(obj.prog, "lightDir" + i);
-		    obj.viewpointLoc[i] = gl.getUniformLocation(obj.prog, "viewpoint" + i);
-		    obj.finiteLoc[i] = gl.getUniformLocation(obj.prog, "finite" + i);
-		  }
-		}
+    if (is_lit) {
+      obj.emissionLoc = gl.getUniformLocation(obj.prog, "emission");
+      obj.emission = new Float32Array(this.stringToRgb(this.getMaterial(id, "emission")));
+      obj.shininessLoc = gl.getUniformLocation(obj.prog, "shininess");
+      obj.shininess = this.getMaterial(id, "shininess");
+      obj.nlights = this.countLights();
+      obj.ambientLoc = [];
+      obj.ambient = new Float32Array(this.stringToRgb(this.getMaterial(id, "ambient")));
+      obj.specularLoc = [];
+      obj.specular = new Float32Array(this.stringToRgb(this.getMaterial(id, "specular")));
+      obj.diffuseLoc = [];
+      obj.lightDirLoc = [];
+      obj.viewpointLoc = [];
+      obj.finiteLoc = [];
+      for (i=0; i < obj.nlights; i++) {
+        obj.ambientLoc[i] = gl.getUniformLocation(obj.prog, "ambient" + i);
+        obj.specularLoc[i] = gl.getUniformLocation(obj.prog, "specular" + i);
+        obj.diffuseLoc[i] = gl.getUniformLocation(obj.prog, "diffuse" + i);
+        obj.lightDirLoc[i] = gl.getUniformLocation(obj.prog, "lightDir" + i);
+        obj.viewpointLoc[i] = gl.getUniformLocation(obj.prog, "viewpoint" + i);
+        obj.finiteLoc[i] = gl.getUniformLocation(obj.prog, "finite" + i);
+      }
+    }
 
-		if (is_indexed) {
+    if (is_indexed) {
       if ((type === "quads" || type === "text" ||
            type === "sprites") && !sprites_3d) {
         nrows = Math.floor(obj.vertexCount/4);
@@ -1097,42 +1136,42 @@ rglwidgetClass = function() {
         }
         frowsize = 6;
       }
-		  obj.f = new Uint16Array(f);
-			if (depth_sort) {
-				drawtype = "DYNAMIC_DRAW";
-			} else {
-				drawtype = "STATIC_DRAW";
-			}
-		}
+      obj.f = new Uint16Array(f);
+      if (depth_sort) {
+        drawtype = "DYNAMIC_DRAW";
+      } else {
+        drawtype = "STATIC_DRAW";
+      }
+    }
 
-		if (type !== "spheres" && !sprites_3d) {
-		  obj.buf = gl.createBuffer();
-			gl.bindBuffer(gl.ARRAY_BUFFER, obj.buf);
-			gl.bufferData(gl.ARRAY_BUFFER, obj.values, gl.STATIC_DRAW); //
-		}
+    if (type !== "spheres" && !sprites_3d) {
+      obj.buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, obj.buf);
+      gl.bufferData(gl.ARRAY_BUFFER, obj.values, gl.STATIC_DRAW); //
+    }
 
-		if (is_indexed && type !== "spheres" && !sprites_3d) {
-			obj.ibuf = gl.createBuffer();
-			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.ibuf);
-			gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, obj.f, gl[drawtype]);
-		}
+    if (is_indexed && type !== "spheres" && !sprites_3d) {
+      obj.ibuf = gl.createBuffer();
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.ibuf);
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, obj.f, gl[drawtype]);
+    }
 
-		if (!sprites_3d) {
-			obj.mvMatLoc = gl.getUniformLocation(obj.prog, "mvMatrix");
-			obj.prMatLoc = gl.getUniformLocation(obj.prog, "prMatrix");
-		}
+    if (!sprites_3d) {
+      obj.mvMatLoc = gl.getUniformLocation(obj.prog, "mvMatrix");
+      obj.prMatLoc = gl.getUniformLocation(obj.prog, "prMatrix");
+    }
 
-		if (type === "text") {
-			obj.textScaleLoc = gl.getUniformLocation(obj.prog, "textScale");
-		}
+    if (type === "text") {
+      obj.textScaleLoc = gl.getUniformLocation(obj.prog, "textScale");
+    }
 
-		if (is_lit && !sprites_3d) {
-			obj.normMatLoc = gl.getUniformLocation(obj.prog, "normMatrix");
-		}
+    if (is_lit && !sprites_3d) {
+      obj.normMatLoc = gl.getUniformLocation(obj.prog, "normMatrix");
+    }
   };
 
     this.setDepthTest = function(id) {
-      var gl = this.gl,
+      var gl = this.gl || this.initGL(),
           tests = {never: gl.NEVER,
                    less:  gl.LESS,
                    equal: gl.EQUAL,
@@ -1145,603 +1184,636 @@ rglwidgetClass = function() {
       gl.depthFunc(test);
     };
 
-	  this.mode4type = {points : "POINTS",
-							       linestrip : "LINE_STRIP",
-							       abclines : "LINES",
-							       lines : "LINES",
-							       sprites : "TRIANGLES",
-							       planes : "TRIANGLES",
-							       text : "TRIANGLES",
-							       quads : "TRIANGLES",
-							       surface : "TRIANGLES",
-							       triangles : "TRIANGLES"};
+    this.mode4type = {points : "POINTS",
+                     linestrip : "LINE_STRIP",
+                     abclines : "LINES",
+                     lines : "LINES",
+                     sprites : "TRIANGLES",
+                     planes : "TRIANGLES",
+                     text : "TRIANGLES",
+                     quads : "TRIANGLES",
+                     surface : "TRIANGLES",
+                     triangles : "TRIANGLES"};
 
-	  this.drawObj = function(id, subsceneid) {
-	    var obj = this.getObj(id),
-	        subscene = this.getObj(subsceneid),
-	        flags = obj.flags,
-	        type = obj.type,
-	        is_indexed = flags & this.f_is_indexed,
+    this.drawObj = function(id, subsceneid) {
+      var obj = this.getObj(id),
+          subscene = this.getObj(subsceneid),
+          flags = obj.flags,
+          type = obj.type,
+          is_indexed = flags & this.f_is_indexed,
           is_lit = flags & this.f_is_lit,
-		      has_texture = flags & this.f_has_texture,
-		      fixed_quads = flags & this.f_fixed_quads,
-		      depth_sort = flags & this.f_depth_sort,
-		      sprites_3d = flags & this.f_sprites_3d,
-		      sprite_3d = flags & this.f_sprite_3d,
-		      is_lines = flags & this.f_is_lines,
-		      gl = this.gl,
-		      sphereMV, baseofs, ofs, sscale, i, count, light,
-		      faces;
+          has_texture = flags & this.f_has_texture,
+          fixed_quads = flags & this.f_fixed_quads,
+          depth_sort = flags & this.f_depth_sort,
+          sprites_3d = flags & this.f_sprites_3d,
+          sprite_3d = flags & this.f_sprite_3d,
+          is_lines = flags & this.f_is_lines,
+          gl = this.gl || this.initGL(),
+          sphereMV, baseofs, ofs, sscale, i, count, light,
+          faces;
 
-		  if (typeof id !== "number") {
-		    this.alertOnce("drawObj id is "+typeof id);
-		  }
+      if (typeof id !== "number") {
+        this.alertOnce("drawObj id is "+typeof id);
+      }
 
-			if (type === "planes") {
-			  if (obj.bbox !== subscene.par3d.bbox || !obj.initialized) {
-			    this.planeUpdateTriangles(id, subscene.par3d.bbox);
-			  }
-			}
+      if (type === "planes") {
+        if (obj.bbox !== subscene.par3d.bbox || !obj.initialized) {
+          this.planeUpdateTriangles(id, subscene.par3d.bbox);
+        }
+      }
 
       if (!obj.initialized)
         this.initObj(id);
 
-      if (type === "light" || type === "bboxdeco")
+      if (type === "clipplanes") {
+        count = obj.offsets.length;
+        var IMVClip = [];
+        for (i=0; i < count; i++) {
+          IMVClip[i] = this.multMV(this.invMatrix, obj.vClipplane.slice(4*i, 4*(i+1)));
+         }
+         obj.IMVClip = IMVClip;
         return;
+      }
 
-		  if (type === "clipplanes") {
-			  count = obj.offsets.length;
-			  var IMVClip = [];
-			  for (i=0; i < count; i++) {
-				  IMVClip[i] = this.multMV(this.invMatrix, obj.vClipplane.slice(4*i, 4*(i+1)));
- 			  }
- 			  obj.IMVClip = IMVClip;
+      if (type === "light" || type === "bboxdeco" || !obj.vertexCount)
         return;
-			}
 
       this.setDepthTest(id);
 
       if (sprites_3d) {
-			  var norigs = obj.vertices.length,
-			      savenorm = new CanvasMatrix4(this.normMatrix);
-			  this.origs = obj.vertices;
-				this.usermat = new Float32Array(obj.userMatrix.getAsArray());
-				this.radii = obj.radii;
-				this.normMatrix = subscene.spriteNormmat;
-				for (this.iOrig=0; this.iOrig < norigs; this.iOrig++) {
-			    for (i=0; i < obj.objects.length; i++) {
-					  this.drawObj(obj.objects[i], subsceneid);
-					}
-				}
-				this.normMatrix = savenorm;
-				return;
-			} else {
-				gl.useProgram(obj.prog);
-			}
+        var norigs = obj.vertices.length,
+            savenorm = new CanvasMatrix4(this.normMatrix);
+        this.origs = obj.vertices;
+        this.usermat = new Float32Array(obj.userMatrix.getAsArray());
+        this.radii = obj.radii;
+        this.normMatrix = subscene.spriteNormmat;
+        for (this.iOrig=0; this.iOrig < norigs; this.iOrig++) {
+          for (i=0; i < obj.objects.length; i++) {
+            this.drawObj(obj.objects[i], subsceneid);
+          }
+        }
+        this.normMatrix = savenorm;
+        return;
+      } else {
+        gl.useProgram(obj.prog);
+      }
 
-			if (sprite_3d) {
-			  gl.uniform3fv(obj.origLoc, new Float32Array(this.origs[this.iOrig]));
-			  if (this.radii.length > 1) {
-				  gl.uniform1f(obj.sizeLoc, this.radii[this.iOrig][0]);
-			  } else {
-			    gl.uniform1f(obj.sizeLoc, this.radii[0][0]);
-			  }
-				gl.uniformMatrix4fv(obj.usermatLoc, false, this.usermat);
-			}
+      if (sprite_3d) {
+        gl.uniform3fv(obj.origLoc, new Float32Array(this.origs[this.iOrig]));
+        if (this.radii.length > 1) {
+          gl.uniform1f(obj.sizeLoc, this.radii[this.iOrig][0]);
+        } else {
+          gl.uniform1f(obj.sizeLoc, this.radii[0][0]);
+        }
+        gl.uniformMatrix4fv(obj.usermatLoc, false, this.usermat);
+      }
 
-			if (type === "spheres") {
-			  gl.bindBuffer(gl.ARRAY_BUFFER, this.sphere.buf);
-			} else {
-				gl.bindBuffer(gl.ARRAY_BUFFER, obj.buf);
-			}
+      if (type === "spheres") {
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.sphere.buf);
+      } else {
+        gl.bindBuffer(gl.ARRAY_BUFFER, obj.buf);
+      }
 
-			if (is_indexed && type !== "spheres") {
-			  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.ibuf);
-			} else if (type === "spheres") {
-				gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.sphere.ibuf);
-			}
+      if (is_indexed && type !== "spheres") {
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.ibuf);
+      } else if (type === "spheres") {
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.sphere.ibuf);
+      }
 
-			gl.uniformMatrix4fv( obj.prMatLoc, false, new Float32Array(this.prMatrix.getAsArray()) );
-			gl.uniformMatrix4fv( obj.mvMatLoc, false, new Float32Array(this.mvMatrix.getAsArray()) );
+      gl.uniformMatrix4fv( obj.prMatLoc, false, new Float32Array(this.prMatrix.getAsArray()) );
+      gl.uniformMatrix4fv( obj.mvMatLoc, false, new Float32Array(this.mvMatrix.getAsArray()) );
       var clipcheck = 0,
           clipplaneids = subscene.clipplanes,
           clip, j;
-			for (i=0; i < clipplaneids.length; i++) {
-			  clip = this.getObj(clipplaneids[i]);
-			  for (j=0; j < clip.offsets.length; j++) {
-			    gl.uniform4fv(obj.clipLoc[clipcheck + j], clip.IMVClip[j]);
-			  }
-			  clipcheck += clip.offsets.length;
-			}
-			if (typeof obj.clipLoc !== "undefined")
-			  for (i=clipcheck; i < obj.clipLoc.length; i++)
-			    gl.uniform4f(obj.clipLoc[i], 0,0,0,0);
+      for (i=0; i < clipplaneids.length; i++) {
+        clip = this.getObj(clipplaneids[i]);
+        for (j=0; j < clip.offsets.length; j++) {
+          gl.uniform4fv(obj.clipLoc[clipcheck + j], clip.IMVClip[j]);
+        }
+        clipcheck += clip.offsets.length;
+      }
+      if (typeof obj.clipLoc !== "undefined")
+        for (i=clipcheck; i < obj.clipLoc.length; i++)
+          gl.uniform4f(obj.clipLoc[i], 0,0,0,0);
 
-			if (is_lit) {
-			  gl.uniformMatrix4fv( obj.normMatLoc, false, new Float32Array(this.normMatrix.getAsArray()) );
-			  gl.uniform3fv( obj.emissionLoc, obj.emission);
-			  gl.uniform1f( obj.shininessLoc, obj.shininess);
-			  for (i=0; i < subscene.lights.length; i++) {
-			    light = this.getObj(subscene.lights[i]);
-			    gl.uniform3fv( obj.ambientLoc[i], this.componentProduct(light.ambient, obj.ambient));
-			    gl.uniform3fv( obj.specularLoc[i], this.componentProduct(light.specular, obj.specular));
-			    gl.uniform3fv( obj.diffuseLoc[i], light.diffuse);
-			    gl.uniform3fv( obj.lightDirLoc[i], light.lightDir);
-			    gl.uniform1i( obj.viewpointLoc[i], light.viewpoint);
-			    gl.uniform1i( obj.finiteLoc[i], light.finite);
-			  }
-			  for (i=subscene.lights.length; i < obj.nlights; i++) {
-			    gl.uniform3f( obj.ambientLoc[i], 0,0,0);
-			    gl.uniform3f( obj.specularLoc[i], 0,0,0);
-			    gl.uniform3f( obj.diffuseLoc[i], 0,0,0);
-			  }
-			}
-
-			if (type === "text") {
-				gl.uniform2f( obj.textScaleLoc, 0.75/this.vp.width, 0.75/this.vp.height);
-			}
-
-			gl.enableVertexAttribArray( this.posLoc );
-
-			var nc = obj.colorCount;
-      count = obj.vertexCount;
-			if (depth_sort) {
-						var nfaces = obj.centers.length,
-						    frowsize, z, w;
-						if (sprites_3d) frowsize = 1;
-						else if (type === "triangles") frowsize = 3;
-						else frowsize = 6;
-            var depths = new Float32Array(nfaces);
-						faces = new Array(nfaces);
-						for(i=0; i<nfaces; i++) {
-							z = this.prmvMatrix.m13*obj.centers[3*i] +
-							    this.prmvMatrix.m23*obj.centers[3*i+1] +
-						      this.prmvMatrix.m33*obj.centers[3*i+2] +
-					        this.prmvMatrix.m43;
-							w = this.prmvMatrix.m14*obj.centers[3*i] +
-				  			  this.prmvMatrix.m24*obj.centers[3*i+1] +
-					  		  this.prmvMatrix.m34*obj.centers[3*i+2] +
-						  	  this.prmvMatrix.m44;
-							depths[i] = z/w;
-							faces[i] = i;
-						}
-						var depthsort = function(i,j) { return depths[j] - depths[i]; };
-						faces.sort(depthsort);
-
-						if (type !== "spheres") {
-						  var f = new Uint16Array(obj.f.length);
-							for (i=0; i<nfaces; i++) {
-					  	  for (j=0; j<frowsize; j++) {
-							    f[frowsize*i + j] = obj.f[frowsize*faces[i] + j];
-							  }
-							}
-							gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, f, gl.DYNAMIC_DRAW);
-						}
-					}
-
-			if (type === "spheres") {
-				subscene = this.getObj(subsceneid);
-				var scale = subscene.par3d.scale,
-						scount = count;
-				gl.vertexAttribPointer(this.posLoc,  3, gl.FLOAT, false, this.sphere.sphereStride,  0);
-				gl.enableVertexAttribArray(obj.normLoc );
-				gl.vertexAttribPointer(obj.normLoc,  3, gl.FLOAT, false, this.sphere.sphereStride,  0);
-				gl.disableVertexAttribArray( this.colLoc );
-				var sphereNorm = new CanvasMatrix4();
-				sphereNorm.scale(scale[0], scale[1], scale[2]);
-				sphereNorm.multRight(this.normMatrix);
-				gl.uniformMatrix4fv( obj.normMatLoc, false, new Float32Array(sphereNorm.getAsArray()) );
-
-			  if (nc == 1) {
-				  gl.vertexAttrib4fv( this.colLoc, new Float32Array(obj.onecolor));
-			  }
-
-			  for (i = 0; i < scount; i++) {
-			    sphereMV = new CanvasMatrix4();
-
-			  	if (depth_sort) {
-				    baseofs = faces[i]*obj.vOffsets.stride;
-				  } else {
-				    baseofs = i*obj.vOffsets.stride;
-				  }
-
-          ofs = baseofs + obj.vOffsets.radofs;
-				  sscale = obj.values[ofs];
-
-				  sphereMV.scale(sscale/scale[0], sscale/scale[1], sscale/scale[2]);
-				  sphereMV.translate(obj.values[baseofs],
-				                     obj.values[baseofs+1],
-				                     obj.values[baseofs+2]);
-				  sphereMV.multRight(this.mvMatrix);
-				  gl.uniformMatrix4fv( obj.mvMatLoc, false, new Float32Array(sphereMV.getAsArray()) );
-
-				  if (nc > 1) {
-				    ofs = baseofs + obj.vOffsets.cofs;
-					  gl.vertexAttrib4f( this.colLoc, obj.values[ofs],
-					   		                       obj.values[ofs+1],
-                                       obj.values[ofs+2],
-							                         obj.values[ofs+3] );
-				  }
-				  gl.drawElements(gl.TRIANGLES, this.sphere.sphereCount, gl.UNSIGNED_SHORT, 0);
-
-			  }
-			  return;
-			} else {
-				if (obj.colorCount === 1) {
-					gl.disableVertexAttribArray( this.colLoc );
-				  gl.vertexAttrib4fv( this.colLoc, new Float32Array(obj.onecolor));
-				} else {
-					gl.enableVertexAttribArray( this.colLoc );
-					gl.vertexAttribPointer(this.colLoc, 4, gl.FLOAT, false, 4*obj.vOffsets.stride, 4*obj.vOffsets.cofs);
-				}
+      if (is_lit) {
+        gl.uniformMatrix4fv( obj.normMatLoc, false, new Float32Array(this.normMatrix.getAsArray()) );
+        gl.uniform3fv( obj.emissionLoc, obj.emission);
+        gl.uniform1f( obj.shininessLoc, obj.shininess);
+        for (i=0; i < subscene.lights.length; i++) {
+          light = this.getObj(subscene.lights[i]);
+          gl.uniform3fv( obj.ambientLoc[i], this.componentProduct(light.ambient, obj.ambient));
+          gl.uniform3fv( obj.specularLoc[i], this.componentProduct(light.specular, obj.specular));
+          gl.uniform3fv( obj.diffuseLoc[i], light.diffuse);
+          gl.uniform3fv( obj.lightDirLoc[i], light.lightDir);
+          gl.uniform1i( obj.viewpointLoc[i], light.viewpoint);
+          gl.uniform1i( obj.finiteLoc[i], light.finite);
+        }
+        for (i=subscene.lights.length; i < obj.nlights; i++) {
+          gl.uniform3f( obj.ambientLoc[i], 0,0,0);
+          gl.uniform3f( obj.specularLoc[i], 0,0,0);
+          gl.uniform3f( obj.diffuseLoc[i], 0,0,0);
+        }
       }
 
-			if (is_lit && obj.vOffsets.nofs > 0) {
-				gl.enableVertexAttribArray( obj.normLoc );
-				gl.vertexAttribPointer(obj.normLoc, 3, gl.FLOAT, false, 4*obj.vOffsets.stride, 4*obj.vOffsets.nofs);
-			}
+      if (type === "text") {
+        gl.uniform2f( obj.textScaleLoc, 0.75/this.vp.width, 0.75/this.vp.height);
+      }
 
-			if (has_texture || type === "text") {
-				gl.enableVertexAttribArray( obj.texLoc );
-				gl.vertexAttribPointer(obj.texLoc, 2, gl.FLOAT, false, 4*obj.vOffsets.stride, 4*obj.vOffsets.tofs);
-				gl.activeTexture(gl.TEXTURE0);
-				gl.bindTexture(gl.TEXTURE_2D, obj.texture);
-				gl.uniform1i( obj.sampler, 0);
-			}
+      gl.enableVertexAttribArray( this.posLoc );
 
-			if (fixed_quads) {
-				gl.enableVertexAttribArray( obj.ofsLoc );
-				gl.vertexAttribPointer(obj.ofsLoc, 2, gl.FLOAT, false, 4*obj.vOffsets.stride, 4*obj.vOffsets.oofs);
-			}
+      var nc = obj.colorCount;
+      count = obj.vertexCount;
+      if (depth_sort) {
+            var nfaces = obj.centers.length,
+                frowsize, z, w;
+            if (sprites_3d) frowsize = 1;
+            else if (type === "triangles") frowsize = 3;
+            else frowsize = 6;
+            var depths = new Float32Array(nfaces);
+            faces = new Array(nfaces);
+            for(i=0; i<nfaces; i++) {
+              z = this.prmvMatrix.m13*obj.centers[3*i] +
+                  this.prmvMatrix.m23*obj.centers[3*i+1] +
+                  this.prmvMatrix.m33*obj.centers[3*i+2] +
+                  this.prmvMatrix.m43;
+              w = this.prmvMatrix.m14*obj.centers[3*i] +
+                  this.prmvMatrix.m24*obj.centers[3*i+1] +
+                  this.prmvMatrix.m34*obj.centers[3*i+2] +
+                  this.prmvMatrix.m44;
+              depths[i] = z/w;
+              faces[i] = i;
+            }
+            var depthsort = function(i,j) { return depths[j] - depths[i]; };
+            faces.sort(depthsort);
 
-			var mode = this.mode4type[type];
+            if (type !== "spheres") {
+              var f = new Uint16Array(obj.f.length);
+              for (i=0; i<nfaces; i++) {
+                for (j=0; j<frowsize; j++) {
+                  f[frowsize*i + j] = obj.f[frowsize*faces[i] + j];
+                }
+              }
+              gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, f, gl.DYNAMIC_DRAW);
+            }
+          }
+
+      if (type === "spheres") {
+        subscene = this.getObj(subsceneid);
+        var scale = subscene.par3d.scale,
+            scount = count;
+        gl.vertexAttribPointer(this.posLoc,  3, gl.FLOAT, false, 4*this.sphere.vOffsets.stride,  0);
+        gl.enableVertexAttribArray(obj.normLoc );
+        gl.vertexAttribPointer(obj.normLoc,  3, gl.FLOAT, false, 4*this.sphere.vOffsets.stride,  0);
+        gl.disableVertexAttribArray( this.colLoc );
+        var sphereNorm = new CanvasMatrix4();
+        sphereNorm.scale(scale[0], scale[1], scale[2]);
+        sphereNorm.multRight(this.normMatrix);
+        gl.uniformMatrix4fv( obj.normMatLoc, false, new Float32Array(sphereNorm.getAsArray()) );
+
+        if (nc == 1) {
+          gl.vertexAttrib4fv( this.colLoc, new Float32Array(obj.onecolor));
+        }
+        
+        if (has_texture) {
+          gl.enableVertexAttribArray( obj.texLoc );
+          gl.vertexAttribPointer(obj.texLoc, 2, gl.FLOAT, false, 4*this.sphere.vOffsets.stride, 4*this.sphere.vOffsets.tofs);
+          gl.activeTexture(gl.TEXTURE0);
+          gl.bindTexture(gl.TEXTURE_2D, obj.texture);
+          gl.uniform1i( obj.sampler, 0);
+        }
+
+        for (i = 0; i < scount; i++) {
+          sphereMV = new CanvasMatrix4();
+
+          if (depth_sort) {
+            baseofs = faces[i]*obj.vOffsets.stride;
+          } else {
+            baseofs = i*obj.vOffsets.stride;
+          }
+
+          ofs = baseofs + obj.vOffsets.radofs;
+          sscale = obj.values[ofs];
+
+          sphereMV.scale(sscale/scale[0], sscale/scale[1], sscale/scale[2]);
+          sphereMV.translate(obj.values[baseofs],
+                             obj.values[baseofs+1],
+                             obj.values[baseofs+2]);
+          sphereMV.multRight(this.mvMatrix);
+          gl.uniformMatrix4fv( obj.mvMatLoc, false, new Float32Array(sphereMV.getAsArray()) );
+
+          if (nc > 1) {
+            ofs = baseofs + obj.vOffsets.cofs;
+            gl.vertexAttrib4f( this.colLoc, obj.values[ofs],
+                                        obj.values[ofs+1],
+                                       obj.values[ofs+2],
+                                       obj.values[ofs+3] );
+          }
+          gl.drawElements(gl.TRIANGLES, this.sphere.sphereCount, gl.UNSIGNED_SHORT, 0);
+
+        }
+        return;
+      } else {
+        if (obj.colorCount === 1) {
+          gl.disableVertexAttribArray( this.colLoc );
+          gl.vertexAttrib4fv( this.colLoc, new Float32Array(obj.onecolor));
+        } else {
+          gl.enableVertexAttribArray( this.colLoc );
+          gl.vertexAttribPointer(this.colLoc, 4, gl.FLOAT, false, 4*obj.vOffsets.stride, 4*obj.vOffsets.cofs);
+        }
+      }
+
+      if (is_lit && obj.vOffsets.nofs > 0) {
+        gl.enableVertexAttribArray( obj.normLoc );
+        gl.vertexAttribPointer(obj.normLoc, 3, gl.FLOAT, false, 4*obj.vOffsets.stride, 4*obj.vOffsets.nofs);
+      }
+
+      if (has_texture || type === "text") {
+        gl.enableVertexAttribArray( obj.texLoc );
+        gl.vertexAttribPointer(obj.texLoc, 2, gl.FLOAT, false, 4*obj.vOffsets.stride, 4*obj.vOffsets.tofs);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, obj.texture);
+        gl.uniform1i( obj.sampler, 0);
+      }
+
+      if (fixed_quads) {
+        gl.enableVertexAttribArray( obj.ofsLoc );
+        gl.vertexAttribPointer(obj.ofsLoc, 2, gl.FLOAT, false, 4*obj.vOffsets.stride, 4*obj.vOffsets.oofs);
+      }
+
+      var mode = this.mode4type[type];
 
       if (type === "sprites" || type === "text" || type === "quads") {
         count = count * 6/4;
       } else if (type === "surface") {
-				count = obj.f.length;
+        count = obj.f.length;
       }
 
-			if (is_lines) {
-				gl.lineWidth( this.getMaterial(id, "lwd") );
-			}
+      if (is_lines) {
+        gl.lineWidth( this.getMaterial(id, "lwd") );
+      }
 
-			gl.vertexAttribPointer(this.posLoc,  3, gl.FLOAT, false, 4*obj.vOffsets.stride,  4*obj.vOffsets.vofs);
+      gl.vertexAttribPointer(this.posLoc,  3, gl.FLOAT, false, 4*obj.vOffsets.stride,  4*obj.vOffsets.vofs);
 
-			if (is_indexed) {
-			  gl.drawElements(gl[mode], count, gl.UNSIGNED_SHORT, 0);
-			} else {
-			  gl.drawArrays(gl[mode], 0, count);
-			}
-	 };
+      if (is_indexed) {
+        gl.drawElements(gl[mode], count, gl.UNSIGNED_SHORT, 0);
+      } else {
+        gl.drawArrays(gl[mode], 0, count);
+      }
+   };
 
-	  this.drawSubscene = function(subsceneid) {
-		  var gl = this.gl,
-		      obj = this.getObj(subsceneid),
-		      objects = this.scene.objects,
-		      subids = obj.objects,
-		      subscene_has_faces = false,
-		      subscene_needs_sorting = false,
-		      flags, i;
+    this.drawBackground = function(id, subsceneid) {
+      var gl = this.gl || this.initGL(),
+          obj = this.getObj(id),
+          bg, i;
+
+      if (!obj.initialized)
+        this.initObj(id);
+
+      if (obj.colors.length) {
+        bg = obj.colors[0];
+        gl.clearColor(bg[0], bg[1], bg[2], bg[3]);
+        gl.depthMask(true);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      }
+      if (typeof obj.quad !== "undefined") {
+        this.prMatrix.makeIdentity();
+        this.mvMatrix.makeIdentity();
+        gl.disable(gl.BLEND);
+        gl.disable(gl.DEPTH_TEST);
+        gl.depthMask(false);
+        for (i=0; i < obj.quad.length; i++)
+          this.drawObj(obj.quad[i], subsceneid);
+      }
+    };
+
+    this.drawSubscene = function(subsceneid) {
+      var gl = this.gl || this.initGL(),
+          obj = this.getObj(subsceneid),
+          objects = this.scene.objects,
+          subids = obj.objects,
+          subscene_has_faces = false,
+          subscene_needs_sorting = false,
+          flags, i;
       if (obj.par3d.skipRedraw)
         return;
-		  for (i=0; i < subids.length; i++) {
-		    flags = objects[subids[i]].flags;
-		    if (typeof flags !== "undefined") {
-		      subscene_has_faces |= (flags & this.f_is_lit)
-		                       & !(flags & this.f_fixed_quads);
-		      subscene_needs_sorting |= (flags & this.f_depth_sort);
-		    }
-		  }
-
-		  var bgid = obj.backgroundId,
-		      bg;
-
-      this.setViewport(subsceneid);
-      if (typeof bgid !== "undefined" && objects[bgid].colors.length) {
-			  bg = objects[bgid].colors[0];
-			  gl.clearColor(bg[0], bg[1], bg[2], bg[3]);
-			  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      for (i=0; i < subids.length; i++) {
+        flags = objects[subids[i]].flags;
+        if (typeof flags !== "undefined") {
+          subscene_has_faces |= (flags & this.f_is_lit)
+                           & !(flags & this.f_fixed_quads);
+          subscene_needs_sorting |= (flags & this.f_depth_sort);
+        }
       }
 
-			if (subids.length) {
-			  this.setprMatrix(subsceneid);
-			  this.setmvMatrix(subsceneid);
+      this.setViewport(subsceneid);
 
-				if (subscene_has_faces) {
-				  this.setnormMatrix(subsceneid);
-				  if ((obj.flags & this.f_sprites_3d) &&
-				      typeof obj.spriteNormmat === "undefined") {
-				    obj.spriteNormmat = new CanvasMatrix4(this.normMatrix);
-				  }
-				}
+      if (typeof obj.backgroundId !== "undefined")
+          this.drawBackground(obj.backgroundId, subsceneid);
 
-				if (subscene_needs_sorting)
-				  this.setprmvMatrix();
+      if (subids.length) {
+        this.setprMatrix(subsceneid);
+        this.setmvMatrix(subsceneid);
 
-				var clipids = obj.clipplanes;
-				if (clipids.length > 0) {
-				  this.invMatrix = new CanvasMatrix4(this.mvMatrix);
-				  this.invMatrix.invert();
-				  for (i = 0; i < clipids.length; i++)
-				    this.drawObj(clipids[i], subsceneid);
-				}
-				subids = obj.opaque;
-				if (subids.length > 0) {
-				  gl.depthMask(true);
-				  gl.disable(gl.BLEND);
-				  for (i = 0; subids && i < subids.length; i++) {
-				    this.drawObj(subids[i], subsceneid);
-				  }
-				}
-				subids = obj.transparent;
-				if (subids.length > 0) {
-				  gl.depthMask(false);
-				  gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA,
-				                       gl.ONE, gl.ONE);
-				  gl.enable(gl.BLEND);
-				  for (i = 0; i < subids.length; i++) {
-				    this.drawObj(subids[i], subsceneid);
-				  }
-				}
-				subids = obj.subscenes;
-				for (i = 0; i < subids.length; i++) {
-				  this.drawSubscene(subids[i]);
-				}
-			}
-	  };
+        if (subscene_has_faces) {
+          this.setnormMatrix(subsceneid);
+          if ((obj.flags & this.f_sprites_3d) &&
+              typeof obj.spriteNormmat === "undefined") {
+            obj.spriteNormmat = new CanvasMatrix4(this.normMatrix);
+          }
+        }
+
+        if (subscene_needs_sorting)
+          this.setprmvMatrix();
+
+        gl.enable(gl.DEPTH_TEST);
+        gl.depthMask(true);
+        gl.disable(gl.BLEND);
+
+        var clipids = obj.clipplanes;
+        if (typeof clipids === "undefined") {
+          console.warn("bad clipids");
+        }
+        if (clipids.length > 0) {
+          this.invMatrix = new CanvasMatrix4(this.mvMatrix);
+          this.invMatrix.invert();
+          for (i = 0; i < clipids.length; i++)
+            this.drawObj(clipids[i], subsceneid);
+        }
+        subids = obj.opaque;
+        if (subids.length > 0) {
+          for (i = 0; i < subids.length; i++) {
+            this.drawObj(subids[i], subsceneid);
+          }
+        }
+        subids = obj.transparent;
+        if (subids.length > 0) {
+          gl.depthMask(false);
+          gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA,
+                               gl.ONE, gl.ONE);
+          gl.enable(gl.BLEND);
+          for (i = 0; i < subids.length; i++) {
+            this.drawObj(subids[i], subsceneid);
+          }
+        }
+        subids = obj.subscenes;
+        for (i = 0; i < subids.length; i++) {
+          this.drawSubscene(subids[i]);
+        }
+      }
+    };
 
     this.relMouseCoords = function(event) {
-		  var totalOffsetX = 0,
-		  totalOffsetY = 0,
-		  currentElement = this.canvas;
+      var totalOffsetX = 0,
+      totalOffsetY = 0,
+      currentElement = this.canvas;
 
-		  do {
-		    totalOffsetX += currentElement.offsetLeft;
-		    totalOffsetY += currentElement.offsetTop;
-		    currentElement = currentElement.offsetParent;
-		  }
-		  while(currentElement);
+      do {
+        totalOffsetX += currentElement.offsetLeft;
+        totalOffsetY += currentElement.offsetTop;
+        currentElement = currentElement.offsetParent;
+      }
+      while(currentElement);
 
-		  var canvasX = event.pageX - totalOffsetX,
-		      canvasY = event.pageY - totalOffsetY;
+      var canvasX = event.pageX - totalOffsetX,
+          canvasY = event.pageY - totalOffsetY;
 
-		  return {x:canvasX, y:canvasY};
-		};
+      return {x:canvasX, y:canvasY};
+    };
 
     this.setMouseHandlers = function() {
       var self = this, activeSubscene, handler,
           handlers = {}, drag = 0;
 
-    handlers.rotBase = 0;
+      handlers.rotBase = 0;
 
-		this.screenToVector = function(x, y) {
-		  var viewport = this.getObj(activeSubscene).par3d.viewport,
-		    width = viewport.width*this.canvas.width,
-			  height = viewport.height*this.canvas.height,
-			  radius = Math.max(width, height)/2.0,
-			  cx = width/2.0,
-			  cy = height/2.0,
-			  px = (x-cx)/radius,
-			  py = (y-cy)/radius,
-			  plen = Math.sqrt(px*px+py*py);
-			if (plen > 1.e-6) {
-			  px = px/plen;
-			  py = py/plen;
-			}
-			var angle = (Math.SQRT2 - plen)/Math.SQRT2*Math.PI/2,
-			  z = Math.sin(angle),
-			  zlen = Math.sqrt(1.0 - z*z);
-			px = px * zlen;
-			py = py * zlen;
-			return [px, py, z];
-		};
+      this.screenToVector = function(x, y) {
+        var viewport = this.getObj(activeSubscene).par3d.viewport,
+          width = viewport.width*this.canvas.width,
+          height = viewport.height*this.canvas.height,
+          radius = Math.max(width, height)/2.0,
+          cx = width/2.0,
+          cy = height/2.0,
+          px = (x-cx)/radius,
+          py = (y-cy)/radius,
+          plen = Math.sqrt(px*px+py*py);
+        if (plen > 1.e-6) {
+          px = px/plen;
+          py = py/plen;
+        }
+        var angle = (Math.SQRT2 - plen)/Math.SQRT2*Math.PI/2,
+          z = Math.sin(angle),
+          zlen = Math.sqrt(1.0 - z*z);
+        px = px * zlen;
+        py = py * zlen;
+        return [px, py, z];
+      };
 
-		handlers.trackballdown = function(x,y) {
-			var activeSub = this.getObj(activeSubscene),
-			    activeModel = this.getObj(this.useid(activeSub.id, "model")),
-			  i, l = activeModel.par3d.listeners;
-			handlers.rotBase = this.screenToVector(x, y);
-			this.saveMat = [];
-			for (i = 0; i < l.length; i++) {
-			  activeSub = this.getObj(l[i]);
-			  activeSub.saveMat = new CanvasMatrix4(activeSub.par3d.userMatrix);
-			}
-		};
+      handlers.trackballdown = function(x,y) {
+        var activeSub = this.getObj(activeSubscene),
+            activeModel = this.getObj(this.useid(activeSub.id, "model")),
+            i, l = activeModel.par3d.listeners;
+        handlers.rotBase = this.screenToVector(x, y);
+        this.saveMat = [];
+        for (i = 0; i < l.length; i++) {
+          activeSub = this.getObj(l[i]);
+          activeSub.saveMat = new CanvasMatrix4(activeSub.par3d.userMatrix);
+        }
+      };
 
-		handlers.trackballmove = function(x,y) {
-			var rotCurrent = this.screenToVector(x,y),
-			    rotBase = handlers.rotBase,
-				dot = rotBase[0]*rotCurrent[0] +
-						  rotBase[1]*rotCurrent[1] +
-			  	   	rotBase[2]*rotCurrent[2],
-				angle = Math.acos( dot/this.vlen(rotBase)/this.vlen(rotCurrent) )*180.0/Math.PI,
-				axis = this.xprod(rotBase, rotCurrent),
-				objects = this.scene.objects,
-				activeSub = this.getObj(activeSubscene),
-				activeModel = this.getObj(this.useid(activeSub.id, "model")),
-				l = activeModel.par3d.listeners,
-				i;
-		  for (i = 0; i < l.length; i++) {
-		    activeSub = this.getObj(l[i]);
-			  activeSub.par3d.userMatrix.load(objects[l[i]].saveMat);
-				activeSub.par3d.userMatrix.rotate(angle, axis[0], axis[1], axis[2]);
-			}
-			this.drawScene();
-		};
-		handlers.trackballend = 0;
+      handlers.trackballmove = function(x,y) {
+        var rotCurrent = this.screenToVector(x,y),
+            rotBase = handlers.rotBase,
+            dot = rotBase[0]*rotCurrent[0] +
+                  rotBase[1]*rotCurrent[1] +
+                  rotBase[2]*rotCurrent[2],
+            angle = Math.acos( dot/this.vlen(rotBase)/this.vlen(rotCurrent) )*180.0/Math.PI,
+            axis = this.xprod(rotBase, rotCurrent),
+            objects = this.scene.objects,
+            activeSub = this.getObj(activeSubscene),
+            activeModel = this.getObj(this.useid(activeSub.id, "model")),
+            l = activeModel.par3d.listeners,
+            i;
+        for (i = 0; i < l.length; i++) {
+          activeSub = this.getObj(l[i]);
+          activeSub.par3d.userMatrix.load(objects[l[i]].saveMat);
+          activeSub.par3d.userMatrix.rotate(angle, axis[0], axis[1], axis[2]);
+        }
+        this.drawScene();
+      };
+      handlers.trackballend = 0;
 
-    handlers.axisdown = function(x,y) {
-		  handlers.rotBase = this.screenToVector(x, this.canvas.height/2);
-			var activeSub = this.getObj(activeSubscene),
-			    activeModel = this.getObj(this.useid(activeSub.id, "model")),
-			  i, l = activeModel.par3d.listeners;
-			for (i = 0; i < l.length; i++) {
-			  activeSub = this.getObj(l[i]);
-			  activeSub.saveMat = new CanvasMatrix4(activeSub.par3d.userMatrix);
-			}
-		};
+      handlers.axisdown = function(x,y) {
+        handlers.rotBase = this.screenToVector(x, this.canvas.height/2);
+        var activeSub = this.getObj(activeSubscene),
+            activeModel = this.getObj(this.useid(activeSub.id, "model")),
+            i, l = activeModel.par3d.listeners;
+        for (i = 0; i < l.length; i++) {
+          activeSub = this.getObj(l[i]);
+          activeSub.saveMat = new CanvasMatrix4(activeSub.par3d.userMatrix);
+        }
+      };
 
-		handlers.axismove = function(x,y) {
-		  var rotCurrent = this.screenToVector(x, this.canvas.height/2),
-		      rotBase = handlers.rotBase,
-					angle = (rotCurrent[0] - rotBase[0])*180/Math.PI,
-			    rotMat = new CanvasMatrix4();
-			rotMat.rotate(angle, handlers.axis[0], handlers.axis[1], handlers.axis[2]);
-			var activeSub = this.getObj(activeSubscene),
-			    activeModel = this.getObj(this.useid(activeSub.id, "model")),
-			  i, l = activeModel.par3d.listeners;
-			for (i = 0; i < l.length; i++) {
-			  activeSub = this.getObj(l[i]);
-			  activeSub.par3d.userMatrix.load(activeSub.saveMat);
-			  activeSub.par3d.userMatrix.multLeft(rotMat);
-			}
-			this.drawScene();
-		};
-    handlers.axisend = 0;
+      handlers.axismove = function(x,y) {
+        var rotCurrent = this.screenToVector(x, this.canvas.height/2),
+            rotBase = handlers.rotBase,
+            angle = (rotCurrent[0] - rotBase[0])*180/Math.PI,
+            rotMat = new CanvasMatrix4();
+        rotMat.rotate(angle, handlers.axis[0], handlers.axis[1], handlers.axis[2]);
+        var activeSub = this.getObj(activeSubscene),
+            activeModel = this.getObj(this.useid(activeSub.id, "model")),
+            i, l = activeModel.par3d.listeners;
+        for (i = 0; i < l.length; i++) {
+          activeSub = this.getObj(l[i]);
+          activeSub.par3d.userMatrix.load(activeSub.saveMat);
+          activeSub.par3d.userMatrix.multLeft(rotMat);
+        }
+        this.drawScene();
+      };
+      handlers.axisend = 0;
 
-    handlers.y0zoom = 0;
-		handlers.zoom0 = 0;
-		handlers.zoomdown = function(x, y) {
-		  var activeSub = this.getObj(activeSubscene),
-        activeProjection = this.getObj(this.useid(activeSub.id, "projection")),
-			  i, l = activeProjection.par3d.listeners;
-		  handlers.y0zoom = y;
-		  for (i = 0; i < l.length; i++) {
-			  activeSub = this.getObj(l[i]);
-			  activeSub.zoom0 = Math.log(activeSub.par3d.zoom);
-			}
-		};
-    handlers.zoommove = function(x, y) {
-			var activeSub = this.getObj(activeSubscene),
-			    activeProjection = this.getObj(this.useid(activeSub.id, "projection")),
-			  i, l = activeProjection.par3d.listeners;
-			for (i = 0; i < l.length; i++) {
-			  activeSub = this.getObj(l[i]);
-			  activeSub.par3d.zoom = Math.exp(activeSub.zoom0 + (y-handlers.y0zoom)/this.canvas.height);
-			}
-				this.drawScene();
-		  };
-    handlers.zoomend = 0;
+      handlers.y0zoom = 0;
+      handlers.zoom0 = 0;
+      handlers.zoomdown = function(x, y) {
+        var activeSub = this.getObj(activeSubscene),
+          activeProjection = this.getObj(this.useid(activeSub.id, "projection")),
+          i, l = activeProjection.par3d.listeners;
+        handlers.y0zoom = y;
+        for (i = 0; i < l.length; i++) {
+          activeSub = this.getObj(l[i]);
+          activeSub.zoom0 = Math.log(activeSub.par3d.zoom);
+        }
+      };
+      handlers.zoommove = function(x, y) {
+        var activeSub = this.getObj(activeSubscene),
+            activeProjection = this.getObj(this.useid(activeSub.id, "projection")),
+            i, l = activeProjection.par3d.listeners;
+        for (i = 0; i < l.length; i++) {
+          activeSub = this.getObj(l[i]);
+          activeSub.par3d.zoom = Math.exp(activeSub.zoom0 + (y-handlers.y0zoom)/this.canvas.height);
+        }
+        this.drawScene();
+      };
+      handlers.zoomend = 0;
 
-    handlers.y0fov = 0;
-		handlers.fovdown = function(x, y) {
-			  handlers.y0fov = y;
-				var activeSub = this.getObj(activeSubscene),
-			    activeProjection = this.getObj(this.useid(activeSub.id, "projection")),
-			  i, l = activeProjection.par3d.listeners;
-				for (i = 0; i < l.length; i++) {
-				  activeSub = this.getObj(l[i]);
-				  activeSub.fov0 = activeSub.par3d.FOV;
-				}
-			};
-    handlers.fovmove = function(x, y) {
-			var activeSub = this.getObj(activeSubscene),
-			    activeProjection = this.getObj(this.useid(activeSub.id, "projection")),
-			  i, l = activeProjection.par3d.listeners;
-				for (i = 0; i < l.length; i++) {
-				  activeSub = this.getObj(l[i]);
-				  activeSub.par3d.FOV = Math.max(1, Math.min(179, activeSub.fov0 +
-				     180*(y-handlers.y0fov)/this.canvas.height));
-				}
-				this.drawScene();
-			};
-    handlers.fovend = 0;
+      handlers.y0fov = 0;
+      handlers.fovdown = function(x, y) {
+        handlers.y0fov = y;
+        var activeSub = this.getObj(activeSubscene),
+          activeProjection = this.getObj(this.useid(activeSub.id, "projection")),
+          i, l = activeProjection.par3d.listeners;
+        for (i = 0; i < l.length; i++) {
+          activeSub = this.getObj(l[i]);
+          activeSub.fov0 = activeSub.par3d.FOV;
+        }
+      };
+      handlers.fovmove = function(x, y) {
+        var activeSub = this.getObj(activeSubscene),
+            activeProjection = this.getObj(this.useid(activeSub.id, "projection")),
+            i, l = activeProjection.par3d.listeners;
+        for (i = 0; i < l.length; i++) {
+          activeSub = this.getObj(l[i]);
+          activeSub.par3d.FOV = Math.max(1, Math.min(179, activeSub.fov0 +
+             180*(y-handlers.y0fov)/this.canvas.height));
+        }
+        this.drawScene();
+      };
+      handlers.fovend = 0;
 
-		  this.canvas.onmousedown = function ( ev ){
-		    if (!ev.which) // Use w3c defns in preference to MS
-		    switch (ev.button) {
-		      case 0: ev.which = 1; break;
-		      case 1:
-		      case 4: ev.which = 2; break;
-		      case 2: ev.which = 3;
-		    }
-		    drag = ["left", "middle", "right"][ev.which-1];
-		    var coords = self.relMouseCoords(ev);
-		    coords.y = self.canvas.height-coords.y;
-		    activeSubscene = self.whichSubscene(coords);
-		    var sub = self.getObj(activeSubscene), f;
-		    handler = sub.par3d.mouseMode[drag];
-		    switch (handler) {
-		    case "xAxis":
-		      handler = "axis";
-		      handlers.axis = [1.0, 0.0, 0.0];
-		      break;
-		    case "yAxis":
-		      handler = "axis";
-		      handlers.axis = [0.0, 1.0, 0.0];
-		      break;
-		    case "zAxis":
-		      handler = "axis";
-		      handlers.axis = [0.0, 0.0, 1.0];
-		      break;
-		    }
-		    f = handlers[handler + "down"];
-		    if (f) {
-		      coords = self.translateCoords(activeSubscene, coords);
-		      f.call(self, coords.x, coords.y);
-		      ev.preventDefault();
-		    }
-		  };
+      this.canvas.onmousedown = function ( ev ){
+        if (!ev.which) // Use w3c defns in preference to MS
+        switch (ev.button) {
+          case 0: ev.which = 1; break;
+          case 1:
+          case 4: ev.which = 2; break;
+          case 2: ev.which = 3;
+        }
+        drag = ["left", "middle", "right"][ev.which-1];
+        var coords = self.relMouseCoords(ev);
+        coords.y = self.canvas.height-coords.y;
+        activeSubscene = self.whichSubscene(coords);
+        var sub = self.getObj(activeSubscene), f;
+        handler = sub.par3d.mouseMode[drag];
+        switch (handler) {
+        case "xAxis":
+          handler = "axis";
+          handlers.axis = [1.0, 0.0, 0.0];
+          break;
+        case "yAxis":
+          handler = "axis";
+          handlers.axis = [0.0, 1.0, 0.0];
+          break;
+        case "zAxis":
+          handler = "axis";
+          handlers.axis = [0.0, 0.0, 1.0];
+          break;
+        }
+        f = handlers[handler + "down"];
+        if (f) {
+          coords = self.translateCoords(activeSubscene, coords);
+          f.call(self, coords.x, coords.y);
+          ev.preventDefault();
+        }
+      };
 
-		  this.canvas.onmouseup = function ( ev ){
-		    if ( drag === 0 ) return;
-		    var f = handlers[handler + "up"];
-		    if (f)
-		      f();
-		    drag = 0;
-		  };
+      this.canvas.onmouseup = function ( ev ){
+        if ( drag === 0 ) return;
+        var f = handlers[handler + "up"];
+        if (f)
+          f();
+        drag = 0;
+      };
 
-		  this.canvas.onmouseout = this.canvas.onmouseup;
+      this.canvas.onmouseout = this.canvas.onmouseup;
 
-		  this.canvas.onmousemove = function ( ev ) {
-		    if ( drag === 0 ) return;
-		    var f = handlers[handler + "move"];
-		    if (f) {
-		      var coords = self.relMouseCoords(ev);
-		      coords.y = self.canvas.height - coords.y;
-		      coords = self.translateCoords(activeSubscene, coords);
-		      f.call(self, coords.x, coords.y);
-		    }
-		  };
+      this.canvas.onmousemove = function ( ev ) {
+        if ( drag === 0 ) return;
+        var f = handlers[handler + "move"];
+        if (f) {
+          var coords = self.relMouseCoords(ev);
+          coords.y = self.canvas.height - coords.y;
+          coords = self.translateCoords(activeSubscene, coords);
+          f.call(self, coords.x, coords.y);
+        }
+      };
 
-		  handlers.wheelHandler = function(ev) {
-		    var del = 1.02, i;
-		    if (ev.shiftKey) del = 1.002;
-		    var ds = ((ev.detail || ev.wheelDelta) > 0) ? del : (1 / del);
-		    if (typeof activeSubscene === "undefined")
-		      activeSubscene = self.scene.rootSubscene;
-			  var activeSub = self.getObj(activeSubscene),
-			      activeProjection = self.getObj(self.useid(activeSub.id, "projection")),
-			      l = activeProjection.par3d.listeners;
+      handlers.wheelHandler = function(ev) {
+        var del = 1.02, i;
+        if (ev.shiftKey) del = 1.002;
+        var ds = ((ev.detail || ev.wheelDelta) > 0) ? del : (1 / del);
+        if (typeof activeSubscene === "undefined")
+          activeSubscene = self.scene.rootSubscene;
+        var activeSub = self.getObj(activeSubscene),
+            activeProjection = self.getObj(self.useid(activeSub.id, "projection")),
+            l = activeProjection.par3d.listeners;
 
-		    for (i = 0; i < l.length; i++) {
-		      activeSub = self.getObj(l[i]);
-		      activeSub.par3d.zoom *= ds;
-		    }
-		    self.drawScene();
-		    ev.preventDefault();
-		  };
+        for (i = 0; i < l.length; i++) {
+          activeSub = self.getObj(l[i]);
+          activeSub.par3d.zoom *= ds;
+        }
+        self.drawScene();
+        ev.preventDefault();
+      };
 
-		  this.canvas.addEventListener("DOMMouseScroll", handlers.wheelHandler, false);
-		  this.canvas.addEventListener("mousewheel", handlers.wheelHandler, false);
-		};
+      this.canvas.addEventListener("DOMMouseScroll", handlers.wheelHandler, false);
+      this.canvas.addEventListener("mousewheel", handlers.wheelHandler, false);
+    };
 
-		this.useid = function(subsceneid, type) {
-		  var sub = this.getObj(subsceneid);
-		  if (sub.embeddings[type] === "inherit")
-		    return(this.useid(sub.parent, type));
-		  else
-		    return subsceneid;
-		};
+    this.useid = function(subsceneid, type) {
+      var sub = this.getObj(subsceneid);
+      if (sub.embeddings[type] === "inherit")
+        return(this.useid(sub.parent, type));
+      else
+        return subsceneid;
+    };
 
-		this.inViewport = function(coords, subsceneid) {
-		  var viewport = this.getObj(subsceneid).par3d.viewport,
-		    x0 = coords.x - viewport.x*this.canvas.width,
-		    y0 = coords.y - viewport.y*this.canvas.height;
-		  return 0 <= x0 && x0 <= viewport.width*this.canvas.width &&
-		         0 <= y0 && y0 <= viewport.height*this.canvas.height;
-		};
+    this.inViewport = function(coords, subsceneid) {
+      var viewport = this.getObj(subsceneid).par3d.viewport,
+        x0 = coords.x - viewport.x*this.canvas.width,
+        y0 = coords.y - viewport.y*this.canvas.height;
+      return 0 <= x0 && x0 <= viewport.width*this.canvas.width &&
+             0 <= y0 && y0 <= viewport.height*this.canvas.height;
+    };
 
     this.whichSubscene = function(coords) {
       var self = this,
@@ -1770,122 +1842,184 @@ rglwidgetClass = function() {
               y: coords.y - viewport.y*this.canvas.height};
     };
 
-    this.initSphere = function(verts) {
-      var gl = this.gl, reuse = verts.reuse, result;
+    this.initSphere = function() {
+      var verts = this.scene.sphereVerts, 
+          reuse = verts.reuse, result;
       if (typeof reuse !== "undefined") {
         var prev = document.getElementById(reuse).rglinstance.sphere;
-        result = {vb: prev.vb, it: prev.it};
-      } else {
-        result = {vb: new Float32Array(this.flatten(this.transpose(verts.vb))),
-              it: new Uint16Array(this.flatten(this.transpose(verts.it)))};
-      }
-      result.sphereStride = 12;
-      result.sphereCount = result.it.length;
-	    result.buf = gl.createBuffer();
-	    gl.bindBuffer(gl.ARRAY_BUFFER, result.buf);
-	    gl.bufferData(gl.ARRAY_BUFFER, result.vb, gl.STATIC_DRAW);
-	    result.ibuf = gl.createBuffer();
-	    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, result.ibuf);
-	    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, result.it, gl.STATIC_DRAW);
+        result = {values: prev.values, vOffsets: prev.vOffsets, it: prev.it};
+      } else 
+        result = {values: new Float32Array(this.flatten(this.cbind(this.transpose(verts.vb),
+                    this.transpose(verts.texcoords)))),
+                  it: new Uint16Array(this.flatten(this.transpose(verts.it))),
+                  vOffsets: {vofs:0, cofs:-1, nofs:-1, radofs:-1, oofs:-1, 
+                    tofs:3, stride:5}};
 
-      return result;
+      result.sphereCount = result.it.length;
+      this.sphere = result;
+    };
+    
+    this.initSphereGL = function() {
+      var gl = this.gl || this.initGL(), sphere = this.sphere;
+      if (gl.isContextLost()) return;
+      sphere.buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, sphere.buf);
+      gl.bufferData(gl.ARRAY_BUFFER, sphere.values, gl.STATIC_DRAW);
+      sphere.ibuf = gl.createBuffer();
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, sphere.ibuf);
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, sphere.it, gl.STATIC_DRAW);
+      return;
     };
 
-		this.initialize = function(el, x) {
-		  this.textureCanvas = document.createElement("canvas");
-		  this.textureCanvas.style.display = "block";
-		  this.scene = x;
-	    this.normMatrix = new CanvasMatrix4();
-	    this.saveMat = {};
-	    this.distance = null;
-	    this.posLoc = 0;
-	    this.colLoc = 1;
-	    if (el) {
-	      el.rglinstance = this;
-	      this.initCanvas(el);
-	    }
-		};
-
-		this.initCanvas = function(el) {
-		  this.canvas = document.createElement("canvas");
-		  this.resize(el);
-		  while (el.firstChild) {
-        el.removeChild(el.firstChild);
+    this.initialize = function(el, x) {
+      this.textureCanvas = document.createElement("canvas");
+      this.textureCanvas.style.display = "block";
+      this.scene = x;
+      this.normMatrix = new CanvasMatrix4();
+      this.saveMat = {};
+      this.distance = null;
+      this.posLoc = 0;
+      this.colLoc = 1;
+      if (el) {
+        el.rglinstance = this;
+        this.el = el;
+        this.webGLoptions = el.rglinstance.scene.webGLoptions;
+        this.initCanvas();
       }
-		  el.appendChild(this.canvas);
-		  this.initGL0();
-		  if (!this.gl)
-		    return;
-	    var objs = this.scene.objects,
-	        self = this;
-	    this.sphere = this.initSphere(this.scene.sphereVerts);
-	    Object.keys(objs).forEach(function(key){
-	      var id = parseInt(key, 10),
-	          obj = self.getObj(id);
-	      if (typeof obj.reuse !== "undefined")
-	        self.copyObj(id, obj.reuse);
-	    });
-	    Object.keys(objs).forEach(function(key){
-	      self.initSubscene(parseInt(key, 10));
-	    });
-	    Object.keys(objs).forEach(function(key){
-		    self.initObj(parseInt(key, 10));
-		  });
-		  this.setMouseHandlers();
-		};
+    };
 
-		/* this is only used by .writeWebGL; rglwidget has
-		   no debug element and does the drawing in rglwidget.js */
+    this.restartCanvas = function() {
+      var newcanvas = document.createElement("canvas");
+      newcanvas.width = this.el.width;
+      newcanvas.height = this.el.height;
+      newcanvas.addEventListener("webglcontextrestored",
+        this.onContextRestored, false);
+      newcanvas.addEventListener("webglcontextlost",
+        this.onContextLost, false);            
+      while (this.el.firstChild) {
+        this.el.removeChild(this.el.firstChild);
+      }
+      this.el.appendChild(newcanvas);
+      this.canvas = newcanvas;
+      this.gl = null;      	
+    }
+      
+    this.initCanvas = function() {
+      this.restartCanvas();
+      var objs = this.scene.objects,
+          self = this;
+      Object.keys(objs).forEach(function(key){
+        var id = parseInt(key, 10),
+            obj = self.getObj(id);
+        if (typeof obj.reuse !== "undefined")
+          self.copyObj(id, obj.reuse);
+      });
+      Object.keys(objs).forEach(function(key){
+        self.initSubscene(parseInt(key, 10));
+      });
+      this.setMouseHandlers();      
+      this.initSphere();
+      
+      this.onContextRestored = function(event) {
+        self.initGL();
+        self.drawScene();
+        console.log("restored context for "+self.scene.rootSubscene);
+      }
+      
+      this.onContextLost = function(event) {
+        if (!self.drawing)
+          self.restartCanvas();
+        event.preventDefault();
+      }
+      
+      this.initGL0();
+      lazyLoadScene = function() {
+      	if (self.isInBrowserViewport()) {
+      	  if (!self.gl) {
+      	    self.initGL();
+      	  }
+      	  self.drawScene();
+      	}
+      }
+      window.addEventListener("DOMContentLoaded", lazyLoadScene, false);
+      window.addEventListener("load", lazyLoadScene, false);
+      window.addEventListener("resize", lazyLoadScene, false);
+      window.addEventListener("scroll", lazyLoadScene, false);
+    };
 
-		this.start = function() {
-		  if (typeof this.prefix !== "undefined") {
-		    this.debugelement = document.getElementById(this.prefix + "debug");
-	      this.debug("");
-		  }
-		  this.drag = 0;
-		  this.drawScene();
-		};
+    /* this is only used by writeWebGL; rglwidget has
+       no debug element and does the drawing in rglwidget.js */
 
-		this.debug = function(msg, img) {
-		  if (typeof this.debugelement !== "undefined") {
-		    this.debugelement.innerHTML = msg;
-		    if (typeof img !== "undefined") {
-		      this.debugelement.insertBefore(img, this.debugelement.firstChild);
-		    }
-		  } else
-		    alert(msg);
-		};
+    this.start = function() {
+      if (typeof this.prefix !== "undefined") {
+        this.debugelement = document.getElementById(this.prefix + "debug");
+        this.debug("");
+      }
+      this.drag = 0;
+      this.drawScene();
+    };
+
+    this.debug = function(msg, img) {
+      if (typeof this.debugelement !== "undefined" && this.debugelement !== null) {
+        this.debugelement.innerHTML = msg;
+        if (typeof img !== "undefined") {
+          this.debugelement.insertBefore(img, this.debugelement.firstChild);
+        }
+      } else if (msg !== "")
+        alert(msg);
+    };
 
     this.getSnapshot = function() {
       var img;
-	    if (typeof this.scene.snapshot !== "undefined") {
-	      img = document.createElement("img");
-	      img.src = this.scene.snapshot;
-	      img.alt = "Snapshot";
-	    }
-	    return img;
+      if (typeof this.scene.snapshot !== "undefined") {
+        img = document.createElement("img");
+        img.src = this.scene.snapshot;
+        img.alt = "Snapshot";
+      }
+      return img;
     };
 
     this.initGL0 = function() {
-	    if (!window.WebGLRenderingContext){
-	      this.debug("Your browser does not support WebGL. See <a href=\"http://get.webgl.org\">http://get.webgl.org</a>", this.getSnapshot());
-	      return;
-	    }
-	    try {
-	      this.initGL();
-	    }
-	    catch(e) {}
-	    if ( !this.gl ) {
-	      this.debug("Your browser appears to support WebGL, but did not create a WebGL context.  See <a href=\"http://get.webgl.org\">http://get.webgl.org</a>",
-	            this.getSnapshot());
-	      return;
-	    }
+      if (!window.WebGLRenderingContext){
+        alert("Your browser does not support WebGL. See http://get.webgl.org");
+        return;
+      }
     };
+    
+    this.isInBrowserViewport = function() {
+      var rect = this.canvas.getBoundingClientRect(),
+          windHeight = (window.innerHeight || document.documentElement.clientHeight),
+          windWidth = (window.innerWidth || document.documentElement.clientWidth);
+      return (
+      	rect.top >= -windHeight &&
+      	rect.left >= -windWidth &&
+      	rect.bottom <= 2*windHeight &&
+      	rect.right <= 2*windWidth);
+    }
 
     this.initGL = function() {
-	   this.gl = this.canvas.getContext("webgl") ||
-	               this.canvas.getContext("experimental-webgl");
-	 };
+      var self = this;
+      if (this.gl) {
+      	if (!this.drawing && this.gl.isContextLost())
+          this.restartCanvas();
+        else
+          return this.gl;
+      }
+      // if (!this.isInBrowserViewport()) return; Return what??? At this point we know this.gl is null.
+      this.canvas.addEventListener("webglcontextrestored",
+        this.onContextRestored, false);
+      this.canvas.addEventListener("webglcontextlost",
+        this.onContextLost, false);      
+      this.gl = this.canvas.getContext("webgl", this.webGLoptions) ||
+               this.canvas.getContext("experimental-webgl", this.webGLoptions);
+      var save = this.startDrawing();
+      this.initSphereGL(); 
+      Object.keys(this.scene.objects).forEach(function(key){
+        self.initObj(parseInt(key, 10));
+        });
+      this.stopDrawing(save);
+      return this.gl;
+    };
 
     this.resize = function(el) {
       this.canvas.width = el.width;
@@ -1893,21 +2027,21 @@ rglwidgetClass = function() {
     };
 
     this.drawScene = function() {
-      var gl = this.gl;
-      if (!gl)
-        this.alertOnce("No WebGL context.");
+      var gl = this.gl || this.initGL(),
+          save = this.startDrawing();
       gl.enable(gl.DEPTH_TEST);
-	    gl.depthFunc(gl.LEQUAL);
-	    gl.clearDepth(1.0);
-	    gl.clearColor(1,1,1,1);
+      gl.depthFunc(gl.LEQUAL);
+      gl.clearDepth(1.0);
+      gl.clearColor(1,1,1,1);
+      gl.depthMask(true); // Must be true before clearing depth buffer
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-			this.drawSubscene(this.scene.rootSubscene);
-			this.drawing = false;
-		};
+      this.drawSubscene(this.scene.rootSubscene);
+      this.stopDrawing(save);
+    };
 
-		this.subsetSetter = function(el, control) {
-		  if (typeof control.subscenes === "undefined" ||
-		      control.subscenes === null)
+    this.subsetSetter = function(el, control) {
+      if (typeof control.subscenes === "undefined" ||
+          control.subscenes === null)
         control.subscenes = this.scene.rootSubscene;
       var value = Math.round(control.value),
           subscenes = [].concat(control.subscenes),
@@ -1934,29 +2068,29 @@ rglwidgetClass = function() {
         entries = entries.map(tointeger);
         this.setSubsceneEntries(this.unique(entries), subsceneid);
       }
-		};
+    };
 
-		this.propertySetter = function(el, control)  {
-		  var value = control.value,
-		      values = [].concat(control.values),
-		      svals = [].concat(control.param),
-		      direct = values[0] === null,
-		      entries = [].concat(control.entries),
-		      ncol = entries.length,
-		      nrow = values.length/ncol,
-		      properties = this.repeatToLen(control.properties, ncol),
-		      objids = this.repeatToLen(control.objids, ncol),
-		      property = properties[0], objid = objids[0],
-		      obj = this.getObj(objid),
-		      propvals, i, v1, v2, p, entry, gl, needsBinding,
-		      newprop, newid,
+    this.propertySetter = function(el, control)  {
+      var value = control.value,
+          values = [].concat(control.values),
+          svals = [].concat(control.param),
+          direct = values[0] === null,
+          entries = [].concat(control.entries),
+          ncol = entries.length,
+          nrow = values.length/ncol,
+          properties = this.repeatToLen(control.properties, ncol),
+          objids = this.repeatToLen(control.objids, ncol),
+          property = properties[0], objid = objids[0],
+          obj = this.getObj(objid),
+          propvals, i, v1, v2, p, entry, gl, needsBinding,
+          newprop, newid,
 
-		      getPropvals = function() {
+          getPropvals = function() {
             if (property === "userMatrix")
               return obj.userMatrix.getAsArray();
             else
               return obj[property];
-		      };
+          };
 
       if (direct && typeof value === "undefined")
         return;
@@ -2009,7 +2143,7 @@ rglwidgetClass = function() {
         }
       }
       for (j=0; j < needsBinding.length; j++) {
-        gl = this.gl;
+        gl = this.gl || this.initGL();
         obj = this.getObj(needsBinding[j]);
         gl.bindBuffer(gl.ARRAY_BUFFER, obj.buf);
         gl.bufferData(gl.ARRAY_BUFFER, obj.values, gl.STATIC_DRAW);
@@ -2032,9 +2166,9 @@ rglwidgetClass = function() {
                      nx:0, ny:1, nz:2,
                      ox:0, oy:1, oz:2,
                      ts:0, tt:1},
-  	    values = control.values,
-		    direct = values === null,
-		    ncol,
+        values = control.values,
+        direct = values === null,
+        ncol,
         interp = control.interp,
         vertices = [].concat(control.vertices),
         attributes = [].concat(control.attributes),
@@ -2091,7 +2225,7 @@ rglwidgetClass = function() {
         }
       }
       if (typeof obj.buf !== "undefined") {
-        var gl = this.gl;
+        var gl = this.gl || this.initGL();
         gl.bindBuffer(gl.ARRAY_BUFFER, obj.buf);
         gl.bufferData(gl.ARRAY_BUFFER, propvals, gl.STATIC_DRAW);
       }
@@ -2165,108 +2299,108 @@ rglwidgetClass = function() {
         }
         obj.values = propvals;
         if (typeof obj.buf !== "undefined") {
-          gl = this.gl;
+          gl = this.gl || this.initGL();
           gl.bindBuffer(gl.ARRAY_BUFFER, obj.buf);
           gl.bufferData(gl.ARRAY_BUFFER, obj.values, gl.STATIC_DRAW);
         }
       }
-		};
+    };
 
-		this.oldBridge = function(el, control) {
-		  var attrname, global = window[control.prefix + "rgl"];
-		  if (typeof global !== "undefined")
+    this.oldBridge = function(el, control) {
+      var attrname, global = window[control.prefix + "rgl"];
+      if (typeof global !== "undefined")
         for (attrname in global)
           this[attrname] = global[attrname];
       window[control.prefix + "rgl"] = this;
-		};
+    };
 
-		this.Player = function(el, control) {
-		  var
-		    self = this,
-		    components = [].concat(control.components),
+    this.Player = function(el, control) {
+      var
+        self = this,
+        components = [].concat(control.components),
 
-		    Tick = function() { /* "this" will be a timer */
-		      var i,
-		          nominal = this.value,
-		          slider = this.Slider,
-		      	  labels = this.outputLabels,
-		          output = this.Output,
-		          step;
-		      if (typeof slider !== "undefined" && nominal != slider.value)
-		        slider.value = nominal;
-		      if (typeof output !== "undefined") {
-		        step = Math.round((nominal - output.sliderMin)/output.sliderStep);
-		        if (labels !== null) {
-		          output.innerHTML = labels[step];
-		        } else {
-		          step = step*output.sliderStep + output.sliderMin;
-		          output.innerHTML = step.toPrecision(output.outputPrecision);
-		        }
-		      }
-		      for (i=0; i < this.actions.length; i++) {
-		        this.actions[i].value = nominal;
-		      }
-		      self.applyControls(el, this.actions, false);
-		      self.drawScene();
-		    },
+        Tick = function() { /* "this" will be a timer */
+          var i,
+              nominal = this.value,
+              slider = this.Slider,
+              labels = this.outputLabels,
+              output = this.Output,
+              step;
+          if (typeof slider !== "undefined" && nominal != slider.value)
+            slider.value = nominal;
+          if (typeof output !== "undefined") {
+            step = Math.round((nominal - output.sliderMin)/output.sliderStep);
+            if (labels !== null) {
+              output.innerHTML = labels[step];
+            } else {
+              step = step*output.sliderStep + output.sliderMin;
+              output.innerHTML = step.toPrecision(output.outputPrecision);
+            }
+          }
+          for (i=0; i < this.actions.length; i++) {
+            this.actions[i].value = nominal;
+          }
+          self.applyControls(el, this.actions, false);
+          self.drawScene();
+        },
 
         OnSliderInput = function() { /* "this" will be the slider */
           this.rgltimer.value = Number(this.value);
-		      this.rgltimer.Tick();
+          this.rgltimer.Tick();
         },
 
-		    addSlider = function(min, max, step, value) {
-		      var slider = document.createElement("input");
-		      slider.type = "range";
-		      slider.min = min;
-		      slider.max = max;
-		      slider.step = step;
-		      slider.value = value;
-		      slider.oninput = OnSliderInput;
-		      slider.sliderActions = control.actions;
-		      slider.sliderScene = this;
-		      slider.className = "rgl-slider";
-		      slider.id = el.id + "-slider";
-		      el.rgltimer.Slider = slider;
-		      slider.rgltimer = el.rgltimer;
-		      el.appendChild(slider);
-		    },
+        addSlider = function(min, max, step, value) {
+          var slider = document.createElement("input");
+          slider.type = "range";
+          slider.min = min;
+          slider.max = max;
+          slider.step = step;
+          slider.value = value;
+          slider.oninput = OnSliderInput;
+          slider.sliderActions = control.actions;
+          slider.sliderScene = this;
+          slider.className = "rgl-slider";
+          slider.id = el.id + "-slider";
+          el.rgltimer.Slider = slider;
+          slider.rgltimer = el.rgltimer;
+          el.appendChild(slider);
+        },
 
-		    addLabel = function(labels, min, step, precision) {
-		      var output = document.createElement("output");
-		      output.sliderMin = min;
-		      output.sliderStep = step;
-		      output.outputPrecision = precision;
-		      output.className = "rgl-label";
-		      output.id = el.id + "-label";
-		      el.rgltimer.Output = output;
-		      el.rgltimer.outputLabels = labels;
-		      el.appendChild(output);
-		    },
+        addLabel = function(labels, min, step, precision) {
+          var output = document.createElement("output");
+          output.sliderMin = min;
+          output.sliderStep = step;
+          output.outputPrecision = precision;
+          output.className = "rgl-label";
+          output.id = el.id + "-label";
+          el.rgltimer.Output = output;
+          el.rgltimer.outputLabels = labels;
+          el.appendChild(output);
+        },
 
-		    addButton = function(label) {
-		      var button = document.createElement("input"),
-		      		onclicks = {Reverse: function() { this.rgltimer.reverse();},
-	 	               Play: function() { this.rgltimer.play();
-	 	                                  this.value = this.rgltimer.enabled ? "Pause" : "Play"; },
-		               Slower: function() { this.rgltimer.slower(); },
-		               Faster: function() { this.rgltimer.faster(); },
-		               Reset: function() { this.rgltimer.reset(); }};
-		      button.rgltimer = el.rgltimer;
-		      button.type = "button";
-		      button.value = label;
-		      if (label === "Play")
-		        button.rgltimer.PlayButton = button;
-		      button.onclick = onclicks[label];
-		      button.className = "rgl-button";
-		      button.id = el.id + "-" + label;
+        addButton = function(label) {
+          var button = document.createElement("input"),
+              onclicks = {Reverse: function() { this.rgltimer.reverse();},
+                    Play: function() { this.rgltimer.play();
+                                       this.value = this.rgltimer.enabled ? "Pause" : "Play"; },
+                   Slower: function() { this.rgltimer.slower(); },
+                   Faster: function() { this.rgltimer.faster(); },
+                   Reset: function() { this.rgltimer.reset(); }};
+          button.rgltimer = el.rgltimer;
+          button.type = "button";
+          button.value = label;
+          if (label === "Play")
+            button.rgltimer.PlayButton = button;
+          button.onclick = onclicks[label];
+          button.className = "rgl-button";
+          button.id = el.id + "-" + label;
           el.appendChild(button);
-		    };
+        };
 
-        if (typeof control.reinit !== "null") {
+        if (typeof control.reinit !== "undefined" && control.reinit !== null) {
           control.actions.reinit = control.reinit;
         }
-		    el.rgltimer = new rgltimerClass(Tick, control.start, control.interval, control.stop, control.value, control.rate, control.loop, control.actions);
+        el.rgltimer = new rgltimerClass(Tick, control.start, control.interval, control.stop, control.value, control.rate, control.loop, control.actions);
         for (var i=0; i < components.length; i++) {
           switch(components[i]) {
             case "Slider": addSlider(control.start, control.stop,
@@ -2280,76 +2414,76 @@ rglwidgetClass = function() {
           }
         }
         el.rgltimer.Tick();
-		};
+    };
 
-		this.applyControls = function(el, x, draw) {
-		  var self = this, reinit = x.reinit, i, obj, control, type;
-		  for (i = 0; i < x.length; i++) {
-		    control = x[i];
-		    type = control.type;
-		    self[type](el, control);
-		  };
-		  if (typeof reinit !== "undefined" && reinit !== null) {
-		    reinit = [].concat(reinit);
-		    for (i = 0; i < reinit.length; i++)
-		      self.getObj(reinit[i]).initialized = false;
-		  }
-		  if (typeof draw === "undefined" || draw)
-		    self.drawScene();
-		};
+    this.applyControls = function(el, x, draw) {
+      var self = this, reinit = x.reinit, i, control, type;
+      for (i = 0; i < x.length; i++) {
+        control = x[i];
+        type = control.type;
+        self[type](el, control);
+      }
+      if (typeof reinit !== "undefined" && reinit !== null) {
+        reinit = [].concat(reinit);
+        for (i = 0; i < reinit.length; i++)
+          self.getObj(reinit[i]).initialized = false;
+      }
+      if (typeof draw === "undefined" || draw)
+        self.drawScene();
+    };
 
-		this.sceneChangeHandler = function(message) {
-		  var self = document.getElementById(message.elementId).rglinstance,
-		      objs = message.objects, mat = message.material,
-		      root = message.rootSubscene,
-		      initSubs = message.initSubscenes,
-		      redraw = message.redrawScene,
-		      skipRedraw = message.skipRedraw,
-		      deletes, subs, allsubs = [], obj, i,j;
-		  if (typeof message.delete !== "undefined") {
-		    deletes = [].concat(message.delete);
-		    if (typeof message.delfromSubscenes !== "undefined")
-		      subs = [].concat(message.delfromSubscenes);
-		    else
-		      subs = [];
-		    for (i = 0; i < deletes.length; i++) {
-		      for (j = 0; j < subs.length; j++) {
-		        self.delFromSubscene(deletes[i], subs[j]);
-		      }
-		      delete self.scene.objects[deletes[i]];
-		    }
-		  }
-		  if (typeof objs !== "undefined") {
-		    Object.keys(objs).forEach(function(key){
-		      key = parseInt(key, 10);
-		      self.scene.objects[key] = objs[key];
-		      self.initObj(key);
-		      var obj = self.getObj(key),
-		          subs = [].concat(obj.inSubscenes), k;
-		      allsubs = allsubs.concat(subs);
-		      for (k = 0; k < subs.length; k++)
-		        self.addToSubscene(key, subs[k]);
-		    });
-		  }
-		  if (typeof mat !== "undefined") {
-		    self.scene.material = mat;
-		  }
-		  if (typeof root !== "undefined") {
-		    self.scene.rootSubscene = root;
-		  }
-		  if (typeof initSubs !== "undefined")
-		    allsubs = allsubs.concat(initSubs);
-		  allsubs = self.unique(allsubs);
-		  for (i = 0; i < allsubs.length; i++) {
-		    self.initSubscene(allsubs[i]);
-		  }
-		  if (typeof skipRedraw !== "undefined") {
-		    root = self.getObj(self.scene.rootSubscene);
-		    root.par3d.skipRedraw = skipRedraw;
-		  }
-		  if (redraw)
-	      self.drawScene();
-		};
+    this.sceneChangeHandler = function(message) {
+      var self = document.getElementById(message.elementId).rglinstance,
+          objs = message.objects, mat = message.material,
+          root = message.rootSubscene,
+          initSubs = message.initSubscenes,
+          redraw = message.redrawScene,
+          skipRedraw = message.skipRedraw,
+          deletes, subs, allsubs = [], i,j;
+      if (typeof message.delete !== "undefined") {
+        deletes = [].concat(message.delete);
+        if (typeof message.delfromSubscenes !== "undefined")
+          subs = [].concat(message.delfromSubscenes);
+        else
+          subs = [];
+        for (i = 0; i < deletes.length; i++) {
+          for (j = 0; j < subs.length; j++) {
+            self.delFromSubscene(deletes[i], subs[j]);
+          }
+          delete self.scene.objects[deletes[i]];
+        }
+      }
+      if (typeof objs !== "undefined") {
+        Object.keys(objs).forEach(function(key){
+          key = parseInt(key, 10);
+          self.scene.objects[key] = objs[key];
+          self.initObj(key);
+          var obj = self.getObj(key),
+              subs = [].concat(obj.inSubscenes), k;
+          allsubs = allsubs.concat(subs);
+          for (k = 0; k < subs.length; k++)
+            self.addToSubscene(key, subs[k]);
+        });
+      }
+      if (typeof mat !== "undefined") {
+        self.scene.material = mat;
+      }
+      if (typeof root !== "undefined") {
+        self.scene.rootSubscene = root;
+      }
+      if (typeof initSubs !== "undefined")
+        allsubs = allsubs.concat(initSubs);
+      allsubs = self.unique(allsubs);
+      for (i = 0; i < allsubs.length; i++) {
+        self.initSubscene(allsubs[i]);
+      }
+      if (typeof skipRedraw !== "undefined") {
+        root = self.getObj(self.scene.rootSubscene);
+        root.par3d.skipRedraw = skipRedraw;
+      }
+      if (redraw)
+        self.drawScene();
+    };
 }).call(rglwidgetClass.prototype);
 
 rgltimerClass = function(Tick, startTime, interval, stopTime, value, rate, loop, actions) {

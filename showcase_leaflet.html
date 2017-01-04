@@ -19,6 +19,9 @@
 <script src="libs/bootstrap/js/bootstrap.min.js"></script>
 <script src="libs/bootstrap/shim/html5shiv.min.js"></script>
 <script src="libs/bootstrap/shim/respond.min.js"></script>
+<script src="libs/navigation/tabsets.js"></script>
+<link href="libs/highlightjs/textmate.css" rel="stylesheet" />
+<script src="libs/highlightjs/highlight.js"></script>
 <script src="libs/htmlwidgets/htmlwidgets.js"></script>
 <link href="libs/leaflet/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet/leaflet.js"></script>
@@ -32,10 +35,6 @@
 <script src="js/polyfill.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<link rel="stylesheet"
-      href="libs/highlight/textmate.css"
-      type="text/css" />
-<script src="libs/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -106,10 +105,10 @@ button.code-folding-btn:focus {
 </style>
 
 
+
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script src="libs/navigation/tabsets.js"></script>
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
@@ -245,8 +244,8 @@ pal &lt;- colorQuantile(&quot;YlOrRd&quot;, NULL, n = 8)
 leaflet(orstationc) %&gt;% 
   addTiles() %&gt;%
   addCircleMarkers(color = ~pal(tann))</code></pre>
-<div id="htmlwidget-9264" style="width:576px;height:336px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-9264">{
+<div id="htmlwidget-ed55738eeba1029f0b0e" style="width:576px;height:336px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ed55738eeba1029f0b0e">{
   "x": {
     "calls": [
       {
@@ -364,9 +363,13 @@ $(document).ready(function () {
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 
