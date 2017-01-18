@@ -206,9 +206,8 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
       )
     }
   )
-  html <- htmltools::attachDependencies(html,
-    c(widget_dependencies(class(x)[1], attr(x, 'package')),
-      x$dependencies)
+  html <- htmltools::attachDependencies(
+    html, c(getDependency(x), x$dependencies)
   )
 
   htmltools::browsable(html)
@@ -232,10 +231,6 @@ widget_html <- function(name, package, id, style, class, inline = FALSE, ...){
   } else {
     tags$div(id = id, style = style, class = class)
   }
-}
-
-widget_dependencies <- function(name, package){
-  getDependency(name, package)
 }
 
 # Generates a <script type="application/json"> tag with the JSON-encoded data,
@@ -386,7 +381,7 @@ shinyWidgetOutput <- function(outputId, name, width, height, package = name,
   )
 
   # attach dependencies
-  dependencies = widget_dependencies(name, package)
+  dependencies = getDependency(name, package)
   htmltools::attachDependencies(html, dependencies)
 }
 
