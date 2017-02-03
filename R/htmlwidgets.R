@@ -206,13 +206,22 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
       )
     }
   )
-  html <- htmltools::attachDependencies(html,
-    c(widget_dependencies(class(x)[1], attr(x, 'package')),
-      x$dependencies)
-  )
+
+  # make sure we're working with a list of dependencies
+  if (inherits(x$dependencies, "html_dependency")) {
+    x$dependencies <- list(x$dependencies)
+  }
+
+  # collect and attach dependencies
+  deps <- widget_dependencies(class(x)[1], attr(x, 'package'))
+  for (i in seq_along(x$dependencies)) {
+    dep <- x$dependencies[[i]]
+    append <- dep$after_widget %||% TRUE
+    deps <- if (append) c(deps, list(dep)) else c(list(dep), deps)
+  }
+  html <- htmltools::attachDependencies(html, deps)
 
   htmltools::browsable(html)
-
 }
 
 
