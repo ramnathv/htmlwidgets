@@ -32,6 +32,11 @@ pandoc_self_contained_html <- function(input, output) {
   # (note there is no markdown in the source document but
   # we still need to do this "conversion" to get the
   # base64 encoding)
+
+  # in markdown, four spaces means "take this code literally"
+  input_txt <- sub("^\\s+", "", readLines(input))
+  writeLines(input_txt, input)
+
   pandoc_convert(
     input = input,
     from = "markdown",
