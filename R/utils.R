@@ -141,7 +141,7 @@ JS <- function(...) {
 #   JavaScript are to be identified
 # @author Yihui Xie
 JSEvals <- function(list) {
-  evals <- names(which(unlist(shouldEval(list))))
+  evals <- names(which(unlist(shouldEval(list)))) %||% list()
   I(evals)  # need I() to prevent toJSON() from converting it to scalar
 }
 
