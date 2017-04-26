@@ -141,6 +141,9 @@ JS <- function(...) {
 #   JavaScript are to be identified
 # @author Yihui Xie
 JSEvals <- function(list) {
+  # the `%||% list()` part is necessary as of R 3.4.0 (April 2017) -- if `evals`
+  # is NULL then `I(evals)` results in a warning in R 3.4.0. This is circumvented
+  # if we let `evals` be equal to `list()` in those cases
   evals <- names(which(unlist(shouldEval(list)))) %||% list()
   I(evals)  # need I() to prevent toJSON() from converting it to scalar
 }
