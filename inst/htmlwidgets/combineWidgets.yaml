@@ -1,0 +1,6 @@
+dependencies:
+ - name: combineWidgetStyle
+   version: 0.1
+   src: htmlwidgets
+   stylesheet: combineWidgets.css
+
