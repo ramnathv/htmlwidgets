@@ -38,7 +38,49 @@ registerMethods <- function(methods) {
   checkShinyVersion(error = FALSE)
 }
 
-knit_print.htmlwidget <- function(x, ..., options = NULL) {
-  knitr::knit_print(toHTML(x, standalone = FALSE, knitrOptions = options), options = options,  ...)
+knit_print.htmlwidget <- function (x, ..., options = NULL)
+{
+  as.iframe <- rmarkdown::metadata$output[[1]]$as.iframe
+  if (!is.null(as.iframe) && as.iframe) {
+    file <- basename(tempfile(fileext = ".html"))
+    selfcontained <- if (is.null(rmarkdown::metadata$self_contained)) TRUE else rmarkdown::metadata$self_contained
+
+    # widget.width and widget.height can be specified as chunk options
+    width  <- if(is.null(options$widget.width)) "100%" else options$widget.width
+    height <- if(is.null(options$widget.height)) 500 else options$widget.height
+
+    # widget.styles can be specified as a chunk option
+    # widget.styles must be a list of pairs of style name and value
+    styles <- options$widget.styles
+    if(is.null(styles)) styles <- list(`border-width` = '0px')
+    if(!is.list(styles)) stop("widget.styles must be a list!")
+    if(!any(grepl("^border", names(styles)))) styles$`border-width` <- '0px'
+    style = paste(
+      paste(paste(names(styles), styles, sep = ':'), collapse = ';'),
+      ";"
+    )
+
+    htmlwidgets::saveWidget(x, file = file, selfcontained = selfcontained)
+
+    content <- if (selfcontained) {
+      on.exit(unlink(file), add = TRUE)
+      list(
+        srcdoc = paste(readLines(file), collapse = "\n"),
+        width = width, height = height, style = style
+      )
+    } else {
+      list(
+        src = file,
+        width = width, height = height, style = style
+      )
+    }
+
+    html <- htmltools::tag("iframe", content)
+
+  } else {
+    html <- toHTML(x, standalone = FALSE, knitrOptions = options)
+  }
+
+  knitr::knit_print(html, options = options, ...)
 }
 
