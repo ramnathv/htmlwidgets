@@ -1,8 +1,8 @@
 Package: htmlwidgets
 Type: Package
 Title: HTML Widgets for R
-Version: 0.8
-Date: 2016-11-09
+Version: 0.9
+Date: 2017-05-03
 Authors@R: c(
     person("Ramnath", "Vaidyanathan", role = c("aut", "cph")),
     person("Yihui", "Xie", role = c("aut")),
