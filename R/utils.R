@@ -41,11 +41,23 @@ toJSON <- function(x) {
 #' @param name name of the widget.
 #' @param package name of the package, defaults to the widget name.
 #' @export
-getDependency <- function(name, package = name){
-  config = sprintf("htmlwidgets/%s.yaml", name)
-  jsfile = sprintf("htmlwidgets/%s.js", name)
+getDependency <- function(name, package = name) {
+  htmlWidgetDep <- htmlDependency(
+    "htmlwidgets", 
+    packageVersion("htmlwidgets"),
+    src = system.file("www", package = "htmlwidgets"),
+    script = "htmlwidgets.js"
+  )
+  
+  config <- sprintf("htmlwidgets/%s.yaml", name)
+  jsfile <- sprintf("htmlwidgets/%s.js", name)
 
-  config = yaml::yaml.load_file(
+  # do less magic if no yaml file exists
+  if (!file.exists(config)) {
+    return(list(htmlWidgetDep))
+  }
+  
+  config <- yaml::yaml.load_file(
     system.file(config, package = package)
   )
   widgetDep <- lapply(config$dependencies, function(l){
@@ -70,10 +82,7 @@ getDependency <- function(name, package = name){
   ), argsDep))
 
   c(
-    list(htmlDependency("htmlwidgets", packageVersion("htmlwidgets"),
-      src = system.file("www", package="htmlwidgets"),
-      script = "htmlwidgets.js"
-    )),
+    list(htmlWidgetDep),
     widgetDep,
     list(bindingDep)
   )
