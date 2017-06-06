@@ -48,18 +48,16 @@ getDependency <- function(name, package = name) {
     src = system.file("www", package = "htmlwidgets"),
     script = "htmlwidgets.js"
   )
-  
-  config <- sprintf("htmlwidgets/%s.yaml", name)
-  jsfile <- sprintf("htmlwidgets/%s.js", name)
+
+  config <- system.file(sprintf("htmlwidgets/%s.yaml", name), package = package)
+  jsfile <- system.file(sprintf("htmlwidgets/%s.js", name), package = package)
 
   # do less magic if no yaml file exists
-  if (!file.exists(config)) {
+  if (identical(config, "")) {
     return(list(htmlWidgetDep))
   }
-  
-  config <- yaml::yaml.load_file(
-    system.file(config, package = package)
-  )
+
+  config <- yaml::yaml.load_file(config)
   widgetDep <- lapply(config$dependencies, function(l){
     l$src = system.file(l$src, package = package)
     do.call(htmlDependency, l)
@@ -73,7 +71,7 @@ getDependency <- function(name, package = name) {
     if (packageVersion('htmltools') < '0.3.3') {
       bindingDir <- tempfile("widgetbinding")
       dir.create(bindingDir, mode = "0700")
-      file.copy(system.file(jsfile, package = package), bindingDir)
+      file.copy(jsfile, bindingDir)
     } else argsDep <- list(all_files = FALSE)
   }
   bindingDep <- do.call(htmlDependency, c(list(
