@@ -41,13 +41,26 @@ toJSON <- function(x) {
 #' @param name name of the widget.
 #' @param package name of the package, defaults to the widget name.
 #' @export
-getDependency <- function(name, package = name){
-  config = sprintf("htmlwidgets/%s.yaml", name)
-  jsfile = sprintf("htmlwidgets/%s.js", name)
-
-  config = yaml::yaml.load_file(
-    system.file(config, package = package)
+getDependency <- function(name, package = name) {
+  htmlWidgetDep <- htmlDependency(
+    "htmlwidgets", 
+    packageVersion("htmlwidgets"),
+    src = system.file("www", package = "htmlwidgets"),
+    script = "htmlwidgets.js"
   )
+
+  config <- system.file(sprintf("htmlwidgets/%s.yaml", name), package = package)
+  jsfile <- system.file(sprintf("htmlwidgets/%s.js", name), package = package)
+
+  # htmlwidget authors may need to place dependencies *before* the binding
+  # (i.e., jsfile) at print time. So, if no yaml exists, we just include the
+  # htmlwidgets.js dependency and leave it to the author to declare their
+  # binding dependency inside htmlwidget::createWidget()
+  if (identical(config, "")) {
+    return(list(htmlWidgetDep))
+  }
+
+  config <- yaml::yaml.load_file(config)
   widgetDep <- lapply(config$dependencies, function(l){
     l$src = system.file(l$src, package = package)
     do.call(htmlDependency, l)
@@ -61,7 +74,7 @@ getDependency <- function(name, package = name){
     if (packageVersion('htmltools') < '0.3.3') {
       bindingDir <- tempfile("widgetbinding")
       dir.create(bindingDir, mode = "0700")
-      file.copy(system.file(jsfile, package = package), bindingDir)
+      file.copy(jsfile, bindingDir)
     } else argsDep <- list(all_files = FALSE)
   }
   bindingDep <- do.call(htmlDependency, c(list(
@@ -70,10 +83,7 @@ getDependency <- function(name, package = name){
   ), argsDep))
 
   c(
-    list(htmlDependency("htmlwidgets", packageVersion("htmlwidgets"),
-      src = system.file("www", package="htmlwidgets"),
-      script = "htmlwidgets.js"
-    )),
+    list(htmlWidgetDep),
     widgetDep,
     list(bindingDep)
   )
