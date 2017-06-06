@@ -52,7 +52,10 @@ getDependency <- function(name, package = name) {
   config <- system.file(sprintf("htmlwidgets/%s.yaml", name), package = package)
   jsfile <- system.file(sprintf("htmlwidgets/%s.js", name), package = package)
 
-  # do less magic if no yaml file exists
+  # htmlwidget authors may need to place dependencies *before* the binding
+  # (i.e., jsfile) at print time. So, if no yaml exists, we just include the
+  # htmlwidgets.js dependency and leave it to the author to declare their
+  # binding dependency inside htmlwidget::createWidget()
   if (identical(config, "")) {
     return(list(htmlWidgetDep))
   }
