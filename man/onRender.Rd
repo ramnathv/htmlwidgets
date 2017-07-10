@@ -83,4 +83,3 @@ leaflet() \%>\% addTiles() \%>\%
 \code{\link{onStaticRenderComplete}}, for writing custom JavaScript
   that involves multiple widgets.
 }
-

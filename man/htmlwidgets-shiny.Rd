@@ -2,8 +2,8 @@
 % Please edit documentation in R/htmlwidgets.R
 \name{htmlwidgets-shiny}
 \alias{htmlwidgets-shiny}
-\alias{shinyRenderWidget}
 \alias{shinyWidgetOutput}
+\alias{shinyRenderWidget}
 \title{Shiny bindings for HTML widgets}
 \usage{
 shinyWidgetOutput(outputId, name, width, height, package = name,
@@ -60,4 +60,3 @@ renderFoo <- function(expr, env = parent.frame(), quoted = FALSE) {
   htmlwidgets::shinyRenderWidget(expr, fooOutput, env, quoted = TRUE)
 }
 }
-

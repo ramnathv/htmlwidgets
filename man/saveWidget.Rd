@@ -27,4 +27,3 @@ Defaults to white.}
 \description{
 Save a rendered widget to an HTML file (e.g. for sharing with others).
 }
-

@@ -14,4 +14,3 @@ getDependency(name, package = name)
 \description{
 Get js and css dependencies for  a htmlwidget
 }
-

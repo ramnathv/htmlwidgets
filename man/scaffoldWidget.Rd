@@ -24,4 +24,3 @@ Add the minimal code required to implement an HTML widget to an R package.
 This function must be executed from the root directory of the package
   you wish to add the widget to.
 }
-

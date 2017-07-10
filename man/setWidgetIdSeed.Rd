@@ -24,4 +24,3 @@ Set a random seed for generating widget element ids. Calling this
 function rather than relying on the default behavior ensures
 stable widget ids across sessions.
 }
-
