@@ -24,4 +24,3 @@ JS('function(x) {', 'return x + 1;', '}')
 \author{
 Yihui Xie
 }
-

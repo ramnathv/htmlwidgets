@@ -1,3 +1,14 @@
+htmlwidgets 0.9
+-----------------------------------------------------------------------
+
+* Starting with R 3.4.0, a "Calling 'structure(NULL, *)' is deprecated"
+  warning would occur when shinyRenderWidget encountered a NULL value.
+  (#269)
+
+* Fix edge case where using dynamic HTML dependencies from a widget
+  binding's JS factory function would fail.
+
+
 htmlwidgets 0.8
 -----------------------------------------------------------------------
 

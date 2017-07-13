@@ -59,4 +59,3 @@ the specified package.
 For additional details on developing widgets, see package vignettes:
 \code{vignette("develop_intro", package = "htmlwidgets")}.
 }
-
