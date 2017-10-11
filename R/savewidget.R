@@ -16,17 +16,23 @@
 saveWidget <- function(widget, file, selfcontained = TRUE, libdir = NULL,
                        background = "white", knitrOptions = list()) {
 
+  if(!dir.exists(dirname(file))){
+    stop(paste0("Directory '", dirname(file), "' does not exist, create it before attempting to save widgets there"))
+  }
+
+  normalised.file.path <- file.path(normalizePath(dirname(file)),basename(file))
+
   # convert to HTML tags
   html <- toHTML(widget, standalone = TRUE, knitrOptions = knitrOptions)
 
   # form a path for dependenent files
   if (is.null(libdir)){
-    libdir <- paste(tools::file_path_sans_ext(basename(file)), "_files",
-      sep = "")
+    libdir <- paste(tools::file_path_sans_ext(basename(normalised.file.path)), "_files",
+                    sep = "")
   }
 
   # save the file
-  htmltools::save_html(html, file = file, libdir = libdir, background=background)
+  htmltools::save_html(html, file = normalised.file.path, libdir = libdir, background=background)
 
   # make it self-contained if requested
   if (selfcontained) {
@@ -36,7 +42,7 @@ saveWidget <- function(widget, file, selfcontained = TRUE, libdir = NULL,
            "https://github.com/rstudio/rmarkdown/blob/master/PANDOC.md")
     }
 
-    pandoc_self_contained_html(file, file)
+    pandoc_self_contained_html(file, normalised.file.path)
     unlink(libdir, recursive = TRUE)
   }
 
