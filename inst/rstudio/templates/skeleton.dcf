@@ -1,0 +1,3 @@
+Title: R Package using htmlwidgets
+Binding: project_template
+OpenFiles: R/main.R, java/main.scala
