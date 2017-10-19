@@ -1,0 +1,3 @@
+Title: R Package using htmlwidgets
+Binding: projectTemplate
+OpenFiles: README.Rmd, inst/htmlwidgets/widget.js, R/main.R, java/main.scala
