@@ -102,7 +102,7 @@ projectTemplate <- function(path, ...) {
     "",
     "Build the package then launch this `htmlwidget` as follows:",
     "",
-    "```{r}",
+    "```{r eval=FALSE}",
     paste("library(", project_name, ")", sep = ""),
     paste(project_name, "()", sep = ""),
     "```"
