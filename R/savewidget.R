@@ -27,13 +27,13 @@ saveWidget <- function(widget, file, selfcontained = TRUE, libdir = NULL,
       sep = "")
   }
 
-  # Save the file
-  # Include a title; pandoc 2.0 complains if you don't have one
-  pandoc_save_markdown(html, file = file, libdir = libdir,
-    background = background, title = title)
-
   # make it self-contained if requested
   if (selfcontained) {
+
+    # Save the file
+    # Include a title; pandoc 2.0 complains if you don't have one
+    pandoc_save_markdown(html, file = file, libdir = libdir,
+                         background = background, title = title)
 
     if (!pandoc_available()) {
       stop("Saving a widget with selfcontained = TRUE requires pandoc. For details see:\n",
@@ -42,6 +42,10 @@ saveWidget <- function(widget, file, selfcontained = TRUE, libdir = NULL,
 
     pandoc_self_contained_html(file, file)
     unlink(libdir, recursive = TRUE)
+  } else {
+    # no pandoc needed if not selfcontained
+    html <- tagList(tags$head(tags$title(title)), html)
+    htmltools::save_html(html, file = file, libdir = libdir, background = background)
   }
 
   invisible(NULL)
