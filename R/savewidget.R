@@ -44,6 +44,7 @@ saveWidget <- function(widget, file, selfcontained = TRUE, libdir = NULL,
     unlink(libdir, recursive = TRUE)
   } else {
     # no pandoc needed if not selfcontained
+    html <- tagList(tags$head(tags$title(title)), html)
     htmltools::save_html(html, file = file, libdir = libdir, background = background)
   }
 
