@@ -414,9 +414,7 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
   # generate a function for the expression
   func <- shiny::exprToFunction(expr, env, quoted)
 
-  # create the render function
-  renderFunc <- function() {
-    instance <- func()
+  renderWidget <- function(instance) {
     if (!is.null(instance$elementId)) {
       warning("Ignoring explicitly provided widget ID \"",
         instance$elementId, "\"; Shiny doesn't use them"
@@ -448,8 +446,19 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
     toJSON(payload)
   }
 
-  # mark it with the output function so we can use it in Rmd files
-  shiny::markRenderFunction(outputFunction, renderFunc)
+  if (!is.null(asNamespace("shiny")$createRenderFunction)) {
+    shiny::createRenderFunction(
+      func,
+      function(instance, session, name, ...) {
+        renderWidget(instance)
+      },
+      outputFunction, NULL
+    )
+  } else {
+    shiny::markRenderFunction(outputFunction, function() {
+      renderWidget(func())
+    })
+  }
 }
 
 checkShinyVersion <- function(error = TRUE) {
