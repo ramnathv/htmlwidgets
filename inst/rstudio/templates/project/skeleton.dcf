@@ -4,4 +4,4 @@ OpenFiles: README.Rmd
 
 Parameter: bower
 Widget: TextInput
-Label: Bower Dependencies
+Label: Bower package
