@@ -18,6 +18,13 @@ saveWidget <- function(widget, file, selfcontained = TRUE, libdir = NULL,
                        background = "white", title = class(widget)[[1]],
                        knitrOptions = list()) {
 
+  # Transform #RRGGBB/#RRGGBBAA colors to rgba(r,g,b,a) form, because the
+  # pound sign interferes with pandoc processing
+  if (grepl("^#", background, perl = TRUE)) {
+    bgcol <- col2rgb(background, alpha = TRUE)
+    background <- sprintf("rgba(%d,%d,%d,%f)", bgcol[1,1], bgcol[2,1], bgcol[3,1], bgcol[4,1]/255)
+  }
+
   # convert to HTML tags
   html <- toHTML(widget, standalone = TRUE, knitrOptions = knitrOptions)
 
