@@ -33,7 +33,10 @@ createWidgetId <- function(bytes = 10) {
     # Change our own seed to match the current seed
     .globals$idSeed <- .GlobalEnv$.Random.seed
     # Restore the system seed--we were never here
-    .GlobalEnv$.Random.seed <- sysSeed
+    if(!is.null(sysSeed))
+      .GlobalEnv$.Random.seed <- sysSeed
+    else
+      rm(".Random.seed", envir = .GlobalEnv)
   })
 
   paste(

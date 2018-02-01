@@ -1,3 +1,17 @@
+htmlwidgets 1.1
+-----------------------------------------------------------------------
+
+* The saveWidget's background parameter could not process hex color
+  codes, due to changes introduced in htmlwidgets 1.0. (#297)
+
+
+htmlwidgets 1.0
+-----------------------------------------------------------------------
+
+* Fix issues with self-contained mode when used with new versions of
+  pandoc. (#289)
+
+
 htmlwidgets 0.9
 -----------------------------------------------------------------------
 
