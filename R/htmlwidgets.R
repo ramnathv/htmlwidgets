@@ -343,6 +343,8 @@ createWidget <- function(name,
 #' for the output
 #' @param outputFunction Shiny output function corresponding to this render
 #'   function.
+#' @param reportSize Should the widget's container size be reported in the
+#'   shiny session's client data?
 #' @param expr An expression that generates an HTML widget
 #' @param env The environment in which to evaluate \code{expr}.
 #' @param quoted Is \code{expr} a quoted expression (with \code{quote()})? This
@@ -370,13 +372,13 @@ createWidget <- function(name,
 #'
 #' @export
 shinyWidgetOutput <- function(outputId, name, width, height, package = name,
-                              inline = FALSE) {
+                              inline = FALSE, reportSize = FALSE) {
 
   checkShinyVersion()
   # generate html
   html <- htmltools::tagList(
     widget_html(name, package, id = outputId,
-      class = paste(name, "html-widget html-widget-output"),
+      class = paste0(name, " html-widget html-widget-output", if (reportSize) " shiny-report-size"),
       style = sprintf("width:%s; height:%s; %s",
         htmltools::validateCssUnit(width),
         htmltools::validateCssUnit(height),
