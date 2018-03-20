@@ -1,3 +1,9 @@
+#' Creates an RStudio Project Template
+#'
+#' @param path Destination path where this project will be created.
+#' @param ... Additional parameters, currently not used.
+#'
+#' @export
 projectTemplate <- function(path, ...) {
   project_name <- tolower(basename(path))
 
