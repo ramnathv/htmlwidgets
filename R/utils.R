@@ -59,26 +59,23 @@ getDependency <- function(name, package = name){
     })
   }
 
-  bindingDir <- system.file("htmlwidgets", package = package)
-  argsDep <- NULL
-  copyBindingDir <- getOption('htmlwidgets.copybindingdir', TRUE)
-  # TODO: remove this trick when htmltools >= 0.3.3 is on CRAN
-  if (copyBindingDir) {
-    if (packageVersion('htmltools') < '0.3.3') {
-      bindingDir <- tempfile("widgetbinding")
-      dir.create(bindingDir, mode = "0700")
-      file.copy(system.file(jsfile, package = package), bindingDir)
-    } else argsDep <- list(all_files = FALSE)
+  # if js binding does not exist then assume provided through
+  #  some other mechanism such as a specified `htmlDependency` or `script` tag.
+  #  Note, this is a very special case.
+  bindingDep <- NULL
+  if(file.exists(system.file(jsfile, package = package))) {
+    bindingDir <- system.file("htmlwidgets", package = package)
+    argsDep <- NULL
+    bindingDep <- do.call(htmlDependency, c(list(
+      paste0(name, "-binding"), packageVersion(package),
+      bindingDir, script = basename(jsfile)
+    ), argsDep))
   }
-  bindingDep <- do.call(htmlDependency, c(list(
-    paste0(name, "-binding"), packageVersion(package),
-    bindingDir, script = basename(jsfile)
-  ), argsDep))
 
   c(
     list(htmlDependency("htmlwidgets", packageVersion("htmlwidgets"),
-      src = system.file("www", package="htmlwidgets"),
-      script = "htmlwidgets.js"
+                        src = system.file("www", package="htmlwidgets"),
+                        script = "htmlwidgets.js"
     )),
     widgetDep,
     list(bindingDep)
