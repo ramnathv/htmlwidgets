@@ -45,13 +45,19 @@ getDependency <- function(name, package = name){
   config = sprintf("htmlwidgets/%s.yaml", name)
   jsfile = sprintf("htmlwidgets/%s.js", name)
 
-  config = yaml::yaml.load_file(
-    system.file(config, package = package)
-  )
-  widgetDep <- lapply(config$dependencies, function(l){
-    l$src = system.file(l$src, package = package)
-    do.call(htmlDependency, l)
-  })
+  # if yaml does not exist then assume no dependencies
+  #  in this cases dependencies should be provided through the
+  #  dependencies argument of createWidget
+  widgetDep <- list()
+  if(file.exists(system.file(config, package = package))) {
+    config = yaml::yaml.load_file(
+      system.file(config, package = package)
+    )
+    widgetDep <- lapply(config$dependencies, function(l){
+      l$src = system.file(l$src, package = package)
+      do.call(htmlDependency, l)
+    })
+  }
 
   bindingDir <- system.file("htmlwidgets", package = package)
   argsDep <- NULL
