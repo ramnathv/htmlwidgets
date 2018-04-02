@@ -1,3 +1,11 @@
+htmlwidgets 1.2
+-----------------------------------------------------------------------
+
+* htmlwidgets can be created without a package, without yaml, and/or
+  without JavaScript binding. (#304, #305)
+
+
+
 htmlwidgets 1.1
 -----------------------------------------------------------------------
 
