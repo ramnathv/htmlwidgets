@@ -31,7 +31,20 @@ print.htmlwidget <- function(x, ..., view = interactive()) {
 
 #' @export
 print.suppress_viewer <- function(x, ..., view = interactive()) {
-  html_print(htmltools::as.tags(x, standalone=TRUE), viewer = if (view) browseURL)
+
+  viewer <- if (view) {
+    if (isTRUE(x$sizingPolicy$browser$external)) {
+      browseURL
+    } else if (!is.null(getOption("page_viewer"))) {
+      function(url) getOption("page_viewer")(url)
+    } else {
+      browseURL
+    }
+  } else {
+    NULL
+  }
+
+  html_print(htmltools::as.tags(x, standalone=TRUE), viewer = viewer)
   invisible(x)
 }
 
