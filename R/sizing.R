@@ -40,6 +40,9 @@
 #' @param browser.fill When displayed in a standalone web browser, automatically
 #'   size the widget to the browser dimensions (note that \code{browser.padding}
 #'   is still applied). Defaults to \code{FALSE}.
+#' @param browser.external When displaying in a browser, always use an external
+#'   browser (via \code{browseURL()}). Defaults to \code{FALSE}, which will
+#'   result in the use of an internal browser within RStudio v1.1 and higher.
 #' @param viewer.paneHeight Request that the RStudio Viewer be forced to a
 #'   specific height when displaying this widget.
 #' @param viewer.suppress Never display the widget within the RStudio Viewer
@@ -80,7 +83,7 @@ sizingPolicy <- function(
   viewer.padding = NULL, viewer.fill = TRUE, viewer.suppress = FALSE,
   viewer.paneHeight = NULL,
   browser.defaultWidth = NULL, browser.defaultHeight = NULL,
-  browser.padding = NULL, browser.fill = FALSE,
+  browser.padding = NULL, browser.fill = FALSE, browser.external = FALSE,
   knitr.defaultWidth = NULL, knitr.defaultHeight = NULL,
   knitr.figure = TRUE) {
 
@@ -100,7 +103,8 @@ sizingPolicy <- function(
       defaultWidth = browser.defaultWidth,
       defaultHeight = browser.defaultHeight,
       padding = browser.padding,
-      fill = browser.fill
+      fill = browser.fill,
+      external = browser.external
     ),
     knitr = list(
       defaultWidth = knitr.defaultWidth,
