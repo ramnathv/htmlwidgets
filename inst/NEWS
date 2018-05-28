@@ -6,6 +6,13 @@ htmlwidgets 1.3 (unreleased)
   unintended change in #306. Only the single `WIDGET.js` file should be
   copied (where `WIDGET` is the widget name). Fixed via #312.
 
+* Support for async Shiny. Widget render functions that use the default
+  implementation of `htmlwidgets::shinyRenderWidget` can receive
+  promises of widget objects (you can, of course, continue to use
+  regular widget objects as well).
+
+  See https://rstudio.github.io/promises for more about async Shiny.
+
 htmlwidgets 1.2
 -----------------------------------------------------------------------
 
