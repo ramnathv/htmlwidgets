@@ -62,14 +62,12 @@ getDependency <- function(name, package = name){
   # if js binding does not exist then assume provided through
   #  some other mechanism such as a specified `htmlDependency` or `script` tag.
   #  Note, this is a very special case.
-  bindingDep <- NULL
-  if(file.exists(system.file(jsfile, package = package))) {
+  bindingDep <- if (file.exists(system.file(jsfile, package = package))) {
     bindingDir <- system.file("htmlwidgets", package = package)
-    argsDep <- NULL
-    bindingDep <- do.call(htmlDependency, c(list(
+    htmlDependency(
       paste0(name, "-binding"), packageVersion(package),
-      bindingDir, script = basename(jsfile)
-    ), argsDep))
+      bindingDir, script = basename(jsfile), all_files = FALSE
+    )
   }
 
   c(
