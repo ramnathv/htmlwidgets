@@ -31,7 +31,20 @@ print.htmlwidget <- function(x, ..., view = interactive()) {
 
 #' @export
 print.suppress_viewer <- function(x, ..., view = interactive()) {
-  html_print(htmltools::as.tags(x, standalone=TRUE), viewer = if (view) browseURL)
+
+  viewer <- if (view) {
+    if (isTRUE(x$sizingPolicy$browser$external)) {
+      browseURL
+    } else if (!is.null(getOption("page_viewer"))) {
+      function(url) getOption("page_viewer")(url)
+    } else {
+      browseURL
+    }
+  } else {
+    NULL
+  }
+
+  html_print(htmltools::as.tags(x, standalone=TRUE), viewer = viewer)
   invisible(x)
 }
 
@@ -343,7 +356,10 @@ createWidget <- function(name,
 #' for the output
 #' @param outputFunction Shiny output function corresponding to this render
 #'   function.
-#' @param expr An expression that generates an HTML widget
+#' @param reportSize Should the widget's container size be reported in the
+#'   shiny session's client data?
+#' @param expr An expression that generates an HTML widget (or a
+#'   \href{https://rstudio.github.io/promises/}{promise} of an HTML widget).
 #' @param env The environment in which to evaluate \code{expr}.
 #' @param quoted Is \code{expr} a quoted expression (with \code{quote()})? This
 #'   is useful if you want to save an expression in a variable.
@@ -370,13 +386,13 @@ createWidget <- function(name,
 #'
 #' @export
 shinyWidgetOutput <- function(outputId, name, width, height, package = name,
-                              inline = FALSE) {
+                              inline = FALSE, reportSize = FALSE) {
 
   checkShinyVersion()
   # generate html
   html <- htmltools::tagList(
     widget_html(name, package, id = outputId,
-      class = paste(name, "html-widget html-widget-output"),
+      class = paste0(name, " html-widget html-widget-output", if (reportSize) " shiny-report-size"),
       style = sprintf("width:%s; height:%s; %s",
         htmltools::validateCssUnit(width),
         htmltools::validateCssUnit(height),
@@ -399,9 +415,7 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
   # generate a function for the expression
   func <- shiny::exprToFunction(expr, env, quoted)
 
-  # create the render function
-  renderFunc <- function() {
-    instance <- func()
+  renderWidget <- function(instance) {
     if (!is.null(instance$elementId)) {
       warning("Ignoring explicitly provided widget ID \"",
         instance$elementId, "\"; Shiny doesn't use them"
@@ -433,8 +447,19 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
     toJSON(payload)
   }
 
-  # mark it with the output function so we can use it in Rmd files
-  shiny::markRenderFunction(outputFunction, renderFunc)
+  if (!is.null(asNamespace("shiny")$createRenderFunction)) {
+    shiny::createRenderFunction(
+      func,
+      function(instance, session, name, ...) {
+        renderWidget(instance)
+      },
+      outputFunction, NULL
+    )
+  } else {
+    shiny::markRenderFunction(outputFunction, function() {
+      renderWidget(func())
+    })
+  }
 }
 
 checkShinyVersion <- function(error = TRUE) {

@@ -5,7 +5,7 @@
 \title{Save a widget to an HTML file}
 \usage{
 saveWidget(widget, file, selfcontained = TRUE, libdir = NULL,
-  background = "white", knitrOptions = list())
+  background = "white", title = class(widget)[[1]], knitrOptions = list())
 }
 \arguments{
 \item{widget}{Widget to save}
@@ -21,6 +21,8 @@ filename_files).}
 
 \item{background}{Text string giving the html background color of the widget.
 Defaults to white.}
+
+\item{title}{Text to use as the title of the generated page.}
 
 \item{knitrOptions}{A list of \pkg{knitr} chunk options.}
 }

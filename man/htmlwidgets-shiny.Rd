@@ -7,7 +7,7 @@
 \title{Shiny bindings for HTML widgets}
 \usage{
 shinyWidgetOutput(outputId, name, width, height, package = name,
-  inline = FALSE)
+  inline = FALSE, reportSize = FALSE)
 
 shinyRenderWidget(expr, outputFunction, env, quoted)
 }
@@ -25,7 +25,11 @@ string and have \code{"px"} appended.}
 \item{inline}{use an inline (\code{span()}) or block container (\code{div()})
 for the output}
 
-\item{expr}{An expression that generates an HTML widget}
+\item{reportSize}{Should the widget's container size be reported in the
+shiny session's client data?}
+
+\item{expr}{An expression that generates an HTML widget (or a
+\href{https://rstudio.github.io/promises/}{promise} of an HTML widget).}
 
 \item{outputFunction}{Shiny output function corresponding to this render
 function.}
