@@ -54,8 +54,12 @@ getDependency <- function(name, package = name){
       system.file(config, package = package)
     )
     widgetDep <- lapply(config$dependencies, function(l){
-      l$src = system.file(l$src, package = package)
-      do.call(htmlDependency, l)
+      if (!is.null(l$call)) {
+        eval(parse(text = l$call), envir = .GlobalEnv)
+      } else {
+        l$src = system.file(l$src, package = package)
+        do.call(htmlDependency, l)
+      }
     })
   }
 
