@@ -152,21 +152,41 @@ appendContent <- function(x, ...) {
 #' }
 #'
 #' @export
-onRender <- function(x, jsCode, data = NULL) {
-  addHook(x, "render", jsCode, data)
+onRender <- function(x, jsCode, data = NULL, validate = FALSE) {
+  addHook(x, "render", jsCode, data, validate = validate)
 }
 
-addHook <- function(x, hookName, jsCode, data = NULL) {
+addHook <- function(x, hookName, jsCode, data = NULL, validate = FALSE) {
   if (length(jsCode) == 0)
     return(x)
 
   if (length(jsCode) > 1)
     jsCode <- paste(jsCode, collapse = "\n")
 
+  # Validation will make sure either `jsCode` or `'(' + jsCode + ')'`
+  # evaluates to a function (and passes the appropriate one).
+  if (isTRUE(validate)) {
+    if (system.file(package = "V8") == "") {
+      stop("V8 package needed for validation of JS code")
+    }
+    ctx <- V8::v8()
+    ctx$assign("code", jsCode)
+    codeType <- try(ctx$eval("typeof eval(code)"), silent = TRUE)
+    if (!identical(codeType, "function")) {
+      codeType2 <- try(ctx$eval("typeof eval('(' + code + ')')"), silent = TRUE)
+      if (identical(codeType2, "function")) {
+        jsCode <- paste0("(", jsCode, ")")
+      } else {
+        stop("The `jsCode` argument does not evaluate to a function.")
+      }
+    }
+  } else {
+    jsCode <- paste0("(", jsCode, ")")
+  }
+
   x$jsHooks[[hookName]] <- c(x$jsHooks[[hookName]], list(list(code = jsCode, data = data)))
   x
 }
-
 
 toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
 
