@@ -233,7 +233,17 @@
           theseArgs = theseArgs.concat([task.data]);
           task = task.code;
         }
-        var taskFunc = eval("(" + task + ")");
+        try {
+          var taskFunc = eval("(" + task + ")");
+        } catch(err) {
+          try {
+            var taskFunc = eval(task);
+          } catch(error) {
+            console.error(err);
+            console.error(error);
+          }
+        }
+
         if (typeof(taskFunc) !== "function") {
           throw new Error("Task must be a function! Source:\n" + task);
         }
