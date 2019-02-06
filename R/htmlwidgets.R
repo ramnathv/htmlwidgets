@@ -163,6 +163,9 @@ addHook <- function(x, hookName, jsCode, data = NULL) {
   if (length(jsCode) > 1)
     jsCode <- paste(jsCode, collapse = "\n")
 
+  # remove trailing comma
+  jsCode <- sub("\\);$", ")", jsCode)
+
   x$jsHooks[[hookName]] <- c(x$jsHooks[[hookName]], list(list(code = jsCode, data = data)))
   x
 }
