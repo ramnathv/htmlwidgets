@@ -233,7 +233,21 @@
           theseArgs = theseArgs.concat([task.data]);
           task = task.code;
         }
-        var taskFunc = eval("(" + task + ")");
+        var taskFunc = null;
+        try {
+          taskFunc = eval(task);
+        } catch(error) {
+          if (!error instanceof SyntaxError) {
+            throw new Error(error.message);
+          }
+          // To support function declarations, retry evaluation with
+          // parentheses (turns declarations into an expression)
+          try {
+            taskFunc = eval("(" + task + ")");
+          } catch(e) {
+            throw new Error(error.message);
+          }
+        }
         if (typeof(taskFunc) !== "function") {
           throw new Error("Task must be a function! Source:\n" + task);
         }
