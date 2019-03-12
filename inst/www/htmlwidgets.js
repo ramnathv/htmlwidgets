@@ -238,14 +238,14 @@
           taskFunc = eval(task);
         } catch(error) {
           if (!error instanceof SyntaxError) {
-            throw new Error(error.message);
+            throw error;
           }
           // To support function declarations, retry evaluation with
           // parentheses (turns declarations into an expression)
           try {
             taskFunc = eval("(" + task + ")");
-          } catch(e) {
-            throw new Error(error.message);
+          } catch(err) {
+            throw err;
           }
         }
         if (typeof(taskFunc) !== "function") {
