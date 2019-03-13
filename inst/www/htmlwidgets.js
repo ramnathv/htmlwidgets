@@ -244,8 +244,12 @@
           // parentheses (turns declarations into an expression)
           try {
             taskFunc = eval("(" + task + ")");
-          } catch(err) {
-            throw err;
+          } catch(e) {
+            if (e instanceof SyntaxError) {
+              throw error;
+            } else {
+              throw e;
+            }
           }
         }
         if (typeof(taskFunc) !== "function") {
