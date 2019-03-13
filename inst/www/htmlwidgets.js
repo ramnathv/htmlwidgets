@@ -242,9 +242,10 @@
     }
   }
 
-  // Attempt eval() both with and without enclosing in parantheses
-  // To support function declarations, retry evaluation with
-  // parentheses (turns declarations into an expression)
+  // Attempt eval() both with and without enclosing in parentheses.
+  // Note that enclosing coerces a function declaration into
+  // an expression that eval() can parse
+  // (otherwise, a SyntaxError is thrown)
   function tryEval(code) {
     var result = null;
     try {

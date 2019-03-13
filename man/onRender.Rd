@@ -24,8 +24,8 @@ logic with additional custom JavaScript code, just for this specific widget
 object.
 }
 \details{
-The \code{jsCode} parameter must be a valid JavaScript expression
-  that returns a function.
+The \code{jsCode} parameter must contain valid JavaScript code which
+  when evaluated returns a function.
 
   The function will be invoked with three arguments: the first is the widget's
   main HTML element, and the second is the data to be rendered (the \code{x}
