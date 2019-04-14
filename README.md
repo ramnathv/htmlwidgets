@@ -11,7 +11,7 @@ There are already several R packages based on **htmlwidgets**, including:
 * [leaflet](https://github.com/rstudio/leaflet) -- Interactive maps with OpenStreetMap
 * [dygraphs](https://rstudio.github.io/dygraphs/) --- Interactive time series visualization
 * [networkD3](https://christophergandrud.github.io/networkD3/) --- Network visualization with D3
-* [sparkline](httpss://github.com/htmlwidgets/sparkline) --- Small inline charts
+* [sparkline](https://github.com/htmlwidgets/sparkline) --- Small inline charts
 * [DT](https://rstudio.github.io/DT/) --- Tabular data via DataTables
 * [rthreejs](https://github.com/bwlewis/rthreejs) -- Interactive 3D graphics
 
