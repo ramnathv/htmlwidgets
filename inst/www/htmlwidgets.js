@@ -660,7 +660,11 @@
   }
 
   // Wait until after the document has loaded to render the widgets.
-  if (document.addEventListener) {
+  if (shinyMode && window.jQuery.fn.jquery > "3.0.0") {
+    window.jQuery(function() {
+      setTimeout(window.HTMLWidgets.staticRender, 1)
+    });
+  } else if (document.addEventListener) {
     document.addEventListener("DOMContentLoaded", function() {
       document.removeEventListener("DOMContentLoaded", arguments.callee, false);
       window.HTMLWidgets.staticRender();
