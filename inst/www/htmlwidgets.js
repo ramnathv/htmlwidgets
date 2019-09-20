@@ -667,7 +667,7 @@
     // it happens to execute after staticRender, the widget
     // won't have access to all of Shiny's methods.
     window.jQuery(function() {
-      setTimeout(window.HTMLWidgets.staticRender, 1)
+      setTimeout(window.HTMLWidgets.staticRender, 1);
     });
   } else if (document.addEventListener) {
     document.addEventListener("DOMContentLoaded", function() {
