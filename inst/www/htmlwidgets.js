@@ -660,7 +660,12 @@
   }
 
   // Wait until after the document has loaded to render the widgets.
-  if (shinyMode && window.jQuery.fn.jquery > "3.0.0") {
+  if (shinyMode && window.jQuery) {
+    // Note: this case is here to ensure that initShiny executes
+    // before staticRender executes. Since initShiny currently
+    // registers important methods like Shiny.onInputChange, if
+    // it happens to execute after staticRender, the widget
+    // won't have access to all of Shiny's methods.
     window.jQuery(function() {
       setTimeout(window.HTMLWidgets.staticRender, 1)
     });
