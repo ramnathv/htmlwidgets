@@ -1,7 +1,18 @@
-htmlwidgets 1.4
+htmlwidgets 1.5
 -----------------------------------------------------------------------
 
-* JavaScript statements can now be passed along to `onRender()` and `JS()` (#329).
+* Fixed an incompatibility with Shiny v1.4.0: due to Shiny upgrading
+  from jQuery 1.x to 3.x, the timing of some initialization routines
+  has changed. This caused some widget `renderValue` calls to occur at
+  an earlier point in Shiny's initialization process than with earlier
+  versions of Shiny. (#345)
+
+
+htmlwidgets 1.4 (unreleased)
+-----------------------------------------------------------------------
+
+* JavaScript statements can now be passed along to `onRender()` and
+  `JS()` (#329).
 
 
 htmlwidgets 1.3
@@ -18,6 +29,7 @@ htmlwidgets 1.3
   regular widget objects as well).
 
   See https://rstudio.github.io/promises for more about async Shiny.
+
 
 htmlwidgets 1.2
 -----------------------------------------------------------------------

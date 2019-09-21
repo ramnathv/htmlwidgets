@@ -660,7 +660,34 @@
   }
 
   // Wait until after the document has loaded to render the widgets.
-  if (document.addEventListener) {
+  if (shinyMode && window.jQuery) {
+    /*
+    / Shiny 1.4.0 bumps jQuery from 1.x to 3.x, which means jQuery's
+    / on-ready handler (i.e., $(fn)) is now asyncronous (i.e., it now
+    / really means $(setTimeout(fn)). https://jquery.com/upgrade-guide/3.0/#breaking-change-document-ready-handlers-are-now-asynchronous
+    /
+    / In order to ensure the order of execution of on-ready handlers
+    / remains consistent with how it's been in the past, a static render
+    / in Shiny is now scheduled via $().
+    /
+    / This is not a long term solution: it just preserves the current order
+    / of execution. Part of that ordering is to ensure initShiny executes
+    / _after_ staticRender, which is both right and wrong:
+    / * It's wrong because, when initShiny executes, it registers methods
+    / like Shiny.onInputChange that widget authors would expect to be available
+    / during a staticRender.
+    / * It's also 'right' because initShiny currently (as of v1.4.0) wants
+    / to execute after user code so that it can bind to any dynamically
+    / created elements.
+    /
+    / A longer term solution might be to make changes to Shiny so that
+    / these methods are available before the binding takes place, and then
+    / the ordering would be: register methods -> static render -> bind.
+    */
+    window.jQuery(function() {
+      window.HTMLWidgets.staticRender();
+    });
+  } else if (document.addEventListener) {
     document.addEventListener("DOMContentLoaded", function() {
       document.removeEventListener("DOMContentLoaded", arguments.callee, false);
       window.HTMLWidgets.staticRender();
