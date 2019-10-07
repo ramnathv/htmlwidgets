@@ -659,8 +659,17 @@
     invokePostRenderHandlers();
   }
 
+  function has_jQuery3() {
+    if (!window.jQuery) {
+      return false;
+    }
+    var $version = window.jQuery.fn.jquery;
+    var $major_version = parseInt($version.split(".")[0]);
+    return $major_version >= 3;
+  }
+
   // Wait until after the document has loaded to render the widgets.
-  if (shinyMode && window.jQuery) {
+  if (shinyMode && window.jQuery && has_jQuery3()) {
     /*
     / Shiny 1.4.0 bumps jQuery from 1.x to 3.x, which means jQuery's
     / on-ready handler (i.e., $(fn)) is now asyncronous (i.e., it now
