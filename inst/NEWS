@@ -1,3 +1,8 @@
+htmlwidgets 1.5.1
+-------------------------------------------------------
+
+* Fixed an issue with dynamically rendered widgets (i.e., using `shiny::uiOutput()` to render a widget) with any version of shiny prior to 1.4. This issue was introduced by htmlwidgets 1.5. (#351)
+
 htmlwidgets 1.5
 -----------------------------------------------------------------------
 
