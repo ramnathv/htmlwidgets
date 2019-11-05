@@ -4,9 +4,10 @@
 \alias{sizingPolicy}
 \title{Create a widget sizing policy}
 \usage{
-sizingPolicy(defaultWidth = NULL, defaultHeight = NULL, padding = NULL,
-  viewer.defaultWidth = NULL, viewer.defaultHeight = NULL,
-  viewer.padding = NULL, viewer.fill = TRUE, viewer.suppress = FALSE,
+sizingPolicy(defaultWidth = NULL, defaultHeight = NULL,
+  padding = NULL, viewer.defaultWidth = NULL,
+  viewer.defaultHeight = NULL, viewer.padding = NULL,
+  viewer.fill = TRUE, viewer.suppress = FALSE,
   viewer.paneHeight = NULL, browser.defaultWidth = NULL,
   browser.defaultHeight = NULL, browser.padding = NULL,
   browser.fill = FALSE, browser.external = FALSE,

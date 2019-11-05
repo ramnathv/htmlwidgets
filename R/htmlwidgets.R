@@ -94,8 +94,8 @@ appendContent <- function(x, ...) {
 #'   multiple objects to pass to the function, use a named list.
 #' @return The modified widget object
 #'
-#' @details The \code{jsCode} parameter must be a valid JavaScript expression
-#'   that returns a function.
+#' @details The \code{jsCode} parameter must contain valid JavaScript code which
+#'   when evaluated returns a function.
 #'
 #'   The function will be invoked with three arguments: the first is the widget's
 #'   main HTML element, and the second is the data to be rendered (the \code{x}
