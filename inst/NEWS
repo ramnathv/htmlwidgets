@@ -1,3 +1,8 @@
+htmlwidgets 1.5.1.9000
+-------------------------------------------------------
+
+* Fixed an issue with passing named function declarations to `JS()` and `onRender()` (introduced by v1.4). (#356)
+
 htmlwidgets 1.5.1
 -------------------------------------------------------
 
