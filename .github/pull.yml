@@ -3,3 +3,7 @@ rules:
   - base: master
     upstream: ramnathv:master    # change `wei` to the owner of upstream repo
     mergeMethod: none
+    assignees:
+      - mwmclean
+    reviewers:
+      - mwmclean
