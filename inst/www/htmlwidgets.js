@@ -587,7 +587,8 @@
         var localStorageKey = 'htmlwidget.'+el.id+'.state'
         var widgetStateChanged = function(state) {
           if (shouldSaveStateExternally()) {
-            window.HTMLWidgets.stateChangedHook(state)
+            if (window.HTMLWidgets.stateChangedHook)
+              window.HTMLWidgets.stateChangedHook(state)
           } else {
             if (window.localStorage) {
               if (state)
