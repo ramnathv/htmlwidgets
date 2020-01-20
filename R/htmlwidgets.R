@@ -175,7 +175,7 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
   if (!is.null(x$elementId))
     id <- x$elementId
   else
-    id <- paste("htmlwidget", createWidgetId(), sep="-")
+    id <- paste("htmlwidget", attr(x, "package"), createWidgetId(), sep="-")
 
   w <- validateCssUnit(sizeInfo$width)
   h <- validateCssUnit(sizeInfo$height)
