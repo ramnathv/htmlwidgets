@@ -567,6 +567,10 @@
     }
   }
 
+  function shouldSaveStateExternally() {
+    return !!window.htmlWidgetsUseExternalStateSaving  || !!window.HTMLWidgets.stateChangedHook;
+  }
+
   // Render static widgets after the document finishes loading
   // Statically render all elements that are of this widget's class
   window.HTMLWidgets.staticRender = function() {
@@ -582,8 +586,9 @@
 
         var localStorageKey = 'htmlwidget.'+el.id+'.state'
         var widgetStateChanged = function(state) {
-          if (window.HTMLWidgets.stateChangedHook) {
-            window.HTMLWidgets.stateChangedHook(state)
+          if (shouldSaveStateExternally()) {
+            if (window.HTMLWidgets.stateChangedHook)
+              window.HTMLWidgets.stateChangedHook(state)
           } else {
             if (window.localStorage) {
               if (state)
@@ -593,7 +598,7 @@
             }
           }
         }
-        var initialState = window.localStorage ? JSON.parse(window.localStorage.getItem(localStorageKey)) : null;
+        var initialState = !shouldSaveStateExternally() && window.localStorage ? JSON.parse(window.localStorage.getItem(localStorageKey)) : null;
         if (!initialState) {
           // No locally-stored state.  Use anything provided in a script tag as a default.
           var initialStateData = document.querySelector("script[data-for='" + el.id + "'][type='application/htmlwidget-state']");
