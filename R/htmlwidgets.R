@@ -358,6 +358,8 @@ createWidget <- function(name,
 #'   function.
 #' @param reportSize Should the widget's container size be reported in the
 #'   shiny session's client data?
+#' @param reportTheme Should the widget's container styles (e.g., colors and fonts)
+#' be reported in the shiny session's client data?
 #' @param expr An expression that generates an HTML widget (or a
 #'   \href{https://rstudio.github.io/promises/}{promise} of an HTML widget).
 #' @param env The environment in which to evaluate \code{expr}.
@@ -386,13 +388,18 @@ createWidget <- function(name,
 #'
 #' @export
 shinyWidgetOutput <- function(outputId, name, width, height, package = name,
-                              inline = FALSE, reportSize = FALSE) {
+                              inline = FALSE, reportSize = FALSE, reportTheme = FALSE) {
 
   checkShinyVersion()
   # generate html
   html <- htmltools::tagList(
-    widget_html(name, package, id = outputId,
-      class = paste0(name, " html-widget html-widget-output", if (reportSize) " shiny-report-size"),
+    widget_html(
+      name, package, id = outputId,
+      class = paste0(
+        name, " html-widget html-widget-output",
+        if (reportSize) " shiny-report-size",
+        if (reportTheme) " shiny-report-theme"
+      ),
       style = sprintf("width:%s; height:%s; %s",
         htmltools::validateCssUnit(width),
         htmltools::validateCssUnit(height),
