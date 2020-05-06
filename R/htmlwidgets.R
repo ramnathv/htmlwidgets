@@ -391,6 +391,15 @@ shinyWidgetOutput <- function(outputId, name, width, height, package = name,
                               inline = FALSE, reportSize = FALSE, reportTheme = FALSE) {
 
   checkShinyVersion()
+
+  # Theme reporting requires this shiny feature
+  # https://github.com/rstudio/shiny/pull/2740/files
+  if (reportTheme &&
+      nzchar(system.file(package = "shiny")) &&
+      packageVersion("shiny") < "1.4.0.9003") {
+    message("`reportTheme = TRUE` requires shiny v.1.4.0.9003 or higher. Consider upgrading shiny.")
+  }
+
   # generate html
   html <- htmltools::tagList(
     widget_html(
