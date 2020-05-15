@@ -174,7 +174,7 @@ find_pandoc <- function() {
 
     # determine the versions of the sources
     versions <- lapply(sources, function(src) {
-      if (file.exists(src))
+      if (dir.exists(src))
         get_pandoc_version(src)
       else
         numeric_version("0")
