@@ -280,6 +280,7 @@ This method is highly recommended as it ensures that you get started with the ri
 devtools::create("mywidget")               # create package using devtools
 setwd("mywidget")                          # navigate to package dir
 htmlwidgets::scaffoldWidget("mywidget")    # create widget scaffolding
+devtools::document()                       # roxygenize, so NAMESPACE is updated
 devtools::install()                        # install the package so we can try it
 ```
 
