@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
-<meta charset="utf-8">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta charset="utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
 
 <title>htmlwidgets: rbokeh</title>
 
+<script src="libs/header-attrs/header-attrs.js"></script>
 <script src="libs/jquery/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="libs/bootstrap/css/cosmo.min.css" rel="stylesheet" />
@@ -41,10 +42,12 @@
   }
 </style>
 <script type="text/javascript">
-if (window.hljs && document.readyState && document.readyState === "complete") {
-   window.setTimeout(function() {
-      hljs.initHighlighting();
-   }, 0);
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
 }
 </script>
 
@@ -78,9 +81,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -94,30 +95,91 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
 }
 </style>
 
 
 
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -187,10 +249,6 @@ $(document).ready(function () {
           <h5 class="list-group-item-heading">networkD3</h5>
           <p class="list-group-item-text">Graph data visualization with D3</p>
         </a>
-        <a href="showcase_d3heatmap.html" class="list-group-item">
-          <h5 class="list-group-item-heading">d3heatmap</h5>
-          <p class="list-group-item-text">Interactive heatmaps with D3</p>
-        </a>
         <a href="showcase_datatables.html" class="list-group-item">
           <h5 class="list-group-item-heading">DataTables</h5>
           <p class="list-group-item-text">Tabular data display</p>
@@ -246,46 +304,46 @@ figure() %&gt;%
   ly_points(Sepal.Length, Sepal.Width, data = iris,
     color = Species, glyph = Species,
     hover = list(Sepal.Length, Sepal.Width))</code></pre>
-<div id="htmlwidget-4e418d0e777bcf5e8b2b" style="width:480px;height:480px;" class="rbokeh html-widget"></div>
-<script type="application/json" data-for="htmlwidget-4e418d0e777bcf5e8b2b">{
+<div id="htmlwidget-c9f6656ff2d8f9cdeb96" style="width:480px;height:480px;" class="rbokeh html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c9f6656ff2d8f9cdeb96">{
   "x": {
-    "elementid": "1ba57e06e34dedd9682a91b2cb6f95f2",
+    "elementid": "b7e4c97bb5bee1e4ae0adf0484584896",
     "modeltype": "Plot",
-    "modelid": "c07bd414bcb65f3893176df638a384ba",
-    "docid": "7e7f6db8f7c0c3501bfe2563281bab2d",
+    "modelid": "f781af849865cde7bc162a388a4ee66d",
+    "docid": "4779e1242948a853d6c5099b95236e90",
     "docs_json": {
-      "7e7f6db8f7c0c3501bfe2563281bab2d": {
+      "4779e1242948a853d6c5099b95236e90": {
         "version": "0.12.2",
         "title": "Bokeh Figure",
         "roots": {
           "root_ids": [
-            "c07bd414bcb65f3893176df638a384ba"
+            "f781af849865cde7bc162a388a4ee66d"
           ],
           "references": [
             {
               "type": "Plot",
-              "id": "c07bd414bcb65f3893176df638a384ba",
+              "id": "f781af849865cde7bc162a388a4ee66d",
               "attributes": {
-                "id": "c07bd414bcb65f3893176df638a384ba",
+                "id": "f781af849865cde7bc162a388a4ee66d",
                 "sizing_mode": "scale_both",
                 "x_range": {
                   "type": "Range1d",
-                  "id": "4ddd89cf16cbf33ffad3f722ba0da31a"
+                  "id": "e8966093feb0baba5eea25c9ba105ecd"
                 },
                 "y_range": {
                   "type": "Range1d",
-                  "id": "d85ca5d7f6ea3f7bec9b8ad9949d68f1"
+                  "id": "c31ee338c2be88a9fdb87355046be9d8"
                 },
                 "left": [
                   {
                     "type": "LinearAxis",
-                    "id": "f2d222796e4f4698c2c2f5d5560ec69b"
+                    "id": "3cb86d81c7902d53cb0630e1aead37a7"
                   }
                 ],
                 "below": [
                   {
                     "type": "LinearAxis",
-                    "id": "317845a0d13f70f2e11cce96bc6cf670"
+                    "id": "8b0dfcbfaf0b892e1e50be4786d47f77"
                   }
                 ],
                 "right": [],
@@ -293,51 +351,51 @@ figure() %&gt;%
                 "renderers": [
                   {
                     "type": "BoxAnnotation",
-                    "id": "223dbcce2210b2a13d109e4f6b84e073"
+                    "id": "a26643f54234a801cf6136246e3e896e"
                   },
                   {
                     "type": "GlyphRenderer",
-                    "id": "f2ee6dad7a883a3fa4633d393c937ddb"
+                    "id": "496646e5e500b6210e2620529e6ca0bf"
                   },
                   {
                     "type": "GlyphRenderer",
-                    "id": "32f2820da963f46dfceac359cdd0c003"
+                    "id": "fc3b3a7132ba53b0b56474fdf0121765"
                   },
                   {
                     "type": "GlyphRenderer",
-                    "id": "4e2249c444422026be15f33e2676975b"
+                    "id": "6aa6e676b416f111989e77ab55a31881"
                   },
                   {
                     "type": "GlyphRenderer",
-                    "id": "833c8c0ef08c4d6c6817988fc7280ee4"
+                    "id": "bdaef9cb044b2f536fbc80a174c83d87"
                   },
                   {
                     "type": "GlyphRenderer",
-                    "id": "68d5db2ddbb3623baa23a1be59eb3ed8"
+                    "id": "ffbc8b27408f690d9174826bb704c5d5"
                   },
                   {
                     "type": "GlyphRenderer",
-                    "id": "3a01aa897f9ab0297b8d84df9e5b3f01"
+                    "id": "4b651b8f0bc8bc7fb1a1e45a11004dd6"
                   },
                   {
                     "type": "Legend",
-                    "id": "317ac64246c2c54812efdf046c3e7d35"
+                    "id": "bb55bed971e57ac1e004904e3b171f8f"
                   },
                   {
                     "type": "LinearAxis",
-                    "id": "317845a0d13f70f2e11cce96bc6cf670"
+                    "id": "8b0dfcbfaf0b892e1e50be4786d47f77"
                   },
                   {
                     "type": "Grid",
-                    "id": "84196bbe4372835186e0be851a227379"
+                    "id": "b02e5dc50c52f333843ce1177354ea72"
                   },
                   {
                     "type": "LinearAxis",
-                    "id": "f2d222796e4f4698c2c2f5d5560ec69b"
+                    "id": "3cb86d81c7902d53cb0630e1aead37a7"
                   },
                   {
                     "type": "Grid",
-                    "id": "6bc643e4a734be2977c666d82ab1beda"
+                    "id": "d268ca8bcad900b87e05c2c64ae58990"
                   }
                 ],
                 "extra_y_ranges": {},
@@ -350,20 +408,20 @@ figure() %&gt;%
                 "lod_threshold": null,
                 "toolbar": {
                   "type": "Toolbar",
-                  "id": "a2f065d3eb64b473d3e2d4827e310d1c"
+                  "id": "9bbcc84c9670d37fd89930bd6196c8c7"
                 },
                 "tool_events": {
                   "type": "ToolEvents",
-                  "id": "0e41d8de0ecd327e49766c43fb44b997"
+                  "id": "692619f6ec93f7d22481bcad8787a7f3"
                 }
               },
               "subtype": "Figure"
             },
             {
               "type": "Toolbar",
-              "id": "a2f065d3eb64b473d3e2d4827e310d1c",
+              "id": "9bbcc84c9670d37fd89930bd6196c8c7",
               "attributes": {
-                "id": "a2f065d3eb64b473d3e2d4827e310d1c",
+                "id": "9bbcc84c9670d37fd89930bd6196c8c7",
                 "tags": [],
                 "active_drag": "auto",
                 "active_scroll": "auto",
@@ -371,39 +429,39 @@ figure() %&gt;%
                 "tools": [
                   {
                     "type": "PanTool",
-                    "id": "ef5b60befc4760fdbb48ec7abc68fa94"
+                    "id": "51e7d18b5c7e27bd6750d39b8e56dfa8"
                   },
                   {
                     "type": "WheelZoomTool",
-                    "id": "45716f54ce5909df31abb6afe05eebfe"
+                    "id": "14e307681313a2fcf0a39ea3954b463f"
                   },
                   {
                     "type": "BoxZoomTool",
-                    "id": "80299320cd1a74f0d9962e167b4637ba"
+                    "id": "58e0968743498e36529677a2bf24d4ed"
                   },
                   {
                     "type": "ResetTool",
-                    "id": "8259761f10140379e1ae93df12e81286"
+                    "id": "dcc4c8eb5da77e74d9a5dba11afbf827"
                   },
                   {
                     "type": "SaveTool",
-                    "id": "8147ca2b6f2b37d1d0f06586fd54ffe6"
+                    "id": "3ef2064eeca40463fa8a44deb231fd43"
                   },
                   {
                     "type": "HelpTool",
-                    "id": "06d01127a032e89750c7ae74c1a64e63"
+                    "id": "56162133e67c67b1ef45a236a5cfa2cf"
                   },
                   {
                     "type": "HoverTool",
-                    "id": "fb4386b1578a58dead05759f1dac2fa8"
+                    "id": "9ddab5d08f5e3aae72b8f2912024d3dd"
                   },
                   {
                     "type": "HoverTool",
-                    "id": "7fdbd4bad14cc0bf056855c3c3bc7d5f"
+                    "id": "2e1f065581798f5afb3c495960051ad6"
                   },
                   {
                     "type": "HoverTool",
-                    "id": "ddbbd005ccf22d3ccb482418eeea405f"
+                    "id": "9b23f9ff6d0a47ce984b3fc32a3e3c6a"
                   }
                 ],
                 "logo": null
@@ -411,13 +469,13 @@ figure() %&gt;%
             },
             {
               "type": "PanTool",
-              "id": "ef5b60befc4760fdbb48ec7abc68fa94",
+              "id": "51e7d18b5c7e27bd6750d39b8e56dfa8",
               "attributes": {
-                "id": "ef5b60befc4760fdbb48ec7abc68fa94",
+                "id": "51e7d18b5c7e27bd6750d39b8e56dfa8",
                 "tags": [],
                 "plot": {
                   "type": "Plot",
-                  "id": "c07bd414bcb65f3893176df638a384ba",
+                  "id": "f781af849865cde7bc162a388a4ee66d",
                   "subtype": "Figure"
                 },
                 "dimensions": ["width", "height"]
@@ -425,22 +483,22 @@ figure() %&gt;%
             },
             {
               "type": "ToolEvents",
-              "id": "0e41d8de0ecd327e49766c43fb44b997",
+              "id": "692619f6ec93f7d22481bcad8787a7f3",
               "attributes": {
-                "id": "0e41d8de0ecd327e49766c43fb44b997",
+                "id": "692619f6ec93f7d22481bcad8787a7f3",
                 "tags": []
               },
               "geometries": []
             },
             {
               "type": "WheelZoomTool",
-              "id": "45716f54ce5909df31abb6afe05eebfe",
+              "id": "14e307681313a2fcf0a39ea3954b463f",
               "attributes": {
-                "id": "45716f54ce5909df31abb6afe05eebfe",
+                "id": "14e307681313a2fcf0a39ea3954b463f",
                 "tags": [],
                 "plot": {
                   "type": "Plot",
-                  "id": "c07bd414bcb65f3893176df638a384ba",
+                  "id": "f781af849865cde7bc162a388a4ee66d",
                   "subtype": "Figure"
                 },
                 "dimensions": ["width", "height"]
@@ -448,9 +506,9 @@ figure() %&gt;%
             },
             {
               "type": "BoxAnnotation",
-              "id": "223dbcce2210b2a13d109e4f6b84e073",
+              "id": "a26643f54234a801cf6136246e3e896e",
               "attributes": {
-                "id": "223dbcce2210b2a13d109e4f6b84e073",
+                "id": "a26643f54234a801cf6136246e3e896e",
                 "tags": [],
                 "line_color": {
                   "units": "data",
@@ -483,56 +541,56 @@ figure() %&gt;%
             },
             {
               "type": "BoxZoomTool",
-              "id": "80299320cd1a74f0d9962e167b4637ba",
+              "id": "58e0968743498e36529677a2bf24d4ed",
               "attributes": {
-                "id": "80299320cd1a74f0d9962e167b4637ba",
+                "id": "58e0968743498e36529677a2bf24d4ed",
                 "tags": [],
                 "plot": {
                   "type": "Plot",
-                  "id": "c07bd414bcb65f3893176df638a384ba",
+                  "id": "f781af849865cde7bc162a388a4ee66d",
                   "subtype": "Figure"
                 },
                 "overlay": {
                   "type": "BoxAnnotation",
-                  "id": "223dbcce2210b2a13d109e4f6b84e073"
+                  "id": "a26643f54234a801cf6136246e3e896e"
                 }
               }
             },
             {
               "type": "ResetTool",
-              "id": "8259761f10140379e1ae93df12e81286",
+              "id": "dcc4c8eb5da77e74d9a5dba11afbf827",
               "attributes": {
-                "id": "8259761f10140379e1ae93df12e81286",
+                "id": "dcc4c8eb5da77e74d9a5dba11afbf827",
                 "tags": [],
                 "plot": {
                   "type": "Plot",
-                  "id": "c07bd414bcb65f3893176df638a384ba",
+                  "id": "f781af849865cde7bc162a388a4ee66d",
                   "subtype": "Figure"
                 }
               }
             },
             {
               "type": "SaveTool",
-              "id": "8147ca2b6f2b37d1d0f06586fd54ffe6",
+              "id": "3ef2064eeca40463fa8a44deb231fd43",
               "attributes": {
-                "id": "8147ca2b6f2b37d1d0f06586fd54ffe6",
+                "id": "3ef2064eeca40463fa8a44deb231fd43",
                 "tags": [],
                 "plot": {
                   "type": "Plot",
-                  "id": "c07bd414bcb65f3893176df638a384ba",
+                  "id": "f781af849865cde7bc162a388a4ee66d",
                   "subtype": "Figure"
                 }
               }
             },
             {
               "type": "HelpTool",
-              "id": "06d01127a032e89750c7ae74c1a64e63",
+              "id": "56162133e67c67b1ef45a236a5cfa2cf",
               "attributes": {
-                "id": "06d01127a032e89750c7ae74c1a64e63",
+                "id": "56162133e67c67b1ef45a236a5cfa2cf",
                 "tags": [],
                 "plot": {
                   "type": "Plot",
-                  "id": "c07bd414bcb65f3893176df638a384ba",
+                  "id": "f781af849865cde7bc162a388a4ee66d",
                   "subtype": "Figure"
                 },
                 "redirect": "http://hafen.github.io/rbokeh",
@@ -541,19 +599,19 @@ figure() %&gt;%
             },
             {
               "type": "HoverTool",
-              "id": "fb4386b1578a58dead05759f1dac2fa8",
+              "id": "9ddab5d08f5e3aae72b8f2912024d3dd",
               "attributes": {
-                "id": "fb4386b1578a58dead05759f1dac2fa8",
+                "id": "9ddab5d08f5e3aae72b8f2912024d3dd",
                 "tags": [],
                 "plot": {
                   "type": "Plot",
-                  "id": "c07bd414bcb65f3893176df638a384ba",
+                  "id": "f781af849865cde7bc162a388a4ee66d",
                   "subtype": "Figure"
                 },
                 "renderers": [
                   {
                     "type": "GlyphRenderer",
-                    "id": "f2ee6dad7a883a3fa4633d393c937ddb"
+                    "id": "496646e5e500b6210e2620529e6ca0bf"
                   }
                 ],
                 "names": [],
@@ -576,9 +634,9 @@ figure() %&gt;%
             },
             {
               "type": "ColumnDataSource",
-              "id": "ece41fa415486c2685333e5ce4c7d106",
+              "id": "36487a6993181fb3285fd5d1a9825997",
               "attributes": {
-                "id": "ece41fa415486c2685333e5ce4c7d106",
+                "id": "36487a6993181fb3285fd5d1a9825997",
                 "tags": [],
                 "column_names": ["x", "y", "line_color", "fill_color", "hover_col_1", "hover_col_2"],
                 "selected": [],
@@ -594,9 +652,9 @@ figure() %&gt;%
             },
             {
               "type": "Circle",
-              "id": "4f5b0f137fdf1e1b3858522e85b2936f",
+              "id": "88388b9f283c65c07ad4372070e8b985",
               "attributes": {
-                "id": "4f5b0f137fdf1e1b3858522e85b2936f",
+                "id": "88388b9f283c65c07ad4372070e8b985",
                 "tags": [],
                 "size": {
                   "units": "screen",
@@ -631,9 +689,9 @@ figure() %&gt;%
             },
             {
               "type": "Circle",
-              "id": "07d62ea78a4b3f3c7eba3eb9540da7fd",
+              "id": "9dcd2f4d62fbc549f1093b890b4c745c",
               "attributes": {
-                "id": "07d62ea78a4b3f3c7eba3eb9540da7fd",
+                "id": "9dcd2f4d62fbc549f1093b890b4c745c",
                 "tags": [],
                 "size": {
                   "units": "screen",
@@ -668,9 +726,9 @@ figure() %&gt;%
             },
             {
               "type": "Circle",
-              "id": "b89121f1d1cc8f11ab161714dd47eb6a",
+              "id": "fcc59598528117ea807ad4783803c047",
               "attributes": {
-                "id": "b89121f1d1cc8f11ab161714dd47eb6a",
+                "id": "fcc59598528117ea807ad4783803c047",
                 "tags": [],
                 "size": {
                   "units": "screen",
@@ -705,45 +763,45 @@ figure() %&gt;%
             },
             {
               "type": "GlyphRenderer",
-              "id": "f2ee6dad7a883a3fa4633d393c937ddb",
+              "id": "496646e5e500b6210e2620529e6ca0bf",
               "attributes": {
-                "id": "f2ee6dad7a883a3fa4633d393c937ddb",
+                "id": "496646e5e500b6210e2620529e6ca0bf",
                 "tags": [],
                 "selection_glyph": null,
                 "nonselection_glyph": {
                   "type": "Circle",
-                  "id": "07d62ea78a4b3f3c7eba3eb9540da7fd"
+                  "id": "9dcd2f4d62fbc549f1093b890b4c745c"
                 },
                 "hover_glyph": {
                   "type": "Circle",
-                  "id": "b89121f1d1cc8f11ab161714dd47eb6a"
+                  "id": "fcc59598528117ea807ad4783803c047"
                 },
                 "name": null,
                 "data_source": {
                   "type": "ColumnDataSource",
-                  "id": "ece41fa415486c2685333e5ce4c7d106"
+                  "id": "36487a6993181fb3285fd5d1a9825997"
                 },
                 "glyph": {
                   "type": "Circle",
-                  "id": "4f5b0f137fdf1e1b3858522e85b2936f"
+                  "id": "88388b9f283c65c07ad4372070e8b985"
                 }
               }
             },
             {
               "type": "HoverTool",
-              "id": "7fdbd4bad14cc0bf056855c3c3bc7d5f",
+              "id": "2e1f065581798f5afb3c495960051ad6",
               "attributes": {
-                "id": "7fdbd4bad14cc0bf056855c3c3bc7d5f",
+                "id": "2e1f065581798f5afb3c495960051ad6",
                 "tags": [],
                 "plot": {
                   "type": "Plot",
-                  "id": "c07bd414bcb65f3893176df638a384ba",
+                  "id": "f781af849865cde7bc162a388a4ee66d",
                   "subtype": "Figure"
                 },
                 "renderers": [
                   {
                     "type": "GlyphRenderer",
-                    "id": "32f2820da963f46dfceac359cdd0c003"
+                    "id": "fc3b3a7132ba53b0b56474fdf0121765"
                   }
                 ],
                 "names": [],
@@ -766,9 +824,9 @@ figure() %&gt;%
             },
             {
               "type": "ColumnDataSource",
-              "id": "1eda0274ab8afa6908ddb1ee22635de8",
+              "id": "b6c63c1c4a332be3230b50dbdf3603df",
               "attributes": {
-                "id": "1eda0274ab8afa6908ddb1ee22635de8",
+                "id": "b6c63c1c4a332be3230b50dbdf3603df",
                 "tags": [],
                 "column_names": ["x", "y", "line_color", "fill_color", "hover_col_1", "hover_col_2"],
                 "selected": [],
@@ -784,9 +842,9 @@ figure() %&gt;%
             },
             {
               "type": "Square",
-              "id": "783b4a5bdb862a9da0814d5ada30cbc9",
+              "id": "0225a011f84cdd4a613a7950cb6640b0",
               "attributes": {
-                "id": "783b4a5bdb862a9da0814d5ada30cbc9",
+                "id": "0225a011f84cdd4a613a7950cb6640b0",
                 "tags": [],
                 "size": {
                   "units": "screen",
@@ -821,9 +879,9 @@ figure() %&gt;%
             },
             {
               "type": "Square",
-              "id": "c77494764544006ce3d905e0b140971b",
+              "id": "63c52bcc13461422c06a543db9bcdde8",
               "attributes": {
-                "id": "c77494764544006ce3d905e0b140971b",
+                "id": "63c52bcc13461422c06a543db9bcdde8",
                 "tags": [],
                 "size": {
                   "units": "screen",
@@ -858,9 +916,9 @@ figure() %&gt;%
             },
             {
               "type": "Square",
-              "id": "283d2f1e0d171fa256f51bfa9230ca15",
+              "id": "c42c283a5ab832b0217a535be4355ba5",
               "attributes": {
-                "id": "283d2f1e0d171fa256f51bfa9230ca15",
+                "id": "c42c283a5ab832b0217a535be4355ba5",
                 "tags": [],
                 "size": {
                   "units": "screen",
@@ -895,45 +953,45 @@ figure() %&gt;%
             },
             {
               "type": "GlyphRenderer",
-              "id": "32f2820da963f46dfceac359cdd0c003",
+              "id": "fc3b3a7132ba53b0b56474fdf0121765",
               "attributes": {
-                "id": "32f2820da963f46dfceac359cdd0c003",
+                "id": "fc3b3a7132ba53b0b56474fdf0121765",
                 "tags": [],
                 "selection_glyph": null,
                 "nonselection_glyph": {
                   "type": "Square",
-                  "id": "c77494764544006ce3d905e0b140971b"
+                  "id": "63c52bcc13461422c06a543db9bcdde8"
                 },
                 "hover_glyph": {
                   "type": "Square",
-                  "id": "283d2f1e0d171fa256f51bfa9230ca15"
+                  "id": "c42c283a5ab832b0217a535be4355ba5"
                 },
                 "name": null,
                 "data_source": {
                   "type": "ColumnDataSource",
-                  "id": "1eda0274ab8afa6908ddb1ee22635de8"
+                  "id": "b6c63c1c4a332be3230b50dbdf3603df"
                 },
                 "glyph": {
                   "type": "Square",
-                  "id": "783b4a5bdb862a9da0814d5ada30cbc9"
+                  "id": "0225a011f84cdd4a613a7950cb6640b0"
                 }
               }
             },
             {
               "type": "HoverTool",
-              "id": "ddbbd005ccf22d3ccb482418eeea405f",
+              "id": "9b23f9ff6d0a47ce984b3fc32a3e3c6a",
               "attributes": {
-                "id": "ddbbd005ccf22d3ccb482418eeea405f",
+                "id": "9b23f9ff6d0a47ce984b3fc32a3e3c6a",
                 "tags": [],
                 "plot": {
                   "type": "Plot",
-                  "id": "c07bd414bcb65f3893176df638a384ba",
+                  "id": "f781af849865cde7bc162a388a4ee66d",
                   "subtype": "Figure"
                 },
                 "renderers": [
                   {
                     "type": "GlyphRenderer",
-                    "id": "4e2249c444422026be15f33e2676975b"
+                    "id": "6aa6e676b416f111989e77ab55a31881"
                   }
                 ],
                 "names": [],
@@ -956,9 +1014,9 @@ figure() %&gt;%
             },
             {
               "type": "ColumnDataSource",
-              "id": "a4a4a507f43532b00b9bbff3e8567270",
+              "id": "cfdd077974372dcefaebf3dbfd1659de",
               "attributes": {
-                "id": "a4a4a507f43532b00b9bbff3e8567270",
+                "id": "cfdd077974372dcefaebf3dbfd1659de",
                 "tags": [],
                 "column_names": ["x", "y", "line_color", "fill_color", "hover_col_1", "hover_col_2"],
                 "selected": [],
@@ -974,9 +1032,9 @@ figure() %&gt;%
             },
             {
               "type": "Triangle",
-              "id": "12a9bb81e03cefade31f1e3db099a5f5",
+              "id": "6ee53760ee32be03d9dbbe356cc95a52",
               "attributes": {
-                "id": "12a9bb81e03cefade31f1e3db099a5f5",
+                "id": "6ee53760ee32be03d9dbbe356cc95a52",
                 "tags": [],
                 "size": {
                   "units": "screen",
@@ -1011,9 +1069,9 @@ figure() %&gt;%
             },
             {
               "type": "Triangle",
-              "id": "b38ce42b9a4242b6444581d89db3b1e8",
+              "id": "0d61701afbe5138e11c8f3043d789b35",
               "attributes": {
-                "id": "b38ce42b9a4242b6444581d89db3b1e8",
+                "id": "0d61701afbe5138e11c8f3043d789b35",
                 "tags": [],
                 "size": {
                   "units": "screen",
@@ -1048,9 +1106,9 @@ figure() %&gt;%
             },
             {
               "type": "Triangle",
-              "id": "c7c4a8ba2d49bfe6b5c58bfc80043cf3",
+              "id": "ff2d9744675ed3e9d3ecf60f6a0baee7",
               "attributes": {
-                "id": "c7c4a8ba2d49bfe6b5c58bfc80043cf3",
+                "id": "ff2d9744675ed3e9d3ecf60f6a0baee7",
                 "tags": [],
                 "size": {
                   "units": "screen",
@@ -1085,35 +1143,35 @@ figure() %&gt;%
             },
             {
               "type": "GlyphRenderer",
-              "id": "4e2249c444422026be15f33e2676975b",
+              "id": "6aa6e676b416f111989e77ab55a31881",
               "attributes": {
-                "id": "4e2249c444422026be15f33e2676975b",
+                "id": "6aa6e676b416f111989e77ab55a31881",
                 "tags": [],
                 "selection_glyph": null,
                 "nonselection_glyph": {
                   "type": "Triangle",
-                  "id": "b38ce42b9a4242b6444581d89db3b1e8"
+                  "id": "0d61701afbe5138e11c8f3043d789b35"
                 },
                 "hover_glyph": {
                   "type": "Triangle",
-                  "id": "c7c4a8ba2d49bfe6b5c58bfc80043cf3"
+                  "id": "ff2d9744675ed3e9d3ecf60f6a0baee7"
                 },
                 "name": null,
                 "data_source": {
                   "type": "ColumnDataSource",
-                  "id": "a4a4a507f43532b00b9bbff3e8567270"
+                  "id": "cfdd077974372dcefaebf3dbfd1659de"
                 },
                 "glyph": {
                   "type": "Triangle",
-                  "id": "12a9bb81e03cefade31f1e3db099a5f5"
+                  "id": "6ee53760ee32be03d9dbbe356cc95a52"
                 }
               }
             },
             {
               "type": "ColumnDataSource",
-              "id": "fb6a7967d3188e37ddbff09b00eed070",
+              "id": "2afacef6ee20d6f11b2063f544978842",
               "attributes": {
-                "id": "fb6a7967d3188e37ddbff09b00eed070",
+                "id": "2afacef6ee20d6f11b2063f544978842",
                 "tags": [],
                 "column_names": ["x", "y"],
                 "selected": [],
@@ -1125,9 +1183,9 @@ figure() %&gt;%
             },
             {
               "type": "Circle",
-              "id": "f2ce9d041445ba2385fedcc82b04a17d",
+              "id": "7d124e15cdf4d6b5a4685bfcc2070102",
               "attributes": {
-                "id": "f2ce9d041445ba2385fedcc82b04a17d",
+                "id": "7d124e15cdf4d6b5a4685bfcc2070102",
                 "tags": [],
                 "size": {
                   "units": "screen",
@@ -1162,9 +1220,9 @@ figure() %&gt;%
             },
             {
               "type": "Circle",
-              "id": "9f594fa2d2df135854610beb48cfd0c4",
+              "id": "2d05d0e8dde1fcb2ddc234ac29d6a55a",
               "attributes": {
-                "id": "9f594fa2d2df135854610beb48cfd0c4",
+                "id": "2d05d0e8dde1fcb2ddc234ac29d6a55a",
                 "tags": [],
                 "size": {
                   "units": "screen",
@@ -1199,9 +1257,9 @@ figure() %&gt;%
             },
             {
               "type": "Circle",
-              "id": "e75ed51afd1e0465ac35d2281af552e2",
+              "id": "3c73002673d50e02c0fb227e150d95ca",
               "attributes": {
-                "id": "e75ed51afd1e0465ac35d2281af552e2",
+                "id": "3c73002673d50e02c0fb227e150d95ca",
                 "tags": [],
                 "size": {
                   "units": "screen",
@@ -1236,35 +1294,35 @@ figure() %&gt;%
             },
             {
               "type": "GlyphRenderer",
-              "id": "833c8c0ef08c4d6c6817988fc7280ee4",
+              "id": "bdaef9cb044b2f536fbc80a174c83d87",
               "attributes": {
-                "id": "833c8c0ef08c4d6c6817988fc7280ee4",
+                "id": "bdaef9cb044b2f536fbc80a174c83d87",
                 "tags": [],
                 "selection_glyph": null,
                 "nonselection_glyph": {
                   "type": "Circle",
-                  "id": "9f594fa2d2df135854610beb48cfd0c4"
+                  "id": "2d05d0e8dde1fcb2ddc234ac29d6a55a"
                 },
                 "hover_glyph": {
                   "type": "Circle",
-                  "id": "e75ed51afd1e0465ac35d2281af552e2"
+                  "id": "3c73002673d50e02c0fb227e150d95ca"
                 },
                 "name": null,
                 "data_source": {
                   "type": "ColumnDataSource",
-                  "id": "fb6a7967d3188e37ddbff09b00eed070"
+                  "id": "2afacef6ee20d6f11b2063f544978842"
                 },
                 "glyph": {
                   "type": "Circle",
-                  "id": "f2ce9d041445ba2385fedcc82b04a17d"
+                  "id": "7d124e15cdf4d6b5a4685bfcc2070102"
                 }
               }
             },
             {
               "type": "Square",
-              "id": "00824a1c2a66d2b4595cb3ed03bc70a3",
+              "id": "5c949983dc716375096ed517593fecf6",
               "attributes": {
-                "id": "00824a1c2a66d2b4595cb3ed03bc70a3",
+                "id": "5c949983dc716375096ed517593fecf6",
                 "tags": [],
                 "size": {
                   "units": "screen",
@@ -1299,9 +1357,9 @@ figure() %&gt;%
             },
             {
               "type": "Square",
-              "id": "f69ce9efe66c119c71c95aa4beb73297",
+              "id": "d925f9ed9e3b87968c848fc4b94cd891",
               "attributes": {
-                "id": "f69ce9efe66c119c71c95aa4beb73297",
+                "id": "d925f9ed9e3b87968c848fc4b94cd891",
                 "tags": [],
                 "size": {
                   "units": "screen",
@@ -1336,9 +1394,9 @@ figure() %&gt;%
             },
             {
               "type": "Square",
-              "id": "7c917381760a1fa53129a777b2f2f8ce",
+              "id": "43934afeff5c541f9652d8f27262b3e2",
               "attributes": {
-                "id": "7c917381760a1fa53129a777b2f2f8ce",
+                "id": "43934afeff5c541f9652d8f27262b3e2",
                 "tags": [],
                 "size": {
                   "units": "screen",
@@ -1373,35 +1431,35 @@ figure() %&gt;%
             },
             {
               "type": "GlyphRenderer",
-              "id": "68d5db2ddbb3623baa23a1be59eb3ed8",
+              "id": "ffbc8b27408f690d9174826bb704c5d5",
               "attributes": {
-                "id": "68d5db2ddbb3623baa23a1be59eb3ed8",
+                "id": "ffbc8b27408f690d9174826bb704c5d5",
                 "tags": [],
                 "selection_glyph": null,
                 "nonselection_glyph": {
                   "type": "Square",
-                  "id": "f69ce9efe66c119c71c95aa4beb73297"
+                  "id": "d925f9ed9e3b87968c848fc4b94cd891"
                 },
                 "hover_glyph": {
                   "type": "Square",
-                  "id": "7c917381760a1fa53129a777b2f2f8ce"
+                  "id": "43934afeff5c541f9652d8f27262b3e2"
                 },
                 "name": null,
                 "data_source": {
                   "type": "ColumnDataSource",
-                  "id": "fb6a7967d3188e37ddbff09b00eed070"
+                  "id": "2afacef6ee20d6f11b2063f544978842"
                 },
                 "glyph": {
                   "type": "Square",
-                  "id": "00824a1c2a66d2b4595cb3ed03bc70a3"
+                  "id": "5c949983dc716375096ed517593fecf6"
                 }
               }
             },
             {
               "type": "Triangle",
-              "id": "587d7af4e6faa06d7411492765cc2a9a",
+              "id": "99a25c01d17eb8c20fd4d8f3c966391b",
               "attributes": {
-                "id": "587d7af4e6faa06d7411492765cc2a9a",
+                "id": "99a25c01d17eb8c20fd4d8f3c966391b",
                 "tags": [],
                 "size": {
                   "units": "screen",
@@ -1436,9 +1494,9 @@ figure() %&gt;%
             },
             {
               "type": "Triangle",
-              "id": "e256eea74d64cf40989de1f51f615205",
+              "id": "dc1541e2d7d875c50817263161c613a7",
               "attributes": {
-                "id": "e256eea74d64cf40989de1f51f615205",
+                "id": "dc1541e2d7d875c50817263161c613a7",
                 "tags": [],
                 "size": {
                   "units": "screen",
@@ -1473,9 +1531,9 @@ figure() %&gt;%
             },
             {
               "type": "Triangle",
-              "id": "55d2d5cd3d1cd3865150425451c9762a",
+              "id": "702bf14482270c9a56f7995d0c608206",
               "attributes": {
-                "id": "55d2d5cd3d1cd3865150425451c9762a",
+                "id": "702bf14482270c9a56f7995d0c608206",
                 "tags": [],
                 "size": {
                   "units": "screen",
@@ -1510,39 +1568,39 @@ figure() %&gt;%
             },
             {
               "type": "GlyphRenderer",
-              "id": "3a01aa897f9ab0297b8d84df9e5b3f01",
+              "id": "4b651b8f0bc8bc7fb1a1e45a11004dd6",
               "attributes": {
-                "id": "3a01aa897f9ab0297b8d84df9e5b3f01",
+                "id": "4b651b8f0bc8bc7fb1a1e45a11004dd6",
                 "tags": [],
                 "selection_glyph": null,
                 "nonselection_glyph": {
                   "type": "Triangle",
-                  "id": "e256eea74d64cf40989de1f51f615205"
+                  "id": "dc1541e2d7d875c50817263161c613a7"
                 },
                 "hover_glyph": {
                   "type": "Triangle",
-                  "id": "55d2d5cd3d1cd3865150425451c9762a"
+                  "id": "702bf14482270c9a56f7995d0c608206"
                 },
                 "name": null,
                 "data_source": {
                   "type": "ColumnDataSource",
-                  "id": "fb6a7967d3188e37ddbff09b00eed070"
+                  "id": "2afacef6ee20d6f11b2063f544978842"
                 },
                 "glyph": {
                   "type": "Triangle",
-                  "id": "587d7af4e6faa06d7411492765cc2a9a"
+                  "id": "99a25c01d17eb8c20fd4d8f3c966391b"
                 }
               }
             },
             {
               "type": "Legend",
-              "id": "317ac64246c2c54812efdf046c3e7d35",
+              "id": "bb55bed971e57ac1e004904e3b171f8f",
               "attributes": {
-                "id": "317ac64246c2c54812efdf046c3e7d35",
+                "id": "bb55bed971e57ac1e004904e3b171f8f",
                 "tags": [],
                 "plot": {
                   "type": "Plot",
-                  "id": "c07bd414bcb65f3893176df638a384ba",
+                  "id": "f781af849865cde7bc162a388a4ee66d",
                   "subtype": "Figure"
                 },
                 "legends": [
@@ -1555,7 +1613,7 @@ figure() %&gt;%
                     [
                       {
                         "type": "GlyphRenderer",
-                        "id": "833c8c0ef08c4d6c6817988fc7280ee4"
+                        "id": "bdaef9cb044b2f536fbc80a174c83d87"
                       }
                     ]
                   ],
@@ -1564,7 +1622,7 @@ figure() %&gt;%
                     [
                       {
                         "type": "GlyphRenderer",
-                        "id": "68d5db2ddbb3623baa23a1be59eb3ed8"
+                        "id": "ffbc8b27408f690d9174826bb704c5d5"
                       }
                     ]
                   ],
@@ -1573,7 +1631,7 @@ figure() %&gt;%
                     [
                       {
                         "type": "GlyphRenderer",
-                        "id": "3a01aa897f9ab0297b8d84df9e5b3f01"
+                        "id": "4b651b8f0bc8bc7fb1a1e45a11004dd6"
                       }
                     ]
                   ]
@@ -1583,9 +1641,9 @@ figure() %&gt;%
             },
             {
               "type": "Range1d",
-              "id": "4ddd89cf16cbf33ffad3f722ba0da31a",
+              "id": "e8966093feb0baba5eea25c9ba105ecd",
               "attributes": {
-                "id": "4ddd89cf16cbf33ffad3f722ba0da31a",
+                "id": "e8966093feb0baba5eea25c9ba105ecd",
                 "tags": [],
                 "start": 4.048,
                 "end": 8.152
@@ -1593,9 +1651,9 @@ figure() %&gt;%
             },
             {
               "type": "Range1d",
-              "id": "d85ca5d7f6ea3f7bec9b8ad9949d68f1",
+              "id": "c31ee338c2be88a9fdb87355046be9d8",
               "attributes": {
-                "id": "d85ca5d7f6ea3f7bec9b8ad9949d68f1",
+                "id": "c31ee338c2be88a9fdb87355046be9d8",
                 "tags": [],
                 "start": 1.832,
                 "end": 4.568
@@ -1603,23 +1661,23 @@ figure() %&gt;%
             },
             {
               "type": "LinearAxis",
-              "id": "317845a0d13f70f2e11cce96bc6cf670",
+              "id": "8b0dfcbfaf0b892e1e50be4786d47f77",
               "attributes": {
-                "id": "317845a0d13f70f2e11cce96bc6cf670",
+                "id": "8b0dfcbfaf0b892e1e50be4786d47f77",
                 "tags": [],
                 "plot": {
                   "type": "Plot",
-                  "id": "c07bd414bcb65f3893176df638a384ba",
+                  "id": "f781af849865cde7bc162a388a4ee66d",
                   "subtype": "Figure"
                 },
                 "axis_label": "Sepal.Length",
                 "formatter": {
                   "type": "BasicTickFormatter",
-                  "id": "6bbf986e80fc7f5fdaee0a1a246b8b1b"
+                  "id": "4b819098fc727bdd04d114b74d472e14"
                 },
                 "ticker": {
                   "type": "BasicTicker",
-                  "id": "db5b194991ab18c277c116c03628d8bf"
+                  "id": "5f0fd84ef4836ce4ef9dba13e390d944"
                 },
                 "visible": true,
                 "axis_label_text_font_size": "12pt"
@@ -1627,58 +1685,58 @@ figure() %&gt;%
             },
             {
               "type": "BasicTickFormatter",
-              "id": "6bbf986e80fc7f5fdaee0a1a246b8b1b",
+              "id": "4b819098fc727bdd04d114b74d472e14",
               "attributes": {
-                "id": "6bbf986e80fc7f5fdaee0a1a246b8b1b",
+                "id": "4b819098fc727bdd04d114b74d472e14",
                 "tags": []
               }
             },
             {
               "type": "BasicTicker",
-              "id": "db5b194991ab18c277c116c03628d8bf",
+              "id": "5f0fd84ef4836ce4ef9dba13e390d944",
               "attributes": {
-                "id": "db5b194991ab18c277c116c03628d8bf",
+                "id": "5f0fd84ef4836ce4ef9dba13e390d944",
                 "tags": [],
                 "num_minor_ticks": 5
               }
             },
             {
               "type": "Grid",
-              "id": "84196bbe4372835186e0be851a227379",
+              "id": "b02e5dc50c52f333843ce1177354ea72",
               "attributes": {
-                "id": "84196bbe4372835186e0be851a227379",
+                "id": "b02e5dc50c52f333843ce1177354ea72",
                 "tags": [],
                 "dimension": 0,
                 "plot": {
                   "type": "Plot",
-                  "id": "c07bd414bcb65f3893176df638a384ba",
+                  "id": "f781af849865cde7bc162a388a4ee66d",
                   "subtype": "Figure"
                 },
                 "ticker": {
                   "type": "BasicTicker",
-                  "id": "db5b194991ab18c277c116c03628d8bf"
+                  "id": "5f0fd84ef4836ce4ef9dba13e390d944"
                 }
               }
             },
             {
               "type": "LinearAxis",
-              "id": "f2d222796e4f4698c2c2f5d5560ec69b",
+              "id": "3cb86d81c7902d53cb0630e1aead37a7",
               "attributes": {
-                "id": "f2d222796e4f4698c2c2f5d5560ec69b",
+                "id": "3cb86d81c7902d53cb0630e1aead37a7",
                 "tags": [],
                 "plot": {
                   "type": "Plot",
-                  "id": "c07bd414bcb65f3893176df638a384ba",
+                  "id": "f781af849865cde7bc162a388a4ee66d",
                   "subtype": "Figure"
                 },
                 "axis_label": "Sepal.Width",
                 "formatter": {
                   "type": "BasicTickFormatter",
-                  "id": "2c35856c05e8b6df255743f77253a990"
+                  "id": "0787305aeca1341bb94fc19bd1475b1d"
                 },
                 "ticker": {
                   "type": "BasicTicker",
-                  "id": "85a9be1f41ab210e703139577bad1740"
+                  "id": "57bee96558a25ca889476ad06a624ac9"
                 },
                 "visible": true,
                 "axis_label_text_font_size": "12pt"
@@ -1686,36 +1744,36 @@ figure() %&gt;%
             },
             {
               "type": "BasicTickFormatter",
-              "id": "2c35856c05e8b6df255743f77253a990",
+              "id": "0787305aeca1341bb94fc19bd1475b1d",
               "attributes": {
-                "id": "2c35856c05e8b6df255743f77253a990",
+                "id": "0787305aeca1341bb94fc19bd1475b1d",
                 "tags": []
               }
             },
             {
               "type": "BasicTicker",
-              "id": "85a9be1f41ab210e703139577bad1740",
+              "id": "57bee96558a25ca889476ad06a624ac9",
               "attributes": {
-                "id": "85a9be1f41ab210e703139577bad1740",
+                "id": "57bee96558a25ca889476ad06a624ac9",
                 "tags": [],
                 "num_minor_ticks": 5
               }
             },
             {
               "type": "Grid",
-              "id": "6bc643e4a734be2977c666d82ab1beda",
+              "id": "d268ca8bcad900b87e05c2c64ae58990",
               "attributes": {
-                "id": "6bc643e4a734be2977c666d82ab1beda",
+                "id": "d268ca8bcad900b87e05c2c64ae58990",
                 "tags": [],
                 "dimension": 1,
                 "plot": {
                   "type": "Plot",
-                  "id": "c07bd414bcb65f3893176df638a384ba",
+                  "id": "f781af849865cde7bc162a388a4ee66d",
                   "subtype": "Figure"
                 },
                 "ticker": {
                   "type": "BasicTicker",
-                  "id": "85a9be1f41ab210e703139577bad1740"
+                  "id": "57bee96558a25ca889476ad06a624ac9"
                 }
               }
             }
@@ -1787,6 +1845,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 
 </body>

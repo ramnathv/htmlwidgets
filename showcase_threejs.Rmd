@@ -7,7 +7,7 @@ title: "htmlwidgets: threejs"
 
 threejs includes a 3D scatterplot and 3D globe (you can directly manipulate the scatterplot below with the mouse).
 
-```{r}
+```{r message = FALSE}
 library(threejs)
 z <- seq(-10, 10, 0.01)
 x <- cos(z)

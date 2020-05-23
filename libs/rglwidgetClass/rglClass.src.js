@@ -1,4 +1,17 @@
+// To generate the help pages for this library, use
 
+// jsdoc --destination ../../../doc/rglwidgetClass --template ~/node_modules/jsdoc-baseline rglClass.src.js
+
+// To validate, use
+
+// setwd(".../inst/htmlwidgets/lib/rglClass")
+// hints <- js::jshint(readLines("rglClass.src.js"))
+// hints[, c("line", "reason")]
+
+/**
+ * The class of an rgl widget
+ * @class
+*/
 rglwidgetClass = function() {
     this.canvas = null;
     this.userMatrix = new CanvasMatrix4();
@@ -10,49 +23,128 @@ rglwidgetClass = function() {
     this.origs = null;
     this.gl = null;
     this.scene = null;
+    this.select = {state: "inactive", subscene: null, region: {p1: {x:0, y:0}, p2: {x:0, y:0}}};
+    this.drawing = false;
 };
 
-(function() {
-    this.multMV = function(M, v) {
+
+    /**
+     * Multiply matrix by vector
+     * @returns {number[]}
+     * @param M {number[][]} Left operand
+     * @param v {number[]} Right operand
+     */
+    rglwidgetClass.prototype.multMV = function(M, v) {
         return [ M.m11 * v[0] + M.m12 * v[1] + M.m13 * v[2] + M.m14 * v[3],
                  M.m21 * v[0] + M.m22 * v[1] + M.m23 * v[2] + M.m24 * v[3],
                  M.m31 * v[0] + M.m32 * v[1] + M.m33 * v[2] + M.m34 * v[3],
                  M.m41 * v[0] + M.m42 * v[1] + M.m43 * v[2] + M.m44 * v[3]
                ];
     };
-
-    this.vlen = function(v) {
+    
+    /**
+     * Multiply row vector by Matrix
+     * @returns {number[]}
+     * @param v {number[]} left operand
+     * @param M {number[][]} right operand
+     */
+    rglwidgetClass.prototype.multVM = function(v, M) {
+        return [ M.m11 * v[0] + M.m21 * v[1] + M.m31 * v[2] + M.m41 * v[3],
+                 M.m12 * v[0] + M.m22 * v[1] + M.m32 * v[2] + M.m42 * v[3],
+                 M.m13 * v[0] + M.m23 * v[1] + M.m33 * v[2] + M.m43 * v[3],
+                 M.m14 * v[0] + M.m24 * v[1] + M.m34 * v[2] + M.m44 * v[3]
+               ];
+    };
+    
+    /**
+     * Euclidean length of a vector
+     * @returns {number}
+     * @param v {number[]}
+     */
+    rglwidgetClass.prototype.vlen = function(v) {
       return Math.sqrt(this.dotprod(v, v));
     };
 
-    this.dotprod = function(a, b) {
+    /**
+     * Dot product of two vectors
+     * @instance rglwidgetClass
+     * @returns {number}
+     * @param a {number[]}
+     * @param b {number[]}
+     */
+    rglwidgetClass.prototype.dotprod = function(a, b) {
       return a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
     };
 
-    this.xprod = function(a, b) {
+    /**
+     * Cross product of two vectors
+     * @returns {number[]}
+     * @param a {number[]}
+     * @param b {number[]}
+     */
+    rglwidgetClass.prototype.xprod = function(a, b) {
       return [a[1]*b[2] - a[2]*b[1],
           a[2]*b[0] - a[0]*b[2],
           a[0]*b[1] - a[1]*b[0]];
     };
 
-    this.cbind = function(a, b) {
+    /**
+     * Bind vectors or matrices by columns
+     * @returns {number[][]}
+     * @param a {number[]|number[][]}
+     * @param b {number[]|number[][]}
+     */
+    rglwidgetClass.prototype.cbind = function(a, b) {
+      if (b.length < a.length)
+        b = this.repeatToLen(b, a.length);
+      else if (a.length < b.length)
+        a = this.repeatToLen(a, b.length);
       return a.map(function(currentValue, index, array) {
             return currentValue.concat(b[index]);
       });
     };
 
-    this.swap = function(a, i, j) {
+    /**
+     * Swap elements
+     * @returns {any[]}
+     * @param a {any[]}
+     * @param i {number} Element to swap
+     * @param j {number} Other element to swap
+     */
+    rglwidgetClass.prototype.swap = function(a, i, j) {
       var temp = a[i];
       a[i] = a[j];
       a[j] = temp;
     };
 
-    this.flatten = function(a) {
-      return [].concat.apply([], a);
+    /**
+     * Flatten a matrix into a vector
+     * @returns {any[]}
+     * @param a {any[][]}
+     */
+    rglwidgetClass.prototype.flatten = function(arr, result) {
+      var value;
+      if (typeof result === "undefined") result = [];
+      for (var i = 0, length = arr.length; i < length; i++) {
+        value = arr[i];
+        if (Array.isArray(value)) {
+          this.flatten(value, result);
+        } else {
+          result.push(value);
+        }
+      }
+      return result;
     };
 
-    /* set element of 1d or 2d array as if it was flattened.  Column major, zero based! */
-    this.setElement = function(a, i, value) {
+    /**
+     * set element of 1d or 2d array as if it was flattened.
+     * Column major, zero based!
+     * @returns {any[]|any[][]}
+     * @param {any[]|any[][]} a - array
+     * @param {number} i - element
+     * @param {any} value
+     */
+    rglwidgetClass.prototype.setElement = function(a, i, value) {
       if (Array.isArray(a[0])) {
         var dim = a.length,
             col = Math.floor(i/dim),
@@ -63,7 +155,12 @@ rglwidgetClass = function() {
       }
     };
 
-    this.transpose = function(a) {
+    /**
+     * Transpose an array
+     * @returns {any[][]}
+     * @param {any[][]} a
+     */
+    rglwidgetClass.prototype.transpose = function(a) {
       var newArray = [],
           n = a.length,
           m = a[0].length,
@@ -80,14 +177,24 @@ rglwidgetClass = function() {
       return newArray;
     };
 
-    this.sumsq = function(x) {
+    /**
+     * Calculate sum of squares of a numeric vector
+     * @returns {number}
+     * @param {number[]} x
+     */
+    rglwidgetClass.prototype.sumsq = function(x) {
       var result = 0, i;
       for (i=0; i < x.length; i++)
         result += x[i]*x[i];
       return result;
     };
 
-    this.toCanvasMatrix4 = function(mat) {
+    /**
+     * Convert a matrix to a CanvasMatrix4
+     * @returns {CanvasMatrix4}
+     * @param {number[][]|number[]} mat
+     */
+    rglwidgetClass.prototype.toCanvasMatrix4 = function(mat) {
       if (mat instanceof CanvasMatrix4)
         return mat;
       var result = new CanvasMatrix4();
@@ -96,7 +203,12 @@ rglwidgetClass = function() {
       return result;
     };
 
-    this.stringToRgb = function(s) {
+    /**
+     * Convert an R-style numeric colour string to an rgb vector
+     * @returns {number[]}
+     * @param {string} s
+     */
+    rglwidgetClass.prototype.stringToRgb = function(s) {
       s = s.replace("#", "");
       var bigint = parseInt(s, 16);
       return [((bigint >> 16) & 255)/255,
@@ -104,7 +216,13 @@ rglwidgetClass = function() {
                (bigint & 255)/255];
     };
 
-    this.componentProduct = function(x, y) {
+    /**
+     * Take a component-by-component product of two 3 vectors
+     * @returns {number[]}
+     * @param {number[]} x
+     * @param {number[]} y
+     */
+    rglwidgetClass.prototype.componentProduct = function(x, y) {
       if (typeof y === "undefined") {
         this.alertOnce("Bad arg to componentProduct");
       }
@@ -114,7 +232,12 @@ rglwidgetClass = function() {
       return result;
     };
 
-    this.getPowerOfTwo = function(value) {
+    /**
+     * Get next higher power of two
+     * @returns { number }
+     * @param { number } value - input value
+     */
+    rglwidgetClass.prototype.getPowerOfTwo = function(value) {
       var pow = 1;
       while(pow<value) {
         pow *= 2;
@@ -122,41 +245,77 @@ rglwidgetClass = function() {
       return pow;
     };
 
-    this.unique = function(arr) {
+    /**
+     * Unique entries
+     * @returns { any[] }
+     * @param { any[] } arr - An array
+     */
+    rglwidgetClass.prototype.unique = function(arr) {
       arr = [].concat(arr);
       return arr.filter(function(value, index, self) {
         return self.indexOf(value) === index;
       });
     };
 
-    this.repeatToLen = function(arr, len) {
+    /**
+     * Shallow compare of arrays
+     * @returns { boolean }
+     * @param { any[] } a - An array
+     * @param { any[] } b - Another array
+     */
+    rglwidgetClass.prototype.equalArrays = function(a, b) {
+      return a === b || (a && b &&
+                      a.length === b.length &&
+                      a.every(function(v, i) {return v === b[i];}));
+    };
+    
+    /**
+     * Repeat an array to a desired length
+     * @returns {any[]}
+     * @param {any | any[]} arr The input array
+     * @param {number} len The desired output length
+     */
+    rglwidgetClass.prototype.repeatToLen = function(arr, len) {
       arr = [].concat(arr);
       while (arr.length < len/2)
         arr = arr.concat(arr);
       return arr.concat(arr.slice(0, len - arr.length));
     };
 
-    this.alertOnce = function(msg) {
+    /**
+     * Give a single alert message, not to be repeated.
+     * @param {string} msg  The message to give.
+     */
+    rglwidgetClass.prototype.alertOnce = function(msg) {
       if (typeof this.alerted !== "undefined")
         return;
       this.alerted = true;
       alert(msg);
     };
 
-    this.f_is_lit = 1;
-    this.f_is_smooth = 2;
-    this.f_has_texture = 4;
-    this.f_is_indexed = 8;
-    this.f_depth_sort = 16;
-    this.f_fixed_quads = 32;
-    this.f_is_transparent = 64;
-    this.f_is_lines = 128;
-    this.f_sprites_3d = 256;
-    this.f_sprite_3d = 512;
-    this.f_is_subscene = 1024;
-    this.f_is_clipplanes = 2048;
+    rglwidgetClass.prototype.f_is_lit = 1;
+    rglwidgetClass.prototype.f_is_smooth = 2;
+    rglwidgetClass.prototype.f_has_texture = 4;
+    rglwidgetClass.prototype.f_depth_sort = 8;
+    rglwidgetClass.prototype.f_fixed_quads = 16;
+    rglwidgetClass.prototype.f_is_transparent = 32;
+    rglwidgetClass.prototype.f_is_lines = 64;
+    rglwidgetClass.prototype.f_sprites_3d = 128;
+    rglwidgetClass.prototype.f_sprite_3d = 256;
+    rglwidgetClass.prototype.f_is_subscene = 512;
+    rglwidgetClass.prototype.f_is_clipplanes = 1024;
+    rglwidgetClass.prototype.f_fixed_size = 2048;
+    rglwidgetClass.prototype.f_is_points = 4096;
+    rglwidgetClass.prototype.f_is_twosided = 8192;
+    rglwidgetClass.prototype.f_fat_lines = 16384;
+    rglwidgetClass.prototype.f_is_brush = 32768;
 
-    this.whichList = function(id) {
+    /**
+     * Which list does a particular id come from?
+     * @returns { string }
+     * @param {number} id The id to look up.
+     */
+    rglwidgetClass.prototype.whichList = function(id) {
       var obj = this.getObj(id),
           flags = obj.flags;
         if (obj.type === "light")
@@ -170,14 +329,25 @@ rglwidgetClass = function() {
         return "opaque";
     };
 
-    this.getObj = function(id) {
+    /**
+     * Get an object by id number.
+     * @returns { Object }
+     * @param {number} id
+     */
+    rglwidgetClass.prototype.getObj = function(id) {
       if (typeof id !== "number") {
         this.alertOnce("getObj id is "+typeof id);
       }
       return this.scene.objects[id];
     };
 
-    this.getIdsByType = function(type, subscene) {
+    /**
+     * Get ids of a particular type from a subscene or the whole scene
+     * @returns { number[] }
+     * @param {string} type What type of object?
+     * @param {number} subscene  Which subscene?  If not given, find in the whole scene
+     */
+    rglwidgetClass.prototype.getIdsByType = function(type, subscene) {
       var
         result = [], i, self = this;
       if (typeof subscene === "undefined") {
@@ -198,26 +368,46 @@ rglwidgetClass = function() {
       return result;
     };
 
-    this.getMaterial = function(id, property) {
-      var obj = this.getObj(id),
-          mat = obj.material[property];
+    /**
+     * Get a particular material property for an id
+     * @returns { any }
+     * @param {number} id  Which object?
+     * @param {string} property Which material property?
+     */
+    rglwidgetClass.prototype.getMaterial = function(id, property) {
+      var obj = this.getObj(id), mat;
+      if (typeof obj.material === "undefined")
+        console.error("material undefined");
+      mat = obj.material[property];
       if (typeof mat === "undefined")
           mat = this.scene.material[property];
       return mat;
     };
 
-    this.inSubscene = function(id, subscene) {
+    /**
+     * Is a particular id in a subscene?
+     * @returns { boolean }
+     * @param {number} id Which id?
+     * @param {number} subscene Which subscene id?
+     */
+    rglwidgetClass.prototype.inSubscene = function(id, subscene) {
       return this.getObj(subscene).objects.indexOf(id) > -1;
     };
 
-    this.addToSubscene = function(id, subscene) {
+    /**
+     * Add an id to a subscene.
+     * @param {number} id Which id?
+     * @param {number} subscene Which subscene id?
+     */
+    rglwidgetClass.prototype.addToSubscene = function(id, subscene) {
       var thelist,
           thesub = this.getObj(subscene),
           ids = [id],
           obj = this.getObj(id), i;
-      if (typeof obj.newIds !== "undefined") {
+      if (typeof obj != "undefined" && typeof (obj.newIds) !== "undefined") {
         ids = ids.concat(obj.newIds);
       }
+      thesub.objects = [].concat(thesub.objects);
       for (i = 0; i < ids.length; i++) {
         id = ids[i];
         if (thesub.objects.indexOf(id) == -1) {
@@ -228,13 +418,19 @@ rglwidgetClass = function() {
       }
     };
 
-    this.delFromSubscene = function(id, subscene) {
+    /**
+     * Delete an id from a subscene
+     * @param { number } id - the id to add
+     * @param { number } subscene - the id of the subscene
+     */
+    rglwidgetClass.prototype.delFromSubscene = function(id, subscene) {
       var thelist,
           thesub = this.getObj(subscene),
           obj = this.getObj(id),
           ids = [id], i;
-      if (typeof obj.newIds !== "undefined")
+      if (typeof obj !== "undefined" && typeof (obj.newIds) !== "undefined")
         ids = ids.concat(obj.newIds);
+      thesub.objects = [].concat(thesub.objects); // It might be a scalar
       for (j=0; j<ids.length;j++) {
         id = ids[j];
         i = thesub.objects.indexOf(id);
@@ -247,34 +443,63 @@ rglwidgetClass = function() {
       }
     };
 
-    this.setSubsceneEntries = function(ids, subsceneid) {
+    /**
+     * Set the ids in a subscene
+     * @param { number[] } ids - the ids to set
+     * @param { number } subsceneid - the id of the subscene
+     */
+    rglwidgetClass.prototype.setSubsceneEntries = function(ids, subsceneid) {
       var sub = this.getObj(subsceneid);
       sub.objects = ids;
       this.initSubscene(subsceneid);
     };
 
-    this.getSubsceneEntries = function(subscene) {
+    /**
+     * Get the ids in a subscene
+     * @returns {number[]}
+     * @param { number } subscene - the id of the subscene
+     */
+    rglwidgetClass.prototype.getSubsceneEntries = function(subscene) {
       return this.getObj(subscene).objects;
     };
 
-    this.getChildSubscenes = function(subscene) {
+    /**
+     * Get the ids of the subscenes within a subscene
+     * @returns { number[] }
+     * @param { number } subscene - the id of the subscene
+     */
+    rglwidgetClass.prototype.getChildSubscenes = function(subscene) {
       return this.getObj(subscene).subscenes;
     };
 
-    this.startDrawing = function() {
+    /**
+     * Start drawing
+     * @returns { boolean } Previous state
+     */
+    rglwidgetClass.prototype.startDrawing = function() {
     	var value = this.drawing;
     	this.drawing = true;
     	return value;
-    }
-    
-    this.stopDrawing = function(saved) {
+    };
+
+    /**
+     * Stop drawing and check for context loss
+     * @param { boolean } saved - Previous state
+     */
+    rglwidgetClass.prototype.stopDrawing = function(saved) {
       this.drawing = saved;
       if (!saved && this.gl && this.gl.isContextLost())
         this.restartCanvas();
-    }
-    
-    this.getVertexShader = function(id) {
+    };
+
+    /**
+     * Generate the vertex shader for an object
+     * @returns {string}
+     * @param { number } id - Id of object
+     */
+    rglwidgetClass.prototype.getVertexShader = function(id) {
       var obj = this.getObj(id),
+          userShader = obj.userVertexShader,
           flags = obj.flags,
           type = obj.type,
           is_lit = flags & this.f_is_lit,
@@ -283,9 +508,16 @@ rglwidgetClass = function() {
           sprites_3d = flags & this.f_sprites_3d,
           sprite_3d = flags & this.f_sprite_3d,
           nclipplanes = this.countClipplanes(),
+          fixed_size = flags & this.f_fixed_size,
+          is_points = flags & this.f_is_points,
+          is_twosided = flags & this.f_is_twosided,
+          fat_lines = flags & this.f_fat_lines,
+          is_brush = flags & this.f_is_brush,
           result;
 
       if (type === "clipplanes" || sprites_3d) return;
+
+      if (typeof userShader !== "undefined") return userShader;
 
       result = "  /* ****** "+type+" object "+id+" vertex shader ****** */\n"+
       "  attribute vec3 aPos;\n"+
@@ -295,7 +527,7 @@ rglwidgetClass = function() {
       " varying vec4 vCol;\n"+
       " varying vec4 vPosition;\n";
 
-      if ((is_lit && !fixed_quads) || sprite_3d)
+      if ((is_lit && !fixed_quads && !is_brush) || sprite_3d)
         result = result + "  attribute vec3 aNorm;\n"+
                           " uniform mat4 normMatrix;\n"+
                           " varying vec3 vNormal;\n";
@@ -304,77 +536,141 @@ rglwidgetClass = function() {
         result = result + " attribute vec2 aTexcoord;\n"+
                           " varying vec2 vTexcoord;\n";
 
-      if (type === "text")
+      if (fixed_size)
         result = result + "  uniform vec2 textScale;\n";
 
       if (fixed_quads)
         result = result + "  attribute vec2 aOfs;\n";
       else if (sprite_3d)
         result = result + "  uniform vec3 uOrig;\n"+
-                          " uniform float uSize;\n"+
-                          " uniform mat4 usermat;\n";
+                          "  uniform float uSize;\n"+
+                          "  uniform mat4 usermat;\n";
 
+      if (is_twosided)
+        result = result + "  attribute vec3 aPos1;\n"+
+                          "  attribute vec3 aPos2;\n"+
+                          "  varying float normz;\n";
+
+      if (fat_lines) {
+      	result = result +   "  attribute vec3 aNext;\n"+
+                            "  attribute vec2 aPoint;\n"+
+                            "  varying vec2 vPoint;\n"+
+                            "  varying float vLength;\n"+
+                            "  uniform float uAspect;\n"+
+                            "  uniform float uLwd;\n";
+      }
+      
       result = result + "  void main(void) {\n";
 
-      if (nclipplanes || (!fixed_quads && !sprite_3d))
+      if ((nclipplanes || (!fixed_quads && !sprite_3d)) && !is_brush)
         result = result + "    vPosition = mvMatrix * vec4(aPos, 1.);\n";
 
-      if (!fixed_quads && !sprite_3d)
+      if (!fixed_quads && !sprite_3d && !is_brush)
         result = result + "    gl_Position = prMatrix * vPosition;\n";
 
-      if (type == "points") {
+      if (is_points) {
         var size = this.getMaterial(id, "size");
         result = result + "    gl_PointSize = "+size.toFixed(1)+";\n";
       }
 
       result = result + "    vCol = aCol;\n";
 
-      if (is_lit && !fixed_quads && !sprite_3d)
+      if (is_lit && !fixed_quads && !sprite_3d && !is_brush)
         result = result + "    vNormal = normalize((normMatrix * vec4(aNorm, 1.)).xyz);\n";
 
-      if (has_texture || type === "text")
+      if (has_texture || type == "text")
         result = result + "    vTexcoord = aTexcoord;\n";
 
-      if (type == "text")
+      if (fixed_size)
         result = result + "    vec4 pos = prMatrix * mvMatrix * vec4(aPos, 1.);\n"+
                           "   pos = pos/pos.w;\n"+
                           "   gl_Position = pos + vec4(aOfs*textScale, 0.,0.);\n";
 
-      if (type == "sprites")
+      if (type == "sprites" && !fixed_size)
         result = result + "    vec4 pos = mvMatrix * vec4(aPos, 1.);\n"+
                           "   pos = pos/pos.w + vec4(aOfs, 0., 0.);\n"+
                           "   gl_Position = prMatrix*pos;\n";
 
       if (sprite_3d)
-        result = result + "    vNormal = normalize((normMatrix * vec4(aNorm, 1.)).xyz);\n"+
+        result = result + "   vNormal = normalize((normMatrix * vec4(aNorm, 1.)).xyz);\n"+
                           "   vec4 pos = mvMatrix * vec4(uOrig, 1.);\n"+
                           "   vPosition = pos/pos.w + vec4(uSize*(vec4(aPos, 1.)*usermat).xyz,0.);\n"+
                           "   gl_Position = prMatrix * vPosition;\n";
 
+      if (is_twosided)
+        result = result + "   vec4 pos1 = prMatrix*(mvMatrix*vec4(aPos1, 1.));\n"+
+                          "   pos1 = pos1/pos1.w - gl_Position/gl_Position.w;\n"+
+                          "   vec4 pos2 = prMatrix*(mvMatrix*vec4(aPos2, 1.));\n"+
+                          "   pos2 = pos2/pos2.w - gl_Position/gl_Position.w;\n"+
+                          "   normz = pos1.x*pos2.y - pos1.y*pos2.x;\n";
+                          
+      if (fat_lines) 
+        /* This code was inspired by Matt Deslauriers' code in https://mattdesl.svbtle.com/drawing-lines-is-hard */
+        result = result + "   vec2 aspectVec = vec2(uAspect, 1.0);\n"+
+                          "   mat4 projViewModel = prMatrix * mvMatrix;\n"+
+                          "   vec4 currentProjected = projViewModel * vec4(aPos, 1.0);\n"+
+                          "   currentProjected = currentProjected/currentProjected.w;\n"+
+                          "   vec4 nextProjected = projViewModel * vec4(aNext, 1.0);\n"+
+                          "   vec2 currentScreen = currentProjected.xy * aspectVec;\n"+
+                          "   vec2 nextScreen = (nextProjected.xy / nextProjected.w) * aspectVec;\n"+
+                          "   float len = uLwd;\n"+
+                          "   vec2 dir = vec2(1.0, 0.0);\n"+
+                          "   vPoint = aPoint;\n"+
+                          "   vLength = length(nextScreen - currentScreen)/2.0;\n"+
+                          "   vLength = vLength/(vLength + len);\n"+
+                          "   if (vLength > 0.0) {\n"+
+                          "     dir = normalize(nextScreen - currentScreen);\n"+
+                          "   }\n"+
+                          "   vec2 normal = vec2(-dir.y, dir.x);\n"+
+                          "   dir.x /= uAspect;\n"+
+                          "   normal.x /= uAspect;\n"+
+                          "   vec4 offset = vec4(len*(normal*aPoint.x*aPoint.y - dir), 0.0, 0.0);\n"+
+                          "   gl_Position = currentProjected + offset;\n";
+
+      if (is_brush)
+        result = result + "   gl_Position = vec4(aPos, 1.);\n";
+        
       result = result + "  }\n";
+
+      // console.log(result);
       return result;
     };
 
-    this.getFragmentShader = function(id) {
+    /**
+     * Generate the fragment shader for an object
+     * @returns {string}
+     * @param { number } id - Id of object
+     */
+    rglwidgetClass.prototype.getFragmentShader = function(id) {
       var obj = this.getObj(id),
+          userShader = obj.userFragmentShader,
           flags = obj.flags,
           type = obj.type,
           is_lit = flags & this.f_is_lit,
           has_texture = flags & this.f_has_texture,
           fixed_quads = flags & this.f_fixed_quads,
           sprites_3d = flags & this.f_sprites_3d,
+          is_twosided = (flags & this.f_is_twosided) > 0,
+          fat_lines = flags & this.f_fat_lines,
+          is_transparent = flags & this.f_is_transparent,
           nclipplanes = this.countClipplanes(), i,
           texture_format, nlights,
           result;
 
       if (type === "clipplanes" || sprites_3d) return;
 
+      if (typeof userShader !== "undefined") return userShader;
+
       if (has_texture)
         texture_format = this.getMaterial(id, "textype");
 
       result = "/* ****** "+type+" object "+id+" fragment shader ****** */\n"+
                "#ifdef GL_ES\n"+
+               "#ifdef GL_FRAGMENT_PRECISION_HIGH\n"+
                "  precision highp float;\n"+
+               "#else\n"+
+               "  precision mediump float;\n"+
+               "#endif\n"+
                "#endif\n"+
                "  varying vec4 vCol; // carries alpha\n"+
                "  varying vec4 vPosition;\n";
@@ -398,11 +694,11 @@ rglwidgetClass = function() {
       }
 
       if (is_lit) {
-        result = result + "    uniform vec3 emission;\n"+
+        result = result + "   uniform vec3 emission;\n"+
                           "   uniform float shininess;\n";
 
         for (i=0; i < nlights; i++) {
-          result = result + "    uniform vec3 ambient" + i + ";\n"+
+          result = result + "   uniform vec3 ambient" + i + ";\n"+
                             "   uniform vec3 specular" + i +"; // light*material\n"+
                             "   uniform vec3 diffuse" + i + ";\n"+
                             "   uniform vec3 lightDir" + i + ";\n"+
@@ -411,10 +707,40 @@ rglwidgetClass = function() {
         }
       }
 
+      if (is_twosided)
+        result = result + "   uniform bool front;\n"+
+                          "   varying float normz;\n";
+                          
+      if (fat_lines)
+        result = result + "   varying vec2 vPoint;\n"+
+                          "   varying float vLength;\n";
+
       result = result + "  void main(void) {\n";
+      
+      if (fat_lines) {
+        result = result + "    vec2 point = vPoint;\n"+
+                          "    bool neg = point.y < 0.0;\n"+
+                          "    point.y = neg ? "+
+                          "      (point.y + vLength)/(1.0 - vLength) :\n"+
+                          "     -(point.y - vLength)/(1.0 - vLength);\n";
+        if (is_transparent && type == "linestrip")
+          result = result+"    if (neg && length(point) <= 1.0) discard;\n";
+        result = result + "    point.y = min(point.y, 0.0);\n"+
+                          "    if (length(point) > 1.0) discard;\n";
+      }
 
       for (i=0; i < nclipplanes;i++)
         result = result + "    if (dot(vPosition, vClipplane"+i+") < 0.0) discard;\n";
+
+      if (fixed_quads) {
+        result = result +   "    vec3 n = vec3(0., 0., 1.);\n";
+      } else if (is_lit) {
+      	result = result +   "    vec3 n = normalize(vNormal);\n";
+      }
+
+      if (is_twosided) {
+      	result = result +   "    if ((normz <= 0.) != front) discard;\n";
+      }
 
       if (is_lit) {
         result = result + "    vec3 eye = normalize(-vPosition.xyz);\n"+
@@ -424,12 +750,8 @@ rglwidgetClass = function() {
                           "   vec4 lighteffect = vec4(emission, 0.);\n"+
                           "   vec3 col;\n"+
                           "   float nDotL;\n";
-        if (fixed_quads) {
-          result = result +   "    vec3 n = vec3(0., 0., 1.);\n";
-        }
-        else {
-          result = result +   "    vec3 n = normalize(vNormal);\n"+
-                              "   n = -faceforward(n, n, eye);\n";
+        if (!fixed_quads) {
+          result = result +   "   n = -faceforward(n, n, eye);\n";
         }
         for (i=0; i < nlights; i++) {
           result = result + "   colDiff = vec4(vCol.rgb * diffuse" + i + ", vCol.a);\n"+
@@ -454,12 +776,13 @@ rglwidgetClass = function() {
                             "    vec4 lighteffect = colDiff;\n";
       }
 
-      if ((has_texture && texture_format === "rgba") || type === "text")
+      if (type === "text")
         result = result +   "    vec4 textureColor = lighteffect*texture2D(uSampler, vTexcoord);\n";
 
       if (has_texture) {
         result = result + {
             rgb:            "   vec4 textureColor = lighteffect*vec4(texture2D(uSampler, vTexcoord).rgb, 1.);\n",
+            rgba:           "   vec4 textureColor = lighteffect*texture2D(uSampler, vTexcoord);\n",
             alpha:          "   vec4 textureColor = texture2D(uSampler, vTexcoord);\n"+
                             "   float luminance = dot(vec3(1.,1.,1.), textureColor.rgb)/3.;\n"+
                             "   textureColor =  vec4(lighteffect.rgb, lighteffect.a*luminance);\n",
@@ -477,11 +800,21 @@ rglwidgetClass = function() {
       } else
         result = result +   "   gl_FragColor = lighteffect;\n";
 
+      //if (fat_lines)
+      //  result = result +   "   gl_FragColor = vec4(0.0, abs(point.x), abs(point.y), 1.0);"
       result = result + "  }\n";
+
+      // console.log(result);
       return result;
     };
 
-    this.getShader = function(shaderType, code) {
+    /**
+     * Call gl functions to create and compile shader
+     * @returns {Object}
+     * @param { number } shaderType - gl code for shader type
+     * @param { string } code - code for the shader
+     */
+    rglwidgetClass.prototype.getShader = function(shaderType, code) {
         var gl = this.gl, shader;
         shader = gl.createShader(shaderType);
         gl.shaderSource(shader, code);
@@ -491,7 +824,12 @@ rglwidgetClass = function() {
         return shader;
     };
 
-    this.handleLoadedTexture = function(texture, textureCanvas) { 
+    /**
+     * Handle a texture after its image has been loaded
+     * @param { Object } texture - the gl texture object
+     * @param { Object } textureCanvas - the canvas holding the image
+     */
+    rglwidgetClass.prototype.handleLoadedTexture = function(texture, textureCanvas) {
       var gl = this.gl || this.initGL();
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 
@@ -504,7 +842,21 @@ rglwidgetClass = function() {
       gl.bindTexture(gl.TEXTURE_2D, null);
     };
 
-    this.loadImageToTexture = function(uri, texture) {
+    /**
+     * Get maximum dimension of texture in current browser.
+     * @returns {number}
+     */
+    rglwidgetClass.prototype.getMaxTexSize = function() {
+      var gl = this.gl || this.initGL();	
+      return Math.min(4096, gl.getParameter(gl.MAX_TEXTURE_SIZE));
+    };
+    
+    /**
+     * Load an image to a texture
+     * @param { string } uri - The image location
+     * @param { Object } texture - the gl texture object
+     */
+    rglwidgetClass.prototype.loadImageToTexture = function(uri, texture) {
       var canvas = this.textureCanvas,
           ctx = canvas.getContext("2d"),
           image = new Image(),
@@ -516,8 +868,7 @@ rglwidgetClass = function() {
              canvasX = self.getPowerOfTwo(w),
              canvasY = self.getPowerOfTwo(h),
              gl = self.gl || self.initGL(),
-             maxTexSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
-         if (maxTexSize > 4096) maxTexSize = 4096;
+             maxTexSize = self.getMaxTexSize();
          while (canvasX > 1 && canvasY > 1 && (canvasX > maxTexSize || canvasY > maxTexSize)) {
            canvasX /= 2;
            canvasY /= 2;
@@ -532,7 +883,15 @@ rglwidgetClass = function() {
        image.src = uri;
      };
 
-    this.drawTextToCanvas = function(text, cex, family, font) {
+    /**
+     * Draw text to the texture canvas
+     * @returns { Object } object with text measurements
+     * @param { string } text - the text
+     * @param { number } cex - expansion
+     * @param { string } family - font family
+     * @param { number } font - font number
+     */
+    rglwidgetClass.prototype.drawTextToCanvas = function(text, cex, family, font) {
        var canvasX, canvasY,
            textY,
            scaling = 20,
@@ -541,8 +900,10 @@ rglwidgetClass = function() {
            backgroundColour = "rgba(0,0,0,0)",
            canvas = this.textureCanvas,
            ctx = canvas.getContext("2d"),
-           i, textHeights = [], widths = [], offset = 0, offsets = [],
-           fontStrings = [],
+           i, textHeight = 0, textHeights = [], width, widths = [], 
+           offsetx, offsety = 0, line, lines = [], offsetsx = [],
+           offsetsy = [], lineoffsetsy = [], fontStrings = [],
+           maxTexSize = this.getMaxTexSize(),
            getFontString = function(i) {
              textHeights[i] = scaling*cex[i];
              var fontString = textHeights[i] + "px",
@@ -564,14 +925,32 @@ rglwidgetClass = function() {
        font = this.repeatToLen(font, text.length);
 
        canvasX = 1;
+       line = -1;
+       offsetx = maxTexSize;
        for (i = 0; i < text.length; i++)  {
          ctx.font = fontStrings[i] = getFontString(i);
-         widths[i] = ctx.measureText(text[i]).width;
-         offset = offsets[i] = offset + 2*textHeights[i];
-         canvasX = (widths[i] > canvasX) ? widths[i] : canvasX;
+         width = widths[i] = ctx.measureText(text[i]).width;
+         if (offsetx + width > maxTexSize) {
+           line += 1;
+           offsety = lineoffsetsy[line] = offsety + 2*textHeight;
+           if (offsety > maxTexSize)
+             console.error("Too many strings for texture.");
+           textHeight = 0;
+           offsetx = 0;
+         }
+         textHeight = Math.max(textHeight, textHeights[i]);
+         offsetsx[i] = offsetx;
+         offsetx += width;
+         canvasX = Math.max(canvasX, offsetx);
+         lines[i] = line;
        }
+       offsety = lineoffsetsy[line] = offsety + 2*textHeight;
+       for (i = 0; i < text.length; i++) {
+       	 offsetsy[i] = lineoffsetsy[lines[i]];
+       }
+       
        canvasX = this.getPowerOfTwo(canvasX);
-       canvasY = this.getPowerOfTwo(offset);
+       canvasY = this.getPowerOfTwo(offsety);
 
        canvas.width = canvasX;
        canvas.height = canvasY;
@@ -581,18 +960,21 @@ rglwidgetClass = function() {
 
        ctx.textBaseline = "alphabetic";
        for(i = 0; i < text.length; i++) {
-         textY = offsets[i];
          ctx.font = fontStrings[i];
          ctx.fillStyle = textColour;
          ctx.textAlign = "left";
-         ctx.fillText(text[i], 0,  textY);
+         ctx.fillText(text[i], offsetsx[i],  offsetsy[i]);
        }
        return {canvasX:canvasX, canvasY:canvasY,
                widths:widths, textHeights:textHeights,
-               offsets:offsets};
+               offsetsx:offsetsx, offsetsy:offsetsy};
      };
 
-    this.setViewport = function(id) {
+    /**
+     * Set the gl viewport and scissor test
+     * @param { number } id - id of subscene
+     */
+    rglwidgetClass.prototype.setViewport = function(id) {
        var gl = this.gl || this.initGL(),
          vp = this.getObj(id).par3d.viewport,
          x = vp.x*this.canvas.width,
@@ -605,7 +987,11 @@ rglwidgetClass = function() {
        gl.enable(gl.SCISSOR_TEST);
      };
 
-    this.setprMatrix = function(id) {
+    /**
+     * Set the projection matrix for a subscene
+     * @param { number } id - id of subscene
+     */
+    rglwidgetClass.prototype.setprMatrix = function(id) {
        var subscene = this.getObj(id),
           embedding = subscene.embeddings.projection;
        if (embedding === "replace")
@@ -628,9 +1014,15 @@ rglwidgetClass = function() {
            t = ortho ? 1 : Math.tan(FOV*Math.PI/360),
            near = distance - radius,
            far = distance + radius,
-           hlen = t*near,
+           hlen,
            aspect = this.vp.width/this.vp.height,
-           z = subscene.par3d.zoom;
+           z = subscene.par3d.zoom,
+           userProjection = subscene.par3d.userProjection;
+       if (far < 0.0)
+         far = 1.0;
+       if (near < far/100.0)
+         near = far/100.0;
+       hlen = t*near;
        if (ortho) {
          if (aspect > 1)
            this.prMatrix.ortho(-hlen*aspect*z, hlen*aspect*z,
@@ -648,9 +1040,14 @@ rglwidgetClass = function() {
                           -hlen*z/aspect, hlen*z/aspect,
                           near, far);
        }
+       this.prMatrix.multRight(userProjection);
      };
 
-    this.setmvMatrix = function(id) {
+    /**
+     * Set the model-view matrix for a subscene
+     * @param { number } id - id of the subscene
+     */
+    rglwidgetClass.prototype.setmvMatrix = function(id) {
        var observer = this.getObj(id).par3d.observer;
        this.mvMatrix.makeIdentity();
        this.setmodelMatrix(id);
@@ -658,7 +1055,11 @@ rglwidgetClass = function() {
 
      };
 
-    this.setmodelMatrix = function(id) {
+    /**
+     * Set the model matrix for a subscene
+     * @param { number } id - id of the subscene
+     */
+    rglwidgetClass.prototype.setmodelMatrix = function(id) {
       var subscene = this.getObj(id),
           embedding = subscene.embeddings.model;
       if (embedding !== "inherit") {
@@ -675,7 +1076,11 @@ rglwidgetClass = function() {
          this.setmodelMatrix(subscene.parent);
      };
 
-    this.setnormMatrix = function(subsceneid) {
+    /**
+     * Set the normals matrix for a subscene
+     * @param { number } subsceneid - id of the subscene
+     */
+    rglwidgetClass.prototype.setnormMatrix = function(subsceneid) {
        var self = this,
        recurse = function(id) {
          var sub = self.getObj(id),
@@ -692,20 +1097,36 @@ rglwidgetClass = function() {
        recurse(subsceneid);
      };
 
-    this.setprmvMatrix = function() {
+    /**
+     * Set the combined projection-model-view matrix
+     */
+    rglwidgetClass.prototype.setprmvMatrix = function() {
        this.prmvMatrix = new CanvasMatrix4( this.mvMatrix );
        this.prmvMatrix.multRight( this.prMatrix );
      };
 
-    this.countClipplanes = function() {
+    /**
+     * Count clipping planes in a scene
+     * @returns {number}
+     */
+    rglwidgetClass.prototype.countClipplanes = function() {
       return this.countObjs("clipplanes");
     };
 
-    this.countLights = function() {
+    /**
+     * Count lights in a scene
+     * @returns { number }
+     */
+    rglwidgetClass.prototype.countLights = function() {
       return this.countObjs("light");
     };
 
-    this.countObjs = function(type) {
+    /**
+     * Count objects of specific type in a scene
+     * @returns { number }
+     * @param { string } type - Type of object to count
+     */
+    rglwidgetClass.prototype.countObjs = function(type) {
       var self = this,
           bound = 0;
 
@@ -717,7 +1138,11 @@ rglwidgetClass = function() {
       return bound;
     };
 
-    this.initSubscene = function(id) {
+    /**
+     * Initialize a subscene
+     * @param { number } id - id of subscene.
+     */
+    rglwidgetClass.prototype.initSubscene = function(id) {
       var sub = this.getObj(id),
           i, obj;
 
@@ -725,6 +1150,8 @@ rglwidgetClass = function() {
         return;
 
       sub.par3d.userMatrix = this.toCanvasMatrix4(sub.par3d.userMatrix);
+      sub.par3d.userProjection = this.toCanvasMatrix4(sub.par3d.userProjection);
+      sub.par3d.userProjection.transpose();
       sub.par3d.listeners = [].concat(sub.par3d.listeners);
       sub.backgroundId = undefined;
       sub.subscenes = [];
@@ -744,7 +1171,12 @@ rglwidgetClass = function() {
       }
     };
 
-    this.copyObj = function(id, reuse) {
+    /**
+     * Copy object
+     * @param { number } id - id of object to copy
+     * @param { string } reuse - Document id of scene to reuse
+     */
+    rglwidgetClass.prototype.copyObj = function(id, reuse) {
       var obj = this.getObj(id),
           prev = document.getElementById(reuse);
       if (prev !== null) {
@@ -761,7 +1193,8 @@ rglwidgetClass = function() {
                     "userMatrix", "ids",
                     "dim",
                     "par3d", "userMatrix",
-                    "viewpoint", "finite"],
+                    "viewpoint", "finite",
+                    "pos"],
           i;
         for (i = 0; i < fields.length; i++) {
           if (typeof prevobj[fields[i]] !== "undefined")
@@ -771,7 +1204,12 @@ rglwidgetClass = function() {
         console.warn("copyObj failed");
     };
 
-    this.planeUpdateTriangles = function(id, bbox) {
+    /**
+     * Update the triangles used to display a plane
+     * @param { number } id - id of the plane
+     * @param { Object } bbox - bounding box in which to display the plane
+     */
+    rglwidgetClass.prototype.planeUpdateTriangles = function(id, bbox) {
       var perms = [[0,0,1], [1,2,2], [2,1,0]],
           x, xrow, elem, A, d, nhits, i, j, k, u, v, w, intersect, which, v0, v2, vx, reverse,
           face1 = [], face2 = [], normals = [],
@@ -845,21 +1283,41 @@ rglwidgetClass = function() {
       }
       obj.pnormals = normals;
     };
+    
+    rglwidgetClass.prototype.getAdj = function (pos, offset, text) {
+      switch(pos) {
+        case 1: return [0.5, 1 + offset];
+        case 2: return [1 + offset/text.length, 0.5];
+        case 3: return [0.5, -offset];
+        case 4: return [-offset/text.length, 0.5];
+      }
+    }
 
-    this.initObj = function(id) {
+    /**
+     * Initialize object for display
+     * @param { number } id - id of object to initialize
+     */
+    rglwidgetClass.prototype.initObj = function(id) {
       var obj = this.getObj(id),
           flags = obj.flags,
           type = obj.type,
-          is_indexed = flags & this.f_is_indexed,
           is_lit = flags & this.f_is_lit,
+          is_lines = flags & this.f_is_lines,
+          fat_lines = flags & this.f_fat_lines,
           has_texture = flags & this.f_has_texture,
           fixed_quads = flags & this.f_fixed_quads,
+          is_transparent = obj.is_transparent,
           depth_sort = flags & this.f_depth_sort,
           sprites_3d = flags & this.f_sprites_3d,
           sprite_3d = flags & this.f_sprite_3d,
+          fixed_size = flags & this.f_fixed_size,
+          is_twosided = (flags & this.f_is_twosided) > 0,
+          is_brush = flags & this.f_is_brush,
           gl = this.gl || this.initGL(),
-          texinfo, drawtype, nclipplanes, f, frowsize, nrows,
-          i,j,v, mat, uri, matobj;
+          polygon_offset,
+          texinfo, drawtype, nclipplanes, f, nrows, oldrows,
+          i,j,v,v1,v2, mat, uri, matobj, pass, passes, pmode,
+          dim, nx, nz, attr;
 
     if (typeof id !== "number") {
       this.alertOnce("initObj id is "+typeof id);
@@ -883,10 +1341,22 @@ rglwidgetClass = function() {
       return;
     }
 
-    if (type == "background" && typeof obj.ids !== "undefined") {
+    if (type === "background" && typeof obj.ids !== "undefined") {
       obj.quad = this.flatten([].concat(obj.ids));
       return;
     }
+
+    polygon_offset = this.getMaterial(id, "polygon_offset");
+    if (polygon_offset[0] != 0 || polygon_offset[1] != 0)
+      obj.polygon_offset = polygon_offset;
+
+    if (is_transparent) {
+      depth_sort = ["triangles", "quads", "surface",
+                    "spheres", "sprites", "text"].indexOf(type) >= 0;
+    }
+    
+    if (is_brush)
+      this.initSelection(id);
 
     if (typeof obj.vertices === "undefined")
       obj.vertices = [];
@@ -894,6 +1364,44 @@ rglwidgetClass = function() {
     v = obj.vertices;
     obj.vertexCount = v.length;
     if (!obj.vertexCount) return;
+
+    if (is_twosided) {
+      if (typeof obj.userAttributes === "undefined")
+        obj.userAttributes = {};
+      v1 = Array(v.length);
+      v2 = Array(v.length);
+      if (obj.type == "triangles" || obj.type == "quads") {
+      	if (obj.type == "triangles")
+      	  nrow = 3;
+      	else
+      	  nrow = 4;
+        for (i=0; i<Math.floor(v.length/nrow); i++)
+          for (j=0; j<nrow; j++) {
+            v1[nrow*i + j] = v[nrow*i + ((j+1) % nrow)];
+            v2[nrow*i + j] = v[nrow*i + ((j+2) % nrow)];
+          }
+      } else if (obj.type == "surface") {
+        dim = obj.dim[0];
+        nx = dim[0];
+        nz = dim[1];
+        for (j=0; j<nx; j++) {
+          for (i=0; i<nz; i++) {
+            if (i+1 < nz && j+1 < nx) {
+              v2[j + nx*i] = v[j + nx*(i+1)];
+              v1[j + nx*i] = v[j+1 + nx*(i+1)];
+            } else if (i+1 < nz) {
+              v2[j + nx*i] = v[j-1 + nx*i];
+              v1[j + nx*i] = v[j + nx*(i+1)];
+            } else {
+              v2[j + nx*i] = v[j + nx*(i-1)];
+              v1[j + nx*i] = v[j-1 + nx*(i-1)];
+            }
+          }
+        }
+      }
+      obj.userAttributes.aPos1 = v1;
+      obj.userAttributes.aPos2 = v2;
+    }
 
     if (!sprites_3d) {
       if (gl.isContextLost()) return;
@@ -936,7 +1444,8 @@ rglwidgetClass = function() {
     }
 
     if (has_texture || type == "text") {
-      obj.texture = gl.createTexture();
+      if (!obj.texture)
+        obj.texture = gl.createTexture();
       obj.texLoc = gl.getAttribLocation(obj.prog, "aTexcoord");
       obj.sampler = gl.getUniformLocation(obj.prog, "uSampler");
     }
@@ -962,16 +1471,47 @@ rglwidgetClass = function() {
       this.handleLoadedTexture(obj.texture, this.textureCanvas);
     }
 
-    var stride = 3, nc, cofs, nofs, radofs, oofs, tofs, vnew, v1;
+    var stride = 3, nc, cofs, nofs, radofs, oofs, tofs, vnew, fnew,
+        nextofs = -1, pointofs = -1, alias, colors, key, selection, filter, adj, pos, offset;
 
-    nc = obj.colorCount = obj.colors.length;
+    obj.alias = undefined;
+    
+    colors = obj.colors;
+
+    j = this.scene.crosstalk.id.indexOf(id);
+    if (j >= 0) {
+      key = this.scene.crosstalk.key[j];
+      options = this.scene.crosstalk.options[j];
+      colors = colors.slice(0); 
+      for (i = 0; i < v.length; i++)
+        colors[i] = obj.colors[i % obj.colors.length].slice(0);
+      if ( (selection = this.scene.crosstalk.selection) &&
+           (selection.length || !options.selectedIgnoreNone) )
+        for (i = 0; i < v.length; i++) {
+          if (!selection.includes(key[i])) {
+            if (options.deselectedColor)
+              colors[i] = options.deselectedColor.slice(0);
+            colors[i][3] = colors[i][3]*options.deselectedFade;   /* default: mostly transparent if not selected */
+          } else if (options.selectedColor)
+            colors[i] = options.selectedColor.slice(0);
+        }
+      if ( (filter = this.scene.crosstalk.filter) )
+        for (i = 0; i < v.length; i++) 
+          if (!filter.includes(key[i])) {
+            if (options.filteredColor)
+              colors[i] = options.filteredColor.slice(0);
+            colors[i][3] = colors[i][3]*options.filteredFade;   /* default: completely hidden if filtered */
+          }
+    }  
+    
+    nc = obj.colorCount = colors.length;
     if (nc > 1) {
       cofs = stride;
       stride = stride + 4;
-      v = this.cbind(v, obj.colors);
+      v = this.cbind(v, colors);
     } else {
       cofs = -1;
-      obj.onecolor = this.flatten(obj.colors);
+      obj.onecolor = this.flatten(colors);
     }
 
     if (typeof obj.normals !== "undefined") {
@@ -984,6 +1524,7 @@ rglwidgetClass = function() {
     if (typeof obj.radii !== "undefined") {
       radofs = stride;
       stride = stride + 1;
+      // FIXME:  always concat the radii?
       if (obj.radii.length === v.length) {
         v = this.cbind(v, obj.radii);
       } else if (obj.radii.length === 1) {
@@ -991,6 +1532,12 @@ rglwidgetClass = function() {
       }
     } else
       radofs = -1;
+      
+    // Add default indices
+    f = Array(v.length);
+    for (i = 0; i < v.length; i++)
+      f[i] = i;
+    obj.f = [f,f];
 
     if (type == "sprites" && !sprites_3d) {
       tofs = stride;
@@ -998,62 +1545,107 @@ rglwidgetClass = function() {
       oofs = stride;
       stride += 2;
       vnew = new Array(4*v.length);
-      var size = obj.radii, s = size[0]/2;
+      fnew = new Array(4*v.length);
+      alias = new Array(v.length);
+      var rescale = fixed_size ? 72 : 1,
+          size = obj.radii, s = rescale*size[0]/2;
+      last = v.length;
+      f = obj.f[0];
       for (i=0; i < v.length; i++) {
         if (size.length > 1)
-          s = size[i]/2;
-        vnew[4*i]  = v[i].concat([0,0,-s,-s]);
-        vnew[4*i+1]= v[i].concat([1,0, s,-s]);
-        vnew[4*i+2]= v[i].concat([1,1, s, s]);
-        vnew[4*i+3]= v[i].concat([0,1,-s, s]);
+          s = rescale*size[i]/2;
+        vnew[i]  = v[i].concat([0,0,-s,-s]);
+        fnew[4*i] = f[i];
+        vnew[last]= v[i].concat([1,0, s,-s]);
+        fnew[4*i+1] = last++;
+        vnew[last]= v[i].concat([1,1, s, s]);
+        fnew[4*i+2] = last++;
+        vnew[last]= v[i].concat([0,1,-s, s]);
+        fnew[4*i+3] = last++;
+        alias[i] = [last-3, last-2, last-1];
       }
       v = vnew;
       obj.vertexCount = v.length;
+      obj.f = [fnew, fnew];
     } else if (type === "text") {
       tofs = stride;
       stride += 2;
       oofs = stride;
       stride += 2;
       vnew = new Array(4*v.length);
+      f = obj.f[0];
+      fnew = new Array(4*f.length);
+      alias = new Array(v.length);
+      last = v.length;
+      adj = this.flatten(obj.adj);
+      if (typeof obj.pos !== "undefined") {
+        pos = this.flatten(obj.pos);
+        offset = adj[0];
+      }
       for (i=0; i < v.length; i++) {
-        vnew[4*i]  = v[i].concat([0,-0.5]).concat(obj.adj[0]);
-        vnew[4*i+1]= v[i].concat([1,-0.5]).concat(obj.adj[0]);
-        vnew[4*i+2]= v[i].concat([1, 1.5]).concat(obj.adj[0]);
-        vnew[4*i+3]= v[i].concat([0, 1.5]).concat(obj.adj[0]);
+        if (typeof pos !== "undefined")
+          adj = this.getAdj(pos[i % pos.length], offset, obj.texts[i]);
+        vnew[i]  = v[i].concat([0,-0.5]).concat(adj);
+        fnew[4*i] = f[i];
+        vnew[last] = v[i].concat([1,-0.5]).concat(adj);
+        fnew[4*i+1] = last++;
+        vnew[last] = v[i].concat([1, 1.5]).concat(adj);
+        fnew[4*i+2] = last++;
+        vnew[last] = v[i].concat([0, 1.5]).concat(adj);
+        fnew[4*i+3] = last++;
+        alias[i] = [last-3, last-2, last-1];
         for (j=0; j < 4; j++) {
-          v1 = vnew[4*i+j];
+          v1 = vnew[fnew[4*i+j]];
           v1[tofs+2] = 2*(v1[tofs]-v1[tofs+2])*texinfo.widths[i];
           v1[tofs+3] = 2*(v1[tofs+1]-v1[tofs+3])*texinfo.textHeights[i];
-          v1[tofs] *= texinfo.widths[i]/texinfo.canvasX;
-          v1[tofs+1] = 1.0-(texinfo.offsets[i] -
+          v1[tofs] = (texinfo.offsetsx[i] + v1[tofs]*texinfo.widths[i])/texinfo.canvasX;
+          v1[tofs+1] = 1.0-(texinfo.offsetsy[i] -
               v1[tofs+1]*texinfo.textHeights[i])/texinfo.canvasY;
-          vnew[4*i+j] = v1;
+          vnew[fnew[4*i+j]] = v1;
         }
       }
       v = vnew;
       obj.vertexCount = v.length;
+      obj.f = [fnew, fnew];
     } else if (typeof obj.texcoords !== "undefined") {
       tofs = stride;
       stride += 2;
       oofs = -1;
       v = this.cbind(v, obj.texcoords);
     } else {
-       tofs = -1;
+      tofs = -1;
       oofs = -1;
     }
-
-    if (stride !== v[0].length) {
-      this.alertOnce("problem in stride calculation");
+    
+    obj.alias = alias;
+                          
+    if (typeof obj.userAttributes !== "undefined") {
+      obj.userAttribOffsets = {};
+      obj.userAttribLocations = {};
+      obj.userAttribSizes = {};
+      for (attr in obj.userAttributes) {
+      	obj.userAttribLocations[attr] = gl.getAttribLocation(obj.prog, attr);
+      	if (obj.userAttribLocations[attr] >= 0) { // Attribute may not have been used
+      	  obj.userAttribOffsets[attr] = stride;
+      	  v = this.cbind(v, obj.userAttributes[attr]);
+      	  stride = v[0].length;
+      	  obj.userAttribSizes[attr] = stride - obj.userAttribOffsets[attr];
+      	}
+      }
     }
 
-    obj.vOffsets = {vofs:0, cofs:cofs, nofs:nofs, radofs:radofs, oofs:oofs, tofs:tofs, stride:stride};
-
-    obj.values = new Float32Array(this.flatten(v));
+    if (typeof obj.userUniforms !== "undefined") {
+      obj.userUniformLocations = {};
+      for (attr in obj.userUniforms)
+        obj.userUniformLocations[attr] = gl.getUniformLocation(obj.prog, attr);
+    }
 
     if (sprites_3d) {
       obj.userMatrix = new CanvasMatrix4(obj.userMatrix);
       obj.objects = this.flatten([].concat(obj.ids));
       is_lit = false;
+      for (i=0; i < obj.objects.length; i++)
+        this.initObj(obj.objects[i]);
     }
 
     if (is_lit && !fixed_quads) {
@@ -1090,70 +1682,246 @@ rglwidgetClass = function() {
         obj.finiteLoc[i] = gl.getUniformLocation(obj.prog, "finite" + i);
       }
     }
-
-    if (is_indexed) {
-      if ((type === "quads" || type === "text" ||
-           type === "sprites") && !sprites_3d) {
-        nrows = Math.floor(obj.vertexCount/4);
-        f = Array(6*nrows);
-        for (i=0; i < nrows; i++) {
-          f[6*i] = 4*i;
-          f[6*i+1] = 4*i + 1;
-          f[6*i+2] = 4*i + 2;
-          f[6*i+3] = 4*i;
-          f[6*i+4] = 4*i + 2;
-          f[6*i+5] = 4*i + 3;
-        }
-        frowsize = 6;
-      } else if (type === "triangles") {
-        nrows = Math.floor(obj.vertexCount/3);
-        f = Array(3*nrows);
-        for (i=0; i < f.length; i++) {
-          f[i] = i;
-        }
-        frowsize = 3;
-      } else if (type === "spheres") {
-        nrows = obj.vertexCount;
-        f = Array(nrows);
-        for (i=0; i < f.length; i++) {
-          f[i] = i;
-        }
-        frowsize = 1;
-      } else if (type === "surface") {
-        var dim = obj.dim[0],
-            nx = dim[0],
-            nz = dim[1];
-        f = [];
-        for (j=0; j<nx-1; j++) {
-          for (i=0; i<nz-1; i++) {
-            f.push(j + nx*i,
-                   j + nx*(i+1),
-                   j + 1 + nx*(i+1),
-                   j + nx*i,
-                   j + 1 + nx*(i+1),
-                   j + 1 + nx*i);
+    
+    obj.passes = is_twosided + 1;
+    obj.pmode = new Array(obj.passes);
+    for (pass = 0; pass < obj.passes; pass++) {
+      if (type === "triangles" || type === "quads" || type === "surface")
+      	pmode = this.getMaterial(id, (pass === 0) ? "front" : "back");
+      else pmode = "filled";
+      obj.pmode[pass] = pmode;
+    }
+    
+ 
+      obj.f.length = obj.passes;
+      for (pass = 0; pass < obj.passes; pass++) {
+      	f = fnew = obj.f[pass];
+        pmode = obj.pmode[pass];
+      	if (pmode === "culled")
+      	  f = [];
+        else if (pmode === "points") {
+          // stay with default
+        } else if ((type === "quads" || type === "text" ||
+             type === "sprites") && !sprites_3d) {
+          nrows = Math.floor(obj.vertexCount/4);
+          if (pmode === "filled") {
+            fnew = Array(6*nrows);
+            for (i=0; i < nrows; i++) {
+              fnew[6*i] = f[4*i];
+              fnew[6*i+1] = f[4*i + 1];
+              fnew[6*i+2] = f[4*i + 2];
+              fnew[6*i+3] = f[4*i];
+              fnew[6*i+4] = f[4*i + 2];
+              fnew[6*i+5] = f[4*i + 3];
+            }
+          } else {
+            fnew = Array(8*nrows);
+            for (i=0; i < nrows; i++) {
+              fnew[8*i] = f[4*i];
+              fnew[8*i+1] = f[4*i + 1];
+              fnew[8*i+2] = f[4*i + 1];
+              fnew[8*i+3] = f[4*i + 2];
+              fnew[8*i+4] = f[4*i + 2];
+              fnew[8*i+5] = f[4*i + 3];
+              fnew[8*i+6] = f[4*i + 3];
+              fnew[8*i+7] = f[4*i];
+            }
+          }
+        } else if (type === "triangles") {
+          nrows = Math.floor(obj.vertexCount/3);
+          if (pmode === "filled") {
+            fnew = Array(3*nrows);
+            for (i=0; i < fnew.length; i++) {
+              fnew[i] = f[i];
+            }
+          } else if (pmode === "lines") {
+            fnew = Array(6*nrows);
+      	    for (i=0; i < nrows; i++) {
+      	      fnew[6*i] = f[3*i];
+      	      fnew[6*i + 1] = f[3*i + 1];
+      	      fnew[6*i + 2] = f[3*i + 1];
+      	      fnew[6*i + 3] = f[3*i + 2];
+      	      fnew[6*i + 4] = f[3*i + 2];
+      	      fnew[6*i + 5] = f[3*i];
+      	    }
+          }
+        } else if (type === "spheres") {
+          // default
+        } else if (type === "surface") {
+          dim = obj.dim[0];
+          nx = dim[0];
+          nz = dim[1];
+          if (pmode === "filled") {
+            fnew = [];
+            for (j=0; j<nx-1; j++) {
+              for (i=0; i<nz-1; i++) {
+                fnew.push(f[j + nx*i],
+                       f[j + nx*(i+1)],
+                       f[j + 1 + nx*(i+1)],
+                       f[j + nx*i],
+                       f[j + 1 + nx*(i+1)],
+                       f[j + 1 + nx*i]);
+              }
+            }
+          } else if (pmode === "lines") {
+            fnew = [];
+            for (j=0; j<nx; j++) {
+              for (i=0; i<nz; i++) {
+                if (i+1 < nz)
+                  fnew.push(f[j + nx*i],
+                         f[j + nx*(i+1)]);
+                if (j+1 < nx)
+                  fnew.push(f[j + nx*i],
+                         f[j+1 + nx*i]);
+              }
+            }
           }
         }
-        frowsize = 6;
+        obj.f[pass] = fnew;
+        if (depth_sort) {
+          drawtype = "DYNAMIC_DRAW";
+        } else {
+          drawtype = "STATIC_DRAW";
+        }
       }
-      obj.f = new Uint16Array(f);
-      if (depth_sort) {
+    
+    
+    if (fat_lines) {
+      alias = undefined;
+      obj.nextLoc = gl.getAttribLocation(obj.prog, "aNext");
+      obj.pointLoc = gl.getAttribLocation(obj.prog, "aPoint");
+      obj.aspectLoc = gl.getUniformLocation(obj.prog, "uAspect");
+      obj.lwdLoc = gl.getUniformLocation(obj.prog, "uLwd");
+      // Expand vertices to turn each segment into a pair of triangles
+        
+      	for (pass = 0; pass < obj.passes; pass++) {
+      	  f = obj.f[pass];	
+          oldrows = f.length;
+      	  if (obj.pmode[pass] === "lines") 
+      	    break;
+      	}
+      
+      if (type === "linestrip") 
+        nrows = 4*(oldrows - 1); 
+      else
+        nrows = 2*oldrows;
+      vnew = new Array(nrows);
+      fnew = new Array(1.5*nrows);
+      var fnext = new Array(nrows),
+          fpt = new Array(nrows), 
+          pt, start, gap = type === "linestrip" ? 3 : 1;
+      
+      // We're going to turn each pair of vertices into 4 new ones, with the "next" and "pt" attributes
+      // added.
+      // We do this by copying the originals in the first pass, adding the new attributes, then in a 
+      // second pass add new vertices at the end.
+
+      for (i = 0; i < v.length; i++) {
+        vnew[i] = v[i].concat([0,0,0,0,0]); 
+      }
+
+      nextofs = stride;
+      pointofs = stride + 3;
+      stride = stride + 5;
+            
+      // Now add the extras
+      last = v.length - 1;
+      ind = 0;
+      alias = new Array(f.length);
+      for (i = 0; i < f.length; i++)
+        alias[i] = [];
+      for (i = 0; i < f.length - 1; i++) {
+      	if (type !== "linestrip" && i % 2 == 1)
+      	  continue;
+      	k = ++last;
+      	vnew[k] = vnew[f[i]].slice();
+      	for (j=0; j<3; j++)
+      	  vnew[k][nextofs + j] = vnew[f[i+1]][j];
+      	vnew[k][pointofs] = -1;
+      	vnew[k][pointofs+1] = -1;
+      	fnew[ind] = k;
+      	last++;
+      	vnew[last] = vnew[k].slice();
+      	vnew[last][pointofs] = 1;
+      	fnew[ind+1] = last;
+      	alias[f[i]].push(last-1, last);
+      	last++;
+      	k = last;
+      	vnew[k] = vnew[f[i+1]].slice();
+      	for (j=0; j<3; j++)
+      	  vnew[k][nextofs + j] = vnew[f[i]][j];
+      	vnew[k][pointofs] = -1;
+      	vnew[k][pointofs+1] = 1;
+      	fnew[ind+2] = k;
+      	fnew[ind+3] = fnew[ind+1];
+      	last++;
+      	vnew[last] = vnew[k].slice();
+      	vnew[last][pointofs] = 1;
+      	fnew[ind+4] = last;
+      	fnew[ind+5] = fnew[ind+2];
+      	ind += 6;
+      	alias[f[i+1]].push(last-1, last);
+      }
+      vnew.length = last+1;
+      v = vnew;
+      obj.vertexCount = v.length;
+      if (typeof alias !== "undefined" && typeof obj.alias !== "undefined") {  // Already have aliases from previous section?
+        var oldalias = obj.alias, newalias = Array(obj.alias.length);
+        for (i = 0; i < newalias.length; i++) {
+          newalias[i] = oldalias[i].slice();
+          for (j = 0; j < oldalias[i].length; j++)
+            Array.prototype.push.apply(newalias[i], alias[oldalias[j]]); // pushes each element 
+        }
+        obj.alias = newalias;
+      } else
+        obj.alias = alias;
+      
+      for (pass = 0; pass < obj.passes; pass++)
+      	if (type === "lines" || type === "linestrip" || obj.pmode[pass] == "lines") {
+          obj.f[pass] = fnew;
+        }
+      
+      if (depth_sort) 
         drawtype = "DYNAMIC_DRAW";
-      } else {
+      else
         drawtype = "STATIC_DRAW";
-      }
     }
+    
+      for (pass = 0; pass < obj.passes; pass++) {
+        if (obj.vertexCount > 65535) {
+          if (this.index_uint) {
+            obj.f[pass] = new Uint32Array(obj.f[pass]);
+            obj.index_uint = true;
+          } else
+            this.alertOnce("Object has "+obj.vertexCount+" vertices, not supported in this browser.");
+        } else {
+          obj.f[pass] = new Uint16Array(obj.f[pass]);
+          obj.index_uint = false;
+        }
+      }
+    
+    if (stride !== v[0].length) {
+      this.alertOnce("problem in stride calculation");
+    }
+
+    obj.vOffsets = {vofs:0, cofs:cofs, nofs:nofs, radofs:radofs, oofs:oofs, tofs:tofs,
+                    nextofs:nextofs, pointofs:pointofs, stride:stride};
+
+    obj.values = new Float32Array(this.flatten(v));
 
     if (type !== "spheres" && !sprites_3d) {
       obj.buf = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, obj.buf);
       gl.bufferData(gl.ARRAY_BUFFER, obj.values, gl.STATIC_DRAW); //
-    }
-
-    if (is_indexed && type !== "spheres" && !sprites_3d) {
-      obj.ibuf = gl.createBuffer();
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.ibuf);
-      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, obj.f, gl[drawtype]);
+      obj.ibuf = Array(obj.passes);
+      obj.ibuf[0] = gl.createBuffer();
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.ibuf[0]);
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, obj.f[0], gl[drawtype]);
+      if (is_twosided) {
+      	obj.ibuf[1] = gl.createBuffer();
+      	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.ibuf[1]);
+      	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, obj.f[1], gl[drawtype]);
+      }
     }
 
     if (!sprites_3d) {
@@ -1161,16 +1929,24 @@ rglwidgetClass = function() {
       obj.prMatLoc = gl.getUniformLocation(obj.prog, "prMatrix");
     }
 
-    if (type === "text") {
+    if (fixed_size) {
       obj.textScaleLoc = gl.getUniformLocation(obj.prog, "textScale");
     }
 
     if (is_lit && !sprites_3d) {
       obj.normMatLoc = gl.getUniformLocation(obj.prog, "normMatrix");
     }
+
+    if (is_twosided) {
+      obj.frontLoc = gl.getUniformLocation(obj.prog, "front");
+    }
   };
 
-    this.setDepthTest = function(id) {
+    /**
+     * Set gl depth test based on object's material
+     * @param { number } id - object to use
+     */
+    rglwidgetClass.prototype.setDepthTest = function(id) {
       var gl = this.gl || this.initGL(),
           tests = {never: gl.NEVER,
                    less:  gl.LESS,
@@ -1184,7 +1960,7 @@ rglwidgetClass = function() {
       gl.depthFunc(test);
     };
 
-    this.mode4type = {points : "POINTS",
+    rglwidgetClass.prototype.mode4type = {points : "POINTS",
                      linestrip : "LINE_STRIP",
                      abclines : "LINES",
                      lines : "LINES",
@@ -1195,22 +1971,75 @@ rglwidgetClass = function() {
                      surface : "TRIANGLES",
                      triangles : "TRIANGLES"};
 
-    this.drawObj = function(id, subsceneid) {
+    /**
+     * Sort objects from back to front
+     * @returns { number[] }
+     * @param { Object } obj - object to sort
+     */
+    rglwidgetClass.prototype.depthSort = function(obj) {
+      var n = obj.centers.length,
+          depths = new Float32Array(n),
+          result = new Array(n),
+          compare = function(i,j) { return depths[j] - depths[i]; },
+          z, w;
+      for(i=0; i<n; i++) {
+        z = this.prmvMatrix.m13*obj.centers[i][0] +
+            this.prmvMatrix.m23*obj.centers[i][1] +
+            this.prmvMatrix.m33*obj.centers[i][2] +
+            this.prmvMatrix.m43;
+        w = this.prmvMatrix.m14*obj.centers[i][0] +
+            this.prmvMatrix.m24*obj.centers[i][1] +
+            this.prmvMatrix.m34*obj.centers[i][2] +
+            this.prmvMatrix.m44;
+        depths[i] = z/w;
+        result[i] = i;
+      }
+      result.sort(compare);
+      return result;
+    };
+    
+    rglwidgetClass.prototype.disableArrays = function(obj, enabled) {
+      var gl = this.gl || this.initGL(),
+          objLocs = ["normLoc", "texLoc", "ofsLoc", "pointLoc", "nextLoc"],
+          thisLocs = ["posLoc", "colLoc"], i, attr;
+      for (i = 0; i < objLocs.length; i++) 
+        if (enabled[objLocs[i]]) gl.disableVertexAttribArray(obj[objLocs[i]]);
+      for (i = 0; i < thisLocs.length; i++)
+        if (enabled[thisLocs[i]]) gl.disableVertexAttribArray(this[objLocs[i]]);
+      if (typeof obj.userAttributes !== "undefined") {
+      	for (attr in obj.userAttribSizes) {  // Not all attributes may have been used
+      	  gl.disableVertexAttribArray( obj.userAttribLocations[attr] );
+      	}
+      }
+    }
+    
+    /**
+     * Draw an object in a subscene
+     * @param { number } id - object to draw
+     * @param { number } subsceneid - id of subscene
+     */
+    rglwidgetClass.prototype.drawObj = function(id, subsceneid) {
       var obj = this.getObj(id),
           subscene = this.getObj(subsceneid),
           flags = obj.flags,
           type = obj.type,
-          is_indexed = flags & this.f_is_indexed,
           is_lit = flags & this.f_is_lit,
           has_texture = flags & this.f_has_texture,
           fixed_quads = flags & this.f_fixed_quads,
+          is_transparent = flags & this.f_is_transparent,
           depth_sort = flags & this.f_depth_sort,
           sprites_3d = flags & this.f_sprites_3d,
           sprite_3d = flags & this.f_sprite_3d,
           is_lines = flags & this.f_is_lines,
+          fat_lines = flags & this.f_fat_lines,
+          is_points = flags & this.f_is_points,
+          fixed_size = flags & this.f_fixed_size,
+          is_twosided = (flags & this.f_is_twosided) > 0,
           gl = this.gl || this.initGL(),
+          mat,
           sphereMV, baseofs, ofs, sscale, i, count, light,
-          faces;
+          pass, mode, pmode, attr,
+          enabled = {};
 
       if (typeof id !== "number") {
         this.alertOnce("drawObj id is "+typeof id);
@@ -1237,9 +2066,16 @@ rglwidgetClass = function() {
 
       if (type === "light" || type === "bboxdeco" || !obj.vertexCount)
         return;
+    
+      if (!is_transparent &&
+    	  obj.someHidden) {
+        is_transparent = true;
+        depth_sort = ["triangles", "quads", "surface",
+                      "spheres", "sprites", "text"].indexOf(type) >= 0;
+      }        
 
       this.setDepthTest(id);
-
+      
       if (sprites_3d) {
         var norigs = obj.vertices.length,
             savenorm = new CanvasMatrix4(this.normMatrix);
@@ -1258,6 +2094,12 @@ rglwidgetClass = function() {
         gl.useProgram(obj.prog);
       }
 
+      if (typeof obj.polygon_offset !== "undefined") {
+        gl.polygonOffset(obj.polygon_offset[0],
+                          obj.polygon_offset[1]);
+        gl.enable(gl.POLYGON_OFFSET_FILL);
+      }
+
       if (sprite_3d) {
         gl.uniform3fv(obj.origLoc, new Float32Array(this.origs[this.iOrig]));
         if (this.radii.length > 1) {
@@ -1272,12 +2114,6 @@ rglwidgetClass = function() {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.sphere.buf);
       } else {
         gl.bindBuffer(gl.ARRAY_BUFFER, obj.buf);
-      }
-
-      if (is_indexed && type !== "spheres") {
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.ibuf);
-      } else if (type === "spheres") {
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.sphere.ibuf);
       }
 
       gl.uniformMatrix4fv( obj.prMatLoc, false, new Float32Array(this.prMatrix.getAsArray()) );
@@ -1302,6 +2138,7 @@ rglwidgetClass = function() {
         gl.uniform1f( obj.shininessLoc, obj.shininess);
         for (i=0; i < subscene.lights.length; i++) {
           light = this.getObj(subscene.lights[i]);
+          if (!light.initialized) this.initObj(subscene.lights[i]);
           gl.uniform3fv( obj.ambientLoc[i], this.componentProduct(light.ambient, obj.ambient));
           gl.uniform3fv( obj.specularLoc[i], this.componentProduct(light.specular, obj.specular));
           gl.uniform3fv( obj.diffuseLoc[i], light.diffuse);
@@ -1316,54 +2153,23 @@ rglwidgetClass = function() {
         }
       }
 
-      if (type === "text") {
+      if (fixed_size) {
         gl.uniform2f( obj.textScaleLoc, 0.75/this.vp.width, 0.75/this.vp.height);
       }
 
       gl.enableVertexAttribArray( this.posLoc );
+      enabled.posLoc = true;
 
       var nc = obj.colorCount;
       count = obj.vertexCount;
-      if (depth_sort) {
-            var nfaces = obj.centers.length,
-                frowsize, z, w;
-            if (sprites_3d) frowsize = 1;
-            else if (type === "triangles") frowsize = 3;
-            else frowsize = 6;
-            var depths = new Float32Array(nfaces);
-            faces = new Array(nfaces);
-            for(i=0; i<nfaces; i++) {
-              z = this.prmvMatrix.m13*obj.centers[3*i] +
-                  this.prmvMatrix.m23*obj.centers[3*i+1] +
-                  this.prmvMatrix.m33*obj.centers[3*i+2] +
-                  this.prmvMatrix.m43;
-              w = this.prmvMatrix.m14*obj.centers[3*i] +
-                  this.prmvMatrix.m24*obj.centers[3*i+1] +
-                  this.prmvMatrix.m34*obj.centers[3*i+2] +
-                  this.prmvMatrix.m44;
-              depths[i] = z/w;
-              faces[i] = i;
-            }
-            var depthsort = function(i,j) { return depths[j] - depths[i]; };
-            faces.sort(depthsort);
-
-            if (type !== "spheres") {
-              var f = new Uint16Array(obj.f.length);
-              for (i=0; i<nfaces; i++) {
-                for (j=0; j<frowsize; j++) {
-                  f[frowsize*i + j] = obj.f[frowsize*faces[i] + j];
-                }
-              }
-              gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, f, gl.DYNAMIC_DRAW);
-            }
-          }
 
       if (type === "spheres") {
         subscene = this.getObj(subsceneid);
         var scale = subscene.par3d.scale,
-            scount = count;
+            scount = count, indices;
         gl.vertexAttribPointer(this.posLoc,  3, gl.FLOAT, false, 4*this.sphere.vOffsets.stride,  0);
         gl.enableVertexAttribArray(obj.normLoc );
+        enabled.normLoc = true;
         gl.vertexAttribPointer(obj.normLoc,  3, gl.FLOAT, false, 4*this.sphere.vOffsets.stride,  0);
         gl.disableVertexAttribArray( this.colLoc );
         var sphereNorm = new CanvasMatrix4();
@@ -1374,20 +2180,25 @@ rglwidgetClass = function() {
         if (nc == 1) {
           gl.vertexAttrib4fv( this.colLoc, new Float32Array(obj.onecolor));
         }
-        
+
         if (has_texture) {
           gl.enableVertexAttribArray( obj.texLoc );
-          gl.vertexAttribPointer(obj.texLoc, 2, gl.FLOAT, false, 4*this.sphere.vOffsets.stride, 4*this.sphere.vOffsets.tofs);
+          enabled.texLoc = true;
+          gl.vertexAttribPointer(obj.texLoc, 2, gl.FLOAT, false, 4*this.sphere.vOffsets.stride,
+                                 4*this.sphere.vOffsets.tofs);
           gl.activeTexture(gl.TEXTURE0);
           gl.bindTexture(gl.TEXTURE_2D, obj.texture);
           gl.uniform1i( obj.sampler, 0);
         }
 
+        if (depth_sort)
+          indices = this.depthSort(obj);
+
         for (i = 0; i < scount; i++) {
           sphereMV = new CanvasMatrix4();
 
           if (depth_sort) {
-            baseofs = faces[i]*obj.vOffsets.stride;
+            baseofs = indices[i]*obj.vOffsets.stride;
           } else {
             baseofs = i*obj.vOffsets.stride;
           }
@@ -1409,9 +2220,14 @@ rglwidgetClass = function() {
                                        obj.values[ofs+2],
                                        obj.values[ofs+3] );
           }
+          gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.sphere.ibuf);
           gl.drawElements(gl.TRIANGLES, this.sphere.sphereCount, gl.UNSIGNED_SHORT, 0);
-
         }
+        
+        this.disableArrays(obj, enabled);
+        if (typeof obj.polygon_offset !== "undefined") 
+          gl.disable(gl.POLYGON_OFFSET_FILL);
+          
         return;
       } else {
         if (obj.colorCount === 1) {
@@ -1419,17 +2235,20 @@ rglwidgetClass = function() {
           gl.vertexAttrib4fv( this.colLoc, new Float32Array(obj.onecolor));
         } else {
           gl.enableVertexAttribArray( this.colLoc );
+          enabled.colLoc = true;
           gl.vertexAttribPointer(this.colLoc, 4, gl.FLOAT, false, 4*obj.vOffsets.stride, 4*obj.vOffsets.cofs);
         }
       }
 
       if (is_lit && obj.vOffsets.nofs > 0) {
         gl.enableVertexAttribArray( obj.normLoc );
+        enabled.normLoc = true;
         gl.vertexAttribPointer(obj.normLoc, 3, gl.FLOAT, false, 4*obj.vOffsets.stride, 4*obj.vOffsets.nofs);
       }
 
       if (has_texture || type === "text") {
         gl.enableVertexAttribArray( obj.texLoc );
+        enabled.texLoc = true;
         gl.vertexAttribPointer(obj.texLoc, 2, gl.FLOAT, false, 4*obj.vOffsets.stride, 4*obj.vOffsets.tofs);
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, obj.texture);
@@ -1438,31 +2257,110 @@ rglwidgetClass = function() {
 
       if (fixed_quads) {
         gl.enableVertexAttribArray( obj.ofsLoc );
+        enabled.ofsLoc = true;
         gl.vertexAttribPointer(obj.ofsLoc, 2, gl.FLOAT, false, 4*obj.vOffsets.stride, 4*obj.vOffsets.oofs);
       }
 
-      var mode = this.mode4type[type];
-
-      if (type === "sprites" || type === "text" || type === "quads") {
-        count = count * 6/4;
-      } else if (type === "surface") {
-        count = obj.f.length;
+      if (typeof obj.userAttributes !== "undefined") {
+      	for (attr in obj.userAttribSizes) {  // Not all attributes may have been used
+      	  gl.enableVertexAttribArray( obj.userAttribLocations[attr] );
+      	  gl.vertexAttribPointer( obj.userAttribLocations[attr], obj.userAttribSizes[attr],
+      	  			  gl.FLOAT, false, 4*obj.vOffsets.stride, 4*obj.userAttribOffsets[attr]);
+      	}
       }
 
-      if (is_lines) {
-        gl.lineWidth( this.getMaterial(id, "lwd") );
+      if (typeof obj.userUniforms !== "undefined") {
+      	for (attr in obj.userUniformLocations) {
+      	  var loc = obj.userUniformLocations[attr];
+      	  if (loc !== null) {
+      	    var uniform = obj.userUniforms[attr];
+      	    if (typeof uniform.length === "undefined")
+      	      gl.uniform1f(loc, uniform);
+      	    else if (typeof uniform[0].length === "undefined") {
+      	      uniform = new Float32Array(uniform);
+      	      switch(uniform.length) {
+      	      	case 2: gl.uniform2fv(loc, uniform); break;
+      	      	case 3: gl.uniform3fv(loc, uniform); break;
+      	      	case 4: gl.uniform4fv(loc, uniform); break;
+      	      	default: console.warn("bad uniform length");
+      	      }
+      	    } else if (uniform.length == 4 && uniform[0].length == 4)
+      	      gl.uniformMatrix4fv(loc, false, new Float32Array(uniform.getAsArray()));
+      	    else
+      	      console.warn("unsupported uniform matrix");
+      	  }
+      	}
       }
 
-      gl.vertexAttribPointer(this.posLoc,  3, gl.FLOAT, false, 4*obj.vOffsets.stride,  4*obj.vOffsets.vofs);
+      for (pass = 0; pass < obj.passes; pass++) {
+      	pmode = obj.pmode[pass];
+        if (pmode === "culled")
+          continue;
 
-      if (is_indexed) {
-        gl.drawElements(gl[mode], count, gl.UNSIGNED_SHORT, 0);
-      } else {
-        gl.drawArrays(gl[mode], 0, count);
-      }
+      	mode = fat_lines && (is_lines || pmode == "lines") ? "TRIANGLES" : this.mode4type[type];
+        if (depth_sort && pmode == "filled") {// Don't try depthsorting on wireframe or points
+          var faces = this.depthSort(obj),
+              nfaces = faces.length,
+              frowsize = Math.floor(obj.f[pass].length/nfaces);
+
+          if (type !== "spheres") {
+            var f = obj.index_uint ? new Uint32Array(obj.f[pass].length) : new Uint16Array(obj.f[pass].length);
+            for (i=0; i<nfaces; i++) {
+              for (j=0; j<frowsize; j++) {
+                f[frowsize*i + j] = obj.f[pass][frowsize*faces[i] + j];
+              }
+            }
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.ibuf[pass]);
+            gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, f, gl.DYNAMIC_DRAW);
+          }
+        }
+
+      	if (is_twosided)
+      	  gl.uniform1i(obj.frontLoc, pass !== 0);
+
+        if (type !== "spheres") 
+          gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.ibuf[pass]);
+
+        if (type === "sprites" || type === "text" || type === "quads") {
+          count = count * 6/4;
+        } else if (type === "surface") {
+          count = obj.f[pass].length;
+        }
+
+        count = obj.f[pass].length;
+      	if (!is_lines && pmode === "lines" && !fat_lines) {
+          mode = "LINES";
+        } else if (pmode === "points") {
+          mode = "POINTS";
+        }
+                          
+        if ((is_lines || pmode === "lines") && fat_lines) {
+          gl.enableVertexAttribArray(obj.pointLoc);
+          enabled.pointLoc = true;
+          gl.vertexAttribPointer(obj.pointLoc, 2, gl.FLOAT, false, 4*obj.vOffsets.stride, 4*obj.vOffsets.pointofs);
+          gl.enableVertexAttribArray(obj.nextLoc );
+          enabled.nextLoc = true;
+          gl.vertexAttribPointer(obj.nextLoc, 3, gl.FLOAT, false, 4*obj.vOffsets.stride, 4*obj.vOffsets.nextofs);
+          gl.uniform1f(obj.aspectLoc, this.vp.width/this.vp.height);
+          gl.uniform1f(obj.lwdLoc, this.getMaterial(id, "lwd")/this.vp.height);
+        }
+
+        gl.vertexAttribPointer(this.posLoc,  3, gl.FLOAT, false, 4*obj.vOffsets.stride,  4*obj.vOffsets.vofs);
+
+        gl.drawElements(gl[mode], count, obj.index_uint ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT, 0);
+        this.disableArrays(obj, enabled);
+     }
+     
+     if (typeof obj.polygon_offset !== "undefined") 
+       gl.disable(gl.POLYGON_OFFSET_FILL);
    };
 
-    this.drawBackground = function(id, subsceneid) {
+    /**
+     * Draw the background for a subscene
+     * @param { number } id - id of background object
+     * @param { number } subsceneid - id of subscene
+     */
+    rglwidgetClass.prototype.drawBackground = function(id, subsceneid) {
       var gl = this.gl || this.initGL(),
           obj = this.getObj(id),
           bg, i;
@@ -1487,29 +2385,36 @@ rglwidgetClass = function() {
       }
     };
 
-    this.drawSubscene = function(subsceneid) {
+    /**
+     * Draw a subscene
+     * @param { number } subsceneid - id of subscene
+     * @param { boolean } opaquePass - is this the opaque drawing pass?
+     */
+    rglwidgetClass.prototype.drawSubscene = function(subsceneid, opaquePass) {
       var gl = this.gl || this.initGL(),
-          obj = this.getObj(subsceneid),
+          sub = this.getObj(subsceneid),
           objects = this.scene.objects,
-          subids = obj.objects,
+          subids = sub.objects,
           subscene_has_faces = false,
           subscene_needs_sorting = false,
-          flags, i;
-      if (obj.par3d.skipRedraw)
+          flags, i, obj;
+      if (sub.par3d.skipRedraw)
         return;
       for (i=0; i < subids.length; i++) {
-        flags = objects[subids[i]].flags;
+      	obj = objects[subids[i]];
+        flags = obj.flags;
         if (typeof flags !== "undefined") {
           subscene_has_faces |= (flags & this.f_is_lit)
                            & !(flags & this.f_fixed_quads);
-          subscene_needs_sorting |= (flags & this.f_depth_sort);
+          obj.is_transparent = (flags & this.f_is_transparent) || obj.someHidden;
+          subscene_needs_sorting |= (flags & this.f_depth_sort) || obj.is_transparent;
         }
       }
 
       this.setViewport(subsceneid);
 
-      if (typeof obj.backgroundId !== "undefined")
-          this.drawBackground(obj.backgroundId, subsceneid);
+      if (typeof sub.backgroundId !== "undefined" && opaquePass)
+          this.drawBackground(sub.backgroundId, subsceneid);
 
       if (subids.length) {
         this.setprMatrix(subsceneid);
@@ -1517,20 +2422,16 @@ rglwidgetClass = function() {
 
         if (subscene_has_faces) {
           this.setnormMatrix(subsceneid);
-          if ((obj.flags & this.f_sprites_3d) &&
-              typeof obj.spriteNormmat === "undefined") {
-            obj.spriteNormmat = new CanvasMatrix4(this.normMatrix);
+          if ((sub.flags & this.f_sprites_3d) &&
+              typeof sub.spriteNormmat === "undefined") {
+            sub.spriteNormmat = new CanvasMatrix4(this.normMatrix);
           }
         }
 
         if (subscene_needs_sorting)
           this.setprmvMatrix();
 
-        gl.enable(gl.DEPTH_TEST);
-        gl.depthMask(true);
-        gl.disable(gl.BLEND);
-
-        var clipids = obj.clipplanes;
+        var clipids = sub.clipplanes;
         if (typeof clipids === "undefined") {
           console.warn("bad clipids");
         }
@@ -1540,30 +2441,141 @@ rglwidgetClass = function() {
           for (i = 0; i < clipids.length; i++)
             this.drawObj(clipids[i], subsceneid);
         }
-        subids = obj.opaque;
-        if (subids.length > 0) {
+
+        subids = sub.opaque.concat(sub.transparent);
+        if (opaquePass) {
+          gl.enable(gl.DEPTH_TEST);
+          gl.depthMask(true);
+          gl.disable(gl.BLEND);
           for (i = 0; i < subids.length; i++) {
-            this.drawObj(subids[i], subsceneid);
+            if (!this.getObj(subids[i]).is_transparent)	
+              this.drawObj(subids[i], subsceneid);
           }
-        }
-        subids = obj.transparent;
-        if (subids.length > 0) {
+        } else {
           gl.depthMask(false);
           gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA,
                                gl.ONE, gl.ONE);
           gl.enable(gl.BLEND);
           for (i = 0; i < subids.length; i++) {
-            this.drawObj(subids[i], subsceneid);
+            if (this.getObj(subids[i]).is_transparent)
+              this.drawObj(subids[i], subsceneid);
           }
         }
-        subids = obj.subscenes;
+        subids = sub.subscenes;
         for (i = 0; i < subids.length; i++) {
-          this.drawSubscene(subids[i]);
+          this.drawSubscene(subids[i], opaquePass);
         }
       }
     };
+    
+    /**
+     * Respond to brush change
+     */
+    rglwidgetClass.prototype.selectionChanged = function() {
+      var i, j, k, id, subid = this.select.subscene, subscene,
+          objids, obj,
+          p1 = this.select.region.p1, p2 = this.select.region.p2,
+          filter, selection = [], handle, keys, xmin, x, xmax, ymin, y, ymax, z, v,
+          someHidden;
+      if (!subid)
+        return;
+      subscene = this.getObj(subid);
+      objids = subscene.objects;
+      filter = this.scene.crosstalk.filter;
+      this.setmvMatrix(subid);
+      this.setprMatrix(subid);
+      this.setprmvMatrix();
+      xmin = Math.min(p1.x, p2.x);
+      xmax = Math.max(p1.x, p2.x);
+      ymin = Math.min(p1.y, p2.y);
+      ymax = Math.max(p1.y, p2.y);
+      for (i = 0; i < objids.length; i++) {
+      	id = objids[i];
+      	j = this.scene.crosstalk.id.indexOf(id);
+      	if (j >= 0) {
+      	  keys = this.scene.crosstalk.key[j];
+      	  obj = this.getObj(id);
+      	  someHidden = false;
+      	  for (k = 0; k < keys.length; k++) {
+      	    if (filter && filter.indexOf(keys[k]) < 0) {
+      	      someHidden = true;
+      	      continue;
+      	    }
+      	    v = [].concat(obj.vertices[k]).concat(1.0);
+            v = this.multVM(v, this.prmvMatrix);
+            x = v[0]/v[3];
+            y = v[1]/v[3];
+            z = v[2]/v[3];
+            if (xmin <= x && x <= xmax && ymin <= y && y <= ymax && -1.0 <= z && z <= 1.0) {
+              selection.push(keys[k]);
+            } else
+              someHidden = true;
+      	  }
+      	  obj.someHidden = someHidden && (filter || selection.length);
+      	  obj.initialized = false;
+      	  /* Who should we notify?  Only shared data in the current subscene, or everyone? */
+      	  if (!this.equalArrays(selection, this.scene.crosstalk.selection)) {
+      	    handle = this.scene.crosstalk.sel_handle[j];
+      	    handle.set(selection, {rglSubsceneId: this.select.subscene});
+      	  }
+      	}
+      }
+    };
+    
+    /**
+     * Respond to selection or filter change from crosstalk
+     * @param { Object } event - crosstalk event
+     * @param { boolean } filter - filter or selection?
+     */
+    rglwidgetClass.prototype.selection = function(event, filter) {
+      	var i, j, ids, obj, keys, crosstalk = this.scene.crosstalk,
+      	    selection, someHidden;
 
-    this.relMouseCoords = function(event) {
+      	// Record the message and find out if this event makes some objects have mixed values:
+      	
+      	crosstalk = this.scene.crosstalk;
+      	
+      	if (filter) {
+      	  filter = crosstalk.filter = event.value;
+      	  selection = crosstalk.selection;
+      	} else {  
+          selection = crosstalk.selection = event.value;
+          filter = crosstalk.filter;
+      	}
+        ids = crosstalk.id;
+        for (i = 0; i < ids.length ; i++) {
+          obj = this.getObj(ids[i]);
+          obj.initialized = false;
+          keys = crosstalk.key[i];
+          someHidden = false;
+          for (j = 0; j < keys.length && !someHidden; j++) {
+            if ((filter && filter.indexOf(keys[j]) < 0) ||
+                (selection.length && selection.indexOf(keys[j]) < 0))
+                someHidden = true;
+          }
+          obj.someHidden = someHidden;
+        }
+        this.drawScene();
+    };
+    
+    /**
+     * Clear the selection brush
+     * @param { number } except - Subscene that should ignore this request
+     */
+    rglwidgetClass.prototype.clearBrush = function(except) {
+      if (this.select.subscene != except) {
+        this.select.state = "inactive";
+        this.delFromSubscene(this.scene.brushId, this.select.subscene);
+      }
+      this.drawScene();
+    };
+
+    /**
+     * Compute mouse coordinates relative to current canvas
+     * @returns { Object }
+     * @param { Object } event - event object from mouse click
+     */
+    rglwidgetClass.prototype.relMouseCoords = function(event) {
       var totalOffsetX = 0,
       totalOffsetY = 0,
       currentElement = this.canvas;
@@ -1581,7 +2593,10 @@ rglwidgetClass = function() {
       return {x:canvasX, y:canvasY};
     };
 
-    this.setMouseHandlers = function() {
+    /**
+     * Set mouse handlers for the scene
+     */
+    rglwidgetClass.prototype.setMouseHandlers = function() {
       var self = this, activeSubscene, handler,
           handlers = {}, drag = 0;
 
@@ -1642,6 +2657,54 @@ rglwidgetClass = function() {
         this.drawScene();
       };
       handlers.trackballend = 0;
+
+      this.clamp = function(x, lo, hi) {
+      	return Math.max(lo, Math.min(x, hi));
+      };
+
+      this.screenToPolar = function(x,y) {
+        var viewport = this.getObj(activeSubscene).par3d.viewport,
+          width = viewport.width*this.canvas.width,
+          height = viewport.height*this.canvas.height,
+    	  r = Math.min(width, height)/2,
+    	  dx = this.clamp(x - width/2, -r, r),
+    	  dy = this.clamp(y - height/2, -r, r);
+    	  return [Math.asin(dx/r), Math.asin(-dy/r)];
+      };
+
+      handlers.polardown = function(x,y) {
+        var activeSub = this.getObj(activeSubscene),
+            activeModel = this.getObj(this.useid(activeSub.id, "model")),
+            i, l = activeModel.par3d.listeners;
+        handlers.dragBase = this.screenToPolar(x, y);
+        this.saveMat = [];
+        for (i = 0; i < l.length; i++) {
+          activeSub = this.getObj(l[i]);
+          activeSub.saveMat = new CanvasMatrix4(activeSub.par3d.userMatrix);
+          activeSub.camBase = [-Math.atan2(activeSub.saveMat.m13, activeSub.saveMat.m11),
+                               Math.atan2(activeSub.saveMat.m32, activeSub.saveMat.m22)];
+        }
+      };
+
+      handlers.polarmove = function(x,y) {
+        var dragCurrent = this.screenToPolar(x,y),
+            activeSub = this.getObj(activeSubscene),
+            activeModel = this.getObj(this.useid(activeSub.id, "model")),
+            objects = this.scene.objects,
+            l = activeModel.par3d.listeners,
+            i, changepos = [];
+        for (i = 0; i < l.length; i++) {
+          activeSub = this.getObj(l[i]);
+          for (j=0; j<2; j++)
+            changepos[j] = -(dragCurrent[j] - handlers.dragBase[j]);
+          activeSub.par3d.userMatrix.makeIdentity();
+          activeSub.par3d.userMatrix.rotate(changepos[0]*180/Math.PI, 0,-1,0);
+          activeSub.par3d.userMatrix.multRight(objects[l[i]].saveMat);
+          activeSub.par3d.userMatrix.rotate(changepos[1]*180/Math.PI, -1,0,0);
+        }
+        this.drawScene();
+      };
+      handlers.polarend = 0;
 
       handlers.axisdown = function(x,y) {
         handlers.rotBase = this.screenToVector(x, this.canvas.height/2);
@@ -1719,6 +2782,36 @@ rglwidgetClass = function() {
         this.drawScene();
       };
       handlers.fovend = 0;
+      
+      handlers.selectingdown = function(x, y) {
+      	var viewport = this.getObj(activeSubscene).par3d.viewport,
+      	  width = viewport.width*this.canvas.width,
+      	  height = viewport.height*this.canvas.height, 
+          p = {x: 2.0*x/width - 1.0, y: 2.0*y/height - 1.0};
+      	this.select.region = {p1: p, p2: p};
+      	if (this.select.subscene && this.select.subscene != activeSubscene)
+      	  this.delFromSubscene(this.scene.brushId, this.select.subscene);
+      	this.select.subscene = activeSubscene;
+      	this.addToSubscene(this.scene.brushId, activeSubscene);
+      	this.select.state = "changing";
+      	if (typeof this.scene.brushId !== "undefined")
+      	  this.getObj(this.scene.brushId).initialized = false;
+      	this.drawScene();
+      };
+      
+      handlers.selectingmove = function(x, y) {
+      	var viewport = this.getObj(activeSubscene).par3d.viewport,
+      	  width = viewport.width*this.canvas.width,
+      	  height = viewport.height*this.canvas.height;
+      	if (this.select.state === "inactive") 
+      	  return;
+      	this.select.region.p2 = {x: 2.0*x/width - 1.0, y: 2.0*y/height - 1.0};
+      	if (typeof this.scene.brushId !== "undefined")
+      	  this.getObj(this.scene.brushId).initialized = false;
+      	this.drawScene();
+      };
+      
+      handlers.selectingend = 0;
 
       this.canvas.onmousedown = function ( ev ){
         if (!ev.which) // Use w3c defns in preference to MS
@@ -1753,14 +2846,18 @@ rglwidgetClass = function() {
           coords = self.translateCoords(activeSubscene, coords);
           f.call(self, coords.x, coords.y);
           ev.preventDefault();
-        }
+        } else
+          console.warn("Mouse handler '" + handler + "' is not implemented.");
+
       };
 
       this.canvas.onmouseup = function ( ev ){
         if ( drag === 0 ) return;
-        var f = handlers[handler + "up"];
-        if (f)
-          f();
+        var f = handlers[handler + "end"];
+        if (f) {
+          f.call(self);
+          ev.preventDefault();
+        }
         drag = 0;
       };
 
@@ -1799,7 +2896,13 @@ rglwidgetClass = function() {
       this.canvas.addEventListener("mousewheel", handlers.wheelHandler, false);
     };
 
-    this.useid = function(subsceneid, type) {
+    /**
+     * Find a particular subscene by inheritance
+     * @returns { number } id of subscene to use
+     * @param { number } subsceneid - child subscene
+     * @param { string } type - type of inheritance:  "projection" or "model"
+     */
+    rglwidgetClass.prototype.useid = function(subsceneid, type) {
       var sub = this.getObj(subsceneid);
       if (sub.embeddings[type] === "inherit")
         return(this.useid(sub.parent, type));
@@ -1807,7 +2910,13 @@ rglwidgetClass = function() {
         return subsceneid;
     };
 
-    this.inViewport = function(coords, subsceneid) {
+    /**
+     * Check whether point is in viewport of subscene
+     * @returns {boolean}
+     * @param { Object } coords - screen coordinates of point
+     * @param { number } subsceneid - subscene to check
+     */
+    rglwidgetClass.prototype.inViewport = function(coords, subsceneid) {
       var viewport = this.getObj(subsceneid).par3d.viewport,
         x0 = coords.x - viewport.x*this.canvas.width,
         y0 = coords.y - viewport.y*this.canvas.height;
@@ -1815,7 +2924,12 @@ rglwidgetClass = function() {
              0 <= y0 && y0 <= viewport.height*this.canvas.height;
     };
 
-    this.whichSubscene = function(coords) {
+    /**
+     * Find which subscene contains a point
+     * @returns { number } subscene id
+     * @param { Object } coords - coordinates of point
+     */
+    rglwidgetClass.prototype.whichSubscene = function(coords) {
       var self = this,
           recurse = function(subsceneid) {
             var subscenes = self.getChildSubscenes(subsceneid), i, id;
@@ -1836,30 +2950,61 @@ rglwidgetClass = function() {
       return result;
     };
 
-    this.translateCoords = function(subsceneid, coords) {
+    /**
+     * Translate from window coordinates to viewport coordinates
+     * @returns { Object } translated coordinates
+     * @param { number } subsceneid - which subscene to use?
+     * @param { Object } coords - point to translate
+     */
+    rglwidgetClass.prototype.translateCoords = function(subsceneid, coords) {
       var viewport = this.getObj(subsceneid).par3d.viewport;
       return {x: coords.x - viewport.x*this.canvas.width,
               y: coords.y - viewport.y*this.canvas.height};
     };
 
-    this.initSphere = function() {
-      var verts = this.scene.sphereVerts, 
+    /**
+     * Initialize the sphere object
+     */
+    rglwidgetClass.prototype.initSphere = function() {
+      var verts = this.scene.sphereVerts,
           reuse = verts.reuse, result;
       if (typeof reuse !== "undefined") {
         var prev = document.getElementById(reuse).rglinstance.sphere;
         result = {values: prev.values, vOffsets: prev.vOffsets, it: prev.it};
-      } else 
+      } else
         result = {values: new Float32Array(this.flatten(this.cbind(this.transpose(verts.vb),
                     this.transpose(verts.texcoords)))),
                   it: new Uint16Array(this.flatten(this.transpose(verts.it))),
-                  vOffsets: {vofs:0, cofs:-1, nofs:-1, radofs:-1, oofs:-1, 
-                    tofs:3, stride:5}};
+                  vOffsets: {vofs:0, cofs:-1, nofs:-1, radofs:-1, oofs:-1,
+                    tofs:3, nextofs:-1, pointofs:-1, stride:5}};
 
       result.sphereCount = result.it.length;
       this.sphere = result;
     };
     
-    this.initSphereGL = function() {
+    /**
+     * Set the vertices in the selection box object
+     */
+    rglwidgetClass.prototype.initSelection = function(id) {
+      if (typeof this.select.region === "undefined")
+        return;
+      var obj = this.getObj(id),
+          width = this.canvas.width,
+          height = this.canvas.height, 
+          p1 = this.select.region.p1,
+          p2 = this.select.region.p2;
+          
+      obj.vertices = [[p1.x, p1.y, 0.0],
+                      [p2.x, p1.y, 0.0],
+                      [p2.x, p2.y, 0.0],
+                      [p1.x, p2.y, 0.0],
+                      [p1.x, p1.y, 0.0]];
+    };
+
+    /**
+     * Do the gl part of initializing the sphere
+     */
+    rglwidgetClass.prototype.initSphereGL = function() {
       var gl = this.gl || this.initGL(), sphere = this.sphere;
       if (gl.isContextLost()) return;
       sphere.buf = gl.createBuffer();
@@ -1871,7 +3016,12 @@ rglwidgetClass = function() {
       return;
     };
 
-    this.initialize = function(el, x) {
+    /**
+     * Initialize the DOM object
+     * @param { Object } el - the DOM object
+     * @param { Object } x - the scene data sent by JSON from R
+     */
+    rglwidgetClass.prototype.initialize = function(el, x) {
       this.textureCanvas = document.createElement("canvas");
       this.textureCanvas.style.display = "block";
       this.scene = x;
@@ -1886,25 +3036,69 @@ rglwidgetClass = function() {
         this.webGLoptions = el.rglinstance.scene.webGLoptions;
         this.initCanvas();
       }
+      if (typeof Shiny !== "undefined") {
+        var self = this;
+        Shiny.addCustomMessageHandler("shinyGetPar3d",
+          function(message) {
+            var i, param, 
+                subscene = self.getObj(message.subscene),
+                parameters = [].concat(message.parameters),
+                result = {tag: message.tag, subscene: message.subscene};
+            if (typeof subscene !== "undefined") {
+              for (i = 0; i < parameters.length; i++) {
+                param = parameters[i];
+                result[param] = subscene.par3d[param];
+              };
+            } else {
+              console.log("subscene "+message.subscene+" undefined.")
+            }
+            Shiny.setInputValue("par3d:shinyPar3d", result, {priority: "event"});
+          });
+          
+        Shiny.addCustomMessageHandler("shinySetPar3d",
+          function(message) {
+            var param = message.parameter, 
+                subscene = self.getObj(message.subscene);
+            if (typeof subscene !== "undefined") {
+              subscene.par3d[param] = message.value;
+              subscene.initialized = false;
+              self.drawScene();
+            } else {
+              console.log("subscene "+message.subscene+" undefined.")
+            }
+          })
+      }
     };
 
-    this.restartCanvas = function() {
-      var newcanvas = document.createElement("canvas");
+    /**
+     * Restart the WebGL canvas
+     */
+    rglwidgetClass.prototype.restartCanvas = function() {
+      var newcanvas = document.createElement("canvas"),
+          self = this;
       newcanvas.width = this.el.width;
       newcanvas.height = this.el.height;
       newcanvas.addEventListener("webglcontextrestored",
         this.onContextRestored, false);
       newcanvas.addEventListener("webglcontextlost",
-        this.onContextLost, false);            
+        this.onContextLost, false);
       while (this.el.firstChild) {
         this.el.removeChild(this.el.firstChild);
       }
       this.el.appendChild(newcanvas);
       this.canvas = newcanvas;
-      this.gl = null;      	
-    }
-      
-    this.initCanvas = function() {
+      this.setMouseHandlers();
+      if (this.gl) 
+        Object.keys(this.scene.objects).forEach(function(key){
+          self.getObj(parseInt(key, 10)).texture = undefined; 
+          });
+      this.gl = null;
+    };
+
+    /**
+     * Initialize the WebGL canvas
+     */
+    rglwidgetClass.prototype.initCanvas = function() {
       this.restartCanvas();
       var objs = this.scene.objects,
           self = this;
@@ -1917,40 +3111,61 @@ rglwidgetClass = function() {
       Object.keys(objs).forEach(function(key){
         self.initSubscene(parseInt(key, 10));
       });
-      this.setMouseHandlers();      
+      this.setMouseHandlers();
       this.initSphere();
-      
+
       this.onContextRestored = function(event) {
         self.initGL();
         self.drawScene();
-        console.log("restored context for "+self.scene.rootSubscene);
-      }
-      
+      };
+
       this.onContextLost = function(event) {
         if (!self.drawing)
-          self.restartCanvas();
+          this.gl = null;
         event.preventDefault();
-      }
-      
+      };
+
       this.initGL0();
-      lazyLoadScene = function() {
+      this.lazyLoadScene = function() {
+      	if (typeof self.slide === "undefined")
+      	  self.slide = self.getSlide();
       	if (self.isInBrowserViewport()) {
-      	  if (!self.gl) {
+      	  if (!self.gl || self.gl.isContextLost())
       	    self.initGL();
-      	  }
       	  self.drawScene();
       	}
+      };
+      window.addEventListener("DOMContentLoaded", this.lazyLoadScene, false);
+      window.addEventListener("load", this.lazyLoadScene, false);
+      window.addEventListener("resize", this.lazyLoadScene, false);
+      window.addEventListener("scroll", this.lazyLoadScene, false);
+      this.slide = this.getSlide();
+      if (this.slide) {
+        if (typeof this.slide.rgl === "undefined")
+          this.slide.rgl = [this];
+        else
+          this.slide.rgl.push(this);
+        if (this.scene.context.rmarkdown) 
+          if (this.scene.context.rmarkdown === "ioslides_presentation") {
+            this.slide.setAttribute("slideenter", "this.rgl.forEach(function(scene) { scene.lazyLoadScene.call(window);})");
+          } else if (this.scene.context.rmarkdown === "slidy_presentation") {
+            // This method would also work in ioslides, but it gets triggered
+            // something like 5 times per slide for every slide change, so
+            // you'd need a quicker function than lazyLoadScene.
+            var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver,
+            observer = new MutationObserver(function(mutations) {
+              mutations.forEach(function(mutation) {
+                self.slide.rgl.forEach(function(scene) { scene.lazyLoadScene.call(window); });});});
+            observer.observe(this.slide, { attributes: true, attributeFilter:["class"] });
+          }
       }
-      window.addEventListener("DOMContentLoaded", lazyLoadScene, false);
-      window.addEventListener("load", lazyLoadScene, false);
-      window.addEventListener("resize", lazyLoadScene, false);
-      window.addEventListener("scroll", lazyLoadScene, false);
     };
 
-    /* this is only used by writeWebGL; rglwidget has
-       no debug element and does the drawing in rglwidget.js */
-
-    this.start = function() {
+    /**
+     * Start the writeWebGL scene. This is only used by writeWebGL; rglwidget has
+       no debug element and does the drawing in rglwidget.js.
+     */
+    rglwidgetClass.prototype.start = function() {
       if (typeof this.prefix !== "undefined") {
         this.debugelement = document.getElementById(this.prefix + "debug");
         this.debug("");
@@ -1959,7 +3174,12 @@ rglwidgetClass = function() {
       this.drawScene();
     };
 
-    this.debug = function(msg, img) {
+    /**
+     * Display a debug message
+     * @param { string } msg - The message to display
+     * @param { Object } [img] - Image to insert before message
+     */
+    rglwidgetClass.prototype.debug = function(msg, img) {
       if (typeof this.debugelement !== "undefined" && this.debugelement !== null) {
         this.debugelement.innerHTML = msg;
         if (typeof img !== "undefined") {
@@ -1969,7 +3189,11 @@ rglwidgetClass = function() {
         alert(msg);
     };
 
-    this.getSnapshot = function() {
+    /**
+     * Get the snapshot image of this scene
+     * @returns { Object } The img DOM element
+     */
+    rglwidgetClass.prototype.getSnapshot = function() {
       var img;
       if (typeof this.scene.snapshot !== "undefined") {
         img = document.createElement("img");
@@ -1979,25 +3203,66 @@ rglwidgetClass = function() {
       return img;
     };
 
-    this.initGL0 = function() {
+    /**
+     * Initial test for WebGL
+     */
+    rglwidgetClass.prototype.initGL0 = function() {
       if (!window.WebGLRenderingContext){
         alert("Your browser does not support WebGL. See http://get.webgl.org");
         return;
       }
     };
-    
-    this.isInBrowserViewport = function() {
+
+    /**
+     * If we are in an ioslides or slidy presentation, get the
+     * DOM element of the current slide
+     * @returns { Object }
+     */
+    rglwidgetClass.prototype.getSlide = function() {
+      var result = this.el, done = false;
+      while (result && !done && this.scene.context.rmarkdown) {
+      	switch(this.scene.context.rmarkdown) {
+          case "ioslides_presentation":
+            if (result.tagName === "SLIDE") return result;
+            break;
+          case "slidy_presentation":
+            if (result.tagName === "DIV" && result.classList.contains("slide"))
+              return result;
+            break;
+          default: return null;
+      	}
+      	result = result.parentElement;
+      }
+      return null;
+    };
+
+    /**
+     * Is this scene visible in the browser?
+     * @returns { boolean }
+     */
+    rglwidgetClass.prototype.isInBrowserViewport = function() {
       var rect = this.canvas.getBoundingClientRect(),
           windHeight = (window.innerHeight || document.documentElement.clientHeight),
           windWidth = (window.innerWidth || document.documentElement.clientWidth);
+      if (this.scene.context && this.scene.context.rmarkdown !== null) {
+      	if (this.slide)
+      	  return (this.scene.context.rmarkdown === "ioslides_presentation" &&
+      	          this.slide.classList.contains("current")) ||
+      	         (this.scene.context.rmarkdown === "slidy_presentation" &&
+      	          !this.slide.classList.contains("hidden"));
+      }
       return (
       	rect.top >= -windHeight &&
       	rect.left >= -windWidth &&
       	rect.bottom <= 2*windHeight &&
       	rect.right <= 2*windWidth);
-    }
+    };
 
-    this.initGL = function() {
+    /**
+     * Initialize WebGL
+     * @returns { Object } the WebGL context
+     */
+    rglwidgetClass.prototype.initGL = function() {
       var self = this;
       if (this.gl) {
       	if (!this.drawing && this.gl.isContextLost())
@@ -2009,11 +3274,12 @@ rglwidgetClass = function() {
       this.canvas.addEventListener("webglcontextrestored",
         this.onContextRestored, false);
       this.canvas.addEventListener("webglcontextlost",
-        this.onContextLost, false);      
+        this.onContextLost, false);
       this.gl = this.canvas.getContext("webgl", this.webGLoptions) ||
                this.canvas.getContext("experimental-webgl", this.webGLoptions);
+      this.index_uint = this.gl.getExtension("OES_element_index_uint");
       var save = this.startDrawing();
-      this.initSphereGL(); 
+      this.initSphereGL();
       Object.keys(this.scene.objects).forEach(function(key){
         self.initObj(parseInt(key, 10));
         });
@@ -2021,56 +3287,81 @@ rglwidgetClass = function() {
       return this.gl;
     };
 
-    this.resize = function(el) {
+    /**
+     * Resize the display to match element
+     * @param { Object } el - DOM element to match
+     */
+    rglwidgetClass.prototype.resize = function(el) {
       this.canvas.width = el.width;
       this.canvas.height = el.height;
     };
 
-    this.drawScene = function() {
+    /**
+     * Draw the whole scene
+     */
+    rglwidgetClass.prototype.drawScene = function() {
       var gl = this.gl || this.initGL(),
-          save = this.startDrawing();
-      gl.enable(gl.DEPTH_TEST);
-      gl.depthFunc(gl.LEQUAL);
-      gl.clearDepth(1.0);
-      gl.clearColor(1,1,1,1);
-      gl.depthMask(true); // Must be true before clearing depth buffer
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-      this.drawSubscene(this.scene.rootSubscene);
-      this.stopDrawing(save);
+          wasDrawing = this.startDrawing();
+      if (!wasDrawing) {
+        if (this.select.state !== "inactive")
+          this.selectionChanged();
+        gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LEQUAL);
+        gl.clearDepth(1.0);
+        gl.clearColor(1,1,1,1);
+        gl.depthMask(true); // Must be true before clearing depth buffer
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        this.drawSubscene(this.scene.rootSubscene, true);
+        this.drawSubscene(this.scene.rootSubscene, false);
+      }
+      this.stopDrawing(wasDrawing);
     };
 
-    this.subsetSetter = function(el, control) {
+    /**
+     * Change the displayed subset
+     * @param { Object } el - Element of the control; not used.
+     * @param { Object } control - The subset control data.
+     */
+    rglwidgetClass.prototype.subsetSetter = function(el, control) {
       if (typeof control.subscenes === "undefined" ||
           control.subscenes === null)
         control.subscenes = this.scene.rootSubscene;
       var value = Math.round(control.value),
           subscenes = [].concat(control.subscenes),
+          fullset = [].concat(control.fullset),
           i, j, entries, subsceneid,
+          adds = [], deletes = [],
           ismissing = function(x) {
-            return control.fullset.indexOf(x) < 0;
+            return fullset.indexOf(x) < 0;
           },
           tointeger = function(x) {
             return parseInt(x, 10);
           };
-
-      for (i=0; i < subscenes.length; i++) {
+      if (isNaN(value))
+        value = control.value = 0;
+      if (control.accumulate)
+        for (i=0; i <= value; i++)
+          adds = adds.concat(control.subsets[i]);
+      else
+        adds = adds.concat(control.subsets[value]);
+      deletes = fullset.filter(function(x) { return adds.indexOf(x) < 0; });
+      for (i = 0; i < subscenes.length; i++) {
         subsceneid = subscenes[i];
         if (typeof this.getObj(subsceneid) === "undefined")
           this.alertOnce("typeof object is undefined");
-        entries = this.getObj(subsceneid).objects;
-        entries = entries.filter(ismissing);
-        if (control.accumulate) {
-          for (j=0; j<=value; j++)
-            entries = entries.concat(control.subsets[j]);
-        } else {
-          entries = entries.concat(control.subsets[value]);
-        }
-        entries = entries.map(tointeger);
-        this.setSubsceneEntries(this.unique(entries), subsceneid);
+        for (j = 0; j < adds.length; j++)
+          this.addToSubscene(adds[j], subsceneid);
+        for (j = 0; j < deletes.length; j++)
+          this.delFromSubscene(deletes[j], subsceneid);
       }
     };
 
-    this.propertySetter = function(el, control)  {
+    /**
+     * Change the requested property
+     * @param { Object } el - Element of the control; not used.
+     * @param { Object } control - The property setter control data.
+     */
+    rglwidgetClass.prototype.propertySetter = function(el, control)  {
       var value = control.value,
           values = [].concat(control.values),
           svals = [].concat(control.param),
@@ -2080,16 +3371,29 @@ rglwidgetClass = function() {
           nrow = values.length/ncol,
           properties = this.repeatToLen(control.properties, ncol),
           objids = this.repeatToLen(control.objids, ncol),
-          property = properties[0], objid = objids[0],
+          property, objid = objids[0],
           obj = this.getObj(objid),
           propvals, i, v1, v2, p, entry, gl, needsBinding,
           newprop, newid,
 
           getPropvals = function() {
             if (property === "userMatrix")
-              return obj.userMatrix.getAsArray();
+              return obj.par3d.userMatrix.getAsArray();
+            else if (property === "scale" || property === "FOV" || property === "zoom")
+              return [].concat(obj.par3d[property]);
             else
-              return obj[property];
+              return [].concat(obj[property]);
+          };
+
+          putPropvals = function(newvals) {
+            if (newvals.length == 1)
+              newvals = newvals[0];
+            if (property === "userMatrix")
+              obj.par3d.userMatrix.load(newvals);
+            else if (property === "scale" || property === "FOV" || property === "zoom")
+              obj.par3d[property] = newvals;
+            else
+              obj[property] = newvals;
           };
 
       if (direct && typeof value === "undefined")
@@ -2112,14 +3416,14 @@ rglwidgetClass = function() {
         value = Math.round(value);
       }
 
-      propvals = getPropvals();
-
       for (j=0; j<entries.length; j++) {
         entry = entries[j];
         newprop = properties[j];
         newid = objids[j];
 
-        if (newprop != property || newid != objid) {
+        if (newprop !== property || newid != objid) {
+          if (typeof property !== "undefined")
+            putPropvals(propvals);
           property = newprop;
           objid = newid;
           obj = this.getObj(objid);
@@ -2135,6 +3439,8 @@ rglwidgetClass = function() {
           this.setElement(propvals, entry, value[j]);
         }
       }
+      putPropvals(propvals);
+
       needsBinding = [];
       for (j=0; j < entries.length; j++) {
         if (properties[j] === "values" &&
@@ -2150,9 +3456,14 @@ rglwidgetClass = function() {
       }
     };
 
-    this.vertexSetter = function(el, control)  {
+    /**
+     * Change the requested vertices
+     * @param { Object } el - Element of the control; not used.
+     * @param { Object } control - The vertext setter control data.
+     */
+    rglwidgetClass.prototype.vertexSetter = function(el, control)  {
       var svals = [].concat(control.param),
-          j, k, p, propvals, stride, ofs, obj,
+          j, k, p, a, propvals, stride, ofs, obj, entry,
           attrib,
           ofss    = {x:"vofs", y:"vofs", z:"vofs",
                      red:"cofs", green:"cofs", blue:"cofs",
@@ -2172,7 +3483,7 @@ rglwidgetClass = function() {
         interp = control.interp,
         vertices = [].concat(control.vertices),
         attributes = [].concat(control.attributes),
-        value = control.value;
+        value = control.value, newval, aliases, alias;
 
       ncol = Math.max(vertices.length, attributes.length);
 
@@ -2205,23 +3516,73 @@ rglwidgetClass = function() {
       }
 
       obj = this.getObj(control.objid);
+      // First, make sure color attributes vary in original
+      if (typeof obj.vOffsets !== "undefined") {
+      	varies = true;
+        for (k = 0; k < ncol; k++) {
+          attrib = attributes[k];
+          if (typeof attrib !== "undefined") {
+            ofs = obj.vOffsets[ofss[attrib]];
+            if (ofs < 0) {
+              switch(attrib) {
+              	case "alpha":
+              	case "red":
+              	case "green":
+              	case "blue":
+              	  obj.colors = [obj.colors[0], obj.colors[0]];
+              	  break;
+              }
+              varies = false;
+            }
+          }
+        }
+        if (!varies)
+          this.initObj(control.objid);
+      }
       propvals = obj.values;
+      aliases = obj.alias;
+      if (typeof aliases === "undefined")
+        aliases = [];
       for (k=0; k<ncol; k++) {
+        if (direct) {
+          newval = value;
+        } else if (interp) {
+          newval = p*values[j-1][k] + (1-p)*values[j][k];
+        } else {
+          newval = values[j][k];
+        }      	
         attrib = attributes[k];
         vertex = vertices[k];
+        alias = aliases[vertex];
+        if (obj.type === "planes" || obj.type === "clipplanes") {
+          ofs = ["nx", "ny", "nz", "offset"].indexOf(attrib);
+          if (ofs >= 0) {
+            if (ofs < 3) {
+              if (obj.normals[vertex][ofs] != newval) {  // Assume no aliases here...
+              	obj.normals[vertex][ofs] = newval;
+              	obj.initialized = false;
+              }
+            } else {
+              if (obj.offsets[vertex][0] != newval) {
+              	obj.offsets[vertex][0] = newval;
+              	obj.initialized = false;
+              }
+            }
+            continue;
+          }
+        }
+        // Not a plane setting...
         ofs = obj.vOffsets[ofss[attrib]];
         if (ofs < 0)
           this.alertOnce("Attribute '"+attrib+"' not found in object "+control.objid);
         else {
           stride = obj.vOffsets.stride;
-          ofs = vertex*stride + ofs + pos[attrib];
-          if (direct) {
-            propvals[ofs] = value;
-          } else if (interp) {
-            propvals[ofs] = p*values[j-1][k] + (1-p)*values[j][k];
-          } else {
-            propvals[ofs] = values[j][k];
-          }
+          ofs = ofs + pos[attrib];
+          entry = vertex*stride + ofs;
+          propvals[entry] = newval;
+          if (typeof alias !== "undefined")
+            for (a = 0; a < alias.length; a++)
+              propvals[alias[a]*stride + ofs] = newval;
         }
       }
       if (typeof obj.buf !== "undefined") {
@@ -2231,7 +3592,12 @@ rglwidgetClass = function() {
       }
     };
 
-    this.ageSetter = function(el, control) {
+    /**
+     * Change the requested vertex properties by age
+     * @param { Object } el - Element of the control; not used.
+     * @param { Object } control - The age setter control data.
+     */
+    rglwidgetClass.prototype.ageSetter = function(el, control) {
       var objids = [].concat(control.objids),
           nobjs = objids.length,
           time = control.value,
@@ -2241,7 +3607,7 @@ rglwidgetClass = function() {
           j = Array(steps),
           p = Array(steps),
           i, k, age, j0, propvals, stride, ofs, objid, obj,
-          attrib, dim,
+          attrib, dim, varies, alias, aliases, a, d,
           attribs = ["colors", "alpha", "radii", "vertices",
                      "normals", "origins", "texcoords",
                      "x", "y", "z",
@@ -2274,9 +3640,42 @@ rglwidgetClass = function() {
           j[i] = j0;
         }
       }
+      // First, make sure color attributes vary in original
+      for (l = 0; l < nobjs; l++) {
+      	objid = objids[l];
+      	obj = this.getObj(objid);
+      	varies = true;
+        if (typeof obj.vOffsets === "undefined")
+          continue;
+        for (k = 0; k < attribs.length; k++) {
+          attrib = control[attribs[k]];
+          if (typeof attrib !== "undefined") {
+            ofs = obj.vOffsets[ofss[k]];
+            if (ofs < 0) {
+              switch(attribs[k]) {
+              	case "colors":
+              	case "alpha":
+              	case "red":
+              	case "green":
+              	case "blue":
+              	  obj.colors = [obj.colors[0], obj.colors[0]];
+              	  break;
+              }
+              varies = false;
+            }
+          }
+        }
+        if (!varies)
+          this.initObj(objid);
+      }
       for (l = 0; l < nobjs; l++) {
         objid = objids[l];
         obj = this.getObj(objid);
+        if (typeof obj.vOffsets === "undefined")
+          continue;
+        aliases = obj.alias;
+        if (typeof aliases === "undefined")
+          aliases = [];
         propvals = obj.values;
         stride = obj.vOffsets.stride;
         for (k = 0; k < attribs.length; k++) {
@@ -2287,9 +3686,13 @@ rglwidgetClass = function() {
               dim = dims[k];
               ofs = ofs + pos[k];
               for (i = 0; i < steps; i++) {
+              	alias = aliases[i];
                 if (births[i] !== null) {
                   for (d=0; d < dim; d++) {
                     propvals[i*stride + ofs + d] = p[i]*attrib[dim*(j[i]-1) + d] + (1-p[i])*attrib[dim*j[i] + d];
+                    if (typeof alias !== "undefined")
+                      for (a=0; a < alias.length; a++)
+                        propvals[alias[a]*stride + ofs + d] = propvals[i*stride + ofs + d];
                   }
                 }
               }
@@ -2306,18 +3709,29 @@ rglwidgetClass = function() {
       }
     };
 
-    this.oldBridge = function(el, control) {
+    /**
+     * Bridge to old style control
+     * @param { Object } el - Element of the control; not used.
+     * @param { Object } control - The bridge control data.
+     */
+    rglwidgetClass.prototype.oldBridge = function(el, control) {
       var attrname, global = window[control.prefix + "rgl"];
-      if (typeof global !== "undefined")
+      if (global)
         for (attrname in global)
           this[attrname] = global[attrname];
       window[control.prefix + "rgl"] = this;
     };
 
-    this.Player = function(el, control) {
+    /**
+     * Set up a player control
+     * @param { Object } el - The player control element
+     * @param { Object } control - The player data.
+     */
+    rglwidgetClass.prototype.Player = function(el, control) {
       var
         self = this,
         components = [].concat(control.components),
+        buttonLabels = [].concat(control.buttonLabels),
 
         Tick = function() { /* "this" will be a timer */
           var i,
@@ -2378,29 +3792,34 @@ rglwidgetClass = function() {
           el.appendChild(output);
         },
 
-        addButton = function(label) {
+        addButton = function(which, label, active) {
           var button = document.createElement("input"),
               onclicks = {Reverse: function() { this.rgltimer.reverse();},
                     Play: function() { this.rgltimer.play();
-                                       this.value = this.rgltimer.enabled ? "Pause" : "Play"; },
+                                       this.value = this.rgltimer.enabled ? this.inactiveValue : this.activeValue; },
                    Slower: function() { this.rgltimer.slower(); },
                    Faster: function() { this.rgltimer.faster(); },
-                   Reset: function() { this.rgltimer.reset(); }};
+                   Reset: function() { this.rgltimer.reset(); },
+              	   Step:  function() { this.rgltimer.step(); }
+              };
           button.rgltimer = el.rgltimer;
           button.type = "button";
           button.value = label;
-          if (label === "Play")
+          button.activeValue = label;
+          button.inactiveValue = active;
+          if (which === "Play")
             button.rgltimer.PlayButton = button;
-          button.onclick = onclicks[label];
+          button.onclick = onclicks[which];
           button.className = "rgl-button";
-          button.id = el.id + "-" + label;
+          button.id = el.id + "-" + which;
           el.appendChild(button);
         };
 
         if (typeof control.reinit !== "undefined" && control.reinit !== null) {
           control.actions.reinit = control.reinit;
         }
-        el.rgltimer = new rgltimerClass(Tick, control.start, control.interval, control.stop, control.value, control.rate, control.loop, control.actions);
+        el.rgltimer = new rgltimerClass(Tick, control.start, control.interval, control.stop,
+                                        control.step, control.value, control.rate, control.loop, control.actions);
         for (var i=0; i < components.length; i++) {
           switch(components[i]) {
             case "Slider": addSlider(control.start, control.stop,
@@ -2410,13 +3829,19 @@ rglwidgetClass = function() {
                                    control.step, control.precision);
               break;
             default:
-              addButton(components[i]);
+              addButton(components[i], buttonLabels[i], control.pause);
           }
         }
         el.rgltimer.Tick();
     };
 
-    this.applyControls = function(el, x, draw) {
+    /**
+     * Apply all registered controls
+     * @param { Object } el - DOM element of the control
+     * @param { Object } x - List of actions to apply
+     * @param { boolean } [draw=true] - Whether to redraw after applying
+     */
+    rglwidgetClass.prototype.applyControls = function(el, x, draw) {
       var self = this, reinit = x.reinit, i, control, type;
       for (i = 0; i < x.length; i++) {
         control = x[i];
@@ -2432,7 +3857,11 @@ rglwidgetClass = function() {
         self.drawScene();
     };
 
-    this.sceneChangeHandler = function(message) {
+    /**
+     * Handler for scene change
+     * @param { Object } message - What sort of scene change to do?
+     */
+    rglwidgetClass.prototype.sceneChangeHandler = function(message) {
       var self = document.getElementById(message.elementId).rglinstance,
           objs = message.objects, mat = message.material,
           root = message.rootSubscene,
@@ -2484,27 +3913,69 @@ rglwidgetClass = function() {
       if (redraw)
         self.drawScene();
     };
-}).call(rglwidgetClass.prototype);
+    
+    /**
+     * Set mouse mode for a subscene
+     * @param { string } mode - name of mode
+     * @param { number } button - button number (1 to 3)
+     * @param { number } subscene - subscene id number
+     * @param { number } stayActive - if truthy, don't clear brush
+     */
+    rglwidgetClass.prototype.setMouseMode = function(mode, button, subscene, stayActive) {
+      var sub = this.getObj(subscene),
+          which = ["left", "right", "middle"][button - 1];
+      if (!stayActive && sub.par3d.mouseMode[which] === "selecting")
+        this.clearBrush(null);
+      sub.par3d.mouseMode[which] = mode;
+    };
 
-rgltimerClass = function(Tick, startTime, interval, stopTime, value, rate, loop, actions) {
+/**
+ * The class of an rgl timer object
+ * @class
+*/
+
+/**
+ * Construct an rgltimerClass object
+ * @constructor
+ * @param { function } Tick - action when timer fires
+ * @param { number } startTime - nominal start time in seconds
+ * @param { number } interval - seconds between updates
+ * @param { number } stopTime - nominal stop time in seconds
+ * @param { number } stepSize - nominal step size
+ * @param { number } value - current nominal time
+ * @param { number } rate - nominal units per second
+ * @param { string } loop - "none", "cycle" or "oscillate"
+ * @param { Object } actions - list of actions
+ */
+rgltimerClass = function(Tick, startTime, interval, stopTime, stepSize, value, rate, loop, actions) {
   this.enabled = false;
   this.timerId = 0;
-  this.startTime = startTime;         /* nominal start time in seconds */
-  this.value = value;                 /* current nominal time */
-  this.interval = interval;           /* seconds between updates */
-  this.stopTime = stopTime;           /* nominal stop time */
-  this.rate = rate;                   /* nominal units per second */
-  this.loop = loop;                   /* "none", "cycle", or "oscillate" */
-  this.realStart = undefined;         /* real world start time */
-  this.multiplier = 1;                /* multiplier for fast-forward
-                                         or reverse */
+  /** nominal start time in seconds */
+  this.startTime = startTime;   
+  /** current nominal time */      
+  this.value = value;
+  /** seconds between updates */                 
+  this.interval = interval;
+  /** nominal stop time */           
+  this.stopTime = stopTime;
+  /** nominal step size */           
+  this.stepSize = stepSize;
+  /** nominal units per second */           
+  this.rate = rate;
+  /** "none", "cycle", or "oscillate" */                   
+  this.loop = loop;
+  /** real world start time */                   
+  this.realStart = undefined;
+  /** multiplier for fast-forward or reverse */         
+  this.multiplier = 1;                
   this.actions = actions;
   this.Tick = Tick;
 };
 
-(function() {
-
-  this.play = function() {
+  /**
+   * Start playing timer object
+   */
+  rgltimerClass.prototype.play = function() {
     if (this.enabled) {
       this.enabled = false;
       window.clearInterval(this.timerId);
@@ -2514,19 +3985,7 @@ rgltimerClass = function(Tick, startTime, interval, stopTime, value, rate, loop,
     var tick = function(self) {
       var now = new Date();
       self.value = self.multiplier*self.rate*(now - self.realStart)/1000 + self.startTime;
-      if (self.value > self.stopTime || self.value < self.startTime) {
-        if (!self.loop) {
-          self.reset();
-        } else {
-          var cycle = self.stopTime - self.startTime,
-              newval = (self.value - self.startTime) % cycle + self.startTime;
-          if (newval < self.startTime) {
-            newval += cycle;
-          }
-          self.realStart += (self.value - newval)*1000/self.multiplier/self.rate;
-          self.value = newval;
-        }
-      }
+      self.forceToRange();
       if (typeof self.Tick !== "undefined") {
         self.Tick(self.value);
       }
@@ -2537,7 +3996,29 @@ rgltimerClass = function(Tick, startTime, interval, stopTime, value, rate, loop,
     this.enabled = true;
   };
 
-  this.reset = function() {
+  /**
+   * Force value into legal range
+   */
+  rgltimerClass.prototype.forceToRange = function() {
+    if (this.value > this.stopTime + this.stepSize/2 || this.value < this.startTime - this.stepSize/2) {
+      if (!this.loop) {
+        this.reset();
+      } else {
+        var cycle = this.stopTime - this.startTime + this.stepSize,
+            newval = (this.value - this.startTime) % cycle + this.startTime;
+        if (newval < this.startTime) {
+          newval += cycle;
+        }
+        this.realStart += (this.value - newval)*1000/this.multiplier/this.rate;
+        this.value = newval;
+      }
+    }
+  };
+
+  /**
+   * Reset to start values
+   */
+  rgltimerClass.prototype.reset = function() {
     this.value = this.startTime;
     this.newmultiplier(1);
     if (typeof this.Tick !== "undefined") {
@@ -2549,23 +4030,44 @@ rgltimerClass = function(Tick, startTime, interval, stopTime, value, rate, loop,
       this.PlayButton.value = "Play";
   };
 
-  this.faster = function() {
+  /**
+   * Increase the multiplier to play faster
+   */
+  rgltimerClass.prototype.faster = function() {
     this.newmultiplier(Math.SQRT2*this.multiplier);
   };
 
-  this.slower = function() {
+  /**
+   * Decrease the multiplier to play slower
+   */
+  rgltimerClass.prototype.slower = function() {
     this.newmultiplier(this.multiplier/Math.SQRT2);
   };
 
-  this.reverse = function() {
+  /**
+   * Change sign of multiplier to reverse direction
+   */
+  rgltimerClass.prototype.reverse = function() {
     this.newmultiplier(-this.multiplier);
   };
 
-  this.newmultiplier = function(newmult) {
+  /**
+   * Set multiplier for play speed
+   * @param { number } newmult - new value
+   */
+  rgltimerClass.prototype.newmultiplier = function(newmult) {
     if (newmult != this.multiplier) {
       this.realStart += 1000*(this.value - this.startTime)/this.rate*(1/this.multiplier - 1/newmult);
       this.multiplier = newmult;
     }
   };
 
-}).call(rgltimerClass.prototype);
+  /**
+   * Take one step
+   */
+  rgltimerClass.prototype.step = function() {
+    this.value += this.rate*this.multiplier;
+    this.forceToRange();
+    if (typeof this.Tick !== "undefined")
+      this.Tick(this.value);
+  };

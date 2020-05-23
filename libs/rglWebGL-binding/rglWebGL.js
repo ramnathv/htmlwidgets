@@ -10,46 +10,64 @@ HTMLWidgets.widget({
 
   type: 'output',
 
-  initialize: function(el, width, height) {
+  factory: function(el, width, height) {
     el.width = width;
     el.height = height;
-    return {};
+    var rgl = new rglwidgetClass(),
+        onchangeselection = function(e) {
+          for (var i = 0; i < rgl.scene.crosstalk.sel_handle.length; i++)
+            rgl.clearBrush(except = e.rglSubsceneId);
+          rgl.selection(e, false);
+        },
+        onchangefilter = function(e) {
+          rgl.selection(e, true);
+        };
+    
+    return { 
+      renderValue: function(x) {
+        var i, pel, player, groups;
+      
+        x.crosstalk.group = groups = [].concat(x.crosstalk.group);
+        x.crosstalk.id = [].concat(x.crosstalk.id);
+        x.crosstalk.key = [].concat(x.crosstalk.key);
+        x.crosstalk.sel_handle = new Array(groups.length);
+        x.crosstalk.fil_handle = new Array(groups.length);
+        x.crosstalk.selection = [];
+        for (i = 0; i < groups.length; i++) {
+          x.crosstalk.sel_handle[i] = new crosstalk.SelectionHandle(groups[i], {sharedId: x.crosstalk.id[i]});
+          x.crosstalk.sel_handle[i].on("change", onchangeselection);
+          x.crosstalk.fil_handle[i] = new crosstalk.FilterHandle(groups[i], {sharedId: x.crosstalk.id[i]});
+          x.crosstalk.fil_handle[i].on("change", onchangefilter);
+        }
+        rgl.initialize(el, x);
+        rgl.initGL();
+  
+  /* We might have been called after (some of) the players were rendered.
+     We need to make sure we respond to their initial values. */
 
-  },
+        if (typeof x.players !== "undefined") {
+          var players = [].concat(x.players);
+          for (i = 0; i < players.length; i++) {
+            pel = document.getElementById(players[i]);
+            if (pel) {
+              player = pel.rglPlayer;
+              if (player && !player.initialized) {
+                rgl.Player(pel, player);
+                player.initialized = true;
+              }
+            }
+          }
+        }
+        rgl.drag = 0;
+        rgl.drawScene();
+      },
 
-  renderValue: function(el, x) {
-    var rgl = new rglwidgetClass(), i, pel, player,
-      draw = true;
-    rgl.initialize(el, x);
-
-    /* We might have been called after (some of) the players were rendered.
-       We need to make sure we respond to their initial values. */
-
-    if (typeof x.players !== "undefined") {
-      x.players = [].concat(x.players);
-      for (i = 0; i < x.players.length; i++) {
-        pel = window[x.players[i]];
-        if (typeof pel !== "undefined") {
-          player = pel.rglPlayer;
-          if (typeof player !== "undefined" && !player.initialized) {
-            rgl.Player(pel, player, false);
-            player.initialized = true;
-          } else
-            draw = false;  // The player will do the drawing
-        } else
-          rgl.alertOnce("Controller '" + x.players[i] + "' not found.");
+      resize: function(width, height) {
+        el.width = width;
+        el.height = height;
+        el.rglinstance.resize(el);
+        el.rglinstance.drawScene();
       }
-    }
-    rgl.drag = 0;
-    if (draw)
-      rgl.drawScene();
-  },
-
-  resize: function(el, width, height) {
-    el.width = width;
-    el.height = height;
-    el.rglinstance.resize(el);
-    el.rglinstance.drawScene();
+    };
   }
-
 });

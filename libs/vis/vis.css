@@ -1,3 +1,18 @@
+.classActivePointer:hover {
+    cursor: pointer;
+}
+
+/*.rPartvisNetworkTooltipShowme{ 
+display: none;
+}
+.rPartvisNetworkTooltipShowhim:hover .rPartvisNetworkTooltipShowme{
+display : block;
+}*/
+
+.rPartvisNetwork{
+  margin: 0.5em auto; 
+}
+
 .vis .overlay {
   position: absolute;
   top: 0;
@@ -309,6 +324,29 @@ input.vis-configuration.vis-config-range:focus::-ms-fill-upper {
     margin-top: -12px;
 }
 
+div.vis-tooltip {
+  position: absolute;
+  visibility: hidden;
+  padding: 5px;
+  white-space: nowrap;
+
+  font-family: verdana;
+  font-size:14px;
+  color:#000000;
+  background-color: #f5f4ed;
+
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  border: 1px solid #808074;
+
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+
+  z-index: 5;
+}
+
+
 div.vis-color-picker {
   position:absolute;
   top: 0px;
@@ -487,6 +525,8 @@ div.vis-color-picker input.vis-saturation-range {
   width: 289px !important;
 }*/
 div.vis-network div.vis-manipulation {
+  box-sizing: content-box;
+
   border-width: 0;
   border-bottom: 1px;
   border-style:solid;
@@ -635,6 +675,7 @@ div.network-navigation_wrapper {
   height: 100%;
 }
 */
+
 div.vis-network div.vis-navigation div.vis-button {
     width:34px;
     height:34px;
@@ -696,25 +737,6 @@ div.vis-network div.vis-navigation div.vis-button.vis-zoomExtends {
     bottom:50px;
     right:15px;
 }
-/*div.vis-network-tooltip {
-  position: absolute;
-  visibility: hidden;
-  padding: 5px;
-  white-space: nowrap;
-
-  font-family: verdana;
-  font-size:14px;
-  color:#000000;
-  background-color: #f5f4ed;
-
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
-  border: 1px solid #808074;
-
-  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-  pointer-events: none;
-}*/
 .vis-timeline {
   /*
   -webkit-transition: height .4s ease-in-out;
@@ -752,6 +774,30 @@ div.vis-network div.vis-navigation div.vis-button.vis-zoomExtends {
   background-color: #FF7F6E;
   width: 2px;
   z-index: 1;
+  pointer-events: none;
+}
+
+.vis-rolling-mode-btn {
+  height: 40px;
+  width: 40px;
+  position: absolute;
+  top: 7px;
+  right: 20px;
+  border-radius: 50%;
+  font-size: 28px;
+  cursor: pointer;
+  opacity: 0.8;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  background: #3876c2;
+}
+.vis-rolling-mode-btn:before {
+  content: "\26F6";
+}
+
+.vis-rolling-mode-btn:hover {
+  opacity: 1;
 }
 .vis-custom-time {
   background-color: #6E94FF;
@@ -870,6 +916,7 @@ div.vis-network div.vis-navigation div.vis-button.vis-zoomExtends {
   border-width: 1px;
   background-color: #D5DDF6;
   display: inline-block;
+  z-index: 1;
   /*overflow: hidden;*/
 }
 
@@ -930,6 +977,10 @@ div.vis-network div.vis-navigation div.vis-button.vis-zoomExtends {
   overflow: hidden;
 }
 
+.vis-item-visible-frame {
+  white-space: nowrap;
+}
+
 .vis-item.vis-range .vis-item-content {
   position: relative;
   display: inline-block;
@@ -963,6 +1014,10 @@ div.vis-network div.vis-navigation div.vis-button.vis-zoomExtends {
   white-space: nowrap;
   padding: 5px;
   border-radius: 1px;
+  transition: 0.4s;
+  -o-transition: 0.4s;
+  -moz-transition: 0.4s;
+  -webkit-transition: 0.4s;
 }
 
 .vis-item .vis-delete, .vis-item .vis-delete-rtl {
@@ -1082,6 +1137,26 @@ div.vis-network div.vis-navigation div.vis-button.vis-zoomExtends {
 
 .vis-foreground .vis-group:last-child {
   border-bottom: none;
+}
+
+.vis-nesting-group {
+  cursor: pointer;
+}
+
+.vis-nested-group {
+  background: #f5f5f5;
+}
+
+.vis-label.vis-nesting-group.expanded:before {
+  content: "\25BC";
+}
+
+.vis-label.vis-nesting-group.collapsed-rtl:before {
+  content: "\25C0";
+}
+
+.vis-label.vis-nesting-group.collapsed:before {
+  content: "\25B6";
 }
 
 .vis-overlay {

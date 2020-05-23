@@ -3,7 +3,7 @@
  *
  * Author: Torstein Hønsi
  * License: MIT License
- * Version: 1.3.5
+ * Version: 1.3.9
  * Requires: Highcharts 3.0+
  *
  * Usage: Set draggable:true and floating:true in the legend options. The legend
@@ -50,14 +50,16 @@
                 // Stop touch-panning the page
                 e.preventDefault();
 
-                options.x = optionsX + draggedX;
-                options.y = optionsY + draggedY;
-
                 // Do the move is we're inside the chart
-                if (currentX + draggedX > 0 &&
+                if (
+                    currentX + draggedX > 0 &&
                     currentX + draggedX + legend.legendWidth < chart.chartWidth &&
                     currentY + draggedY > 0 &&
-                    currentY + draggedY + legend.legendHeight < chart.chartHeight           ) {
+                    currentY + draggedY + legend.legendHeight < chart.chartHeight
+                ) {
+
+                    options.x = optionsX + draggedX;
+                    options.y = optionsY + draggedY;
                     legend.group.placed = false; // prevent animation
                     legend.group.align(H.extend({
                         width: legend.legendWidth,

@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
-<meta charset="utf-8">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta charset="utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
 
 <title>htmlwidgets: networkD3</title>
 
+<script src="libs/header-attrs/header-attrs.js"></script>
 <script src="libs/jquery/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="libs/bootstrap/css/cosmo.min.css" rel="stylesheet" />
@@ -23,7 +24,7 @@
 <link href="libs/highlightjs/textmate.css" rel="stylesheet" />
 <script src="libs/highlightjs/highlight.js"></script>
 <script src="libs/htmlwidgets/htmlwidgets.js"></script>
-<script src="libs/d3/d3.min.js"></script>
+<script src="libs/d3-4.5.0/d3.min.js"></script>
 <script src="libs/forceNetwork-binding/forceNetwork.js"></script>
 
 <!-- Styles for this site -->
@@ -39,10 +40,12 @@
   }
 </style>
 <script type="text/javascript">
-if (window.hljs && document.readyState && document.readyState === "complete") {
-   window.setTimeout(function() {
-      hljs.initHighlighting();
-   }, 0);
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
 }
 </script>
 
@@ -76,9 +79,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -92,30 +93,91 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
 }
 </style>
 
 
 
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -185,10 +247,6 @@ $(document).ready(function () {
           <h5 class="list-group-item-heading">networkD3</h5>
           <p class="list-group-item-text">Graph data visualization with D3</p>
         </a>
-        <a href="showcase_d3heatmap.html" class="list-group-item">
-          <h5 class="list-group-item-heading">d3heatmap</h5>
-          <p class="list-group-item-text">Interactive heatmaps with D3</p>
-        </a>
         <a href="showcase_datatables.html" class="list-group-item">
           <h5 class="list-group-item-heading">DataTables</h5>
           <p class="list-group-item-text">Tabular data display</p>
@@ -244,8 +302,8 @@ data(MisLinks, MisNodes)
 forceNetwork(Links = MisLinks, Nodes = MisNodes, Source = &quot;source&quot;,
              Target = &quot;target&quot;, Value = &quot;value&quot;, NodeID = &quot;name&quot;,
              Group = &quot;group&quot;, opacity = 0.4)</code></pre>
-<div id="htmlwidget-4e418d0e777bcf5e8b2b" style="width:576px;height:480px;" class="forceNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-4e418d0e777bcf5e8b2b">{
+<div id="htmlwidget-c9f6656ff2d8f9cdeb96" style="width:576px;height:480px;" class="forceNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c9f6656ff2d8f9cdeb96">{
   "x": {
     "links": {
       "source": [1, 2, 3, 3, 4, 5, 6, 7, 8, 9, 11, 11, 11, 11, 12, 13, 14, 15, 17, 18, 18, 19, 19, 19, 20, 20, 20, 20, 21, 21, 21, 21, 21, 22, 22, 22, 22, 22, 22, 23, 23, 23, 23, 23, 23, 23, 23, 23, 24, 24, 25, 25, 25, 26, 26, 26, 26, 27, 27, 27, 27, 27, 28, 28, 29, 29, 29, 30, 31, 31, 31, 31, 32, 33, 33, 34, 34, 35, 35, 35, 36, 36, 36, 36, 37, 37, 37, 37, 37, 38, 38, 38, 38, 38, 38, 39, 40, 41, 41, 42, 42, 42, 43, 43, 43, 44, 44, 45, 47, 48, 48, 48, 48, 49, 49, 50, 50, 51, 51, 51, 52, 52, 53, 54, 54, 54, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 56, 56, 57, 57, 57, 58, 58, 58, 58, 58, 59, 59, 59, 59, 60, 60, 60, 61, 61, 61, 61, 61, 61, 62, 62, 62, 62, 62, 62, 62, 62, 63, 63, 63, 63, 63, 63, 63, 63, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 66, 66, 66, 66, 66, 66, 66, 66, 66, 67, 68, 68, 68, 68, 68, 68, 69, 69, 69, 69, 69, 69, 69, 70, 70, 70, 70, 70, 70, 70, 70, 71, 71, 71, 71, 71, 71, 71, 71, 72, 72, 72, 73, 74, 74, 75, 75, 75, 75, 75, 75, 75, 76, 76, 76, 76, 76, 76, 76],
@@ -260,16 +318,17 @@ forceNetwork(Links = MisLinks, Nodes = MisNodes, Source = &quot;source&quot;,
     "options": {
       "NodeID": "name",
       "Group": "group",
-      "colourScale": "d3.scale.category20()",
+      "colourScale": "d3.scaleOrdinal(d3.schemeCategory20);",
       "fontSize": 7,
       "fontFamily": "serif",
       "clickTextSize": 17.5,
       "linkDistance": 50,
       "linkWidth": "function(d) { return Math.sqrt(d.value); }",
-      "charge": -120,
+      "charge": -30,
       "opacity": 0.4,
       "zoom": false,
       "legend": false,
+      "arrows": false,
       "nodesize": false,
       "radiusCalculation": " Math.sqrt(d.nodesize)+6",
       "bounded": false,
@@ -339,6 +398,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 
 </body>

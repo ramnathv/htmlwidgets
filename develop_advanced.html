@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
-<meta charset="utf-8">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta charset="utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
 
 <title>Advanced topics</title>
 
+<script src="libs/header-attrs/header-attrs.js"></script>
 <script src="libs/jquery/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="libs/bootstrap/css/cosmo.min.css" rel="stylesheet" />
@@ -29,42 +30,95 @@
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; background-color: #dddddd; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { font-weight: bold; } /* Keyword */
-code > span.dt { color: #800000; } /* DataType */
-code > span.dv { color: #0000ff; } /* DecVal */
-code > span.bn { color: #0000ff; } /* BaseN */
-code > span.fl { color: #800080; } /* Float */
-code > span.ch { color: #ff00ff; } /* Char */
-code > span.st { color: #dd0000; } /* String */
-code > span.co { color: #808080; font-style: italic; } /* Comment */
-code > span.al { color: #00ff00; font-weight: bold; } /* Alert */
-code > span.fu { color: #000080; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #ff0000; font-weight: bold; } /* Warning */
-code > span.cn { color: #000000; } /* Constant */
-code > span.sc { color: #ff00ff; } /* SpecialChar */
-code > span.vs { color: #dd0000; } /* VerbatimString */
-code > span.ss { color: #dd0000; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { } /* Variable */
-code > span.cf { } /* ControlFlow */
-code > span.op { } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { font-weight: bold; } /* Preprocessor */
-code > span.at { } /* Attribute */
-code > span.do { color: #808080; font-style: italic; } /* Documentation */
-code > span.an { color: #808080; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #808080; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #808080; font-weight: bold; font-style: italic; } /* Information */
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #ffffff;
+    color: #a0a0a0;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
+div.sourceCode
+  { color: #1f1c1b; background-color: #ffffff; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span. { color: #1f1c1b; } /* Normal */
+code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
+code span.an { color: #ca60ca; } /* Annotation */
+code span.at { color: #0057ae; } /* Attribute */
+code span.bn { color: #b08000; } /* BaseN */
+code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #924c9d; } /* Char */
+code span.cn { color: #aa5500; } /* Constant */
+code span.co { color: #898887; } /* Comment */
+code span.cv { color: #0095ff; } /* CommentVar */
+code span.do { color: #607880; } /* Documentation */
+code span.dt { color: #0057ae; } /* DataType */
+code span.dv { color: #b08000; } /* DecVal */
+code span.er { color: #bf0303; text-decoration: underline; } /* Error */
+code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+code span.fl { color: #b08000; } /* Float */
+code span.fu { color: #644a9b; } /* Function */
+code span.im { color: #ff5500; } /* Import */
+code span.in { color: #b08000; } /* Information */
+code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+code span.op { color: #1f1c1b; } /* Operator */
+code span.ot { color: #006e28; } /* Other */
+code span.pp { color: #006e28; } /* Preprocessor */
+code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
+code span.sc { color: #3daee9; } /* SpecialChar */
+code span.ss { color: #ff5500; } /* SpecialString */
+code span.st { color: #bf0303; } /* String */
+code span.va { color: #0057ae; } /* Variable */
+code span.vs { color: #bf0303; } /* VerbatimString */
+code span.wa { color: #bf0303; } /* Warning */
+
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -100,9 +154,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -116,30 +168,91 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
 }
 </style>
 
 
 
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -209,10 +322,6 @@ $(document).ready(function () {
           <h5 class="list-group-item-heading">networkD3</h5>
           <p class="list-group-item-text">Graph data visualization with D3</p>
         </a>
-        <a href="showcase_d3heatmap.html" class="list-group-item">
-          <h5 class="list-group-item-heading">d3heatmap</h5>
-          <p class="list-group-item-text">Interactive heatmaps with D3</p>
-        </a>
         <a href="showcase_datatables.html" class="list-group-item">
           <h5 class="list-group-item-heading">DataTables</h5>
           <p class="list-group-item-text">Tabular data display</p>
@@ -261,7 +370,8 @@ $(document).ready(function () {
 <div id="TOC">
 <ul>
 <li><a href="#overview">Overview</a></li>
-<li><a href="#data-transformation">Data transformation</a><ul>
+<li><a href="#data-transformation">Data transformation</a>
+<ul>
 <li><a href="#htmlwidgets.dataframetod3">HTMLWidgets.dataframeToD3()</a></li>
 <li><a href="#htmlwidgets.transposearray2d">HTMLWidgets.transposeArray2D()</a></li>
 <li><a href="#custom-json-serializer">Custom JSON serializer</a></li>
@@ -283,7 +393,7 @@ $(document).ready(function () {
 </div>
 <div id="data-transformation" class="section level2">
 <h2>Data transformation</h2>
-<p>R objects passed as part of the <code>x</code> parameter to the <code>createWidget()</code> function are transformed to JSON using the internal function <code>htmlwidgets:::toJSON()</code><a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>, which is basically a wrapper function of <code>jsonlite::toJSON()</code> by default. However, sometimes this representation is not what is required by the JavaScript library you are interfacing with. There are two JavaScript functions that you can use to transform the JSON data.</p>
+<p>R objects passed as part of the <code>x</code> parameter to the <code>createWidget()</code> function are transformed to JSON using the internal function <code>htmlwidgets:::toJSON()</code><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, which is basically a wrapper function of <code>jsonlite::toJSON()</code> by default. However, sometimes this representation is not what is required by the JavaScript library you are interfacing with. There are two JavaScript functions that you can use to transform the JSON data.</p>
 <div id="htmlwidgets.dataframetod3" class="section level3">
 <h3>HTMLWidgets.dataframeToD3()</h3>
 <p>R data frames are represented in “long” form (an array of named vectors) whereas d3 typically requires “wide” form (an array of objects each of which includes all names and values). Since the R representation is smaller in size and much faster to transmit over the network, we create the long-form representation of R data, and then transform the data in JavaScript using the <code>dataframeToD3()</code> helper function.</p>
@@ -320,14 +430,14 @@ $(document).ready(function () {
   }
 ] </code></pre>
 <p>As a real example, the <a href="http://christophergandrud.github.io/networkD3/#simple">simpleNetwork</a> widget accepts a data frame containing network links on the R side, then transforms it to a d3 representation within the JavaScript <code>renderValue</code> function:</p>
-<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript">renderValue<span class="op">:</span> <span class="kw">function</span>(x) <span class="op">{</span>
-
-  <span class="co">// convert links data frame to d3 friendly format</span>
-  <span class="kw">var</span> links <span class="op">=</span> <span class="va">HTMLWidgets</span>.<span class="at">dataframeToD3</span>(<span class="va">x</span>.<span class="at">links</span>)<span class="op">;</span>
-  
-  <span class="co">// ... use the links, etc ...</span>
-
-<span class="op">}</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1"></a>renderValue<span class="op">:</span> <span class="kw">function</span>(x) {</span>
+<span id="cb3-2"><a href="#cb3-2"></a></span>
+<span id="cb3-3"><a href="#cb3-3"></a>  <span class="co">// convert links data frame to d3 friendly format</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a>  <span class="kw">var</span> links <span class="op">=</span> HTMLWidgets<span class="op">.</span><span class="fu">dataframeToD3</span>(x<span class="op">.</span><span class="at">links</span>)<span class="op">;</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a>  </span>
+<span id="cb3-6"><a href="#cb3-6"></a>  <span class="co">// ... use the links, etc ...</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a></span>
+<span id="cb3-8"><a href="#cb3-8"></a>}</span></code></pre></div>
 </div>
 <div id="htmlwidgets.transposearray2d" class="section level3">
 <h3>HTMLWidgets.transposeArray2D()</h3>
@@ -351,60 +461,61 @@ $(document).ready(function () {
   [5, 3.4, 1.5, 0.2, &quot;setosa&quot;]
 ] </code></pre>
 <p>As a real example, the <a href="http://rstudio.github.io/dygraphs">dygraphs</a> widget uses this function to transpose the “file” (data) argument it gets from the R side before passing it on to the dygraphs library:</p>
-<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript">renderValue<span class="op">:</span> <span class="kw">function</span>(x) <span class="op">{</span>
-   
-    <span class="co">// ... code excluded ...</span>
-    
-    <span class="co">// transpose array</span>
-    <span class="va">x</span>.<span class="va">attrs</span>.<span class="at">file</span> <span class="op">=</span> <span class="va">HTMLWidgets</span>.<span class="at">transposeArray2D</span>(<span class="va">x</span>.<span class="va">attrs</span>.<span class="at">file</span>)<span class="op">;</span>
-    
-    <span class="co">// ... more code excluded ...</span>
-<span class="op">}</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1"></a>renderValue<span class="op">:</span> <span class="kw">function</span>(x) {</span>
+<span id="cb6-2"><a href="#cb6-2"></a>   </span>
+<span id="cb6-3"><a href="#cb6-3"></a>    <span class="co">// ... code excluded ...</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a>    </span>
+<span id="cb6-5"><a href="#cb6-5"></a>    <span class="co">// transpose array</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a>    x<span class="op">.</span><span class="at">attrs</span><span class="op">.</span><span class="at">file</span> <span class="op">=</span> HTMLWidgets<span class="op">.</span><span class="fu">transposeArray2D</span>(x<span class="op">.</span><span class="at">attrs</span><span class="op">.</span><span class="at">file</span>)<span class="op">;</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a>    </span>
+<span id="cb6-8"><a href="#cb6-8"></a>    <span class="co">// ... more code excluded ...</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a>}</span></code></pre></div>
 </div>
 <div id="custom-json-serializer" class="section level3">
 <h3>Custom JSON serializer</h3>
 <p>You may find it necessary to customize the JSON serialization of widget data when the default serializer in <strong>htmlwidgets</strong> does not work in the way you have expected. For widget package authors, there are two levels of customization for the JSON serialization: you can either customize the default values of arguments for <code>jsonlite::toJSON()</code>, or just customize the whole function.</p>
 <ol style="list-style-type: decimal">
 <li><p><code>jsonlite::toJSON()</code> has a lot of arguments, and we have already changed some of its default values. Below is the JSON serializer we use in <strong>htmlwidgets</strong> at the moment:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">function (x, ..., <span class="dt">dataframe =</span> <span class="st">&quot;columns&quot;</span>, <span class="dt">null =</span> <span class="st">&quot;null&quot;</span>, <span class="dt">na =</span> <span class="st">&quot;null&quot;</span>, 
-    <span class="dt">auto_unbox =</span> <span class="ot">TRUE</span>, <span class="dt">digits =</span> <span class="kw">getOption</span>(<span class="st">&quot;shiny.json.digits&quot;</span>, 
-        <span class="dv">16</span>), <span class="dt">use_signif =</span> <span class="ot">TRUE</span>, <span class="dt">force =</span> <span class="ot">TRUE</span>, <span class="dt">POSIXt =</span> <span class="st">&quot;ISO8601&quot;</span>, 
-    <span class="dt">UTC =</span> <span class="ot">TRUE</span>, <span class="dt">rownames =</span> <span class="ot">FALSE</span>, <span class="dt">keep_vec_names =</span> <span class="ot">TRUE</span>, <span class="dt">strict_atomic =</span> <span class="ot">TRUE</span>) 
-{
-    if (strict_atomic) 
-        x &lt;-<span class="st"> </span><span class="kw">I</span>(x)
-    jsonlite::<span class="kw">toJSON</span>(x, <span class="dt">dataframe =</span> dataframe, <span class="dt">null =</span> null, <span class="dt">na =</span> na, 
-        <span class="dt">auto_unbox =</span> auto_unbox, <span class="dt">digits =</span> digits, <span class="dt">use_signif =</span> use_signif, 
-        <span class="dt">force =</span> force, <span class="dt">POSIXt =</span> POSIXt, <span class="dt">UTC =</span> UTC, <span class="dt">rownames =</span> rownames, 
-        <span class="dt">keep_vec_names =</span> keep_vec_names, <span class="dt">json_verbatim =</span> <span class="ot">TRUE</span>, 
-        ...)
-}</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="cf">function</span> (x, ..., <span class="dt">dataframe =</span> <span class="st">&quot;columns&quot;</span>, <span class="dt">null =</span> <span class="st">&quot;null&quot;</span>, <span class="dt">na =</span> <span class="st">&quot;null&quot;</span>, </span>
+<span id="cb7-2"><a href="#cb7-2"></a>    <span class="dt">auto_unbox =</span> <span class="ot">TRUE</span>, <span class="dt">digits =</span> <span class="kw">getOption</span>(<span class="st">&quot;shiny.json.digits&quot;</span>, </span>
+<span id="cb7-3"><a href="#cb7-3"></a>        <span class="dv">16</span>), <span class="dt">use_signif =</span> <span class="ot">TRUE</span>, <span class="dt">force =</span> <span class="ot">TRUE</span>, <span class="dt">POSIXt =</span> <span class="st">&quot;ISO8601&quot;</span>, </span>
+<span id="cb7-4"><a href="#cb7-4"></a>    <span class="dt">UTC =</span> <span class="ot">TRUE</span>, <span class="dt">rownames =</span> <span class="ot">FALSE</span>, <span class="dt">keep_vec_names =</span> <span class="ot">TRUE</span>, <span class="dt">strict_atomic =</span> <span class="ot">TRUE</span>) </span>
+<span id="cb7-5"><a href="#cb7-5"></a>{</span>
+<span id="cb7-6"><a href="#cb7-6"></a>    <span class="cf">if</span> (strict_atomic) </span>
+<span id="cb7-7"><a href="#cb7-7"></a>        x &lt;-<span class="st"> </span><span class="kw">I</span>(x)</span>
+<span id="cb7-8"><a href="#cb7-8"></a>    jsonlite<span class="op">::</span><span class="kw">toJSON</span>(x, <span class="dt">dataframe =</span> dataframe, <span class="dt">null =</span> null, <span class="dt">na =</span> na, </span>
+<span id="cb7-9"><a href="#cb7-9"></a>        <span class="dt">auto_unbox =</span> auto_unbox, <span class="dt">digits =</span> digits, <span class="dt">use_signif =</span> use_signif, </span>
+<span id="cb7-10"><a href="#cb7-10"></a>        <span class="dt">force =</span> force, <span class="dt">POSIXt =</span> POSIXt, <span class="dt">UTC =</span> UTC, <span class="dt">rownames =</span> rownames, </span>
+<span id="cb7-11"><a href="#cb7-11"></a>        <span class="dt">keep_vec_names =</span> keep_vec_names, <span class="dt">json_verbatim =</span> <span class="ot">TRUE</span>, </span>
+<span id="cb7-12"><a href="#cb7-12"></a>        ...)</span>
+<span id="cb7-13"><a href="#cb7-13"></a>}</span>
+<span id="cb7-14"><a href="#cb7-14"></a><span class="op">&lt;</span>bytecode<span class="op">:</span><span class="st"> </span><span class="dv">0x559bc7acd648</span><span class="op">&gt;</span></span></code></pre></div>
 <p>For example, we convert data frames to JSON by columns instead of rows (the latter is <code>jsonlite::toJSON</code>’s default). If you want to change the default values of any arguments, you can attach an attribute <code>TOJSON_ARGS</code> to the widget data to be passed to <code>createWidget()</code>, e.g.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fooWidget &lt;-<span class="st"> </span>function(data, name, ...) {
-  <span class="co"># ... process the data ...</span>
-  params &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">foo =</span> data, <span class="dt">bar =</span> <span class="ot">TRUE</span>)
-  <span class="co"># customize toJSON() argument values</span>
-  <span class="kw">attr</span>(params, <span class="st">&#39;TOJSON_ARGS&#39;</span>) &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">digits =</span> <span class="dv">7</span>, <span class="dt">na =</span> <span class="st">&#39;string&#39;</span>)
-  htmlwidgets::<span class="kw">createWidget</span>(name, <span class="dt">x =</span> params, ...)
-}</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>fooWidget &lt;-<span class="st"> </span><span class="cf">function</span>(data, name, ...) {</span>
+<span id="cb8-2"><a href="#cb8-2"></a>  <span class="co"># ... process the data ...</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a>  params &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">foo =</span> data, <span class="dt">bar =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb8-4"><a href="#cb8-4"></a>  <span class="co"># customize toJSON() argument values</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a>  <span class="kw">attr</span>(params, <span class="st">&#39;TOJSON_ARGS&#39;</span>) &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">digits =</span> <span class="dv">7</span>, <span class="dt">na =</span> <span class="st">&#39;string&#39;</span>)</span>
+<span id="cb8-6"><a href="#cb8-6"></a>  htmlwidgets<span class="op">::</span><span class="kw">createWidget</span>(name, <span class="dt">x =</span> params, ...)</span>
+<span id="cb8-7"><a href="#cb8-7"></a>}</span></code></pre></div>
 <p>We changed the default value of <code>digits</code> from 16 to 7, and <code>na</code> from <code>null</code> to <code>string</code> in the above example. It is up to you, the package author, whether you want to expose such customization to users. For example, you can leave an extra argument in your widget function so that users can customize the behavior of the JSON serializer:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fooWidget &lt;-<span class="st"> </span>function(data, name, ..., <span class="dt">JSONArgs =</span> <span class="kw">list</span>(<span class="dt">digits =</span> <span class="dv">7</span>)) {
-  <span class="co"># ... process the data ...</span>
-  params &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">foo =</span> data, <span class="dt">bar =</span> <span class="ot">TRUE</span>)
-  <span class="co"># customize toJSON() argument values</span>
-  <span class="kw">attr</span>(params, <span class="st">&#39;TOJSON_ARGS&#39;</span>) &lt;-<span class="st"> </span>JSONArgs
-  htmlwidgets::<span class="kw">createWidget</span>(name, <span class="dt">x =</span> params, ...)
-}</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>fooWidget &lt;-<span class="st"> </span><span class="cf">function</span>(data, name, ..., <span class="dt">JSONArgs =</span> <span class="kw">list</span>(<span class="dt">digits =</span> <span class="dv">7</span>)) {</span>
+<span id="cb9-2"><a href="#cb9-2"></a>  <span class="co"># ... process the data ...</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a>  params &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">foo =</span> data, <span class="dt">bar =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb9-4"><a href="#cb9-4"></a>  <span class="co"># customize toJSON() argument values</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a>  <span class="kw">attr</span>(params, <span class="st">&#39;TOJSON_ARGS&#39;</span>) &lt;-<span class="st"> </span>JSONArgs</span>
+<span id="cb9-6"><a href="#cb9-6"></a>  htmlwidgets<span class="op">::</span><span class="kw">createWidget</span>(name, <span class="dt">x =</span> params, ...)</span>
+<span id="cb9-7"><a href="#cb9-7"></a>}</span></code></pre></div>
 <p>You can also use a global option <code>htmlwidgets.TOJSON_ARGS</code> to customize the JSON serializer arguments for all widgets in the current R session, e.g.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">options</span>(<span class="dt">htmlwidgets.TOJSON_ARGS =</span> <span class="kw">list</span>(<span class="dt">digits =</span> <span class="dv">7</span>, <span class="dt">pretty =</span> <span class="ot">TRUE</span>))</code></pre></div></li>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">options</span>(<span class="dt">htmlwidgets.TOJSON_ARGS =</span> <span class="kw">list</span>(<span class="dt">digits =</span> <span class="dv">7</span>, <span class="dt">pretty =</span> <span class="ot">TRUE</span>))</span></code></pre></div></li>
 <li><p>If you do not want to use <strong>jsonlite</strong>, you can completely override the serializer function by attaching an attribute <code>TOJSON_FUNC</code> to the widget data, e.g.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fooWidget &lt;-<span class="st"> </span>function(data, name, ...) {
-  <span class="co"># ... process the data ...</span>
-  params &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">foo =</span> data, <span class="dt">bar =</span> <span class="ot">TRUE</span>)
-  <span class="co"># customize the JSON serializer</span>
-  <span class="kw">attr</span>(params, <span class="st">&#39;TOJSON_FUNC&#39;</span>) &lt;-<span class="st"> </span>MY_OWN_JSON_FUNCTION
-  htmlwidgets::<span class="kw">createWidget</span>(name, <span class="dt">x =</span> params, ...)
-}</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>fooWidget &lt;-<span class="st"> </span><span class="cf">function</span>(data, name, ...) {</span>
+<span id="cb11-2"><a href="#cb11-2"></a>  <span class="co"># ... process the data ...</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a>  params &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">foo =</span> data, <span class="dt">bar =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb11-4"><a href="#cb11-4"></a>  <span class="co"># customize the JSON serializer</span></span>
+<span id="cb11-5"><a href="#cb11-5"></a>  <span class="kw">attr</span>(params, <span class="st">&#39;TOJSON_FUNC&#39;</span>) &lt;-<span class="st"> </span>MY_OWN_JSON_FUNCTION</span>
+<span id="cb11-6"><a href="#cb11-6"></a>  htmlwidgets<span class="op">::</span><span class="kw">createWidget</span>(name, <span class="dt">x =</span> params, ...)</span>
+<span id="cb11-7"><a href="#cb11-7"></a>}</span></code></pre></div>
 <p>Here <code>MY_OWN_JSON_FUNCTION</code> can be an arbitrary R function that converts R objects to JSON. If you have also specified the <code>TOJSON_ARGS</code> attribute, it will be passed to your custom JSON function as well.</p></li>
 </ol>
 <p>Note these features about custom JSON serializers require the <strong>shiny</strong> version to be greater than 0.11.1 if you render the widgets in Shiny apps.</p>
@@ -414,35 +525,35 @@ $(document).ready(function () {
 <h2>Passing JavaScript functions</h2>
 <p>As you would expect, character vectors passed from R to JavaScript are converted to JavaScript strings. However, what if you want to allow users to provide custom JavaScript functions for formatting, drawing, or event handling? For this case, the <strong>htmlwidgets</strong> package includes a <code>JS()</code> function that allows you to request that a character value is evaluated as JavaScript when it is received on the client.</p>
 <p>For example, the <a href="http://rstudio.github.io/dygraphs">dygraphs</a> widget includes a <code>dyCallbacks</code> function that allows the user to provide callback functions for a variety of contexts. These callbacks are “marked” as containing JavaScript so that they can be converted to actual JavaScript functions on the client:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">callbacks &lt;-<span class="st"> </span><span class="kw">list</span>(
-  <span class="dt">clickCallback =</span> <span class="kw">JS</span>(clickCallback)
-  <span class="dt">drawCallback =</span> <span class="kw">JS</span>(drawCallback)
-  <span class="dt">highlightCallback =</span> <span class="kw">JS</span>(highlightCallback)
-  <span class="dt">pointClickCallback =</span> <span class="kw">JS</span>(pointClickCallback)
-  <span class="dt">underlayCallback =</span> <span class="kw">JS</span>(underlayCallback)
-)</code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>callbacks &lt;-<span class="st"> </span><span class="kw">list</span>(</span>
+<span id="cb12-2"><a href="#cb12-2"></a>  <span class="dt">clickCallback =</span> <span class="kw">JS</span>(clickCallback)</span>
+<span id="cb12-3"><a href="#cb12-3"></a>  <span class="dt">drawCallback =</span> <span class="kw">JS</span>(drawCallback)</span>
+<span id="cb12-4"><a href="#cb12-4"></a>  <span class="dt">highlightCallback =</span> <span class="kw">JS</span>(highlightCallback)</span>
+<span id="cb12-5"><a href="#cb12-5"></a>  <span class="dt">pointClickCallback =</span> <span class="kw">JS</span>(pointClickCallback)</span>
+<span id="cb12-6"><a href="#cb12-6"></a>  <span class="dt">underlayCallback =</span> <span class="kw">JS</span>(underlayCallback)</span>
+<span id="cb12-7"><a href="#cb12-7"></a>)</span></code></pre></div>
 <p>Another example is in the <a href="http://rstudio.github.io/DT">DT</a> (DataTables) widget, where users can specify an <code>initCallback</code> with JavaScript to execute after the table is loaded and initialized:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">datatable</span>(<span class="kw">head</span>(iris, <span class="dv">20</span>), <span class="dt">options =</span> <span class="kw">list</span>(
-  <span class="dt">initComplete =</span> <span class="kw">JS</span>(
-    <span class="st">&quot;function(settings, json) {&quot;</span>,
-    <span class="st">&quot;$(this.api().table().header()).css({&#39;background-color&#39;: &#39;#000&#39;, &#39;color&#39;: &#39;#fff&#39;});&quot;</span>,
-    <span class="st">&quot;}&quot;</span>)
-))</code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">datatable</span>(<span class="kw">head</span>(iris, <span class="dv">20</span>), <span class="dt">options =</span> <span class="kw">list</span>(</span>
+<span id="cb13-2"><a href="#cb13-2"></a>  <span class="dt">initComplete =</span> <span class="kw">JS</span>(</span>
+<span id="cb13-3"><a href="#cb13-3"></a>    <span class="st">&quot;function(settings, json) {&quot;</span>,</span>
+<span id="cb13-4"><a href="#cb13-4"></a>    <span class="st">&quot;$(this.api().table().header()).css({&#39;background-color&#39;: &#39;#000&#39;, &#39;color&#39;: &#39;#fff&#39;});&quot;</span>,</span>
+<span id="cb13-5"><a href="#cb13-5"></a>    <span class="st">&quot;}&quot;</span>)</span>
+<span id="cb13-6"><a href="#cb13-6"></a>))</span></code></pre></div>
 <p>If multiple arguments are passed to <code>JS()</code> (as in the above example), they will be concatenated into a single string separated by <code>\n</code>.</p>
 </div>
 <div id="custom-widget-html" class="section level2">
 <h2>Custom widget HTML</h2>
 <p>Typically the HTML “housing” for a widget is just a <code>&lt;div&gt;</code> element, and this is correspondingly the default behavior for new widgets that don’t specify otherwise. However, sometimes you need a different element type. For example, the <a href="https://github.com/htmlwidgets/sparkline">sparkline</a> widget requires a <code>&lt;span&gt;</code> element so implements the following custom HTML generation function:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sparkline_html &lt;-<span class="st"> </span>function(id, style, class, ...){
-  tags$<span class="kw">span</span>(<span class="dt">id =</span> id, <span class="dt">class =</span> class)
-}</code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>sparkline_html &lt;-<span class="st"> </span><span class="cf">function</span>(id, style, class, ...){</span>
+<span id="cb14-2"><a href="#cb14-2"></a>  tags<span class="op">$</span><span class="kw">span</span>(<span class="dt">id =</span> id, <span class="dt">class =</span> class)</span>
+<span id="cb14-3"><a href="#cb14-3"></a>}</span></code></pre></div>
 <p>Note that this function is looked up within the package implementing the widget by the convention <code>widgetname_html</code> so it need not be formally exported from your package or otherwise registered with <strong>htmlwidgets</strong>.</p>
 <p>Most widgets won’t need a custom HTML function but if you need to generate custom HTML for your widget (e.g. you need an <code>&lt;input&gt;</code> or a <code>&lt;span&gt;</code> rather than a <code>&lt;div&gt;</code>) then you should use the <strong>htmltools</strong> package (as demonstrated by the code above).</p>
 </div>
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>N.B. It is not exported from <strong>htmlwidgets</strong>, so you are not supposed to call this function directly.<a href="#fnref1">↩</a></p></li>
+<li id="fn1"><p>N.B. It is not exported from <strong>htmlwidgets</strong>, so you are not supposed to call this function directly.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 
@@ -503,6 +614,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 
 </body>

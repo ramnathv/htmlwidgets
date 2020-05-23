@@ -1,10 +1,10 @@
 /**
  * Highcharts pattern fill plugin
  *
- * Version         2.0.2
+ * Version         3.0.3
  * Author:         Torstein Honsi
  *                 Stephane Vanraes
- * Last revision:  2015-05-04
+ * Last revision:  2016-10-05
  * License:        MIT License
  *
  * Remark:         The latest version is not compatible with earlier versions.
@@ -13,7 +13,7 @@
  *                 Create a 'patterns' array under 'defs'
  *                 Each item in this array represents a pattern
  *                 To use a pattern, set the color to `url(#id-of-pattern)'
- * 
+ *
  * Options for the patterns:
  * - id:           The id for the pattern, defaults to highcharts-pattern-# with # an increasing number for each pattern without id
  * - width:        The width of the pattern, defaults to 10
@@ -21,7 +21,7 @@
  * - opacity       A general opacity for the pattern
  * - path:         In SVG, the path for the pattern
  *                 (Note: this can be a string with only a path, or an object with d, stroke, strokeWidth and fill)
- * - image:        An image source for the pattern 
+ * - image:        An image source for the pattern
  * - color:        A color to be used instead of a path
  *
  * Notes:          VML does not support the path setting
@@ -30,7 +30,13 @@
  */
 
 /*global Highcharts, document */
-(function() {
+(function (factory) {
+    if (typeof module === 'object' && module.exports) {
+        module.exports = factory;
+    } else {
+        factory(Highcharts);
+    }
+}(function (Highcharts) {
 
     'use strict';
 
@@ -133,7 +139,7 @@
                     markup;
 
                 if (pattern.image) {
-                    // Remove Previous fills                    
+                    // Remove Previous fills
                     if (elem.getElementsByTagName('fill').length) {
                         elem.removeChild(elem.getElementsByTagName('fill')[0]);
                     }
@@ -203,4 +209,4 @@
 
     });
 
-}());
+}));

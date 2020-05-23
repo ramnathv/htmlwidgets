@@ -17,25 +17,28 @@ HTMLWidgets.widget({
 
   renderValue: function(el, x, instance) {
     var ShowValue = function(value) {
-        var scene = window[x.sceneId].rglinstance;
+        var rgldiv = document.getElementById(x.sceneId),
+            rglinstance;
         x.value = value;
       /* We might be running before the scene exists.  If so, it
          will have to apply our initial value. */
-        if (typeof scene !== "undefined") {
-          scene.Player(el, x);
-          instance.initialized = true;
+        if (rgldiv && (rglinstance = rgldiv.rglinstance)) {
+          rglinstance.Player(el, x);
+          x.initialized = true;
         } else {
+          if (x.initialized)
+            rglwidgetClass.prototype.alertOnce("rgl widget '" + x.sceneId + "' not found.");
+          x.initialized = false;
           instance.rglPlayer = x;
-          instance.initialized = false;
         }
       };
 
     el.rglPlayer = x;
     instance.rglPlayer = x;
 
-    if (x.respondTo !== null) {
+    if (x.respondTo) {
       var control = window[x.respondTo];
-      if (typeof control !== "undefined") {
+      if (control) {
         var self = this, i,
             state = "idle";
 
@@ -47,6 +50,7 @@ HTMLWidgets.widget({
           control.rglOldhandler = control.onchange;
 
         control.onchange = function() {
+          var value;
           /* If we are called n>0 times while servicing a previous call, we want to finish
              the current call, then run again.  But the old handler might want to
              see every change. */
@@ -59,12 +63,16 @@ HTMLWidgets.widget({
             state = "busy";
             if (control.rglOldhandler !== null)
               control.rglOldhandler.call(this);
-            ShowValue(control.value);
+            if (control.type == "checkbox")
+              value = control.checked ? 0 : 1;
+            else
+              value = control.value;
+            ShowValue(value);
             if (state === "busy")
               state = "idle";
           } while (state !== "idle");
         };
-        ShowValue(control.value);
+        control.onchange();
       }
     }
     ShowValue(x.value);

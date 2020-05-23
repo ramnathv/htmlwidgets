@@ -5,6 +5,8 @@ f = rmarkdown::render(commandArgs(TRUE))
 # remove version numbers in HTML
 r = '-\\d+([.]\\d+){0,3}$'
 v1 = rev(list.files('libs', r, full.names = TRUE))
+# d3 has back-compat problems (networkD3 breaks without this line)
+v1 = v1[!grepl("/d3-", v1)]
 v2 = gsub(r, '', v1)
 x = readLines(f)
 for (i in seq_along(v1)) {

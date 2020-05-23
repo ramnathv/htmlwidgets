@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
-<meta charset="utf-8">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta charset="utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
 
 <title>Widget sizing</title>
 
+<script src="libs/header-attrs/header-attrs.js"></script>
 <script src="libs/jquery/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="libs/bootstrap/css/cosmo.min.css" rel="stylesheet" />
@@ -29,42 +30,95 @@
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; background-color: #dddddd; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { font-weight: bold; } /* Keyword */
-code > span.dt { color: #800000; } /* DataType */
-code > span.dv { color: #0000ff; } /* DecVal */
-code > span.bn { color: #0000ff; } /* BaseN */
-code > span.fl { color: #800080; } /* Float */
-code > span.ch { color: #ff00ff; } /* Char */
-code > span.st { color: #dd0000; } /* String */
-code > span.co { color: #808080; font-style: italic; } /* Comment */
-code > span.al { color: #00ff00; font-weight: bold; } /* Alert */
-code > span.fu { color: #000080; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #ff0000; font-weight: bold; } /* Warning */
-code > span.cn { color: #000000; } /* Constant */
-code > span.sc { color: #ff00ff; } /* SpecialChar */
-code > span.vs { color: #dd0000; } /* VerbatimString */
-code > span.ss { color: #dd0000; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { } /* Variable */
-code > span.cf { } /* ControlFlow */
-code > span.op { } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { font-weight: bold; } /* Preprocessor */
-code > span.at { } /* Attribute */
-code > span.do { color: #808080; font-style: italic; } /* Documentation */
-code > span.an { color: #808080; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #808080; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #808080; font-weight: bold; font-style: italic; } /* Information */
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #ffffff;
+    color: #a0a0a0;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
+div.sourceCode
+  { color: #1f1c1b; background-color: #ffffff; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span. { color: #1f1c1b; } /* Normal */
+code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
+code span.an { color: #ca60ca; } /* Annotation */
+code span.at { color: #0057ae; } /* Attribute */
+code span.bn { color: #b08000; } /* BaseN */
+code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #924c9d; } /* Char */
+code span.cn { color: #aa5500; } /* Constant */
+code span.co { color: #898887; } /* Comment */
+code span.cv { color: #0095ff; } /* CommentVar */
+code span.do { color: #607880; } /* Documentation */
+code span.dt { color: #0057ae; } /* DataType */
+code span.dv { color: #b08000; } /* DecVal */
+code span.er { color: #bf0303; text-decoration: underline; } /* Error */
+code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+code span.fl { color: #b08000; } /* Float */
+code span.fu { color: #644a9b; } /* Function */
+code span.im { color: #ff5500; } /* Import */
+code span.in { color: #b08000; } /* Information */
+code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+code span.op { color: #1f1c1b; } /* Operator */
+code span.ot { color: #006e28; } /* Other */
+code span.pp { color: #006e28; } /* Preprocessor */
+code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
+code span.sc { color: #3daee9; } /* SpecialChar */
+code span.ss { color: #ff5500; } /* SpecialString */
+code span.st { color: #bf0303; } /* String */
+code span.va { color: #0057ae; } /* Variable */
+code span.vs { color: #bf0303; } /* VerbatimString */
+code span.wa { color: #bf0303; } /* Warning */
+
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -100,9 +154,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -116,30 +168,91 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
 }
 </style>
 
 
 
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -209,10 +322,6 @@ $(document).ready(function () {
           <h5 class="list-group-item-heading">networkD3</h5>
           <p class="list-group-item-text">Graph data visualization with D3</p>
         </a>
-        <a href="showcase_d3heatmap.html" class="list-group-item">
-          <h5 class="list-group-item-heading">d3heatmap</h5>
-          <p class="list-group-item-text">Interactive heatmaps with D3</p>
-        </a>
         <a href="showcase_datatables.html" class="list-group-item">
           <h5 class="list-group-item-heading">DataTables</h5>
           <p class="list-group-item-text">Tabular data display</p>
@@ -261,11 +370,13 @@ $(document).ready(function () {
 <div id="TOC">
 <ul>
 <li><a href="#overview">Overview</a></li>
-<li><a href="#specifying-a-sizing-policy">Specifying a sizing policy</a><ul>
+<li><a href="#specifying-a-sizing-policy">Specifying a sizing policy</a>
+<ul>
 <li><a href="#examples">Examples</a></li>
 <li><a href="#available-options">Available options</a></li>
 </ul></li>
-<li><a href="#javascript-resize-method">JavaScript resize method</a><ul>
+<li><a href="#javascript-resize-method">JavaScript resize method</a>
+<ul>
 <li><a href="#examples-1">Examples</a></li>
 </ul></li>
 </ul>
@@ -289,36 +400,36 @@ $(document).ready(function () {
 <h2>Specifying a sizing policy</h2>
 <p>The default HTML widget sizing policy treats the widget with the same sizing semantics as an R plot. When printed at the R console the widget is displayed within the RStudio Viewer and sized to fill the Viewer pane (modulo any padding). When rendered inside an R Markdown document the widget is sized based on the default size of figures in the document.</p>
 <p>Note that for most widgets the default sizing behavior is fine and you won’t need to create a custom sizing policy. If you need a slightly different behavior than the default you can also selectively override the default behavior by calling the <code>sizingPolicy</code> function and passing the result to <code>createWidget</code>. For example:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">htmlwidgets::<span class="kw">createWidget</span>(
-  <span class="st">&quot;sigma&quot;</span>, 
-  x, 
-  <span class="dt">width =</span> width, 
-  <span class="dt">height =</span> height,
-  <span class="dt">sizingPolicy =</span> htmlwidgets::<span class="kw">sizingPolicy</span>(
-    <span class="dt">viewer.padding =</span> <span class="dv">0</span>,
-    <span class="dt">viewer.paneHeight =</span> <span class="dv">500</span>,
-    <span class="dt">browser.fill =</span> <span class="ot">TRUE</span>
-  )
-)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>htmlwidgets<span class="op">::</span><span class="kw">createWidget</span>(</span>
+<span id="cb1-2"><a href="#cb1-2"></a>  <span class="st">&quot;sigma&quot;</span>, </span>
+<span id="cb1-3"><a href="#cb1-3"></a>  x, </span>
+<span id="cb1-4"><a href="#cb1-4"></a>  <span class="dt">width =</span> width, </span>
+<span id="cb1-5"><a href="#cb1-5"></a>  <span class="dt">height =</span> height,</span>
+<span id="cb1-6"><a href="#cb1-6"></a>  <span class="dt">sizingPolicy =</span> htmlwidgets<span class="op">::</span><span class="kw">sizingPolicy</span>(</span>
+<span id="cb1-7"><a href="#cb1-7"></a>    <span class="dt">viewer.padding =</span> <span class="dv">0</span>,</span>
+<span id="cb1-8"><a href="#cb1-8"></a>    <span class="dt">viewer.paneHeight =</span> <span class="dv">500</span>,</span>
+<span id="cb1-9"><a href="#cb1-9"></a>    <span class="dt">browser.fill =</span> <span class="ot">TRUE</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a>  )</span>
+<span id="cb1-11"><a href="#cb1-11"></a>)</span></code></pre></div>
 <div id="examples" class="section level3">
 <h3>Examples</h3>
 <p>The <a href="http://christophergandrud.github.io/networkD3/">networkD3</a> package uses custom sizing policies for all of its widgets. The <code>simpleNetwork</code> widget eliminates padding (as d3 is already providing padding) and specifies that it wants to fill up as much space as possible when displayed in a standalone web browser:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sizingPolicy</span>(<span class="dt">padding =</span> <span class="dv">0</span>, <span class="dt">browser.fill =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">sizingPolicy</span>(<span class="dt">padding =</span> <span class="dv">0</span>, <span class="dt">browser.fill =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <p>The <code>sankeyNetwork</code> widget requires much more space than is afforded by the RStudio Viewer or a typical knitr figure so it disables those automatic sizing behaviors. It also provides a more reasonable default width and height for knitr documents:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sizingPolicy</span>(<span class="dt">viewer.suppress =</span> <span class="ot">TRUE</span>,
-             <span class="dt">knitr.figure =</span> <span class="ot">FALSE</span>,
-             <span class="dt">browser.fill =</span> <span class="ot">TRUE</span>,
-             <span class="dt">browser.padding =</span> <span class="dv">75</span>,
-             <span class="dt">knitr.defaultWidth =</span> <span class="dv">800</span>,
-             <span class="dt">knitr.defaultHeight =</span> <span class="dv">500</span>)</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">sizingPolicy</span>(<span class="dt">viewer.suppress =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb3-2"><a href="#cb3-2"></a>             <span class="dt">knitr.figure =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb3-3"><a href="#cb3-3"></a>             <span class="dt">browser.fill =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb3-4"><a href="#cb3-4"></a>             <span class="dt">browser.padding =</span> <span class="dv">75</span>,</span>
+<span id="cb3-5"><a href="#cb3-5"></a>             <span class="dt">knitr.defaultWidth =</span> <span class="dv">800</span>,</span>
+<span id="cb3-6"><a href="#cb3-6"></a>             <span class="dt">knitr.defaultHeight =</span> <span class="dv">500</span>)</span></code></pre></div>
 </div>
 <div id="available-options" class="section level3">
 <h3>Available options</h3>
 <p>Here are the various options that can be specified within a sizing policy:</p>
-<table style="width:11%;">
+<table>
 <colgroup>
-<col width="5%" />
-<col width="5%" />
+<col width="50%" />
+<col width="50%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -399,64 +510,64 @@ $(document).ready(function () {
 <h2>JavaScript resize method</h2>
 <p>Specifying a sizing policy allows htmlwidgets to calculate the width and height of your widget based on where it’s being displayed. However, you still need to forward this sizing information on to the underlying JavaScript library you are creating a widget for.</p>
 <p>Every JavaScript library handles dynamic sizing a bit differently. Some do it automatically, some have a resize() call to force a layout, and some require that size be set only along with data and other options. Whatever the case, the <strong>htmlwidgets</strong> framework will pass the computed sizes to both your <code>initialize</code> function and <code>resize</code> function. Here’s an empty JavaScript binding that illustrates:</p>
-<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="va">HTMLWidgets</span>.<span class="at">widget</span>(<span class="op">{</span>
-
-  <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;demo&quot;</span><span class="op">,</span>
-  
-  <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;output&quot;</span><span class="op">,</span>
-  
-  <span class="dt">factory</span><span class="op">:</span> <span class="kw">function</span>(el<span class="op">,</span> width<span class="op">,</span> height) <span class="op">{</span>
-  
-    <span class="cf">return</span> <span class="op">{</span>
-      <span class="dt">renderValue</span><span class="op">:</span> <span class="kw">function</span>(x) <span class="op">{</span>
-      
-      <span class="op">},</span>
-      
-      <span class="dt">resize</span><span class="op">:</span> <span class="kw">function</span>(width<span class="op">,</span> height) <span class="op">{</span>
-        
-      <span class="op">}</span>
-    <span class="op">};</span>
-  <span class="op">}</span>
-<span class="op">}</span>)<span class="op">;</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1"></a>HTMLWidgets<span class="op">.</span><span class="fu">widget</span>({</span>
+<span id="cb4-2"><a href="#cb4-2"></a></span>
+<span id="cb4-3"><a href="#cb4-3"></a>  <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;demo&quot;</span><span class="op">,</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a>  </span>
+<span id="cb4-5"><a href="#cb4-5"></a>  <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;output&quot;</span><span class="op">,</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a>  </span>
+<span id="cb4-7"><a href="#cb4-7"></a>  <span class="dt">factory</span><span class="op">:</span> <span class="kw">function</span>(el<span class="op">,</span> width<span class="op">,</span> height) {</span>
+<span id="cb4-8"><a href="#cb4-8"></a>  </span>
+<span id="cb4-9"><a href="#cb4-9"></a>    <span class="cf">return</span> {</span>
+<span id="cb4-10"><a href="#cb4-10"></a>      <span class="dt">renderValue</span><span class="op">:</span> <span class="kw">function</span>(x) {</span>
+<span id="cb4-11"><a href="#cb4-11"></a>      </span>
+<span id="cb4-12"><a href="#cb4-12"></a>      }<span class="op">,</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a>      </span>
+<span id="cb4-14"><a href="#cb4-14"></a>      <span class="dt">resize</span><span class="op">:</span> <span class="kw">function</span>(width<span class="op">,</span> height) {</span>
+<span id="cb4-15"><a href="#cb4-15"></a>        </span>
+<span id="cb4-16"><a href="#cb4-16"></a>      }</span>
+<span id="cb4-17"><a href="#cb4-17"></a>    }<span class="op">;</span></span>
+<span id="cb4-18"><a href="#cb4-18"></a>  }</span>
+<span id="cb4-19"><a href="#cb4-19"></a>})<span class="op">;</span></span></code></pre></div>
 <p>What you do with the passed width and height is up to you and depends on the re-sizing semantics of the underlying JavaScript library you are creating a widget for. A couple of illustrative examples are included in the next section.</p>
 <div id="examples-1" class="section level3">
 <h3>Examples</h3>
 <div id="dygraphs" class="section level4">
 <h4>dygraphs</h4>
 <p>In the <a href="http://rstudio.github.io/dygraphs">dygraphs</a> widget the implementation of re-sizing is relatively simple since the <strong>dygraphs</strong> library includes a resize() method to automatically size the graph to it’s enclosing HTML element:</p>
-<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript">resize<span class="op">:</span> <span class="kw">function</span>(width<span class="op">,</span> height) <span class="op">{</span>
-  <span class="cf">if</span> (dygraph)
-    <span class="va">dygraph</span>.<span class="at">resize</span>()<span class="op">;</span>
-<span class="op">}</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1"></a>resize<span class="op">:</span> <span class="kw">function</span>(width<span class="op">,</span> height) {</span>
+<span id="cb5-2"><a href="#cb5-2"></a>  <span class="cf">if</span> (dygraph)</span>
+<span id="cb5-3"><a href="#cb5-3"></a>    dygraph<span class="op">.</span><span class="fu">resize</span>()<span class="op">;</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a>}</span></code></pre></div>
 </div>
 <div id="forcenetwork" class="section level4">
 <h4>forceNetwork</h4>
 <p>In the <a href="http://christophergandrud.github.io/networkD3/#force">forceNetwork</a> widget, the passed width and height are applied to the <code>&lt;svg&gt;</code> element that hosts the d3 network visualization, as well as forwarded on to the underlying d3 force simulation object:</p>
-<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript">factory<span class="op">:</span> <span class="kw">function</span>(el<span class="op">,</span> width<span class="op">,</span> height) <span class="op">{</span>
-
-  <span class="co">// instance data</span>
-  <span class="kw">var</span> el <span class="op">=</span> el<span class="op">;</span>
-  <span class="kw">var</span> force <span class="op">=</span> <span class="va">d3</span>.<span class="va">layout</span>.<span class="at">force</span>()<span class="op">;</span>
-
-  <span class="va">d3</span>.<span class="at">select</span>(el).<span class="at">append</span>(<span class="st">&quot;svg&quot;</span>)
-    .<span class="at">attr</span>(<span class="st">&quot;width&quot;</span><span class="op">,</span> width)
-    .<span class="at">attr</span>(<span class="st">&quot;height&quot;</span><span class="op">,</span> height)<span class="op">;</span>
-      
-  <span class="cf">return</span> <span class="op">{</span>
-    <span class="dt">renderValue</span><span class="op">:</span> <span class="kw">function</span>(x) <span class="op">{</span>
-      <span class="co">// implementation excluded</span>
-    <span class="op">},</span>
-      
-    <span class="dt">resize</span><span class="op">:</span> <span class="kw">function</span>(width<span class="op">,</span> height) <span class="op">{</span>
-         
-      <span class="va">d3</span>.<span class="at">select</span>(el).<span class="at">select</span>(<span class="st">&quot;svg&quot;</span>)
-        .<span class="at">attr</span>(<span class="st">&quot;width&quot;</span><span class="op">,</span> width)
-        .<span class="at">attr</span>(<span class="st">&quot;height&quot;</span><span class="op">,</span> height)<span class="op">;</span>
-
-      <span class="va">force</span>.<span class="at">size</span>([width<span class="op">,</span> height]).<span class="at">resume</span>()<span class="op">;</span>
-    <span class="op">}</span>
-  <span class="op">};</span>
-<span class="op">}</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1"></a>factory<span class="op">:</span> <span class="kw">function</span>(el<span class="op">,</span> width<span class="op">,</span> height) {</span>
+<span id="cb6-2"><a href="#cb6-2"></a></span>
+<span id="cb6-3"><a href="#cb6-3"></a>  <span class="co">// instance data</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a>  <span class="kw">var</span> el <span class="op">=</span> el<span class="op">;</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a>  <span class="kw">var</span> force <span class="op">=</span> d3<span class="op">.</span><span class="at">layout</span><span class="op">.</span><span class="fu">force</span>()<span class="op">;</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a></span>
+<span id="cb6-7"><a href="#cb6-7"></a>  d3<span class="op">.</span><span class="fu">select</span>(el)<span class="op">.</span><span class="fu">append</span>(<span class="st">&quot;svg&quot;</span>)</span>
+<span id="cb6-8"><a href="#cb6-8"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">&quot;width&quot;</span><span class="op">,</span> width)</span>
+<span id="cb6-9"><a href="#cb6-9"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">&quot;height&quot;</span><span class="op">,</span> height)<span class="op">;</span></span>
+<span id="cb6-10"><a href="#cb6-10"></a>      </span>
+<span id="cb6-11"><a href="#cb6-11"></a>  <span class="cf">return</span> {</span>
+<span id="cb6-12"><a href="#cb6-12"></a>    <span class="dt">renderValue</span><span class="op">:</span> <span class="kw">function</span>(x) {</span>
+<span id="cb6-13"><a href="#cb6-13"></a>      <span class="co">// implementation excluded</span></span>
+<span id="cb6-14"><a href="#cb6-14"></a>    }<span class="op">,</span></span>
+<span id="cb6-15"><a href="#cb6-15"></a>      </span>
+<span id="cb6-16"><a href="#cb6-16"></a>    <span class="dt">resize</span><span class="op">:</span> <span class="kw">function</span>(width<span class="op">,</span> height) {</span>
+<span id="cb6-17"><a href="#cb6-17"></a>         </span>
+<span id="cb6-18"><a href="#cb6-18"></a>      d3<span class="op">.</span><span class="fu">select</span>(el)<span class="op">.</span><span class="fu">select</span>(<span class="st">&quot;svg&quot;</span>)</span>
+<span id="cb6-19"><a href="#cb6-19"></a>        <span class="op">.</span><span class="fu">attr</span>(<span class="st">&quot;width&quot;</span><span class="op">,</span> width)</span>
+<span id="cb6-20"><a href="#cb6-20"></a>        <span class="op">.</span><span class="fu">attr</span>(<span class="st">&quot;height&quot;</span><span class="op">,</span> height)<span class="op">;</span></span>
+<span id="cb6-21"><a href="#cb6-21"></a></span>
+<span id="cb6-22"><a href="#cb6-22"></a>      force<span class="op">.</span><span class="fu">size</span>([width<span class="op">,</span> height])<span class="op">.</span><span class="fu">resume</span>()<span class="op">;</span></span>
+<span id="cb6-23"><a href="#cb6-23"></a>    }</span>
+<span id="cb6-24"><a href="#cb6-24"></a>  }<span class="op">;</span></span>
+<span id="cb6-25"><a href="#cb6-25"></a>}</span></code></pre></div>
 <p>As you can see, re-sizing is handled in a wide variety of fashions in different JavaScript libraries. The <code>resize</code> method is intended to provide a flexible way to map the automatic sizing logic of <strong>htmlwidgets</strong> directly into the underlying library.</p>
 </div>
 </div>
@@ -519,6 +630,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 
 </body>

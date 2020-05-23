@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
-<meta charset="utf-8">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta charset="utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
 
 <title>Creating a widget</title>
 
+<script src="libs/header-attrs/header-attrs.js"></script>
 <script src="libs/jquery/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="libs/bootstrap/css/cosmo.min.css" rel="stylesheet" />
@@ -29,42 +30,95 @@
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; background-color: #dddddd; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { font-weight: bold; } /* Keyword */
-code > span.dt { color: #800000; } /* DataType */
-code > span.dv { color: #0000ff; } /* DecVal */
-code > span.bn { color: #0000ff; } /* BaseN */
-code > span.fl { color: #800080; } /* Float */
-code > span.ch { color: #ff00ff; } /* Char */
-code > span.st { color: #dd0000; } /* String */
-code > span.co { color: #808080; font-style: italic; } /* Comment */
-code > span.al { color: #00ff00; font-weight: bold; } /* Alert */
-code > span.fu { color: #000080; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #ff0000; font-weight: bold; } /* Warning */
-code > span.cn { color: #000000; } /* Constant */
-code > span.sc { color: #ff00ff; } /* SpecialChar */
-code > span.vs { color: #dd0000; } /* VerbatimString */
-code > span.ss { color: #dd0000; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { } /* Variable */
-code > span.cf { } /* ControlFlow */
-code > span.op { } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { font-weight: bold; } /* Preprocessor */
-code > span.at { } /* Attribute */
-code > span.do { color: #808080; font-style: italic; } /* Documentation */
-code > span.an { color: #808080; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #808080; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #808080; font-weight: bold; font-style: italic; } /* Information */
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #ffffff;
+    color: #a0a0a0;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
+div.sourceCode
+  { color: #1f1c1b; background-color: #ffffff; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span. { color: #1f1c1b; } /* Normal */
+code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
+code span.an { color: #ca60ca; } /* Annotation */
+code span.at { color: #0057ae; } /* Attribute */
+code span.bn { color: #b08000; } /* BaseN */
+code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #924c9d; } /* Char */
+code span.cn { color: #aa5500; } /* Constant */
+code span.co { color: #898887; } /* Comment */
+code span.cv { color: #0095ff; } /* CommentVar */
+code span.do { color: #607880; } /* Documentation */
+code span.dt { color: #0057ae; } /* DataType */
+code span.dv { color: #b08000; } /* DecVal */
+code span.er { color: #bf0303; text-decoration: underline; } /* Error */
+code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+code span.fl { color: #b08000; } /* Float */
+code span.fu { color: #644a9b; } /* Function */
+code span.im { color: #ff5500; } /* Import */
+code span.in { color: #b08000; } /* Information */
+code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+code span.op { color: #1f1c1b; } /* Operator */
+code span.ot { color: #006e28; } /* Other */
+code span.pp { color: #006e28; } /* Preprocessor */
+code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
+code span.sc { color: #3daee9; } /* SpecialChar */
+code span.ss { color: #ff5500; } /* SpecialString */
+code span.st { color: #bf0303; } /* String */
+code span.va { color: #0057ae; } /* Variable */
+code span.vs { color: #bf0303; } /* VerbatimString */
+code span.wa { color: #bf0303; } /* Warning */
+
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -100,9 +154,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -116,30 +168,91 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
 }
 </style>
 
 
 
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -209,10 +322,6 @@ $(document).ready(function () {
           <h5 class="list-group-item-heading">networkD3</h5>
           <p class="list-group-item-text">Graph data visualization with D3</p>
         </a>
-        <a href="showcase_d3heatmap.html" class="list-group-item">
-          <h5 class="list-group-item-heading">d3heatmap</h5>
-          <p class="list-group-item-text">Interactive heatmaps with D3</p>
-        </a>
         <a href="showcase_datatables.html" class="list-group-item">
           <h5 class="list-group-item-heading">DataTables</h5>
           <p class="list-group-item-text">Tabular data display</p>
@@ -261,14 +370,16 @@ $(document).ready(function () {
 <div id="TOC">
 <ul>
 <li><a href="#overview">Overview</a></li>
-<li><a href="#example-sigma.js">Example (sigma.js)</a><ul>
+<li><a href="#example-sigma.js">Example (sigma.js)</a>
+<ul>
 <li><a href="#file-layout">File layout</a></li>
 <li><a href="#dependencies">Dependencies</a></li>
 <li><a href="#r-binding">R binding</a></li>
 <li><a href="#javascript-binding">JavaScript binding</a></li>
 <li><a href="#demo">Demo</a></li>
 </ul></li>
-<li><a href="#creating-your-own-widgets">Creating your own widgets</a><ul>
+<li><a href="#creating-your-own-widgets">Creating your own widgets</a>
+<ul>
 <li><a href="#requirements">Requirements</a></li>
 <li><a href="#scaffolding">Scaffolding</a></li>
 <li><a href="#learning-more">Learning more</a></li>
@@ -296,9 +407,9 @@ $(document).ready(function () {
 <div id="example-sigma.js" class="section level2">
 <h2>Example (sigma.js)</h2>
 <p>To start with we’ll walk through the creation of a simple widget that wraps the <a href="http://sigmajs.org">sigma.js</a> graph visualization library. When we’re done we’ll be able to use it to display interactive visualizations of <a href="http://gexf.net">GEXF</a> (Graph Exchange XML Format) data files. For example:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(sigma)
-data &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;examples/ediaspora.gexf.xml&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;sigma&quot;</span>)
-<span class="kw">sigma</span>(data)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(sigma)</span>
+<span id="cb1-2"><a href="#cb1-2"></a>data &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;examples/ediaspora.gexf.xml&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;sigma&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">sigma</span>(data)</span></code></pre></div>
 <p><img src="images/sigma.png" alt="sigma" data-toggle="tooltip" data-placement="right" title="" data-original-title="Note this is just an image of the visualization so it's not interactive. You can play with the interactive version by following the steps in the demo section below." onload="$(this).tooltip()"></p>
 <p>Note that the above is just an image of the visualization so it’s not interactive. You can play with the interactive version by following the steps in the demo section below.</p>
 <p>There is remarkably little code required to create this binding. Below we’ll go through all of the components step-by-step. Then we’ll describe how you can create your own widgets (including automatically generating basic scaffolding for all of the core components).</p>
@@ -322,105 +433,105 @@ inst/
 <div id="dependencies" class="section level3">
 <h3>Dependencies</h3>
 <p>Dependencies are the JavaScript and CSS assets used by a widget. Dependencies are included within the <code>inst/htmlwidgets/lib</code> directory. Dependencies are specified using a YAML configuration file which uses the name of the widget as its base file name. Here’s what our <strong>sigma.yaml</strong> file looks like:</p>
-<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="fu">dependencies:</span>
-  <span class="kw">-</span> <span class="fu">name:</span> sigma
-    <span class="fu">version:</span> 1.0.3
-    <span class="fu">src:</span> htmlwidgets/lib/sigma-1.0.3
-    <span class="fu">script:</span> 
-      <span class="kw">-</span> sigma.min.js
-      <span class="kw">-</span> plugins/sigma.parsers.gexf.min.js</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">dependencies</span><span class="kw">:</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> sigma</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="at">    </span><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="fl">1.0.3</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="at">    </span><span class="fu">src</span><span class="kw">:</span><span class="at"> htmlwidgets/lib/sigma-1.0.3</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="at">    </span><span class="fu">script</span><span class="kw">:</span><span class="at"> </span></span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="at">      </span><span class="kw">-</span><span class="at"> sigma.min.js</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="at">      </span><span class="kw">-</span><span class="at"> plugins/sigma.parsers.gexf.min.js</span></span></code></pre></div>
 <p>The dependency <code>src</code> specification refers to the directory that contains the library and <code>script</code> refers to specific JavaScript files. If your library contains multiple JavaScript files specify each one on a line beginning with <code>-</code> as shown here. You can also add <code>stylesheet</code> entries and even <code>meta</code> or <code>head</code> entries. Multiple dependencies may be specified in one YAML file. See the documentation on the <code>htmlDependency</code> function in the <a href="http://cran.r-project.org/web/packages/htmltools/index.html"><strong>htmltools</strong></a> package for additional details.</p>
 </div>
 <div id="r-binding" class="section level3">
 <h3>R binding</h3>
 <p>We need to provide users with an R function that invokes our widget. Typically this function will accept input data as well as various options that control the widget’s display. Here’s the R function for <code>sigma</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#&#39; @import htmlwidgets</span>
-<span class="co">#&#39; @export</span>
-sigma &lt;-<span class="st"> </span>function(gexf, <span class="dt">drawEdges =</span> <span class="ot">TRUE</span>, <span class="dt">drawNodes =</span> <span class="ot">TRUE</span>,
-                  <span class="dt">width =</span> <span class="ot">NULL</span>, <span class="dt">height =</span> <span class="ot">NULL</span>) {
-  
-  <span class="co"># read the gexf file</span>
-  data &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="kw">readLines</span>(gexf), <span class="dt">collapse=</span><span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
-  
-  <span class="co"># create a list that contains the settings</span>
-  settings &lt;-<span class="st"> </span><span class="kw">list</span>(
-    <span class="dt">drawEdges =</span> drawEdges,
-    <span class="dt">drawNodes =</span> drawNodes
-  )
-  
-  <span class="co"># pass the data and settings using &#39;x&#39;</span>
-  x &lt;-<span class="st"> </span><span class="kw">list</span>(
-    <span class="dt">data =</span> data,
-    <span class="dt">settings =</span> settings
-  )
-  
-  <span class="co"># create the widget</span>
-  htmlwidgets::<span class="kw">createWidget</span>(<span class="st">&quot;sigma&quot;</span>, x, <span class="dt">width =</span> width, <span class="dt">height =</span> height)
-}</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co">#&#39; @import htmlwidgets</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="co">#&#39; @export</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a>sigma &lt;-<span class="st"> </span><span class="cf">function</span>(gexf, <span class="dt">drawEdges =</span> <span class="ot">TRUE</span>, <span class="dt">drawNodes =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb4-4"><a href="#cb4-4"></a>                  <span class="dt">width =</span> <span class="ot">NULL</span>, <span class="dt">height =</span> <span class="ot">NULL</span>) {</span>
+<span id="cb4-5"><a href="#cb4-5"></a>  </span>
+<span id="cb4-6"><a href="#cb4-6"></a>  <span class="co"># read the gexf file</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a>  data &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="kw">readLines</span>(gexf), <span class="dt">collapse=</span><span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-8"><a href="#cb4-8"></a>  </span>
+<span id="cb4-9"><a href="#cb4-9"></a>  <span class="co"># create a list that contains the settings</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a>  settings &lt;-<span class="st"> </span><span class="kw">list</span>(</span>
+<span id="cb4-11"><a href="#cb4-11"></a>    <span class="dt">drawEdges =</span> drawEdges,</span>
+<span id="cb4-12"><a href="#cb4-12"></a>    <span class="dt">drawNodes =</span> drawNodes</span>
+<span id="cb4-13"><a href="#cb4-13"></a>  )</span>
+<span id="cb4-14"><a href="#cb4-14"></a>  </span>
+<span id="cb4-15"><a href="#cb4-15"></a>  <span class="co"># pass the data and settings using &#39;x&#39;</span></span>
+<span id="cb4-16"><a href="#cb4-16"></a>  x &lt;-<span class="st"> </span><span class="kw">list</span>(</span>
+<span id="cb4-17"><a href="#cb4-17"></a>    <span class="dt">data =</span> data,</span>
+<span id="cb4-18"><a href="#cb4-18"></a>    <span class="dt">settings =</span> settings</span>
+<span id="cb4-19"><a href="#cb4-19"></a>  )</span>
+<span id="cb4-20"><a href="#cb4-20"></a>  </span>
+<span id="cb4-21"><a href="#cb4-21"></a>  <span class="co"># create the widget</span></span>
+<span id="cb4-22"><a href="#cb4-22"></a>  htmlwidgets<span class="op">::</span><span class="kw">createWidget</span>(<span class="st">&quot;sigma&quot;</span>, x, <span class="dt">width =</span> width, <span class="dt">height =</span> height)</span>
+<span id="cb4-23"><a href="#cb4-23"></a>}</span></code></pre></div>
 <p>The function takes two classes of input: the GEXF data file to render and some additional settings which control how it is rendered. This input is collected into a list named <code>x</code> which is then passed on to the <code>htmlwidgets::createWidget</code> function. This <code>x</code> variable will subsequently be made available to the JavaScript binding for sigma (this is described below). Any width or height parameter specified is also forwarded to the widget (widgets size themselves automatically by default so typically don’t require an explicit width or height).</p>
 <p>We want our sigma widget to also work in Shiny applications, so we add the following boilerplate Shiny output and render functions (these are always the same for all widgets):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#&#39; @export</span>
-sigmaOutput &lt;-<span class="st"> </span>function(outputId, <span class="dt">width =</span> <span class="st">&quot;100%&quot;</span>, <span class="dt">height =</span> <span class="st">&quot;400px&quot;</span>) {
-  <span class="kw">shinyWidgetOutput</span>(outputId, <span class="st">&quot;sigma&quot;</span>, width, height, <span class="dt">package =</span> <span class="st">&quot;sigma&quot;</span>)
-}
-<span class="co">#&#39; @export</span>
-renderSigma &lt;-<span class="st"> </span>function(expr, <span class="dt">env =</span> <span class="kw">parent.frame</span>(), <span class="dt">quoted =</span> <span class="ot">FALSE</span>) {
-  if (!quoted) { expr &lt;-<span class="st"> </span><span class="kw">substitute</span>(expr) } <span class="co"># force quoted</span>
-  <span class="kw">shinyRenderWidget</span>(expr, sigmaOutput, env, <span class="dt">quoted =</span> <span class="ot">TRUE</span>)
-}</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co">#&#39; @export</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>sigmaOutput &lt;-<span class="st"> </span><span class="cf">function</span>(outputId, <span class="dt">width =</span> <span class="st">&quot;100%&quot;</span>, <span class="dt">height =</span> <span class="st">&quot;400px&quot;</span>) {</span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="kw">shinyWidgetOutput</span>(outputId, <span class="st">&quot;sigma&quot;</span>, width, height, <span class="dt">package =</span> <span class="st">&quot;sigma&quot;</span>)</span>
+<span id="cb5-4"><a href="#cb5-4"></a>}</span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="co">#&#39; @export</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a>renderSigma &lt;-<span class="st"> </span><span class="cf">function</span>(expr, <span class="dt">env =</span> <span class="kw">parent.frame</span>(), <span class="dt">quoted =</span> <span class="ot">FALSE</span>) {</span>
+<span id="cb5-7"><a href="#cb5-7"></a>  <span class="cf">if</span> (<span class="op">!</span>quoted) { expr &lt;-<span class="st"> </span><span class="kw">substitute</span>(expr) } <span class="co"># force quoted</span></span>
+<span id="cb5-8"><a href="#cb5-8"></a>  <span class="kw">shinyRenderWidget</span>(expr, sigmaOutput, env, <span class="dt">quoted =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb5-9"><a href="#cb5-9"></a>}</span></code></pre></div>
 </div>
 <div id="javascript-binding" class="section level3">
 <h3>JavaScript binding</h3>
 <p><em><strong>Note:</strong> An older, less intuitive JavaScript binding API was used in htmlwidgets 0.5.2 and earlier, and continues to be supported in newer versions of htmlwidgets. See this <a href="https://cdn.rawgit.com/ramnathv/htmlwidgets/f735840bf938d35d3c4143c0d16515da6ff252bd/develop_intro.html#javascript-binding">archived version</a> for details on the legacy binding API. New widgets are encouraged to use the newer API described below.</em></p>
 <p>The third piece in the puzzle is the JavaScript required to activate the widget. By convention we’ll define our JavaScript binding in the file <code>inst/htmlwidgets/sigma.js</code>. Here is the full source code of the binding:</p>
-<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="va">HTMLWidgets</span>.<span class="at">widget</span>(<span class="op">{</span>
-
-  <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;sigma&quot;</span><span class="op">,</span>
-  
-  <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;output&quot;</span><span class="op">,</span>
-  
-  <span class="dt">factory</span><span class="op">:</span> <span class="kw">function</span>(el<span class="op">,</span> width<span class="op">,</span> height) <span class="op">{</span>
-  
-    <span class="co">// create our sigma object and bind it to the element</span>
-    <span class="kw">var</span> sig <span class="op">=</span> <span class="kw">new</span> <span class="at">sigma</span>(<span class="va">el</span>.<span class="at">id</span>)<span class="op">;</span>
-    
-    <span class="cf">return</span> <span class="op">{</span>
-      <span class="dt">renderValue</span><span class="op">:</span> <span class="kw">function</span>(x) <span class="op">{</span>
-          
-        <span class="co">// parse gexf data</span>
-        <span class="kw">var</span> parser <span class="op">=</span> <span class="kw">new</span> <span class="at">DOMParser</span>()<span class="op">;</span>
-        <span class="kw">var</span> data <span class="op">=</span> <span class="va">parser</span>.<span class="at">parseFromString</span>(<span class="va">x</span>.<span class="at">data</span><span class="op">,</span> <span class="st">&quot;application/xml&quot;</span>)<span class="op">;</span>
-        
-        <span class="co">// apply settings</span>
-        <span class="cf">for</span> (<span class="kw">var</span> name <span class="kw">in</span> <span class="va">x</span>.<span class="at">settings</span>)
-          <span class="va">sig</span>.<span class="at">settings</span>(name<span class="op">,</span> <span class="va">x</span>.<span class="at">settings</span>[name])<span class="op">;</span>
-        
-        <span class="co">// update the sigma object</span>
-        <span class="va">sigma</span>.<span class="va">parsers</span>.<span class="at">gexf</span>(
-          data<span class="op">,</span>          <span class="co">// parsed gexf data</span>
-          sig<span class="op">,</span>           <span class="co">// sigma object</span>
-          <span class="kw">function</span>() <span class="op">{</span>
-            <span class="co">// need to call refresh to reflect new settings and data</span>
-            <span class="va">sig</span>.<span class="at">refresh</span>()<span class="op">;</span>
-          <span class="op">}</span>
-        )<span class="op">;</span>
-      <span class="op">},</span>
-      
-      <span class="dt">resize</span><span class="op">:</span> <span class="kw">function</span>(width<span class="op">,</span> height) <span class="op">{</span>
-        
-        <span class="co">// forward resize on to sigma renderers</span>
-        <span class="cf">for</span> (<span class="kw">var</span> name <span class="kw">in</span> <span class="va">sig</span>.<span class="at">renderers</span>)
-          <span class="va">sig</span>.<span class="at">renderers</span>[name].<span class="at">resize</span>(width<span class="op">,</span> height)<span class="op">;</span>  
-      <span class="op">},</span>
-      
-      <span class="co">// Make the sigma object available as a property on the widget</span>
-      <span class="co">// instance we&#39;re returning from factory(). This is generally a</span>
-      <span class="co">// good idea for extensibility--it helps users of this widget</span>
-      <span class="co">// interact directly with sigma, if needed.</span>
-      <span class="dt">s</span><span class="op">:</span> sig
-    <span class="op">};</span>
-  <span class="op">}</span>
-<span class="op">}</span>)<span class="op">;</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1"></a>HTMLWidgets<span class="op">.</span><span class="fu">widget</span>({</span>
+<span id="cb6-2"><a href="#cb6-2"></a></span>
+<span id="cb6-3"><a href="#cb6-3"></a>  <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;sigma&quot;</span><span class="op">,</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a>  </span>
+<span id="cb6-5"><a href="#cb6-5"></a>  <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;output&quot;</span><span class="op">,</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a>  </span>
+<span id="cb6-7"><a href="#cb6-7"></a>  <span class="dt">factory</span><span class="op">:</span> <span class="kw">function</span>(el<span class="op">,</span> width<span class="op">,</span> height) {</span>
+<span id="cb6-8"><a href="#cb6-8"></a>  </span>
+<span id="cb6-9"><a href="#cb6-9"></a>    <span class="co">// create our sigma object and bind it to the element</span></span>
+<span id="cb6-10"><a href="#cb6-10"></a>    <span class="kw">var</span> sig <span class="op">=</span> <span class="kw">new</span> sigma(el<span class="op">.</span><span class="at">id</span>)<span class="op">;</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a>    </span>
+<span id="cb6-12"><a href="#cb6-12"></a>    <span class="cf">return</span> {</span>
+<span id="cb6-13"><a href="#cb6-13"></a>      <span class="dt">renderValue</span><span class="op">:</span> <span class="kw">function</span>(x) {</span>
+<span id="cb6-14"><a href="#cb6-14"></a>          </span>
+<span id="cb6-15"><a href="#cb6-15"></a>        <span class="co">// parse gexf data</span></span>
+<span id="cb6-16"><a href="#cb6-16"></a>        <span class="kw">var</span> parser <span class="op">=</span> <span class="kw">new</span> DOMParser()<span class="op">;</span></span>
+<span id="cb6-17"><a href="#cb6-17"></a>        <span class="kw">var</span> data <span class="op">=</span> parser<span class="op">.</span><span class="fu">parseFromString</span>(x<span class="op">.</span><span class="at">data</span><span class="op">,</span> <span class="st">&quot;application/xml&quot;</span>)<span class="op">;</span></span>
+<span id="cb6-18"><a href="#cb6-18"></a>        </span>
+<span id="cb6-19"><a href="#cb6-19"></a>        <span class="co">// apply settings</span></span>
+<span id="cb6-20"><a href="#cb6-20"></a>        <span class="cf">for</span> (<span class="kw">var</span> name <span class="kw">in</span> x<span class="op">.</span><span class="at">settings</span>)</span>
+<span id="cb6-21"><a href="#cb6-21"></a>          sig<span class="op">.</span><span class="fu">settings</span>(name<span class="op">,</span> x<span class="op">.</span><span class="at">settings</span>[name])<span class="op">;</span></span>
+<span id="cb6-22"><a href="#cb6-22"></a>        </span>
+<span id="cb6-23"><a href="#cb6-23"></a>        <span class="co">// update the sigma object</span></span>
+<span id="cb6-24"><a href="#cb6-24"></a>        sigma<span class="op">.</span><span class="at">parsers</span><span class="op">.</span><span class="fu">gexf</span>(</span>
+<span id="cb6-25"><a href="#cb6-25"></a>          data<span class="op">,</span>          <span class="co">// parsed gexf data</span></span>
+<span id="cb6-26"><a href="#cb6-26"></a>          sig<span class="op">,</span>           <span class="co">// sigma object</span></span>
+<span id="cb6-27"><a href="#cb6-27"></a>          <span class="kw">function</span>() {</span>
+<span id="cb6-28"><a href="#cb6-28"></a>            <span class="co">// need to call refresh to reflect new settings and data</span></span>
+<span id="cb6-29"><a href="#cb6-29"></a>            sig<span class="op">.</span><span class="fu">refresh</span>()<span class="op">;</span></span>
+<span id="cb6-30"><a href="#cb6-30"></a>          }</span>
+<span id="cb6-31"><a href="#cb6-31"></a>        )<span class="op">;</span></span>
+<span id="cb6-32"><a href="#cb6-32"></a>      }<span class="op">,</span></span>
+<span id="cb6-33"><a href="#cb6-33"></a>      </span>
+<span id="cb6-34"><a href="#cb6-34"></a>      <span class="dt">resize</span><span class="op">:</span> <span class="kw">function</span>(width<span class="op">,</span> height) {</span>
+<span id="cb6-35"><a href="#cb6-35"></a>        </span>
+<span id="cb6-36"><a href="#cb6-36"></a>        <span class="co">// forward resize on to sigma renderers</span></span>
+<span id="cb6-37"><a href="#cb6-37"></a>        <span class="cf">for</span> (<span class="kw">var</span> name <span class="kw">in</span> sig<span class="op">.</span><span class="at">renderers</span>)</span>
+<span id="cb6-38"><a href="#cb6-38"></a>          sig<span class="op">.</span><span class="at">renderers</span>[name]<span class="op">.</span><span class="fu">resize</span>(width<span class="op">,</span> height)<span class="op">;</span>  </span>
+<span id="cb6-39"><a href="#cb6-39"></a>      }<span class="op">,</span></span>
+<span id="cb6-40"><a href="#cb6-40"></a>      </span>
+<span id="cb6-41"><a href="#cb6-41"></a>      <span class="co">// Make the sigma object available as a property on the widget</span></span>
+<span id="cb6-42"><a href="#cb6-42"></a>      <span class="co">// instance we&#39;re returning from factory(). This is generally a</span></span>
+<span id="cb6-43"><a href="#cb6-43"></a>      <span class="co">// good idea for extensibility--it helps users of this widget</span></span>
+<span id="cb6-44"><a href="#cb6-44"></a>      <span class="co">// interact directly with sigma, if needed.</span></span>
+<span id="cb6-45"><a href="#cb6-45"></a>      <span class="dt">s</span><span class="op">:</span> sig</span>
+<span id="cb6-46"><a href="#cb6-46"></a>    }<span class="op">;</span></span>
+<span id="cb6-47"><a href="#cb6-47"></a>  }</span>
+<span id="cb6-48"><a href="#cb6-48"></a>})<span class="op">;</span></span></code></pre></div>
 <p>We provide a name and type for the widget, plus a <code>factory</code> function that takes <code>el</code> (the HTML element that will host this widget), <code>width</code>, and <code>height</code> (width and height of the HTML element, in pixels–you can always use <code>offsetWidth</code> and <code>offsetHeight</code> for this).</p>
 <p>The <code>factory</code> function should prepare the HTML element to start receiving values. In this case we create a new sigma element and pass it the <code>id</code> of the DOM element that hosts the widget on the page.</p>
 <p>We’re going to need access to the sigma object later (to update its data and settings) so we save it as a variable <code>sig</code>. Note that variables declared directly inside of the factory function are tied to a particular widget instance/<code>el</code>.</p>
@@ -437,32 +548,32 @@ renderSigma &lt;-<span class="st"> </span>function(expr, <span class="dt">env =<
 <div id="demo" class="section level3">
 <h3>Demo</h3>
 <p>Our widget is now complete! If you want to test drive it without reproducing all of the code locally you can install it from GitHub as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">&#39;jjallaire/sigma&#39;</span>)</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&#39;jjallaire/sigma&#39;</span>)</span></code></pre></div>
 <p>Here’s the code to try it out with some sample data included with the package:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(sigma)
-<span class="kw">sigma</span>(<span class="kw">system.file</span>(<span class="st">&quot;examples/ediaspora.gexf.xml&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;sigma&quot;</span>))</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">library</span>(sigma)</span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="kw">sigma</span>(<span class="kw">system.file</span>(<span class="st">&quot;examples/ediaspora.gexf.xml&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;sigma&quot;</span>))</span></code></pre></div>
 <p>If you execute this code in the R console you’ll see the widget displayed in the RStudio Viewer (or in an external browser if you aren’t running RStudio). If you include it within an R Markdown document the widget will be embedded into the document.</p>
 <p>We can also use the widget in a Shiny application:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
-<span class="kw">library</span>(sigma)
-
-gexf &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;examples/ediaspora.gexf.xml&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;sigma&quot;</span>)
-
-ui =<span class="st"> </span><span class="kw">shinyUI</span>(<span class="kw">fluidPage</span>(
-  <span class="kw">checkboxInput</span>(<span class="st">&quot;drawEdges&quot;</span>, <span class="st">&quot;Draw Edges&quot;</span>, <span class="dt">value =</span> <span class="ot">TRUE</span>),
-  <span class="kw">checkboxInput</span>(<span class="st">&quot;drawNodes&quot;</span>, <span class="st">&quot;Draw Nodes&quot;</span>, <span class="dt">value =</span> <span class="ot">TRUE</span>),
-  <span class="kw">sigmaOutput</span>(<span class="st">&#39;sigma&#39;</span>)
-))
-
-server =<span class="st"> </span>function(input, output) {
-  output$sigma &lt;-<span class="st"> </span><span class="kw">renderSigma</span>(
-    <span class="kw">sigma</span>(gexf, 
-          <span class="dt">drawEdges =</span> input$drawEdges, 
-          <span class="dt">drawNodes =</span> input$drawNodes)
-  )
-}
-
-<span class="kw">shinyApp</span>(<span class="dt">ui =</span> ui, <span class="dt">server =</span> server)</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">library</span>(shiny)</span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="kw">library</span>(sigma)</span>
+<span id="cb9-3"><a href="#cb9-3"></a></span>
+<span id="cb9-4"><a href="#cb9-4"></a>gexf &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;examples/ediaspora.gexf.xml&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;sigma&quot;</span>)</span>
+<span id="cb9-5"><a href="#cb9-5"></a></span>
+<span id="cb9-6"><a href="#cb9-6"></a>ui =<span class="st"> </span><span class="kw">shinyUI</span>(<span class="kw">fluidPage</span>(</span>
+<span id="cb9-7"><a href="#cb9-7"></a>  <span class="kw">checkboxInput</span>(<span class="st">&quot;drawEdges&quot;</span>, <span class="st">&quot;Draw Edges&quot;</span>, <span class="dt">value =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb9-8"><a href="#cb9-8"></a>  <span class="kw">checkboxInput</span>(<span class="st">&quot;drawNodes&quot;</span>, <span class="st">&quot;Draw Nodes&quot;</span>, <span class="dt">value =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb9-9"><a href="#cb9-9"></a>  <span class="kw">sigmaOutput</span>(<span class="st">&#39;sigma&#39;</span>)</span>
+<span id="cb9-10"><a href="#cb9-10"></a>))</span>
+<span id="cb9-11"><a href="#cb9-11"></a></span>
+<span id="cb9-12"><a href="#cb9-12"></a>server =<span class="st"> </span><span class="cf">function</span>(input, output) {</span>
+<span id="cb9-13"><a href="#cb9-13"></a>  output<span class="op">$</span>sigma &lt;-<span class="st"> </span><span class="kw">renderSigma</span>(</span>
+<span id="cb9-14"><a href="#cb9-14"></a>    <span class="kw">sigma</span>(gexf, </span>
+<span id="cb9-15"><a href="#cb9-15"></a>          <span class="dt">drawEdges =</span> input<span class="op">$</span>drawEdges, </span>
+<span id="cb9-16"><a href="#cb9-16"></a>          <span class="dt">drawNodes =</span> input<span class="op">$</span>drawNodes)</span>
+<span id="cb9-17"><a href="#cb9-17"></a>  )</span>
+<span id="cb9-18"><a href="#cb9-18"></a>}</span>
+<span id="cb9-19"><a href="#cb9-19"></a></span>
+<span id="cb9-20"><a href="#cb9-20"></a><span class="kw">shinyApp</span>(<span class="dt">ui =</span> ui, <span class="dt">server =</span> server)</span></code></pre></div>
 </div>
 </div>
 <div id="creating-your-own-widgets" class="section level2">
@@ -470,9 +581,9 @@ server =<span class="st"> </span>function(input, output) {
 <div id="requirements" class="section level3">
 <h3>Requirements</h3>
 <p>To implement a widget you need to create a new R package that in turn depends on the <strong>htmlwidgets</strong> package. You can install the package from CRAN as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;htmlwidgets&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;htmlwidgets&quot;</span>)</span></code></pre></div>
 <p>While it’s not strictly required, the step-by-step instructions below for getting started also make use of the <strong>devtools</strong> package which you can also install from CRAN:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)</span></code></pre></div>
 </div>
 <div id="scaffolding" class="section level3">
 <h3>Scaffolding</h3>
@@ -482,13 +593,14 @@ server =<span class="st"> </span>function(input, output) {
 <li><p>If provided, take a <a href="http://bower.io/">Bower</a> package name and automatically download the JavaScript library (and its dependencies) and add the required entries to the .yaml file.</p></li>
 </ul>
 <p>This method is highly recommended as it ensures that you get started with the right file structure. Here’s an example that assumes you want to create a widget named ‘mywidget’ in a new package of the same name:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">create</span>(<span class="st">&quot;mywidget&quot;</span>)               <span class="co"># create package using devtools</span>
-<span class="kw">setwd</span>(<span class="st">&quot;mywidget&quot;</span>)                          <span class="co"># navigate to package dir</span>
-htmlwidgets::<span class="kw">scaffoldWidget</span>(<span class="st">&quot;mywidget&quot;</span>)    <span class="co"># create widget scaffolding</span>
-devtools::<span class="kw">install</span>()                        <span class="co"># install the package so we can try it</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>devtools<span class="op">::</span><span class="kw">create</span>(<span class="st">&quot;mywidget&quot;</span>)               <span class="co"># create package using devtools</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="kw">setwd</span>(<span class="st">&quot;mywidget&quot;</span>)                          <span class="co"># navigate to package dir</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a>htmlwidgets<span class="op">::</span><span class="kw">scaffoldWidget</span>(<span class="st">&quot;mywidget&quot;</span>)    <span class="co"># create widget scaffolding</span></span>
+<span id="cb12-4"><a href="#cb12-4"></a>devtools<span class="op">::</span><span class="kw">document</span>()                       <span class="co"># roxygenize, so NAMESPACE is updated</span></span>
+<span id="cb12-5"><a href="#cb12-5"></a>devtools<span class="op">::</span><span class="kw">install</span>()                        <span class="co"># install the package so we can try it</span></span></code></pre></div>
 <p>This creates a simple widget that takes a single <code>text</code> argument and displays that text within the widgets HTML element. You can try it like this:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mywidget)
-<span class="kw">mywidget</span>(<span class="st">&quot;hello, world&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">library</span>(mywidget)</span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="kw">mywidget</span>(<span class="st">&quot;hello, world&quot;</span>)</span></code></pre></div>
 <p>This is the most minimal widget possible and doesn’t yet include a JavaScript library to interface to (note that <code>scaffoldWidget</code> can optionally include JavaScript library dependencies via the <code>bowerPkg</code> argument). Before getting started with development you should review the introductory example above to make sure you understand the various components and also review the additional articles and examples linked to in the next section.</p>
 </div>
 <div id="learning-more" class="section level3">
@@ -575,6 +687,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 
 </body>

@@ -1,7 +1,7 @@
 /**
  * @license http://creativecommons.org/licenses/by-sa/4.0/ Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
  * @author  Lars Cabrera
- * @version 1.0.8
+ * @version 1.0.9
  */
 
 // JSLint options:
@@ -27,7 +27,7 @@
         Highcharts.each(this.chart.series, function (series, index) {
             if (motion.options.series.indexOf(index) >= 0) {
                 motion.dataSeries[index] = series;
-                for (i = 0; i < series.data.length; i++) {
+                for (var i = 0; i < series.data.length; i++) {
                     if (series.data[i].sequence) {
                         motion.dataLength = Math.max(motion.dataLength, series.data[i].sequence.length);
                     }
@@ -45,17 +45,19 @@
             id: 'play-pause-button',
             title: 'play'
         }, null, this.playControls, null);
-        this.playPauseBtn.className = "fa fa-play";
+        this.playPauseBtn.className = this.options.playIcon;
 
         // Play-range HTML-input
         this.playRange = H.createElement('input', {
             id: 'play-range',
             type: 'range',
-            value: this.dataLength - 1,
             min: 0,
             max: this.dataLength - 1,
             step: this.options.magnet.step
         }, null, this.playControls, null);
+        // Important: max must be set before value in order to allow for
+        // higher numbers than 100.
+        this.playRange.value = H.pick(this.options.startIndex, this.dataLength - 1);
 
         // Play-range HTML-output
         this.playOutput = H.createElement('label', {
@@ -115,7 +117,7 @@
         this.updateChart(this.inputValue);
 
         // Auto-play
-        if (this.autoPlay) {
+        if (this.options.autoPlay) {
             this.play();
         }
     }
@@ -131,7 +133,9 @@
         magnet: {
             round: 'round',
             step: 0.01
-        }
+        },
+        playIcon: "fa fa-play",
+        pauseIcon: "fa fa-pause"
     };
 
     // Toggles between Play and Pause states, and makes calls to changeButtonType()
@@ -170,7 +174,12 @@
     // Updates a button's title, innerHTML and CSS class to a certain value
     Motion.prototype.changeButtonType = function (value) {
         this.playPauseBtn.title = value;
-        this.playPauseBtn.className = value + " fa fa-" + value;
+        this.playPauseBtn.className = value + " ";
+        if (value == 'play') {
+            this.playPauseBtn.className += this.options.playIcon;
+        } else if (value == 'pause') {
+            this.playPauseBtn.className += this.options.pauseIcon;;
+        }
     };
 
     // Called continuously while playing
@@ -199,6 +208,7 @@
             i;
         if (this.currentAxisValue !== roundedInput) {
             this.currentAxisValue = roundedInput;
+            this.chart.options.motion.startIndex = roundedInput;
             for (seriesKey in this.dataSeries) {
                 if (this.dataSeries.hasOwnProperty(seriesKey)) {
                     series = this.dataSeries[seriesKey];

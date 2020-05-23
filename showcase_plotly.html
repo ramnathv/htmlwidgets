@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
-<meta charset="utf-8">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta charset="utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
 
 <title>htmlwidgets: Plotly</title>
 
+<script src="libs/header-attrs/header-attrs.js"></script>
 <script src="libs/jquery/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="libs/bootstrap/css/cosmo.min.css" rel="stylesheet" />
@@ -23,9 +24,12 @@
 <link href="libs/highlightjs/textmate.css" rel="stylesheet" />
 <script src="libs/highlightjs/highlight.js"></script>
 <script src="libs/htmlwidgets/htmlwidgets.js"></script>
-<link href="libs/plotlyjs/plotly-htmlwidgets.css" rel="stylesheet" />
-<script src="libs/plotlyjs/plotly-latest.min.js"></script>
 <script src="libs/plotly-binding/plotly.js"></script>
+<script src="libs/typedarray/typedarray.min.js"></script>
+<link href="libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main/plotly-latest.min.js"></script>
 
 <!-- Styles for this site -->
 <link href="css/styles.css" rel="stylesheet">
@@ -40,10 +44,12 @@
   }
 </style>
 <script type="text/javascript">
-if (window.hljs && document.readyState && document.readyState === "complete") {
-   window.setTimeout(function() {
-      hljs.initHighlighting();
-   }, 0);
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
 }
 </script>
 
@@ -77,9 +83,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -93,30 +97,91 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
 }
 </style>
 
 
 
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -186,10 +251,6 @@ $(document).ready(function () {
           <h5 class="list-group-item-heading">networkD3</h5>
           <p class="list-group-item-text">Graph data visualization with D3</p>
         </a>
-        <a href="showcase_d3heatmap.html" class="list-group-item">
-          <h5 class="list-group-item-heading">d3heatmap</h5>
-          <p class="list-group-item-text">Interactive heatmaps with D3</p>
-        </a>
         <a href="showcase_datatables.html" class="list-group-item">
           <h5 class="list-group-item-heading">DataTables</h5>
           <p class="list-group-item-text">Tabular data display</p>
@@ -245,19 +306,21 @@ library(plotly)
 p &lt;- ggplot(data = diamonds, aes(x = cut, fill = clarity)) +
             geom_bar(position = &quot;dodge&quot;)
 ggplotly(p)</code></pre>
-<div id="htmlwidget-4e418d0e777bcf5e8b2b" style="width:576px;height:336px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-4e418d0e777bcf5e8b2b">{
+<div id="htmlwidget-c9f6656ff2d8f9cdeb96" style="width:576px;height:336px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c9f6656ff2d8f9cdeb96">{
   "x": {
     "data": [
       {
+        "orientation": "v",
+        "width": [0.1125, 0.1125, 0.1125, 0.1125, 0.112500000000001],
+        "base": [0, 0, 0, 0, 0],
         "x": [0.60625, 1.60625, 2.60625, 3.60625, 4.60625],
         "y": [210, 96, 84, 205, 146],
-        "text": ["count: 210<br>cut: Fair<br>clarity: I1", "count: 96<br>cut: Good<br>clarity: I1", "count: 84<br>cut: Very Good<br>clarity: I1", "count: 205<br>cut: Premium<br>clarity: I1", "count: 146<br>cut: Ideal<br>clarity: I1"],
-        "key": null,
+        "text": ["count:  210<br />cut: Fair<br />clarity: I1", "count:   96<br />cut: Good<br />clarity: I1", "count:   84<br />cut: Very Good<br />clarity: I1", "count:  205<br />cut: Premium<br />clarity: I1", "count:  146<br />cut: Ideal<br />clarity: I1"],
         "type": "bar",
         "marker": {
           "autocolorscale": false,
-          "color": "rgba(248,118,109,1)",
+          "color": "rgba(68,1,84,1)",
           "line": {
             "width": 1.88976377952756,
             "color": "transparent"
@@ -268,17 +331,20 @@ ggplotly(p)</code></pre>
         "showlegend": true,
         "xaxis": "x",
         "yaxis": "y",
-        "hoverinfo": "text"
+        "hoverinfo": "text",
+        "frame": null
       },
       {
+        "orientation": "v",
+        "width": [0.1125, 0.1125, 0.1125, 0.1125, 0.112500000000001],
+        "base": [0, 0, 0, 0, 0],
         "x": [0.71875, 1.71875, 2.71875, 3.71875, 4.71875],
         "y": [466, 1081, 2100, 2949, 2598],
-        "text": ["count: 466<br>cut: Fair<br>clarity: SI2", "count: 1081<br>cut: Good<br>clarity: SI2", "count: 2100<br>cut: Very Good<br>clarity: SI2", "count: 2949<br>cut: Premium<br>clarity: SI2", "count: 2598<br>cut: Ideal<br>clarity: SI2"],
-        "key": null,
+        "text": ["count:  466<br />cut: Fair<br />clarity: SI2", "count: 1081<br />cut: Good<br />clarity: SI2", "count: 2100<br />cut: Very Good<br />clarity: SI2", "count: 2949<br />cut: Premium<br />clarity: SI2", "count: 2598<br />cut: Ideal<br />clarity: SI2"],
         "type": "bar",
         "marker": {
           "autocolorscale": false,
-          "color": "rgba(205,150,0,1)",
+          "color": "rgba(70,51,126,1)",
           "line": {
             "width": 1.88976377952756,
             "color": "transparent"
@@ -289,17 +355,20 @@ ggplotly(p)</code></pre>
         "showlegend": true,
         "xaxis": "x",
         "yaxis": "y",
-        "hoverinfo": "text"
+        "hoverinfo": "text",
+        "frame": null
       },
       {
+        "orientation": "v",
+        "width": [0.1125, 0.1125, 0.1125, 0.1125, 0.112500000000001],
+        "base": [0, 0, 0, 0, 0],
         "x": [0.83125, 1.83125, 2.83125, 3.83125, 4.83125],
         "y": [408, 1560, 3240, 3575, 4282],
-        "text": ["count: 408<br>cut: Fair<br>clarity: SI1", "count: 1560<br>cut: Good<br>clarity: SI1", "count: 3240<br>cut: Very Good<br>clarity: SI1", "count: 3575<br>cut: Premium<br>clarity: SI1", "count: 4282<br>cut: Ideal<br>clarity: SI1"],
-        "key": null,
+        "text": ["count:  408<br />cut: Fair<br />clarity: SI1", "count: 1560<br />cut: Good<br />clarity: SI1", "count: 3240<br />cut: Very Good<br />clarity: SI1", "count: 3575<br />cut: Premium<br />clarity: SI1", "count: 4282<br />cut: Ideal<br />clarity: SI1"],
         "type": "bar",
         "marker": {
           "autocolorscale": false,
-          "color": "rgba(124,174,0,1)",
+          "color": "rgba(54,92,141,1)",
           "line": {
             "width": 1.88976377952756,
             "color": "transparent"
@@ -310,17 +379,20 @@ ggplotly(p)</code></pre>
         "showlegend": true,
         "xaxis": "x",
         "yaxis": "y",
-        "hoverinfo": "text"
+        "hoverinfo": "text",
+        "frame": null
       },
       {
+        "orientation": "v",
+        "width": [0.1125, 0.1125, 0.1125, 0.1125, 0.112500000000001],
+        "base": [0, 0, 0, 0, 0],
         "x": [0.94375, 1.94375, 2.94375, 3.94375, 4.94375],
         "y": [261, 978, 2591, 3357, 5071],
-        "text": ["count: 261<br>cut: Fair<br>clarity: VS2", "count: 978<br>cut: Good<br>clarity: VS2", "count: 2591<br>cut: Very Good<br>clarity: VS2", "count: 3357<br>cut: Premium<br>clarity: VS2", "count: 5071<br>cut: Ideal<br>clarity: VS2"],
-        "key": null,
+        "text": ["count:  261<br />cut: Fair<br />clarity: VS2", "count:  978<br />cut: Good<br />clarity: VS2", "count: 2591<br />cut: Very Good<br />clarity: VS2", "count: 3357<br />cut: Premium<br />clarity: VS2", "count: 5071<br />cut: Ideal<br />clarity: VS2"],
         "type": "bar",
         "marker": {
           "autocolorscale": false,
-          "color": "rgba(0,190,103,1)",
+          "color": "rgba(39,127,142,1)",
           "line": {
             "width": 1.88976377952756,
             "color": "transparent"
@@ -331,17 +403,20 @@ ggplotly(p)</code></pre>
         "showlegend": true,
         "xaxis": "x",
         "yaxis": "y",
-        "hoverinfo": "text"
+        "hoverinfo": "text",
+        "frame": null
       },
       {
+        "orientation": "v",
+        "width": [0.1125, 0.1125, 0.1125, 0.112500000000001, 0.112500000000001],
+        "base": [0, 0, 0, 0, 0],
         "x": [1.05625, 2.05625, 3.05625, 4.05625, 5.05625],
         "y": [170, 648, 1775, 1989, 3589],
-        "text": ["count: 170<br>cut: Fair<br>clarity: VS1", "count: 648<br>cut: Good<br>clarity: VS1", "count: 1775<br>cut: Very Good<br>clarity: VS1", "count: 1989<br>cut: Premium<br>clarity: VS1", "count: 3589<br>cut: Ideal<br>clarity: VS1"],
-        "key": null,
+        "text": ["count:  170<br />cut: Fair<br />clarity: VS1", "count:  648<br />cut: Good<br />clarity: VS1", "count: 1775<br />cut: Very Good<br />clarity: VS1", "count: 1989<br />cut: Premium<br />clarity: VS1", "count: 3589<br />cut: Ideal<br />clarity: VS1"],
         "type": "bar",
         "marker": {
           "autocolorscale": false,
-          "color": "rgba(0,191,196,1)",
+          "color": "rgba(31,161,135,1)",
           "line": {
             "width": 1.88976377952756,
             "color": "transparent"
@@ -352,17 +427,20 @@ ggplotly(p)</code></pre>
         "showlegend": true,
         "xaxis": "x",
         "yaxis": "y",
-        "hoverinfo": "text"
+        "hoverinfo": "text",
+        "frame": null
       },
       {
+        "orientation": "v",
+        "width": [0.1125, 0.1125, 0.1125, 0.112500000000001, 0.112500000000001],
+        "base": [0, 0, 0, 0, 0],
         "x": [1.16875, 2.16875, 3.16875, 4.16875, 5.16875],
         "y": [69, 286, 1235, 870, 2606],
-        "text": ["count: 69<br>cut: Fair<br>clarity: VVS2", "count: 286<br>cut: Good<br>clarity: VVS2", "count: 1235<br>cut: Very Good<br>clarity: VVS2", "count: 870<br>cut: Premium<br>clarity: VVS2", "count: 2606<br>cut: Ideal<br>clarity: VVS2"],
-        "key": null,
+        "text": ["count:   69<br />cut: Fair<br />clarity: VVS2", "count:  286<br />cut: Good<br />clarity: VVS2", "count: 1235<br />cut: Very Good<br />clarity: VVS2", "count:  870<br />cut: Premium<br />clarity: VVS2", "count: 2606<br />cut: Ideal<br />clarity: VVS2"],
         "type": "bar",
         "marker": {
           "autocolorscale": false,
-          "color": "rgba(0,169,255,1)",
+          "color": "rgba(74,193,109,1)",
           "line": {
             "width": 1.88976377952756,
             "color": "transparent"
@@ -373,17 +451,20 @@ ggplotly(p)</code></pre>
         "showlegend": true,
         "xaxis": "x",
         "yaxis": "y",
-        "hoverinfo": "text"
+        "hoverinfo": "text",
+        "frame": null
       },
       {
+        "orientation": "v",
+        "width": [0.1125, 0.1125, 0.1125, 0.112500000000001, 0.112500000000001],
+        "base": [0, 0, 0, 0, 0],
         "x": [1.28125, 2.28125, 3.28125, 4.28125, 5.28125],
         "y": [17, 186, 789, 616, 2047],
-        "text": ["count: 17<br>cut: Fair<br>clarity: VVS1", "count: 186<br>cut: Good<br>clarity: VVS1", "count: 789<br>cut: Very Good<br>clarity: VVS1", "count: 616<br>cut: Premium<br>clarity: VVS1", "count: 2047<br>cut: Ideal<br>clarity: VVS1"],
-        "key": null,
+        "text": ["count:   17<br />cut: Fair<br />clarity: VVS1", "count:  186<br />cut: Good<br />clarity: VVS1", "count:  789<br />cut: Very Good<br />clarity: VVS1", "count:  616<br />cut: Premium<br />clarity: VVS1", "count: 2047<br />cut: Ideal<br />clarity: VVS1"],
         "type": "bar",
         "marker": {
           "autocolorscale": false,
-          "color": "rgba(199,124,255,1)",
+          "color": "rgba(159,218,58,1)",
           "line": {
             "width": 1.88976377952756,
             "color": "transparent"
@@ -394,17 +475,20 @@ ggplotly(p)</code></pre>
         "showlegend": true,
         "xaxis": "x",
         "yaxis": "y",
-        "hoverinfo": "text"
+        "hoverinfo": "text",
+        "frame": null
       },
       {
+        "orientation": "v",
+        "width": [0.1125, 0.1125, 0.1125, 0.112500000000001, 0.112500000000001],
+        "base": [0, 0, 0, 0, 0],
         "x": [1.39375, 2.39375, 3.39375, 4.39375, 5.39375],
         "y": [9, 71, 268, 230, 1212],
-        "text": ["count: 9<br>cut: Fair<br>clarity: IF", "count: 71<br>cut: Good<br>clarity: IF", "count: 268<br>cut: Very Good<br>clarity: IF", "count: 230<br>cut: Premium<br>clarity: IF", "count: 1212<br>cut: Ideal<br>clarity: IF"],
-        "key": null,
+        "text": ["count:    9<br />cut: Fair<br />clarity: IF", "count:   71<br />cut: Good<br />clarity: IF", "count:  268<br />cut: Very Good<br />clarity: IF", "count:  230<br />cut: Premium<br />clarity: IF", "count: 1212<br />cut: Ideal<br />clarity: IF"],
         "type": "bar",
         "marker": {
           "autocolorscale": false,
-          "color": "rgba(255,97,204,1)",
+          "color": "rgba(253,231,37,1)",
           "line": {
             "width": 1.88976377952756,
             "color": "transparent"
@@ -415,7 +499,8 @@ ggplotly(p)</code></pre>
         "showlegend": true,
         "xaxis": "x",
         "yaxis": "y",
-        "hoverinfo": "text"
+        "hoverinfo": "text",
+        "frame": null
       }
     ],
     "layout": {
@@ -434,12 +519,16 @@ ggplotly(p)</code></pre>
       },
       "xaxis": {
         "domain": [0, 1],
+        "automargin": true,
         "type": "linear",
         "autorange": false,
-        "tickmode": "array",
         "range": [0.4, 5.6],
+        "tickmode": "array",
         "ticktext": ["Fair", "Good", "Very Good", "Premium", "Ideal"],
         "tickvals": [1, 2, 3, 4, 5],
+        "categoryorder": "array",
+        "categoryarray": ["Fair", "Good", "Very Good", "Premium", "Ideal"],
+        "nticks": null,
         "ticks": "outside",
         "tickcolor": "rgba(51,51,51,1)",
         "ticklen": 3.65296803652968,
@@ -459,22 +548,28 @@ ggplotly(p)</code></pre>
         "gridwidth": 0.66417600664176,
         "zeroline": false,
         "anchor": "y",
-        "title": "cut",
-        "titlefont": {
-          "color": "rgba(0,0,0,1)",
-          "family": "",
-          "size": 14.6118721461187
+        "title": {
+          "text": "cut",
+          "font": {
+            "color": "rgba(0,0,0,1)",
+            "family": "",
+            "size": 14.6118721461187
+          }
         },
         "hoverformat": ".2f"
       },
       "yaxis": {
         "domain": [0, 1],
+        "automargin": true,
         "type": "linear",
         "autorange": false,
-        "tickmode": "array",
         "range": [-253.55, 5324.55],
+        "tickmode": "array",
         "ticktext": ["0", "1000", "2000", "3000", "4000", "5000"],
         "tickvals": [0, 1000, 2000, 3000, 4000, 5000],
+        "categoryorder": "array",
+        "categoryarray": ["0", "1000", "2000", "3000", "4000", "5000"],
+        "nticks": null,
         "ticks": "outside",
         "tickcolor": "rgba(51,51,51,1)",
         "ticklen": 3.65296803652968,
@@ -494,11 +589,13 @@ ggplotly(p)</code></pre>
         "gridwidth": 0.66417600664176,
         "zeroline": false,
         "anchor": "x",
-        "title": "count",
-        "titlefont": {
-          "color": "rgba(0,0,0,1)",
-          "family": "",
-          "size": 14.6118721461187
+        "title": {
+          "text": "count",
+          "font": {
+            "color": "rgba(0,0,0,1)",
+            "family": "",
+            "size": 14.6118721461187
+          }
         },
         "hoverformat": ".2f"
       },
@@ -529,7 +626,7 @@ ggplotly(p)</code></pre>
           "family": "",
           "size": 11.689497716895
         },
-        "y": 0.907199100112486
+        "y": 0.953599550056243
       },
       "annotations": [
         {
@@ -552,31 +649,40 @@ ggplotly(p)</code></pre>
           "legendTitle": true
         }
       ],
-      "barmode": "stack",
-      "bargap": 0,
-      "hovermode": "closest"
+      "hovermode": "closest",
+      "barmode": "relative"
+    },
+    "config": {
+      "doubleClick": "reset",
+      "showSendToCloud": false
     },
     "source": "A",
-    "config": {
-      "modeBarButtonsToAdd": [
-        {
-          "name": "Collaborate",
-          "icon": {
-            "width": 1000,
-            "ascent": 500,
-            "descent": -50,
-            "path": "M487 375c7-10 9-23 5-36l-79-259c-3-12-11-23-22-31-11-8-22-12-35-12l-263 0c-15 0-29 5-43 15-13 10-23 23-28 37-5 13-5 25-1 37 0 0 0 3 1 7 1 5 1 8 1 11 0 2 0 4-1 6 0 3-1 5-1 6 1 2 2 4 3 6 1 2 2 4 4 6 2 3 4 5 5 7 5 7 9 16 13 26 4 10 7 19 9 26 0 2 0 5 0 9-1 4-1 6 0 8 0 2 2 5 4 8 3 3 5 5 5 7 4 6 8 15 12 26 4 11 7 19 7 26 1 1 0 4 0 9-1 4-1 7 0 8 1 2 3 5 6 8 4 4 6 6 6 7 4 5 8 13 13 24 4 11 7 20 7 28 1 1 0 4 0 7-1 3-1 6-1 7 0 2 1 4 3 6 1 1 3 4 5 6 2 3 3 5 5 6 1 2 3 5 4 9 2 3 3 7 5 10 1 3 2 6 4 10 2 4 4 7 6 9 2 3 4 5 7 7 3 2 7 3 11 3 3 0 8 0 13-1l0-1c7 2 12 2 14 2l218 0c14 0 25-5 32-16 8-10 10-23 6-37l-79-259c-7-22-13-37-20-43-7-7-19-10-37-10l-248 0c-5 0-9-2-11-5-2-3-2-7 0-12 4-13 18-20 41-20l264 0c5 0 10 2 16 5 5 3 8 6 10 11l85 282c2 5 2 10 2 17 7-3 13-7 17-13z m-304 0c-1-3-1-5 0-7 1-1 3-2 6-2l174 0c2 0 4 1 7 2 2 2 4 4 5 7l6 18c0 3 0 5-1 7-1 1-3 2-6 2l-173 0c-3 0-5-1-8-2-2-2-4-4-4-7z m-24-73c-1-3-1-5 0-7 2-2 3-2 6-2l174 0c2 0 5 0 7 2 3 2 4 4 5 7l6 18c1 2 0 5-1 6-1 2-3 3-5 3l-174 0c-3 0-5-1-7-3-3-1-4-4-5-6z"
-          },
-          "click": "function(gd) { \n        // is this being viewed in RStudio?\n        if (location.search == '?viewer_pane=1') {\n          alert('To learn about plotly for collaboration, visit:\\n https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html');\n        } else {\n          window.open('https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html', '_blank');\n        }\n      }"
-        }
-      ],
-      "modeBarButtonsToRemove": [
-        "sendDataToCloud"
-      ]
+    "attrs": {
+      "542f7cb2b6ba": {
+        "x": {},
+        "fill": {},
+        "type": "bar"
+      }
     },
+    "cur_data": "542f7cb2b6ba",
+    "visdat": {
+      "542f7cb2b6ba": ["function (y) ", "x"]
+    },
+    "highlight": {
+      "on": "plotly_click",
+      "persistent": false,
+      "dynamic": false,
+      "selectize": false,
+      "opacityDim": 0.2,
+      "selected": {
+        "opacity": 1
+      },
+      "debounce": 0
+    },
+    "shinyEvents": ["plotly_hover", "plotly_click", "plotly_selected", "plotly_relayout", "plotly_brushed", "plotly_brushing", "plotly_clickannotation", "plotly_doubleclick", "plotly_deselect", "plotly_afterplot", "plotly_sunburstclick"],
     "base_url": "https://plot.ly"
   },
-  "evals": ["config.modeBarButtonsToAdd.0.click"],
+  "evals": [],
   "jsHooks": []
 }</script>
 <p>The R package also provides high-level bindings for working directly with <a href="https://plot.ly/javascript/">plotly.js</a>.</p>
@@ -584,9 +690,27 @@ ggplotly(p)</code></pre>
 plot_ly(d, x = d$carat, y = d$price, 
         text = paste(&quot;Clarity: &quot;, d$clarity),
         mode = &quot;markers&quot;, color = d$carat, size = d$carat)</code></pre>
-<div id="htmlwidget-9fe14766c3ab345b5cb0" style="width:576px;height:336px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-9fe14766c3ab345b5cb0">{
+<pre><code>## Warning: `line.width` does not currently support multiple values.</code></pre>
+<div id="htmlwidget-ffd5c5033645618606b6" style="width:576px;height:336px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ffd5c5033645618606b6">{
   "x": {
+    "visdat": {
+      "542f6f4c47a8": ["function () ", "plotlyVisDat"]
+    },
+    "cur_data": "542f6f4c47a8",
+    "attrs": {
+      "542f6f4c47a8": {
+        "x": [1.26, 0.7, 0.36, 2.1, 1.21, 2, 0.4, 1.02, 0.61, 0.55, 0.6, 1.08, 1.52, 0.54, 0.91, 0.35, 1.5, 0.3, 1.54, 1.4, 1.21, 1.26, 0.42, 0.3, 1.2, 0.4, 0.61, 1.2, 0.31, 0.52, 1.06, 0.3, 0.32, 1.01, 0.56, 1.1, 0.31, 1.51, 0.9, 0.53, 2, 1.51, 0.5, 0.54, 0.3, 0.74, 1.36, 0.75, 0.73, 1.26, 0.31, 0.85, 0.9, 0.32, 0.31, 0.71, 0.42, 0.3, 0.62, 0.72, 0.26, 1.15, 0.71, 0.26, 0.55, 0.4, 1.02, 1.2, 0.5, 1.7, 0.34, 0.63, 0.5, 0.57, 0.59, 2, 0.9, 0.31, 1.06, 0.38, 0.72, 0.43, 2.22, 0.58, 1.52, 0.53, 0.5, 1, 0.33, 0.6, 0.78, 1.52, 2.01, 0.5, 1.27, 0.56, 0.31, 0.52, 0.56, 0.59, 0.71, 1.04, 0.31, 1.11, 0.77, 0.71, 1.12, 0.7, 1.01, 0.59, 1.15, 1.21, 1.52, 0.41, 0.52, 1.12, 0.52, 0.4, 1.01, 0.61, 0.42, 0.53, 0.51, 0.36, 0.27, 0.42, 0.72, 0.59, 0.32, 0.32, 0.34, 0.3, 2.01, 1, 0.4, 0.31, 1.21, 0.28, 0.5, 1.13, 0.96, 1.1, 1.2, 0.24, 0.3, 0.93, 0.52, 1.51, 0.3, 0.3, 1.04, 1.52, 0.96, 1.56, 1.14, 0.27, 0.24, 0.32, 1.52, 2, 0.34, 0.36, 1, 0.79, 0.24, 0.31, 0.31, 0.51, 0.54, 0.31, 0.32, 0.27, 1.25, 1.04, 0.9, 1.12, 0.32, 0.74, 1.2, 1.22, 0.34, 0.7, 0.41, 0.53, 1.59, 1.1, 1.14, 1.69, 1.21, 0.4, 0.34, 0.3, 1.01, 0.3, 0.91, 1.56, 1.11, 0.43, 1.05, 1.53, 0.56, 0.32, 0.3, 0.27, 0.33, 1.72, 0.26, 0.23, 0.41, 0.49, 0.54, 1.11, 0.76, 1, 0.44, 0.52, 0.31, 0.91, 1, 0.3, 1, 2.54, 0.43, 0.31, 0.38, 0.33, 0.9, 2.02, 0.5, 0.28, 1.21, 0.36, 1.58, 1.05, 0.32, 0.91, 0.35, 0.9, 1.55, 0.32, 0.3, 1.51, 0.57, 0.3, 1.14, 0.52, 1.15, 0.92, 0.35, 0.81, 0.68, 0.72, 1.69, 0.35, 0.56, 0.3, 0.51, 1.5, 1, 1.13, 2.01, 0.23, 0.44, 0.91, 0.38, 1, 1.07, 0.6, 0.51, 1.01, 1.51, 0.53, 0.72, 2.21, 0.46, 1.01, 0.46, 0.75, 0.34, 0.35, 1.51, 0.25, 1, 0.5, 1.22, 0.53, 0.47, 0.32, 0.53, 0.8, 0.69, 0.52, 0.32, 0.7, 1.47, 0.72, 1.12, 0.46, 0.5, 0.58, 1.56, 0.58, 1.01, 1.7, 1.02, 0.9, 0.4, 0.92, 0.75, 1.2, 0.75, 0.44, 0.53, 1.03, 0.32, 0.94, 0.5, 0.9, 1.5, 0.31, 0.28, 1.61, 0.41, 0.65, 0.38, 0.4, 0.23, 0.5, 0.34, 2.41, 1.01, 0.32, 0.36, 0.9, 0.4, 1.62, 1.2, 0.92, 0.34, 0.39, 0.59, 0.3, 0.52, 1.07, 0.7, 0.61, 0.7, 0.24, 0.4, 0.32, 1.58, 1.51, 0.44, 0.72, 0.23, 0.38, 0.34, 0.28, 0.47, 0.41, 0.3, 1.15, 0.32, 0.48, 0.7, 0.5, 0.72, 1.02, 0.7, 1.2, 1, 1.08, 0.58, 0.67, 1.07, 0.51, 0.28, 1.44, 0.4, 1.7, 1.06, 0.72, 0.7, 0.91, 0.32, 1.01, 0.32, 1.26, 0.78, 0.74, 0.71, 0.52, 1.59, 1.71, 1.56, 0.36, 0.32, 0.37, 0.51, 1.26, 0.36, 0.61, 0.7, 1.14, 0.9, 0.41, 1.01, 0.32, 0.76, 0.33, 0.7, 0.33, 1.04, 2.1, 0.33, 0.46, 1.26, 1.53, 0.5, 1.01, 1.01, 0.71, 0.33, 1, 0.71, 2.2, 0.76, 0.7, 0.3, 0.3, 1.5, 1.7, 0.71, 1.1, 0.6, 1.06, 2.07, 0.3, 0.3, 0.71, 0.72, 1.02, 1.7, 1, 1.11, 1.5, 0.31, 0.41, 1.61, 0.71, 1.24, 0.42, 1.26, 0.52, 2.53, 0.53, 1.56, 2.03, 1.05, 0.72, 1.25, 0.78, 1.22, 0.27, 1.2, 0.72, 0.7, 2.5, 1.58, 0.52, 0.76, 0.36, 0.59, 1.69, 0.7, 1, 1.28, 0.56, 1.05, 0.32, 0.44, 0.39, 0.51, 1.51, 0.76, 0.48, 0.31, 0.25, 0.77, 1.32, 0.32, 1.21, 0.71, 0.9, 2.01, 1, 1.13, 1.3, 0.57, 0.95],
+        "y": [6738, 3448, 770, 12494, 4946, 15393, 1446, 11420, 1659, 1786, 2061, 4964, 7388, 1208, 4429, 788, 8590, 600, 7287, 6633, 6056, 5645, 1310, 521, 11435, 694, 1681, 9574, 500, 2301, 3958, 491, 1004, 6522, 1929, 5606, 698, 14334, 4369, 2280, 14340, 11739, 1629, 1725, 886, 2583, 6279, 3192, 1877, 14663, 379, 3070, 4101, 802, 558, 3254, 1210, 574, 1893, 3270, 601, 4927, 2680, 545, 1702, 977, 4819, 4838, 1779, 17892, 626, 1351, 1090, 1819, 1572, 10833, 4165, 435, 8170, 1069, 2398, 1113, 18531, 2088, 7906, 1226, 2016, 3175, 681, 1390, 3671, 8110, 12450, 1155, 8256, 1723, 544, 1815, 1755, 1789, 3245, 7459, 636, 4457, 2425, 2450, 3880, 2028, 4244, 1916, 4959, 6892, 5618, 638, 1605, 9440, 1245, 1323, 3671, 2161, 898, 1353, 1140, 505, 799, 1142, 2383, 2254, 828, 842, 596, 473, 12968, 5600, 1257, 680, 6684, 596, 2083, 4959, 4864, 5196, 6250, 559, 608, 3125, 1619, 14247, 1013, 422, 5535, 14293, 1739, 6971, 5382, 470, 485, 505, 9789, 13480, 829, 608, 8115, 2756, 678, 853, 642, 1261, 1760, 544, 828, 799, 5775, 4290, 4833, 8394, 1300, 2487, 11182, 6288, 846, 2335, 1115, 1236, 11149, 6653, 11654, 14242, 7424, 1080, 1014, 709, 3823, 789, 7131, 11522, 9734, 1008, 2789, 12386, 2010, 645, 684, 604, 1021, 12880, 769, 354, 683, 1934, 1847, 5802, 2977, 4004, 1073, 1289, 917, 2564, 6183, 764, 6867, 14421, 839, 625, 703, 752, 4158, 18678, 1134, 522, 6223, 537, 8782, 5557, 1008, 4370, 906, 4664, 7972, 645, 631, 8242, 2297, 640, 4513, 1576, 5191, 4325, 706, 5373, 3225, 2318, 9275, 798, 1963, 684, 2111, 12179, 5522, 12150, 16881, 414, 733, 4279, 1333, 4427, 6793, 1861, 1573, 4617, 10838, 1683, 3084, 16657, 1418, 3886, 1637, 2835, 765, 984, 13325, 576, 3850, 1629, 7310, 1428, 1058, 524, 1079, 4043, 1757, 1219, 707, 2839, 7438, 2316, 7812, 1040, 1752, 1066, 11047, 2340, 8668, 17485, 4487, 4678, 909, 3282, 3462, 8990, 3170, 974, 2143, 6056, 842, 3285, 1359, 3820, 10584, 628, 428, 10793, 1007, 1801, 800, 945, 478, 1257, 630, 16987, 4129, 758, 727, 3689, 842, 7072, 7074, 3555, 537, 876, 1883, 565, 1694, 3415, 2245, 1884, 1995, 373, 734, 561, 14451, 7848, 1294, 2114, 498, 666, 765, 828, 953, 755, 608, 7123, 480, 2677, 2034, 1154, 2492, 5291, 1890, 6740, 7584, 6982, 1657, 2577, 5063, 2111, 487, 7419, 900, 12622, 2239, 2688, 2980, 4209, 393, 5147, 786, 5080, 3103, 3285, 3464, 1822, 12409, 11455, 8048, 859, 936, 616, 1438, 6085, 473, 2324, 2367, 4935, 4687, 1439, 5616, 449, 2287, 868, 2697, 1040, 5416, 12401, 579, 1834, 6318, 9116, 1397, 6439, 6391, 2480, 743, 4311, 2283, 15424, 2587, 2509, 720, 789, 6731, 18598, 2308, 4561, 1022, 4238, 13495, 475, 452, 4447, 2401, 11765, 12257, 3472, 4662, 10479, 888, 969, 17256, 2861, 5783, 902, 10076, 1694, 15148, 2099, 7862, 12021, 4405, 4252, 9030, 3055, 8485, 799, 5257, 3075, 2279, 14652, 11380, 1250, 2593, 727, 1572, 17803, 3011, 7114, 12285, 1206, 4618, 905, 1081, 1170, 1438, 8550, 4223, 1279, 914, 575, 2946, 7143, 449, 7611, 2233, 3709, 17849, 5197, 6891, 6552, 2095, 4628],
+        "text": ["Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  IF", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  IF", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  IF", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  VVS1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  IF", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  IF", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  IF", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  I1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VVS1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  IF", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  VVS1", "Clarity:  VS1", "Clarity:  VVS1", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VS1", "Clarity:  VVS1", "Clarity:  VVS1", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  VVS1", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VS1", "Clarity:  VVS2", "Clarity:  VVS1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  IF", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  IF", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  IF", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  VS1", "Clarity:  VVS1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  I1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  IF", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  IF", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  VVS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  IF", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  SI1"],
+        "mode": "markers",
+        "color": [1.26, 0.7, 0.36, 2.1, 1.21, 2, 0.4, 1.02, 0.61, 0.55, 0.6, 1.08, 1.52, 0.54, 0.91, 0.35, 1.5, 0.3, 1.54, 1.4, 1.21, 1.26, 0.42, 0.3, 1.2, 0.4, 0.61, 1.2, 0.31, 0.52, 1.06, 0.3, 0.32, 1.01, 0.56, 1.1, 0.31, 1.51, 0.9, 0.53, 2, 1.51, 0.5, 0.54, 0.3, 0.74, 1.36, 0.75, 0.73, 1.26, 0.31, 0.85, 0.9, 0.32, 0.31, 0.71, 0.42, 0.3, 0.62, 0.72, 0.26, 1.15, 0.71, 0.26, 0.55, 0.4, 1.02, 1.2, 0.5, 1.7, 0.34, 0.63, 0.5, 0.57, 0.59, 2, 0.9, 0.31, 1.06, 0.38, 0.72, 0.43, 2.22, 0.58, 1.52, 0.53, 0.5, 1, 0.33, 0.6, 0.78, 1.52, 2.01, 0.5, 1.27, 0.56, 0.31, 0.52, 0.56, 0.59, 0.71, 1.04, 0.31, 1.11, 0.77, 0.71, 1.12, 0.7, 1.01, 0.59, 1.15, 1.21, 1.52, 0.41, 0.52, 1.12, 0.52, 0.4, 1.01, 0.61, 0.42, 0.53, 0.51, 0.36, 0.27, 0.42, 0.72, 0.59, 0.32, 0.32, 0.34, 0.3, 2.01, 1, 0.4, 0.31, 1.21, 0.28, 0.5, 1.13, 0.96, 1.1, 1.2, 0.24, 0.3, 0.93, 0.52, 1.51, 0.3, 0.3, 1.04, 1.52, 0.96, 1.56, 1.14, 0.27, 0.24, 0.32, 1.52, 2, 0.34, 0.36, 1, 0.79, 0.24, 0.31, 0.31, 0.51, 0.54, 0.31, 0.32, 0.27, 1.25, 1.04, 0.9, 1.12, 0.32, 0.74, 1.2, 1.22, 0.34, 0.7, 0.41, 0.53, 1.59, 1.1, 1.14, 1.69, 1.21, 0.4, 0.34, 0.3, 1.01, 0.3, 0.91, 1.56, 1.11, 0.43, 1.05, 1.53, 0.56, 0.32, 0.3, 0.27, 0.33, 1.72, 0.26, 0.23, 0.41, 0.49, 0.54, 1.11, 0.76, 1, 0.44, 0.52, 0.31, 0.91, 1, 0.3, 1, 2.54, 0.43, 0.31, 0.38, 0.33, 0.9, 2.02, 0.5, 0.28, 1.21, 0.36, 1.58, 1.05, 0.32, 0.91, 0.35, 0.9, 1.55, 0.32, 0.3, 1.51, 0.57, 0.3, 1.14, 0.52, 1.15, 0.92, 0.35, 0.81, 0.68, 0.72, 1.69, 0.35, 0.56, 0.3, 0.51, 1.5, 1, 1.13, 2.01, 0.23, 0.44, 0.91, 0.38, 1, 1.07, 0.6, 0.51, 1.01, 1.51, 0.53, 0.72, 2.21, 0.46, 1.01, 0.46, 0.75, 0.34, 0.35, 1.51, 0.25, 1, 0.5, 1.22, 0.53, 0.47, 0.32, 0.53, 0.8, 0.69, 0.52, 0.32, 0.7, 1.47, 0.72, 1.12, 0.46, 0.5, 0.58, 1.56, 0.58, 1.01, 1.7, 1.02, 0.9, 0.4, 0.92, 0.75, 1.2, 0.75, 0.44, 0.53, 1.03, 0.32, 0.94, 0.5, 0.9, 1.5, 0.31, 0.28, 1.61, 0.41, 0.65, 0.38, 0.4, 0.23, 0.5, 0.34, 2.41, 1.01, 0.32, 0.36, 0.9, 0.4, 1.62, 1.2, 0.92, 0.34, 0.39, 0.59, 0.3, 0.52, 1.07, 0.7, 0.61, 0.7, 0.24, 0.4, 0.32, 1.58, 1.51, 0.44, 0.72, 0.23, 0.38, 0.34, 0.28, 0.47, 0.41, 0.3, 1.15, 0.32, 0.48, 0.7, 0.5, 0.72, 1.02, 0.7, 1.2, 1, 1.08, 0.58, 0.67, 1.07, 0.51, 0.28, 1.44, 0.4, 1.7, 1.06, 0.72, 0.7, 0.91, 0.32, 1.01, 0.32, 1.26, 0.78, 0.74, 0.71, 0.52, 1.59, 1.71, 1.56, 0.36, 0.32, 0.37, 0.51, 1.26, 0.36, 0.61, 0.7, 1.14, 0.9, 0.41, 1.01, 0.32, 0.76, 0.33, 0.7, 0.33, 1.04, 2.1, 0.33, 0.46, 1.26, 1.53, 0.5, 1.01, 1.01, 0.71, 0.33, 1, 0.71, 2.2, 0.76, 0.7, 0.3, 0.3, 1.5, 1.7, 0.71, 1.1, 0.6, 1.06, 2.07, 0.3, 0.3, 0.71, 0.72, 1.02, 1.7, 1, 1.11, 1.5, 0.31, 0.41, 1.61, 0.71, 1.24, 0.42, 1.26, 0.52, 2.53, 0.53, 1.56, 2.03, 1.05, 0.72, 1.25, 0.78, 1.22, 0.27, 1.2, 0.72, 0.7, 2.5, 1.58, 0.52, 0.76, 0.36, 0.59, 1.69, 0.7, 1, 1.28, 0.56, 1.05, 0.32, 0.44, 0.39, 0.51, 1.51, 0.76, 0.48, 0.31, 0.25, 0.77, 1.32, 0.32, 1.21, 0.71, 0.9, 2.01, 1, 1.13, 1.3, 0.57, 0.95],
+        "size": [1.26, 0.7, 0.36, 2.1, 1.21, 2, 0.4, 1.02, 0.61, 0.55, 0.6, 1.08, 1.52, 0.54, 0.91, 0.35, 1.5, 0.3, 1.54, 1.4, 1.21, 1.26, 0.42, 0.3, 1.2, 0.4, 0.61, 1.2, 0.31, 0.52, 1.06, 0.3, 0.32, 1.01, 0.56, 1.1, 0.31, 1.51, 0.9, 0.53, 2, 1.51, 0.5, 0.54, 0.3, 0.74, 1.36, 0.75, 0.73, 1.26, 0.31, 0.85, 0.9, 0.32, 0.31, 0.71, 0.42, 0.3, 0.62, 0.72, 0.26, 1.15, 0.71, 0.26, 0.55, 0.4, 1.02, 1.2, 0.5, 1.7, 0.34, 0.63, 0.5, 0.57, 0.59, 2, 0.9, 0.31, 1.06, 0.38, 0.72, 0.43, 2.22, 0.58, 1.52, 0.53, 0.5, 1, 0.33, 0.6, 0.78, 1.52, 2.01, 0.5, 1.27, 0.56, 0.31, 0.52, 0.56, 0.59, 0.71, 1.04, 0.31, 1.11, 0.77, 0.71, 1.12, 0.7, 1.01, 0.59, 1.15, 1.21, 1.52, 0.41, 0.52, 1.12, 0.52, 0.4, 1.01, 0.61, 0.42, 0.53, 0.51, 0.36, 0.27, 0.42, 0.72, 0.59, 0.32, 0.32, 0.34, 0.3, 2.01, 1, 0.4, 0.31, 1.21, 0.28, 0.5, 1.13, 0.96, 1.1, 1.2, 0.24, 0.3, 0.93, 0.52, 1.51, 0.3, 0.3, 1.04, 1.52, 0.96, 1.56, 1.14, 0.27, 0.24, 0.32, 1.52, 2, 0.34, 0.36, 1, 0.79, 0.24, 0.31, 0.31, 0.51, 0.54, 0.31, 0.32, 0.27, 1.25, 1.04, 0.9, 1.12, 0.32, 0.74, 1.2, 1.22, 0.34, 0.7, 0.41, 0.53, 1.59, 1.1, 1.14, 1.69, 1.21, 0.4, 0.34, 0.3, 1.01, 0.3, 0.91, 1.56, 1.11, 0.43, 1.05, 1.53, 0.56, 0.32, 0.3, 0.27, 0.33, 1.72, 0.26, 0.23, 0.41, 0.49, 0.54, 1.11, 0.76, 1, 0.44, 0.52, 0.31, 0.91, 1, 0.3, 1, 2.54, 0.43, 0.31, 0.38, 0.33, 0.9, 2.02, 0.5, 0.28, 1.21, 0.36, 1.58, 1.05, 0.32, 0.91, 0.35, 0.9, 1.55, 0.32, 0.3, 1.51, 0.57, 0.3, 1.14, 0.52, 1.15, 0.92, 0.35, 0.81, 0.68, 0.72, 1.69, 0.35, 0.56, 0.3, 0.51, 1.5, 1, 1.13, 2.01, 0.23, 0.44, 0.91, 0.38, 1, 1.07, 0.6, 0.51, 1.01, 1.51, 0.53, 0.72, 2.21, 0.46, 1.01, 0.46, 0.75, 0.34, 0.35, 1.51, 0.25, 1, 0.5, 1.22, 0.53, 0.47, 0.32, 0.53, 0.8, 0.69, 0.52, 0.32, 0.7, 1.47, 0.72, 1.12, 0.46, 0.5, 0.58, 1.56, 0.58, 1.01, 1.7, 1.02, 0.9, 0.4, 0.92, 0.75, 1.2, 0.75, 0.44, 0.53, 1.03, 0.32, 0.94, 0.5, 0.9, 1.5, 0.31, 0.28, 1.61, 0.41, 0.65, 0.38, 0.4, 0.23, 0.5, 0.34, 2.41, 1.01, 0.32, 0.36, 0.9, 0.4, 1.62, 1.2, 0.92, 0.34, 0.39, 0.59, 0.3, 0.52, 1.07, 0.7, 0.61, 0.7, 0.24, 0.4, 0.32, 1.58, 1.51, 0.44, 0.72, 0.23, 0.38, 0.34, 0.28, 0.47, 0.41, 0.3, 1.15, 0.32, 0.48, 0.7, 0.5, 0.72, 1.02, 0.7, 1.2, 1, 1.08, 0.58, 0.67, 1.07, 0.51, 0.28, 1.44, 0.4, 1.7, 1.06, 0.72, 0.7, 0.91, 0.32, 1.01, 0.32, 1.26, 0.78, 0.74, 0.71, 0.52, 1.59, 1.71, 1.56, 0.36, 0.32, 0.37, 0.51, 1.26, 0.36, 0.61, 0.7, 1.14, 0.9, 0.41, 1.01, 0.32, 0.76, 0.33, 0.7, 0.33, 1.04, 2.1, 0.33, 0.46, 1.26, 1.53, 0.5, 1.01, 1.01, 0.71, 0.33, 1, 0.71, 2.2, 0.76, 0.7, 0.3, 0.3, 1.5, 1.7, 0.71, 1.1, 0.6, 1.06, 2.07, 0.3, 0.3, 0.71, 0.72, 1.02, 1.7, 1, 1.11, 1.5, 0.31, 0.41, 1.61, 0.71, 1.24, 0.42, 1.26, 0.52, 2.53, 0.53, 1.56, 2.03, 1.05, 0.72, 1.25, 0.78, 1.22, 0.27, 1.2, 0.72, 0.7, 2.5, 1.58, 0.52, 0.76, 0.36, 0.59, 1.69, 0.7, 1, 1.28, 0.56, 1.05, 0.32, 0.44, 0.39, 0.51, 1.51, 0.76, 0.48, 0.31, 0.25, 0.77, 1.32, 0.32, 1.21, 0.71, 0.9, 2.01, 1, 1.13, 1.3, 0.57, 0.95],
+        "alpha_stroke": 1,
+        "sizes": [10, 100],
+        "spans": [1, 20]
+      }
+    },
     "layout": {
       "margin": {
         "b": 40,
@@ -594,88 +718,126 @@ plot_ly(d, x = d$carat, y = d$price,
         "t": 25,
         "r": 10
       },
-      "showlegend": false,
       "xaxis": {
-        "domain": [0, 1]
+        "domain": [0, 1],
+        "automargin": true,
+        "title": []
       },
       "yaxis": {
-        "domain": [0, 1]
+        "domain": [0, 1],
+        "automargin": true,
+        "title": []
       },
-      "hovermode": "closest"
+      "hovermode": "closest",
+      "showlegend": false,
+      "legend": {
+        "yanchor": "top",
+        "y": 0.5
+      }
     },
     "source": "A",
     "config": {
-      "modeBarButtonsToAdd": [
-        {
-          "name": "Collaborate",
-          "icon": {
-            "width": 1000,
-            "ascent": 500,
-            "descent": -50,
-            "path": "M487 375c7-10 9-23 5-36l-79-259c-3-12-11-23-22-31-11-8-22-12-35-12l-263 0c-15 0-29 5-43 15-13 10-23 23-28 37-5 13-5 25-1 37 0 0 0 3 1 7 1 5 1 8 1 11 0 2 0 4-1 6 0 3-1 5-1 6 1 2 2 4 3 6 1 2 2 4 4 6 2 3 4 5 5 7 5 7 9 16 13 26 4 10 7 19 9 26 0 2 0 5 0 9-1 4-1 6 0 8 0 2 2 5 4 8 3 3 5 5 5 7 4 6 8 15 12 26 4 11 7 19 7 26 1 1 0 4 0 9-1 4-1 7 0 8 1 2 3 5 6 8 4 4 6 6 6 7 4 5 8 13 13 24 4 11 7 20 7 28 1 1 0 4 0 7-1 3-1 6-1 7 0 2 1 4 3 6 1 1 3 4 5 6 2 3 3 5 5 6 1 2 3 5 4 9 2 3 3 7 5 10 1 3 2 6 4 10 2 4 4 7 6 9 2 3 4 5 7 7 3 2 7 3 11 3 3 0 8 0 13-1l0-1c7 2 12 2 14 2l218 0c14 0 25-5 32-16 8-10 10-23 6-37l-79-259c-7-22-13-37-20-43-7-7-19-10-37-10l-248 0c-5 0-9-2-11-5-2-3-2-7 0-12 4-13 18-20 41-20l264 0c5 0 10 2 16 5 5 3 8 6 10 11l85 282c2 5 2 10 2 17 7-3 13-7 17-13z m-304 0c-1-3-1-5 0-7 1-1 3-2 6-2l174 0c2 0 4 1 7 2 2 2 4 4 5 7l6 18c0 3 0 5-1 7-1 1-3 2-6 2l-173 0c-3 0-5-1-8-2-2-2-4-4-4-7z m-24-73c-1-3-1-5 0-7 2-2 3-2 6-2l174 0c2 0 5 0 7 2 3 2 4 4 5 7l6 18c1 2 0 5-1 6-1 2-3 3-5 3l-174 0c-3 0-5-1-7-3-3-1-4-4-5-6z"
-          },
-          "click": "function(gd) { \n        // is this being viewed in RStudio?\n        if (location.search == '?viewer_pane=1') {\n          alert('To learn about plotly for collaboration, visit:\\n https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html');\n        } else {\n          window.open('https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html', '_blank');\n        }\n      }"
-        }
-      ],
-      "modeBarButtonsToRemove": [
-        "sendDataToCloud"
-      ]
+      "showSendToCloud": false
     },
     "data": [
       {
-        "x": [1.01, 0.9, 0.3, 0.3, 2.06, 1.56, 0.51, 1.16, 0.32, 1.08, 0.3, 0.51, 1.24, 1.7, 0.58, 0.4, 0.91, 1.21, 1.47, 0.31, 0.3, 0.53, 0.31, 0.53, 1.51, 1.01, 0.42, 0.52, 0.35, 1.21, 2.1, 0.74, 1.51, 0.55, 0.35, 0.59, 1.06, 0.37, 0.55, 1.36, 1.52, 0.3, 0.47, 0.54, 0.4, 2.37, 0.61, 0.23, 1, 1, 1.01, 1.09, 0.26, 1.2, 0.3, 1.09, 0.9, 0.28, 0.35, 0.34, 2.01, 0.3, 0.72, 0.31, 2.12, 1.57, 1.28, 1.63, 1.02, 0.51, 1.5, 1.16, 0.33, 0.72, 0.31, 0.32, 0.56, 0.41, 0.74, 0.97, 1.73, 0.26, 0.59, 0.72, 0.79, 0.43, 0.41, 0.32, 1.07, 0.41, 0.55, 1.14, 1, 1.54, 0.5, 1.36, 0.31, 0.33, 0.73, 0.5, 1.5, 0.74, 1.02, 1.42, 0.43, 0.39, 0.81, 0.3, 0.75, 0.41, 0.54, 0.62, 0.8, 1.05, 0.71, 0.9, 0.51, 0.51, 1.31, 0.42, 1.73, 1, 2.02, 0.3, 1.72, 0.74, 0.9, 0.78, 0.35, 0.9, 1.13, 0.56, 0.58, 1.57, 0.32, 0.7, 2.05, 0.78, 1.91, 0.3, 0.36, 0.71, 0.26, 0.61, 1.19, 0.54, 0.7, 0.76, 0.25, 0.96, 1.65, 0.7, 0.9, 1.01, 0.28, 0.54, 0.52, 0.5, 0.75, 0.39, 0.52, 0.31, 1.61, 1.09, 0.92, 1.06, 0.9, 0.33, 0.3, 0.58, 1.4, 1.2, 0.34, 0.55, 0.5, 1.05, 0.7, 0.3, 1.52, 0.32, 1.02, 0.51, 0.32, 0.34, 1, 0.27, 0.85, 0.91, 1.01, 0.63, 0.7, 2.29, 1.21, 0.75, 0.41, 0.3, 0.77, 0.31, 0.99, 0.54, 1.01, 0.71, 0.62, 0.51, 1.01, 0.59, 0.52, 0.4, 0.77, 1.53, 1.06, 0.53, 1.08, 0.29, 1.5, 0.23, 0.5, 0.39, 1.53, 0.9, 0.31, 2, 0.3, 0.72, 1.23, 0.41, 0.74, 0.73, 1.2, 1.46, 0.35, 2.68, 0.55, 0.41, 1.21, 1.02, 1.23, 0.33, 0.83, 0.58, 1.03, 0.44, 0.42, 0.23, 1.02, 0.32, 0.46, 0.72, 0.76, 1, 1.03, 0.72, 1.2, 1.23, 0.54, 0.51, 1.01, 1, 0.31, 0.43, 1.02, 0.63, 1.17, 0.32, 0.47, 0.7, 1.25, 1.19, 0.51, 0.6, 0.33, 0.41, 1.51, 0.9, 0.43, 0.3, 1.48, 1.04, 0.3, 1.4, 1.1, 1.03, 0.76, 1.17, 0.38, 0.32, 0.41, 0.31, 1.09, 1.52, 1, 0.33, 1.13, 0.3, 1.01, 0.9, 0.3, 0.47, 0.31, 0.3, 0.52, 0.38, 0.71, 0.32, 1.38, 0.7, 2.19, 0.39, 0.43, 0.71, 1.02, 0.53, 2.18, 2.14, 0.3, 0.31, 0.31, 0.5, 0.3, 0.44, 2.01, 0.41, 0.31, 0.72, 0.33, 0.72, 0.5, 2.03, 2.01, 0.72, 1.01, 1.01, 1.63, 0.3, 1.05, 1, 0.41, 1.16, 0.3, 0.4, 0.54, 1.53, 0.33, 0.32, 1.7, 0.36, 0.36, 0.8, 2.5, 0.3, 0.71, 1.06, 0.39, 1.01, 1.21, 1.5, 0.7, 1.01, 0.91, 0.71, 1.01, 1.02, 0.37, 0.72, 0.38, 0.33, 1.01, 1.5, 0.51, 0.7, 0.41, 0.41, 1.55, 1.02, 1.21, 1.24, 0.93, 1.51, 1.22, 0.42, 2.04, 1.2, 1.5, 0.91, 0.51, 0.25, 1.2, 0.43, 0.71, 0.36, 1.51, 1.51, 0.71, 1.5, 0.33, 0.41, 0.9, 1.04, 0.45, 1.19, 0.31, 1.01, 1.03, 1.18, 0.39, 0.42, 0.28, 0.55, 0.54, 2, 1.13, 0.4, 0.3, 0.5, 1.09, 0.72, 0.31, 0.39, 0.37, 0.51, 0.51, 1.51, 0.33, 0.55, 0.9, 2.02, 0.94, 0.79, 0.87, 1.13, 0.51, 0.32, 1.5, 1.07, 1.07, 0.71, 0.58, 0.68, 1.51, 0.53, 1.1, 1, 2.01, 0.31, 2.1, 0.5, 0.33, 1.2, 0.4, 1.03, 1.01, 1.94, 0.41, 0.41, 0.92, 0.34, 0.52, 0.3, 1.08, 1.41, 0.4, 0.67, 0.54, 0.51, 1.1, 0.52, 0.9, 1, 1.12, 1.06, 1.01, 1.6, 1.58, 2.03, 0.54, 0.7, 0.23, 0.51, 0.4, 0.42, 1, 1.75, 0.71, 0.78, 0.77, 2.01, 0.71, 0.72, 0.3, 1.19, 0.72, 1.2, 1.09, 1.28, 0.91, 0.37, 1.27, 0.7, 0.71, 1.24],
-        "y": [6630, 5656, 709, 565, 13912, 15334, 1443, 8520, 702, 4544, 838, 1875, 6076, 9586, 1196, 925, 4919, 8001, 8055, 975, 684, 1020, 687, 1132, 10696, 4559, 1235, 1872, 706, 6031, 15827, 2201, 7693, 2374, 984, 1916, 4654, 844, 2656, 4158, 7186, 526, 1261, 1607, 798, 16059, 1270, 530, 4956, 6612, 7179, 4849, 599, 5964, 776, 5588, 4093, 598, 788, 596, 13498, 878, 2405, 942, 12140, 8001, 12841, 12155, 5456, 983, 10256, 7113, 743, 2458, 907, 834, 1746, 1243, 1632, 3729, 13102, 453, 2125, 2591, 3107, 754, 1079, 602, 6471, 1079, 2030, 4980, 8008, 12308, 2025, 9178, 652, 579, 3014, 1237, 7098, 2740, 3142, 8102, 739, 958, 2493, 1000, 2840, 683, 1637, 1415, 3603, 5361, 2443, 3105, 2093, 1060, 4864, 1656, 9494, 9294, 14182, 764, 7802, 2999, 2693, 2386, 707, 3841, 5338, 1755, 1090, 16570, 756, 2872, 14111, 3159, 13367, 844, 932, 3674, 580, 2036, 4078, 1065, 2339, 3170, 558, 4849, 17425, 2167, 4232, 4525, 458, 1452, 1665, 1306, 2903, 988, 1446, 734, 14833, 4456, 3697, 4465, 2974, 1014, 499, 1742, 11519, 10454, 765, 1580, 1332, 7056, 2382, 886, 13001, 801, 6220, 1036, 540, 477, 4704, 620, 4089, 3911, 6407, 1641, 2657, 11502, 4880, 2415, 904, 608, 4039, 789, 4052, 1304, 8416, 2368, 2062, 1574, 6855, 1834, 1369, 807, 3488, 10698, 7541, 1132, 5078, 607, 7888, 465, 1917, 1107, 12851, 3084, 734, 11600, 789, 2337, 5841, 899, 3537, 3471, 8442, 6387, 706, 8419, 1668, 827, 9541, 6432, 8810, 992, 2311, 1234, 5087, 1028, 908, 485, 6047, 1018, 904, 3140, 3363, 6048, 6479, 2364, 9139, 8509, 1662, 1678, 6843, 4170, 816, 1318, 7351, 1996, 4826, 505, 1143, 2042, 6944, 3665, 2041, 2358, 922, 1107, 11640, 3992, 935, 1069, 15164, 4543, 936, 5723, 7453, 4974, 2873, 8648, 721, 943, 1107, 544, 4465, 6982, 4172, 854, 7147, 878, 6499, 3470, 905, 1163, 707, 684, 1689, 883, 2326, 816, 15968, 2499, 15801, 889, 783, 2308, 8303, 1825, 12631, 16390, 638, 816, 791, 1280, 709, 1207, 9781, 647, 661, 2642, 631, 2667, 1286, 18630, 17014, 2731, 5751, 4578, 9556, 684, 5433, 8602, 753, 4958, 506, 855, 1079, 11525, 752, 603, 13256, 587, 810, 2363, 14502, 1125, 2913, 4541, 857, 4479, 7826, 4704, 1935, 5317, 2564, 2922, 3897, 5430, 1041, 3043, 700, 946, 6425, 9055, 1068, 2389, 1163, 755, 13171, 7861, 8877, 4916, 4229, 9069, 5773, 992, 9905, 5765, 9573, 4816, 1591, 363, 9317, 739, 2443, 878, 7208, 7145, 2265, 8770, 723, 647, 4229, 5353, 1027, 6363, 647, 5988, 8020, 11415, 1368, 653, 481, 1667, 1662, 9193, 4371, 855, 605, 2145, 4395, 2393, 553, 1004, 839, 1220, 1895, 17936, 1114, 2132, 3724, 16290, 4817, 2633, 3090, 5052, 1882, 576, 8316, 4458, 4496, 2450, 1408, 2326, 9513, 1690, 3388, 6468, 15675, 871, 17837, 1333, 723, 7761, 895, 5337, 5756, 18735, 1079, 1241, 3986, 803, 2012, 844, 5927, 7738, 918, 1981, 1057, 2075, 8796, 1694, 3288, 5557, 8251, 8003, 6041, 9017, 7592, 6002, 1356, 2633, 493, 2720, 772, 755, 5322, 12529, 2637, 3613, 3253, 15908, 3281, 2306, 844, 5825, 2650, 7930, 8422, 7109, 3863, 746, 7176, 2777, 2623, 8299],
-        "text": ["Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VVS1", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VVS1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  IF", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VVS2", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  IF", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  I1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  IF", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  IF", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  VVS1", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VVS1", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  VVS2", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  VVS1", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  I1", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  IF", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  IF", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  IF", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  I1", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  IF", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VVS2", "Clarity:  IF", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  VVS2", "Clarity:  VVS2", "Clarity:  VS1", "Clarity:  VVS1", "Clarity:  VVS1", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  IF", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  I1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VVS2", "Clarity:  IF", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VVS1", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VS1", "Clarity:  IF", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  IF", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  I1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS1"],
+        "x": [1.26, 0.7, 0.36, 2.1, 1.21, 2, 0.4, 1.02, 0.61, 0.55, 0.6, 1.08, 1.52, 0.54, 0.91, 0.35, 1.5, 0.3, 1.54, 1.4, 1.21, 1.26, 0.42, 0.3, 1.2, 0.4, 0.61, 1.2, 0.31, 0.52, 1.06, 0.3, 0.32, 1.01, 0.56, 1.1, 0.31, 1.51, 0.9, 0.53, 2, 1.51, 0.5, 0.54, 0.3, 0.74, 1.36, 0.75, 0.73, 1.26, 0.31, 0.85, 0.9, 0.32, 0.31, 0.71, 0.42, 0.3, 0.62, 0.72, 0.26, 1.15, 0.71, 0.26, 0.55, 0.4, 1.02, 1.2, 0.5, 1.7, 0.34, 0.63, 0.5, 0.57, 0.59, 2, 0.9, 0.31, 1.06, 0.38, 0.72, 0.43, 2.22, 0.58, 1.52, 0.53, 0.5, 1, 0.33, 0.6, 0.78, 1.52, 2.01, 0.5, 1.27, 0.56, 0.31, 0.52, 0.56, 0.59, 0.71, 1.04, 0.31, 1.11, 0.77, 0.71, 1.12, 0.7, 1.01, 0.59, 1.15, 1.21, 1.52, 0.41, 0.52, 1.12, 0.52, 0.4, 1.01, 0.61, 0.42, 0.53, 0.51, 0.36, 0.27, 0.42, 0.72, 0.59, 0.32, 0.32, 0.34, 0.3, 2.01, 1, 0.4, 0.31, 1.21, 0.28, 0.5, 1.13, 0.96, 1.1, 1.2, 0.24, 0.3, 0.93, 0.52, 1.51, 0.3, 0.3, 1.04, 1.52, 0.96, 1.56, 1.14, 0.27, 0.24, 0.32, 1.52, 2, 0.34, 0.36, 1, 0.79, 0.24, 0.31, 0.31, 0.51, 0.54, 0.31, 0.32, 0.27, 1.25, 1.04, 0.9, 1.12, 0.32, 0.74, 1.2, 1.22, 0.34, 0.7, 0.41, 0.53, 1.59, 1.1, 1.14, 1.69, 1.21, 0.4, 0.34, 0.3, 1.01, 0.3, 0.91, 1.56, 1.11, 0.43, 1.05, 1.53, 0.56, 0.32, 0.3, 0.27, 0.33, 1.72, 0.26, 0.23, 0.41, 0.49, 0.54, 1.11, 0.76, 1, 0.44, 0.52, 0.31, 0.91, 1, 0.3, 1, 2.54, 0.43, 0.31, 0.38, 0.33, 0.9, 2.02, 0.5, 0.28, 1.21, 0.36, 1.58, 1.05, 0.32, 0.91, 0.35, 0.9, 1.55, 0.32, 0.3, 1.51, 0.57, 0.3, 1.14, 0.52, 1.15, 0.92, 0.35, 0.81, 0.68, 0.72, 1.69, 0.35, 0.56, 0.3, 0.51, 1.5, 1, 1.13, 2.01, 0.23, 0.44, 0.91, 0.38, 1, 1.07, 0.6, 0.51, 1.01, 1.51, 0.53, 0.72, 2.21, 0.46, 1.01, 0.46, 0.75, 0.34, 0.35, 1.51, 0.25, 1, 0.5, 1.22, 0.53, 0.47, 0.32, 0.53, 0.8, 0.69, 0.52, 0.32, 0.7, 1.47, 0.72, 1.12, 0.46, 0.5, 0.58, 1.56, 0.58, 1.01, 1.7, 1.02, 0.9, 0.4, 0.92, 0.75, 1.2, 0.75, 0.44, 0.53, 1.03, 0.32, 0.94, 0.5, 0.9, 1.5, 0.31, 0.28, 1.61, 0.41, 0.65, 0.38, 0.4, 0.23, 0.5, 0.34, 2.41, 1.01, 0.32, 0.36, 0.9, 0.4, 1.62, 1.2, 0.92, 0.34, 0.39, 0.59, 0.3, 0.52, 1.07, 0.7, 0.61, 0.7, 0.24, 0.4, 0.32, 1.58, 1.51, 0.44, 0.72, 0.23, 0.38, 0.34, 0.28, 0.47, 0.41, 0.3, 1.15, 0.32, 0.48, 0.7, 0.5, 0.72, 1.02, 0.7, 1.2, 1, 1.08, 0.58, 0.67, 1.07, 0.51, 0.28, 1.44, 0.4, 1.7, 1.06, 0.72, 0.7, 0.91, 0.32, 1.01, 0.32, 1.26, 0.78, 0.74, 0.71, 0.52, 1.59, 1.71, 1.56, 0.36, 0.32, 0.37, 0.51, 1.26, 0.36, 0.61, 0.7, 1.14, 0.9, 0.41, 1.01, 0.32, 0.76, 0.33, 0.7, 0.33, 1.04, 2.1, 0.33, 0.46, 1.26, 1.53, 0.5, 1.01, 1.01, 0.71, 0.33, 1, 0.71, 2.2, 0.76, 0.7, 0.3, 0.3, 1.5, 1.7, 0.71, 1.1, 0.6, 1.06, 2.07, 0.3, 0.3, 0.71, 0.72, 1.02, 1.7, 1, 1.11, 1.5, 0.31, 0.41, 1.61, 0.71, 1.24, 0.42, 1.26, 0.52, 2.53, 0.53, 1.56, 2.03, 1.05, 0.72, 1.25, 0.78, 1.22, 0.27, 1.2, 0.72, 0.7, 2.5, 1.58, 0.52, 0.76, 0.36, 0.59, 1.69, 0.7, 1, 1.28, 0.56, 1.05, 0.32, 0.44, 0.39, 0.51, 1.51, 0.76, 0.48, 0.31, 0.25, 0.77, 1.32, 0.32, 1.21, 0.71, 0.9, 2.01, 1, 1.13, 1.3, 0.57, 0.95],
+        "y": [6738, 3448, 770, 12494, 4946, 15393, 1446, 11420, 1659, 1786, 2061, 4964, 7388, 1208, 4429, 788, 8590, 600, 7287, 6633, 6056, 5645, 1310, 521, 11435, 694, 1681, 9574, 500, 2301, 3958, 491, 1004, 6522, 1929, 5606, 698, 14334, 4369, 2280, 14340, 11739, 1629, 1725, 886, 2583, 6279, 3192, 1877, 14663, 379, 3070, 4101, 802, 558, 3254, 1210, 574, 1893, 3270, 601, 4927, 2680, 545, 1702, 977, 4819, 4838, 1779, 17892, 626, 1351, 1090, 1819, 1572, 10833, 4165, 435, 8170, 1069, 2398, 1113, 18531, 2088, 7906, 1226, 2016, 3175, 681, 1390, 3671, 8110, 12450, 1155, 8256, 1723, 544, 1815, 1755, 1789, 3245, 7459, 636, 4457, 2425, 2450, 3880, 2028, 4244, 1916, 4959, 6892, 5618, 638, 1605, 9440, 1245, 1323, 3671, 2161, 898, 1353, 1140, 505, 799, 1142, 2383, 2254, 828, 842, 596, 473, 12968, 5600, 1257, 680, 6684, 596, 2083, 4959, 4864, 5196, 6250, 559, 608, 3125, 1619, 14247, 1013, 422, 5535, 14293, 1739, 6971, 5382, 470, 485, 505, 9789, 13480, 829, 608, 8115, 2756, 678, 853, 642, 1261, 1760, 544, 828, 799, 5775, 4290, 4833, 8394, 1300, 2487, 11182, 6288, 846, 2335, 1115, 1236, 11149, 6653, 11654, 14242, 7424, 1080, 1014, 709, 3823, 789, 7131, 11522, 9734, 1008, 2789, 12386, 2010, 645, 684, 604, 1021, 12880, 769, 354, 683, 1934, 1847, 5802, 2977, 4004, 1073, 1289, 917, 2564, 6183, 764, 6867, 14421, 839, 625, 703, 752, 4158, 18678, 1134, 522, 6223, 537, 8782, 5557, 1008, 4370, 906, 4664, 7972, 645, 631, 8242, 2297, 640, 4513, 1576, 5191, 4325, 706, 5373, 3225, 2318, 9275, 798, 1963, 684, 2111, 12179, 5522, 12150, 16881, 414, 733, 4279, 1333, 4427, 6793, 1861, 1573, 4617, 10838, 1683, 3084, 16657, 1418, 3886, 1637, 2835, 765, 984, 13325, 576, 3850, 1629, 7310, 1428, 1058, 524, 1079, 4043, 1757, 1219, 707, 2839, 7438, 2316, 7812, 1040, 1752, 1066, 11047, 2340, 8668, 17485, 4487, 4678, 909, 3282, 3462, 8990, 3170, 974, 2143, 6056, 842, 3285, 1359, 3820, 10584, 628, 428, 10793, 1007, 1801, 800, 945, 478, 1257, 630, 16987, 4129, 758, 727, 3689, 842, 7072, 7074, 3555, 537, 876, 1883, 565, 1694, 3415, 2245, 1884, 1995, 373, 734, 561, 14451, 7848, 1294, 2114, 498, 666, 765, 828, 953, 755, 608, 7123, 480, 2677, 2034, 1154, 2492, 5291, 1890, 6740, 7584, 6982, 1657, 2577, 5063, 2111, 487, 7419, 900, 12622, 2239, 2688, 2980, 4209, 393, 5147, 786, 5080, 3103, 3285, 3464, 1822, 12409, 11455, 8048, 859, 936, 616, 1438, 6085, 473, 2324, 2367, 4935, 4687, 1439, 5616, 449, 2287, 868, 2697, 1040, 5416, 12401, 579, 1834, 6318, 9116, 1397, 6439, 6391, 2480, 743, 4311, 2283, 15424, 2587, 2509, 720, 789, 6731, 18598, 2308, 4561, 1022, 4238, 13495, 475, 452, 4447, 2401, 11765, 12257, 3472, 4662, 10479, 888, 969, 17256, 2861, 5783, 902, 10076, 1694, 15148, 2099, 7862, 12021, 4405, 4252, 9030, 3055, 8485, 799, 5257, 3075, 2279, 14652, 11380, 1250, 2593, 727, 1572, 17803, 3011, 7114, 12285, 1206, 4618, 905, 1081, 1170, 1438, 8550, 4223, 1279, 914, 575, 2946, 7143, 449, 7611, 2233, 3709, 17849, 5197, 6891, 6552, 2095, 4628],
+        "text": ["Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  IF", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  IF", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  IF", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  VVS1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  IF", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  IF", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  IF", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  I1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VVS1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  IF", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  VVS1", "Clarity:  VS1", "Clarity:  VVS1", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VS1", "Clarity:  VVS1", "Clarity:  VVS1", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  VVS1", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VS1", "Clarity:  VVS2", "Clarity:  VVS1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  IF", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  IF", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  IF", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VVS1", "Clarity:  VS1", "Clarity:  VVS1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  I1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  VVS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  IF", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  IF", "Clarity:  VS1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  SI2", "Clarity:  SI1", "Clarity:  VVS1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS1", "Clarity:  SI2", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  SI2", "Clarity:  SI2", "Clarity:  VVS1", "Clarity:  VVS2", "Clarity:  VS1", "Clarity:  VS2", "Clarity:  VVS2", "Clarity:  VVS2", "Clarity:  VS2", "Clarity:  IF", "Clarity:  VVS1", "Clarity:  SI1", "Clarity:  VS1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI1", "Clarity:  SI1", "Clarity:  VS2", "Clarity:  SI2", "Clarity:  VVS2", "Clarity:  SI1"],
         "mode": "markers",
         "type": "scatter",
         "marker": {
-          "size": [38.6530612244898, 34.6122448979592, 12.5714285714286, 12.5714285714286, 77.2244897959184, 58.8571428571429, 20.2857142857143, 44.1632653061224, 13.3061224489796, 41.2244897959184, 12.5714285714286, 20.2857142857143, 47.1020408163265, 64, 22.8571428571429, 16.2448979591837, 34.9795918367347, 46, 55.5510204081633, 12.9387755102041, 12.5714285714286, 21.0204081632653, 12.9387755102041, 21.0204081632653, 57.0204081632653, 38.6530612244898, 16.9795918367347, 20.6530612244898, 14.4081632653061, 46, 78.6938775510204, 28.734693877551, 57.0204081632653, 21.7551020408163, 14.4081632653061, 23.2244897959184, 40.4897959183673, 15.1428571428571, 21.7551020408163, 51.5102040816327, 57.3877551020408, 12.5714285714286, 18.8163265306122, 21.3877551020408, 16.2448979591837, 88.6122448979592, 23.9591836734694, 10, 38.2857142857143, 38.2857142857143, 38.6530612244898, 41.5918367346939, 11.1020408163265, 45.6326530612245, 12.5714285714286, 41.5918367346939, 34.6122448979592, 11.8367346938776, 14.4081632653061, 14.0408163265306, 75.3877551020408, 12.5714285714286, 28, 12.9387755102041, 79.4285714285714, 59.2244897959184, 48.5714285714286, 61.4285714285714, 39.0204081632653, 20.2857142857143, 56.6530612244898, 44.1632653061224, 13.6734693877551, 28, 12.9387755102041, 13.3061224489796, 22.1224489795918, 16.6122448979592, 28.734693877551, 37.1836734693878, 65.1020408163265, 11.1020408163265, 23.2244897959184, 28, 30.5714285714286, 17.3469387755102, 16.6122448979592, 13.3061224489796, 40.8571428571429, 16.6122448979592, 21.7551020408163, 43.4285714285714, 38.2857142857143, 58.1224489795918, 19.9183673469388, 51.5102040816327, 12.9387755102041, 13.6734693877551, 28.3673469387755, 19.9183673469388, 56.6530612244898, 28.734693877551, 39.0204081632653, 53.7142857142857, 17.3469387755102, 15.8775510204082, 31.3061224489796, 12.5714285714286, 29.1020408163265, 16.6122448979592, 21.3877551020408, 24.3265306122449, 30.9387755102041, 40.1224489795918, 27.6326530612245, 34.6122448979592, 20.2857142857143, 20.2857142857143, 49.6734693877551, 16.9795918367347, 65.1020408163265, 38.2857142857143, 75.7551020408163, 12.5714285714286, 64.734693877551, 28.734693877551, 34.6122448979592, 30.2040816326531, 14.4081632653061, 34.6122448979592, 43.0612244897959, 22.1224489795918, 22.8571428571429, 59.2244897959184, 13.3061224489796, 27.265306122449, 76.8571428571428, 30.2040816326531, 71.7142857142857, 12.5714285714286, 14.7755102040816, 27.6326530612245, 11.1020408163265, 23.9591836734694, 45.265306122449, 21.3877551020408, 27.265306122449, 29.469387755102, 10.734693877551, 36.8163265306122, 62.1632653061224, 27.265306122449, 34.6122448979592, 38.6530612244898, 11.8367346938776, 21.3877551020408, 20.6530612244898, 19.9183673469388, 29.1020408163265, 15.8775510204082, 20.6530612244898, 12.9387755102041, 60.6938775510204, 41.5918367346939, 35.3469387755102, 40.4897959183673, 34.6122448979592, 13.6734693877551, 12.5714285714286, 22.8571428571429, 52.9795918367347, 45.6326530612245, 14.0408163265306, 21.7551020408163, 19.9183673469388, 40.1224489795918, 27.265306122449, 12.5714285714286, 57.3877551020408, 13.3061224489796, 39.0204081632653, 20.2857142857143, 13.3061224489796, 14.0408163265306, 38.2857142857143, 11.469387755102, 32.7755102040816, 34.9795918367347, 38.6530612244898, 24.6938775510204, 27.265306122449, 85.6734693877551, 46, 29.1020408163265, 16.6122448979592, 12.5714285714286, 29.8367346938776, 12.9387755102041, 37.9183673469388, 21.3877551020408, 38.6530612244898, 27.6326530612245, 24.3265306122449, 20.2857142857143, 38.6530612244898, 23.2244897959184, 20.6530612244898, 16.2448979591837, 29.8367346938776, 57.7551020408163, 40.4897959183673, 21.0204081632653, 41.2244897959184, 12.2040816326531, 56.6530612244898, 10, 19.9183673469388, 15.8775510204082, 57.7551020408163, 34.6122448979592, 12.9387755102041, 75.0204081632653, 12.5714285714286, 28, 46.734693877551, 16.6122448979592, 28.734693877551, 28.3673469387755, 45.6326530612245, 55.1836734693877, 14.4081632653061, 100, 21.7551020408163, 16.6122448979592, 46, 39.0204081632653, 46.734693877551, 13.6734693877551, 32.0408163265306, 22.8571428571429, 39.3877551020408, 17.7142857142857, 16.9795918367347, 10, 39.0204081632653, 13.3061224489796, 18.4489795918367, 28, 29.469387755102, 38.2857142857143, 39.3877551020408, 28, 45.6326530612245, 46.734693877551, 21.3877551020408, 20.2857142857143, 38.6530612244898, 38.2857142857143, 12.9387755102041, 17.3469387755102, 39.0204081632653, 24.6938775510204, 44.530612244898, 13.3061224489796, 18.8163265306122, 27.265306122449, 47.469387755102, 45.265306122449, 20.2857142857143, 23.5918367346939, 13.6734693877551, 16.6122448979592, 57.0204081632653, 34.6122448979592, 17.3469387755102, 12.5714285714286, 55.9183673469388, 39.7551020408163, 12.5714285714286, 52.9795918367347, 41.9591836734694, 39.3877551020408, 29.469387755102, 44.530612244898, 15.5102040816327, 13.3061224489796, 16.6122448979592, 12.9387755102041, 41.5918367346939, 57.3877551020408, 38.2857142857143, 13.6734693877551, 43.0612244897959, 12.5714285714286, 38.6530612244898, 34.6122448979592, 12.5714285714286, 18.8163265306122, 12.9387755102041, 12.5714285714286, 20.6530612244898, 15.5102040816327, 27.6326530612245, 13.3061224489796, 52.2448979591837, 27.265306122449, 82, 15.8775510204082, 17.3469387755102, 27.6326530612245, 39.0204081632653, 21.0204081632653, 81.6326530612245, 80.1632653061225, 12.5714285714286, 12.9387755102041, 12.9387755102041, 19.9183673469388, 12.5714285714286, 17.7142857142857, 75.3877551020408, 16.6122448979592, 12.9387755102041, 28, 13.6734693877551, 28, 19.9183673469388, 76.1224489795918, 75.3877551020408, 28, 38.6530612244898, 38.6530612244898, 61.4285714285714, 12.5714285714286, 40.1224489795918, 38.2857142857143, 16.6122448979592, 44.1632653061224, 12.5714285714286, 16.2448979591837, 21.3877551020408, 57.7551020408163, 13.6734693877551, 13.3061224489796, 64, 14.7755102040816, 14.7755102040816, 30.9387755102041, 93.3877551020408, 12.5714285714286, 27.6326530612245, 40.4897959183673, 15.8775510204082, 38.6530612244898, 46, 56.6530612244898, 27.265306122449, 38.6530612244898, 34.9795918367347, 27.6326530612245, 38.6530612244898, 39.0204081632653, 15.1428571428571, 28, 15.5102040816327, 13.6734693877551, 38.6530612244898, 56.6530612244898, 20.2857142857143, 27.265306122449, 16.6122448979592, 16.6122448979592, 58.4897959183673, 39.0204081632653, 46, 47.1020408163265, 35.7142857142857, 57.0204081632653, 46.3673469387755, 16.9795918367347, 76.4897959183673, 45.6326530612245, 56.6530612244898, 34.9795918367347, 20.2857142857143, 10.734693877551, 45.6326530612245, 17.3469387755102, 27.6326530612245, 14.7755102040816, 57.0204081632653, 57.0204081632653, 27.6326530612245, 56.6530612244898, 13.6734693877551, 16.6122448979592, 34.6122448979592, 39.7551020408163, 18.0816326530612, 45.265306122449, 12.9387755102041, 38.6530612244898, 39.3877551020408, 44.8979591836735, 15.8775510204082, 16.9795918367347, 11.8367346938776, 21.7551020408163, 21.3877551020408, 75.0204081632653, 43.0612244897959, 16.2448979591837, 12.5714285714286, 19.9183673469388, 41.5918367346939, 28, 12.9387755102041, 15.8775510204082, 15.1428571428571, 20.2857142857143, 20.2857142857143, 57.0204081632653, 13.6734693877551, 21.7551020408163, 34.6122448979592, 75.7551020408163, 36.0816326530612, 30.5714285714286, 33.5102040816327, 43.0612244897959, 20.2857142857143, 13.3061224489796, 56.6530612244898, 40.8571428571429, 40.8571428571429, 27.6326530612245, 22.8571428571429, 26.530612244898, 57.0204081632653, 21.0204081632653, 41.9591836734694, 38.2857142857143, 75.3877551020408, 12.9387755102041, 78.6938775510204, 19.9183673469388, 13.6734693877551, 45.6326530612245, 16.2448979591837, 39.3877551020408, 38.6530612244898, 72.8163265306122, 16.6122448979592, 16.6122448979592, 35.3469387755102, 14.0408163265306, 20.6530612244898, 12.5714285714286, 41.2244897959184, 53.3469387755102, 16.2448979591837, 26.1632653061225, 21.3877551020408, 20.2857142857143, 41.9591836734694, 20.6530612244898, 34.6122448979592, 38.2857142857143, 42.6938775510204, 40.4897959183673, 38.6530612244898, 60.3265306122449, 59.5918367346939, 76.1224489795918, 21.3877551020408, 27.265306122449, 10, 20.2857142857143, 16.2448979591837, 16.9795918367347, 38.2857142857143, 65.8367346938776, 27.6326530612245, 30.2040816326531, 29.8367346938776, 75.3877551020408, 27.6326530612245, 28, 12.5714285714286, 45.265306122449, 28, 45.6326530612245, 41.5918367346939, 48.5714285714286, 34.9795918367347, 15.1428571428571, 48.2040816326531, 27.265306122449, 27.6326530612245, 47.1020408163265],
-          "sizemode": "area",
           "colorbar": {
             "title": "",
             "ticklen": 2
           },
           "cmin": 0.23,
-          "cmax": 2.68,
+          "cmax": 2.54,
           "colorscale": [
             ["0", "rgba(68,1,84,1)"],
-            ["0.0285714285714286", "rgba(70,14,93,1)"],
-            ["0.0326530612244898", "rgba(70,15,94,1)"],
-            ["0.036734693877551", "rgba(70,17,96,1)"],
-            ["0.0448979591836735", "rgba(70,20,98,1)"],
-            ["0.0653061224489796", "rgba(71,27,105,1)"],
-            ["0.073469387755102", "rgba(71,29,108,1)"],
-            ["0.0857142857142857", "rgba(72,33,112,1)"],
-            ["0.114285714285714", "rgba(72,41,120,1)"],
-            ["0.122448979591837", "rgba(71,44,122,1)"],
-            ["0.142176870748299", "rgba(70,50,125,1)"],
-            ["0.191836734693878", "rgba(66,65,132,1)"],
-            ["0.2", "rgba(65,68,134,1)"],
-            ["0.212244897959184", "rgba(63,71,135,1)"],
-            ["0.273469387755102", "rgba(58,88,139,1)"],
-            ["0.301530612244898", "rgba(54,96,141,1)"],
-            ["0.318367346938775", "rgba(52,100,141,1)"],
-            ["0.326530612244898", "rgba(50,102,142,1)"],
-            ["0.351020408163265", "rgba(48,108,142,1)"],
-            ["0.391836734693878", "rgba(45,118,142,1)"],
-            ["0.408163265306122", "rgba(43,121,142,1)"],
-            ["0.518367346938776", "rgba(35,149,139,1)"],
-            ["0.536394557823129", "rgba(33,153,138,1)"],
-            ["0.726530612244898", "rgba(88,195,105,1)"],
+            ["0.0416666666666667", "rgba(70,19,97,1)"],
+            ["0.0833333333333333", "rgba(72,32,111,1)"],
+            ["0.125", "rgba(71,45,122,1)"],
+            ["0.166666666666667", "rgba(68,58,128,1)"],
+            ["0.208333333333333", "rgba(64,70,135,1)"],
+            ["0.25", "rgba(60,82,138,1)"],
+            ["0.291666666666667", "rgba(56,93,140,1)"],
+            ["0.333333333333333", "rgba(49,104,142,1)"],
+            ["0.375", "rgba(46,114,142,1)"],
+            ["0.416666666666667", "rgba(42,123,142,1)"],
+            ["0.458333333333333", "rgba(38,133,141,1)"],
+            ["0.5", "rgba(37,144,140,1)"],
+            ["0.541666666666667", "rgba(33,154,138,1)"],
+            ["0.583333333333333", "rgba(39,164,133,1)"],
+            ["0.625", "rgba(47,174,127,1)"],
+            ["0.666666666666667", "rgba(53,183,121,1)"],
+            ["0.708333333333333", "rgba(79,191,110,1)"],
+            ["0.75", "rgba(98,199,98,1)"],
+            ["0.791666666666667", "rgba(119,207,85,1)"],
+            ["0.833333333333333", "rgba(147,214,70,1)"],
+            ["0.875", "rgba(172,220,52,1)"],
+            ["0.916666666666667", "rgba(199,225,42,1)"],
+            ["0.958333333333333", "rgba(226,228,40,1)"],
             ["1", "rgba(253,231,37,1)"]
           ],
           "showscale": false,
-          "color": [1.01, 0.9, 0.3, 0.3, 2.06, 1.56, 0.51, 1.16, 0.32, 1.08, 0.3, 0.51, 1.24, 1.7, 0.58, 0.4, 0.91, 1.21, 1.47, 0.31, 0.3, 0.53, 0.31, 0.53, 1.51, 1.01, 0.42, 0.52, 0.35, 1.21, 2.1, 0.74, 1.51, 0.55, 0.35, 0.59, 1.06, 0.37, 0.55, 1.36, 1.52, 0.3, 0.47, 0.54, 0.4, 2.37, 0.61, 0.23, 1, 1, 1.01, 1.09, 0.26, 1.2, 0.3, 1.09, 0.9, 0.28, 0.35, 0.34, 2.01, 0.3, 0.72, 0.31, 2.12, 1.57, 1.28, 1.63, 1.02, 0.51, 1.5, 1.16, 0.33, 0.72, 0.31, 0.32, 0.56, 0.41, 0.74, 0.97, 1.73, 0.26, 0.59, 0.72, 0.79, 0.43, 0.41, 0.32, 1.07, 0.41, 0.55, 1.14, 1, 1.54, 0.5, 1.36, 0.31, 0.33, 0.73, 0.5, 1.5, 0.74, 1.02, 1.42, 0.43, 0.39, 0.81, 0.3, 0.75, 0.41, 0.54, 0.62, 0.8, 1.05, 0.71, 0.9, 0.51, 0.51, 1.31, 0.42, 1.73, 1, 2.02, 0.3, 1.72, 0.74, 0.9, 0.78, 0.35, 0.9, 1.13, 0.56, 0.58, 1.57, 0.32, 0.7, 2.05, 0.78, 1.91, 0.3, 0.36, 0.71, 0.26, 0.61, 1.19, 0.54, 0.7, 0.76, 0.25, 0.96, 1.65, 0.7, 0.9, 1.01, 0.28, 0.54, 0.52, 0.5, 0.75, 0.39, 0.52, 0.31, 1.61, 1.09, 0.92, 1.06, 0.9, 0.33, 0.3, 0.58, 1.4, 1.2, 0.34, 0.55, 0.5, 1.05, 0.7, 0.3, 1.52, 0.32, 1.02, 0.51, 0.32, 0.34, 1, 0.27, 0.85, 0.91, 1.01, 0.63, 0.7, 2.29, 1.21, 0.75, 0.41, 0.3, 0.77, 0.31, 0.99, 0.54, 1.01, 0.71, 0.62, 0.51, 1.01, 0.59, 0.52, 0.4, 0.77, 1.53, 1.06, 0.53, 1.08, 0.29, 1.5, 0.23, 0.5, 0.39, 1.53, 0.9, 0.31, 2, 0.3, 0.72, 1.23, 0.41, 0.74, 0.73, 1.2, 1.46, 0.35, 2.68, 0.55, 0.41, 1.21, 1.02, 1.23, 0.33, 0.83, 0.58, 1.03, 0.44, 0.42, 0.23, 1.02, 0.32, 0.46, 0.72, 0.76, 1, 1.03, 0.72, 1.2, 1.23, 0.54, 0.51, 1.01, 1, 0.31, 0.43, 1.02, 0.63, 1.17, 0.32, 0.47, 0.7, 1.25, 1.19, 0.51, 0.6, 0.33, 0.41, 1.51, 0.9, 0.43, 0.3, 1.48, 1.04, 0.3, 1.4, 1.1, 1.03, 0.76, 1.17, 0.38, 0.32, 0.41, 0.31, 1.09, 1.52, 1, 0.33, 1.13, 0.3, 1.01, 0.9, 0.3, 0.47, 0.31, 0.3, 0.52, 0.38, 0.71, 0.32, 1.38, 0.7, 2.19, 0.39, 0.43, 0.71, 1.02, 0.53, 2.18, 2.14, 0.3, 0.31, 0.31, 0.5, 0.3, 0.44, 2.01, 0.41, 0.31, 0.72, 0.33, 0.72, 0.5, 2.03, 2.01, 0.72, 1.01, 1.01, 1.63, 0.3, 1.05, 1, 0.41, 1.16, 0.3, 0.4, 0.54, 1.53, 0.33, 0.32, 1.7, 0.36, 0.36, 0.8, 2.5, 0.3, 0.71, 1.06, 0.39, 1.01, 1.21, 1.5, 0.7, 1.01, 0.91, 0.71, 1.01, 1.02, 0.37, 0.72, 0.38, 0.33, 1.01, 1.5, 0.51, 0.7, 0.41, 0.41, 1.55, 1.02, 1.21, 1.24, 0.93, 1.51, 1.22, 0.42, 2.04, 1.2, 1.5, 0.91, 0.51, 0.25, 1.2, 0.43, 0.71, 0.36, 1.51, 1.51, 0.71, 1.5, 0.33, 0.41, 0.9, 1.04, 0.45, 1.19, 0.31, 1.01, 1.03, 1.18, 0.39, 0.42, 0.28, 0.55, 0.54, 2, 1.13, 0.4, 0.3, 0.5, 1.09, 0.72, 0.31, 0.39, 0.37, 0.51, 0.51, 1.51, 0.33, 0.55, 0.9, 2.02, 0.94, 0.79, 0.87, 1.13, 0.51, 0.32, 1.5, 1.07, 1.07, 0.71, 0.58, 0.68, 1.51, 0.53, 1.1, 1, 2.01, 0.31, 2.1, 0.5, 0.33, 1.2, 0.4, 1.03, 1.01, 1.94, 0.41, 0.41, 0.92, 0.34, 0.52, 0.3, 1.08, 1.41, 0.4, 0.67, 0.54, 0.51, 1.1, 0.52, 0.9, 1, 1.12, 1.06, 1.01, 1.6, 1.58, 2.03, 0.54, 0.7, 0.23, 0.51, 0.4, 0.42, 1, 1.75, 0.71, 0.78, 0.77, 2.01, 0.71, 0.72, 0.3, 1.19, 0.72, 1.2, 1.09, 1.28, 0.91, 0.37, 1.27, 0.7, 0.71, 1.24],
+          "color": [1.26, 0.7, 0.36, 2.1, 1.21, 2, 0.4, 1.02, 0.61, 0.55, 0.6, 1.08, 1.52, 0.54, 0.91, 0.35, 1.5, 0.3, 1.54, 1.4, 1.21, 1.26, 0.42, 0.3, 1.2, 0.4, 0.61, 1.2, 0.31, 0.52, 1.06, 0.3, 0.32, 1.01, 0.56, 1.1, 0.31, 1.51, 0.9, 0.53, 2, 1.51, 0.5, 0.54, 0.3, 0.74, 1.36, 0.75, 0.73, 1.26, 0.31, 0.85, 0.9, 0.32, 0.31, 0.71, 0.42, 0.3, 0.62, 0.72, 0.26, 1.15, 0.71, 0.26, 0.55, 0.4, 1.02, 1.2, 0.5, 1.7, 0.34, 0.63, 0.5, 0.57, 0.59, 2, 0.9, 0.31, 1.06, 0.38, 0.72, 0.43, 2.22, 0.58, 1.52, 0.53, 0.5, 1, 0.33, 0.6, 0.78, 1.52, 2.01, 0.5, 1.27, 0.56, 0.31, 0.52, 0.56, 0.59, 0.71, 1.04, 0.31, 1.11, 0.77, 0.71, 1.12, 0.7, 1.01, 0.59, 1.15, 1.21, 1.52, 0.41, 0.52, 1.12, 0.52, 0.4, 1.01, 0.61, 0.42, 0.53, 0.51, 0.36, 0.27, 0.42, 0.72, 0.59, 0.32, 0.32, 0.34, 0.3, 2.01, 1, 0.4, 0.31, 1.21, 0.28, 0.5, 1.13, 0.96, 1.1, 1.2, 0.24, 0.3, 0.93, 0.52, 1.51, 0.3, 0.3, 1.04, 1.52, 0.96, 1.56, 1.14, 0.27, 0.24, 0.32, 1.52, 2, 0.34, 0.36, 1, 0.79, 0.24, 0.31, 0.31, 0.51, 0.54, 0.31, 0.32, 0.27, 1.25, 1.04, 0.9, 1.12, 0.32, 0.74, 1.2, 1.22, 0.34, 0.7, 0.41, 0.53, 1.59, 1.1, 1.14, 1.69, 1.21, 0.4, 0.34, 0.3, 1.01, 0.3, 0.91, 1.56, 1.11, 0.43, 1.05, 1.53, 0.56, 0.32, 0.3, 0.27, 0.33, 1.72, 0.26, 0.23, 0.41, 0.49, 0.54, 1.11, 0.76, 1, 0.44, 0.52, 0.31, 0.91, 1, 0.3, 1, 2.54, 0.43, 0.31, 0.38, 0.33, 0.9, 2.02, 0.5, 0.28, 1.21, 0.36, 1.58, 1.05, 0.32, 0.91, 0.35, 0.9, 1.55, 0.32, 0.3, 1.51, 0.57, 0.3, 1.14, 0.52, 1.15, 0.92, 0.35, 0.81, 0.68, 0.72, 1.69, 0.35, 0.56, 0.3, 0.51, 1.5, 1, 1.13, 2.01, 0.23, 0.44, 0.91, 0.38, 1, 1.07, 0.6, 0.51, 1.01, 1.51, 0.53, 0.72, 2.21, 0.46, 1.01, 0.46, 0.75, 0.34, 0.35, 1.51, 0.25, 1, 0.5, 1.22, 0.53, 0.47, 0.32, 0.53, 0.8, 0.69, 0.52, 0.32, 0.7, 1.47, 0.72, 1.12, 0.46, 0.5, 0.58, 1.56, 0.58, 1.01, 1.7, 1.02, 0.9, 0.4, 0.92, 0.75, 1.2, 0.75, 0.44, 0.53, 1.03, 0.32, 0.94, 0.5, 0.9, 1.5, 0.31, 0.28, 1.61, 0.41, 0.65, 0.38, 0.4, 0.23, 0.5, 0.34, 2.41, 1.01, 0.32, 0.36, 0.9, 0.4, 1.62, 1.2, 0.92, 0.34, 0.39, 0.59, 0.3, 0.52, 1.07, 0.7, 0.61, 0.7, 0.24, 0.4, 0.32, 1.58, 1.51, 0.44, 0.72, 0.23, 0.38, 0.34, 0.28, 0.47, 0.41, 0.3, 1.15, 0.32, 0.48, 0.7, 0.5, 0.72, 1.02, 0.7, 1.2, 1, 1.08, 0.58, 0.67, 1.07, 0.51, 0.28, 1.44, 0.4, 1.7, 1.06, 0.72, 0.7, 0.91, 0.32, 1.01, 0.32, 1.26, 0.78, 0.74, 0.71, 0.52, 1.59, 1.71, 1.56, 0.36, 0.32, 0.37, 0.51, 1.26, 0.36, 0.61, 0.7, 1.14, 0.9, 0.41, 1.01, 0.32, 0.76, 0.33, 0.7, 0.33, 1.04, 2.1, 0.33, 0.46, 1.26, 1.53, 0.5, 1.01, 1.01, 0.71, 0.33, 1, 0.71, 2.2, 0.76, 0.7, 0.3, 0.3, 1.5, 1.7, 0.71, 1.1, 0.6, 1.06, 2.07, 0.3, 0.3, 0.71, 0.72, 1.02, 1.7, 1, 1.11, 1.5, 0.31, 0.41, 1.61, 0.71, 1.24, 0.42, 1.26, 0.52, 2.53, 0.53, 1.56, 2.03, 1.05, 0.72, 1.25, 0.78, 1.22, 0.27, 1.2, 0.72, 0.7, 2.5, 1.58, 0.52, 0.76, 0.36, 0.59, 1.69, 0.7, 1, 1.28, 0.56, 1.05, 0.32, 0.44, 0.39, 0.51, 1.51, 0.76, 0.48, 0.31, 0.25, 0.77, 1.32, 0.32, 1.21, 0.71, 0.9, 2.01, 1, 1.13, 1.3, 0.57, 0.95],
+          "size": [50.1298701298701, 28.3116883116883, 15.0649350649351, 82.8571428571429, 48.1818181818182, 78.961038961039, 16.6233766233766, 40.7792207792208, 24.8051948051948, 22.4675324675325, 24.4155844155844, 43.1168831168831, 60.2597402597403, 22.0779220779221, 36.4935064935065, 14.6753246753247, 59.4805194805195, 12.7272727272727, 61.038961038961, 55.5844155844156, 48.1818181818182, 50.1298701298701, 17.4025974025974, 12.7272727272727, 47.7922077922078, 16.6233766233766, 24.8051948051948, 47.7922077922078, 13.1168831168831, 21.2987012987013, 42.3376623376623, 12.7272727272727, 13.5064935064935, 40.3896103896104, 22.8571428571429, 43.8961038961039, 13.1168831168831, 59.8701298701299, 36.1038961038961, 21.6883116883117, 78.961038961039, 59.8701298701299, 20.5194805194805, 22.0779220779221, 12.7272727272727, 29.8701298701299, 54.025974025974, 30.2597402597403, 29.4805194805195, 50.1298701298701, 13.1168831168831, 34.1558441558442, 36.1038961038961, 13.5064935064935, 13.1168831168831, 28.7012987012987, 17.4025974025974, 12.7272727272727, 25.1948051948052, 29.0909090909091, 11.1688311688312, 45.8441558441558, 28.7012987012987, 11.1688311688312, 22.4675324675325, 16.6233766233766, 40.7792207792208, 47.7922077922078, 20.5194805194805, 67.2727272727273, 14.2857142857143, 25.5844155844156, 20.5194805194805, 23.2467532467532, 24.025974025974, 78.961038961039, 36.1038961038961, 13.1168831168831, 42.3376623376623, 15.8441558441558, 29.0909090909091, 17.7922077922078, 87.5324675324675, 23.6363636363636, 60.2597402597403, 21.6883116883117, 20.5194805194805, 40, 13.8961038961039, 24.4155844155844, 31.4285714285714, 60.2597402597403, 79.3506493506493, 20.5194805194805, 50.5194805194805, 22.8571428571429, 13.1168831168831, 21.2987012987013, 22.8571428571429, 24.025974025974, 28.7012987012987, 41.5584415584416, 13.1168831168831, 44.2857142857143, 31.038961038961, 28.7012987012987, 44.6753246753247, 28.3116883116883, 40.3896103896104, 24.025974025974, 45.8441558441558, 48.1818181818182, 60.2597402597403, 17.012987012987, 21.2987012987013, 44.6753246753247, 21.2987012987013, 16.6233766233766, 40.3896103896104, 24.8051948051948, 17.4025974025974, 21.6883116883117, 20.9090909090909, 15.0649350649351, 11.5584415584416, 17.4025974025974, 29.0909090909091, 24.025974025974, 13.5064935064935, 13.5064935064935, 14.2857142857143, 12.7272727272727, 79.3506493506493, 40, 16.6233766233766, 13.1168831168831, 48.1818181818182, 11.9480519480519, 20.5194805194805, 45.0649350649351, 38.4415584415584, 43.8961038961039, 47.7922077922078, 10.3896103896104, 12.7272727272727, 37.2727272727273, 21.2987012987013, 59.8701298701299, 12.7272727272727, 12.7272727272727, 41.5584415584416, 60.2597402597403, 38.4415584415584, 61.8181818181818, 45.4545454545455, 11.5584415584416, 10.3896103896104, 13.5064935064935, 60.2597402597403, 78.961038961039, 14.2857142857143, 15.0649350649351, 40, 31.8181818181818, 10.3896103896104, 13.1168831168831, 13.1168831168831, 20.9090909090909, 22.0779220779221, 13.1168831168831, 13.5064935064935, 11.5584415584416, 49.7402597402597, 41.5584415584416, 36.1038961038961, 44.6753246753247, 13.5064935064935, 29.8701298701299, 47.7922077922078, 48.5714285714286, 14.2857142857143, 28.3116883116883, 17.012987012987, 21.6883116883117, 62.987012987013, 43.8961038961039, 45.4545454545455, 66.8831168831169, 48.1818181818182, 16.6233766233766, 14.2857142857143, 12.7272727272727, 40.3896103896104, 12.7272727272727, 36.4935064935065, 61.8181818181818, 44.2857142857143, 17.7922077922078, 41.948051948052, 60.6493506493507, 22.8571428571429, 13.5064935064935, 12.7272727272727, 11.5584415584416, 13.8961038961039, 68.051948051948, 11.1688311688312, 10, 17.012987012987, 20.1298701298701, 22.0779220779221, 44.2857142857143, 30.6493506493506, 40, 18.1818181818182, 21.2987012987013, 13.1168831168831, 36.4935064935065, 40, 12.7272727272727, 40, 100, 17.7922077922078, 13.1168831168831, 15.8441558441558, 13.8961038961039, 36.1038961038961, 79.7402597402597, 20.5194805194805, 11.9480519480519, 48.1818181818182, 15.0649350649351, 62.5974025974026, 41.948051948052, 13.5064935064935, 36.4935064935065, 14.6753246753247, 36.1038961038961, 61.4285714285714, 13.5064935064935, 12.7272727272727, 59.8701298701299, 23.2467532467532, 12.7272727272727, 45.4545454545455, 21.2987012987013, 45.8441558441558, 36.8831168831169, 14.6753246753247, 32.5974025974026, 27.5324675324675, 29.0909090909091, 66.8831168831169, 14.6753246753247, 22.8571428571429, 12.7272727272727, 20.9090909090909, 59.4805194805195, 40, 45.0649350649351, 79.3506493506493, 10, 18.1818181818182, 36.4935064935065, 15.8441558441558, 40, 42.7272727272727, 24.4155844155844, 20.9090909090909, 40.3896103896104, 59.8701298701299, 21.6883116883117, 29.0909090909091, 87.1428571428571, 18.961038961039, 40.3896103896104, 18.961038961039, 30.2597402597403, 14.2857142857143, 14.6753246753247, 59.8701298701299, 10.7792207792208, 40, 20.5194805194805, 48.5714285714286, 21.6883116883117, 19.3506493506493, 13.5064935064935, 21.6883116883117, 32.2077922077922, 27.9220779220779, 21.2987012987013, 13.5064935064935, 28.3116883116883, 58.3116883116883, 29.0909090909091, 44.6753246753247, 18.961038961039, 20.5194805194805, 23.6363636363636, 61.8181818181818, 23.6363636363636, 40.3896103896104, 67.2727272727273, 40.7792207792208, 36.1038961038961, 16.6233766233766, 36.8831168831169, 30.2597402597403, 47.7922077922078, 30.2597402597403, 18.1818181818182, 21.6883116883117, 41.1688311688312, 13.5064935064935, 37.6623376623377, 20.5194805194805, 36.1038961038961, 59.4805194805195, 13.1168831168831, 11.9480519480519, 63.7662337662338, 17.012987012987, 26.3636363636364, 15.8441558441558, 16.6233766233766, 10, 20.5194805194805, 14.2857142857143, 94.9350649350649, 40.3896103896104, 13.5064935064935, 15.0649350649351, 36.1038961038961, 16.6233766233766, 64.1558441558442, 47.7922077922078, 36.8831168831169, 14.2857142857143, 16.2337662337662, 24.025974025974, 12.7272727272727, 21.2987012987013, 42.7272727272727, 28.3116883116883, 24.8051948051948, 28.3116883116883, 10.3896103896104, 16.6233766233766, 13.5064935064935, 62.5974025974026, 59.8701298701299, 18.1818181818182, 29.0909090909091, 10, 15.8441558441558, 14.2857142857143, 11.9480519480519, 19.3506493506493, 17.012987012987, 12.7272727272727, 45.8441558441558, 13.5064935064935, 19.7402597402597, 28.3116883116883, 20.5194805194805, 29.0909090909091, 40.7792207792208, 28.3116883116883, 47.7922077922078, 40, 43.1168831168831, 23.6363636363636, 27.1428571428571, 42.7272727272727, 20.9090909090909, 11.9480519480519, 57.1428571428571, 16.6233766233766, 67.2727272727273, 42.3376623376623, 29.0909090909091, 28.3116883116883, 36.4935064935065, 13.5064935064935, 40.3896103896104, 13.5064935064935, 50.1298701298701, 31.4285714285714, 29.8701298701299, 28.7012987012987, 21.2987012987013, 62.987012987013, 67.6623376623376, 61.8181818181818, 15.0649350649351, 13.5064935064935, 15.4545454545455, 20.9090909090909, 50.1298701298701, 15.0649350649351, 24.8051948051948, 28.3116883116883, 45.4545454545455, 36.1038961038961, 17.012987012987, 40.3896103896104, 13.5064935064935, 30.6493506493506, 13.8961038961039, 28.3116883116883, 13.8961038961039, 41.5584415584416, 82.8571428571429, 13.8961038961039, 18.961038961039, 50.1298701298701, 60.6493506493507, 20.5194805194805, 40.3896103896104, 40.3896103896104, 28.7012987012987, 13.8961038961039, 40, 28.7012987012987, 86.7532467532468, 30.6493506493506, 28.3116883116883, 12.7272727272727, 12.7272727272727, 59.4805194805195, 67.2727272727273, 28.7012987012987, 43.8961038961039, 24.4155844155844, 42.3376623376623, 81.6883116883117, 12.7272727272727, 12.7272727272727, 28.7012987012987, 29.0909090909091, 40.7792207792208, 67.2727272727273, 40, 44.2857142857143, 59.4805194805195, 13.1168831168831, 17.012987012987, 63.7662337662338, 28.7012987012987, 49.3506493506494, 17.4025974025974, 50.1298701298701, 21.2987012987013, 99.6103896103896, 21.6883116883117, 61.8181818181818, 80.1298701298701, 41.948051948052, 29.0909090909091, 49.7402597402597, 31.4285714285714, 48.5714285714286, 11.5584415584416, 47.7922077922078, 29.0909090909091, 28.3116883116883, 98.4415584415584, 62.5974025974026, 21.2987012987013, 30.6493506493506, 15.0649350649351, 24.025974025974, 66.8831168831169, 28.3116883116883, 40, 50.9090909090909, 22.8571428571429, 41.948051948052, 13.5064935064935, 18.1818181818182, 16.2337662337662, 20.9090909090909, 59.8701298701299, 30.6493506493506, 19.7402597402597, 13.1168831168831, 10.7792207792208, 31.038961038961, 52.4675324675325, 13.5064935064935, 48.1818181818182, 28.7012987012987, 36.1038961038961, 79.3506493506493, 40, 45.0649350649351, 51.6883116883117, 23.2467532467532, 38.0519480519481],
+          "sizemode": "area",
           "line": {
-            "color": "transparent"
+            "colorbar": {
+              "title": "",
+              "ticklen": 2
+            },
+            "cmin": 0.23,
+            "cmax": 2.54,
+            "colorscale": [
+              ["0", "rgba(68,1,84,1)"],
+              ["0.0416666666666667", "rgba(70,19,97,1)"],
+              ["0.0833333333333333", "rgba(72,32,111,1)"],
+              ["0.125", "rgba(71,45,122,1)"],
+              ["0.166666666666667", "rgba(68,58,128,1)"],
+              ["0.208333333333333", "rgba(64,70,135,1)"],
+              ["0.25", "rgba(60,82,138,1)"],
+              ["0.291666666666667", "rgba(56,93,140,1)"],
+              ["0.333333333333333", "rgba(49,104,142,1)"],
+              ["0.375", "rgba(46,114,142,1)"],
+              ["0.416666666666667", "rgba(42,123,142,1)"],
+              ["0.458333333333333", "rgba(38,133,141,1)"],
+              ["0.5", "rgba(37,144,140,1)"],
+              ["0.541666666666667", "rgba(33,154,138,1)"],
+              ["0.583333333333333", "rgba(39,164,133,1)"],
+              ["0.625", "rgba(47,174,127,1)"],
+              ["0.666666666666667", "rgba(53,183,121,1)"],
+              ["0.708333333333333", "rgba(79,191,110,1)"],
+              ["0.75", "rgba(98,199,98,1)"],
+              ["0.791666666666667", "rgba(119,207,85,1)"],
+              ["0.833333333333333", "rgba(147,214,70,1)"],
+              ["0.875", "rgba(172,220,52,1)"],
+              ["0.916666666666667", "rgba(199,225,42,1)"],
+              ["0.958333333333333", "rgba(226,228,40,1)"],
+              ["1", "rgba(253,231,37,1)"]
+            ],
+            "showscale": false,
+            "color": [1.26, 0.7, 0.36, 2.1, 1.21, 2, 0.4, 1.02, 0.61, 0.55, 0.6, 1.08, 1.52, 0.54, 0.91, 0.35, 1.5, 0.3, 1.54, 1.4, 1.21, 1.26, 0.42, 0.3, 1.2, 0.4, 0.61, 1.2, 0.31, 0.52, 1.06, 0.3, 0.32, 1.01, 0.56, 1.1, 0.31, 1.51, 0.9, 0.53, 2, 1.51, 0.5, 0.54, 0.3, 0.74, 1.36, 0.75, 0.73, 1.26, 0.31, 0.85, 0.9, 0.32, 0.31, 0.71, 0.42, 0.3, 0.62, 0.72, 0.26, 1.15, 0.71, 0.26, 0.55, 0.4, 1.02, 1.2, 0.5, 1.7, 0.34, 0.63, 0.5, 0.57, 0.59, 2, 0.9, 0.31, 1.06, 0.38, 0.72, 0.43, 2.22, 0.58, 1.52, 0.53, 0.5, 1, 0.33, 0.6, 0.78, 1.52, 2.01, 0.5, 1.27, 0.56, 0.31, 0.52, 0.56, 0.59, 0.71, 1.04, 0.31, 1.11, 0.77, 0.71, 1.12, 0.7, 1.01, 0.59, 1.15, 1.21, 1.52, 0.41, 0.52, 1.12, 0.52, 0.4, 1.01, 0.61, 0.42, 0.53, 0.51, 0.36, 0.27, 0.42, 0.72, 0.59, 0.32, 0.32, 0.34, 0.3, 2.01, 1, 0.4, 0.31, 1.21, 0.28, 0.5, 1.13, 0.96, 1.1, 1.2, 0.24, 0.3, 0.93, 0.52, 1.51, 0.3, 0.3, 1.04, 1.52, 0.96, 1.56, 1.14, 0.27, 0.24, 0.32, 1.52, 2, 0.34, 0.36, 1, 0.79, 0.24, 0.31, 0.31, 0.51, 0.54, 0.31, 0.32, 0.27, 1.25, 1.04, 0.9, 1.12, 0.32, 0.74, 1.2, 1.22, 0.34, 0.7, 0.41, 0.53, 1.59, 1.1, 1.14, 1.69, 1.21, 0.4, 0.34, 0.3, 1.01, 0.3, 0.91, 1.56, 1.11, 0.43, 1.05, 1.53, 0.56, 0.32, 0.3, 0.27, 0.33, 1.72, 0.26, 0.23, 0.41, 0.49, 0.54, 1.11, 0.76, 1, 0.44, 0.52, 0.31, 0.91, 1, 0.3, 1, 2.54, 0.43, 0.31, 0.38, 0.33, 0.9, 2.02, 0.5, 0.28, 1.21, 0.36, 1.58, 1.05, 0.32, 0.91, 0.35, 0.9, 1.55, 0.32, 0.3, 1.51, 0.57, 0.3, 1.14, 0.52, 1.15, 0.92, 0.35, 0.81, 0.68, 0.72, 1.69, 0.35, 0.56, 0.3, 0.51, 1.5, 1, 1.13, 2.01, 0.23, 0.44, 0.91, 0.38, 1, 1.07, 0.6, 0.51, 1.01, 1.51, 0.53, 0.72, 2.21, 0.46, 1.01, 0.46, 0.75, 0.34, 0.35, 1.51, 0.25, 1, 0.5, 1.22, 0.53, 0.47, 0.32, 0.53, 0.8, 0.69, 0.52, 0.32, 0.7, 1.47, 0.72, 1.12, 0.46, 0.5, 0.58, 1.56, 0.58, 1.01, 1.7, 1.02, 0.9, 0.4, 0.92, 0.75, 1.2, 0.75, 0.44, 0.53, 1.03, 0.32, 0.94, 0.5, 0.9, 1.5, 0.31, 0.28, 1.61, 0.41, 0.65, 0.38, 0.4, 0.23, 0.5, 0.34, 2.41, 1.01, 0.32, 0.36, 0.9, 0.4, 1.62, 1.2, 0.92, 0.34, 0.39, 0.59, 0.3, 0.52, 1.07, 0.7, 0.61, 0.7, 0.24, 0.4, 0.32, 1.58, 1.51, 0.44, 0.72, 0.23, 0.38, 0.34, 0.28, 0.47, 0.41, 0.3, 1.15, 0.32, 0.48, 0.7, 0.5, 0.72, 1.02, 0.7, 1.2, 1, 1.08, 0.58, 0.67, 1.07, 0.51, 0.28, 1.44, 0.4, 1.7, 1.06, 0.72, 0.7, 0.91, 0.32, 1.01, 0.32, 1.26, 0.78, 0.74, 0.71, 0.52, 1.59, 1.71, 1.56, 0.36, 0.32, 0.37, 0.51, 1.26, 0.36, 0.61, 0.7, 1.14, 0.9, 0.41, 1.01, 0.32, 0.76, 0.33, 0.7, 0.33, 1.04, 2.1, 0.33, 0.46, 1.26, 1.53, 0.5, 1.01, 1.01, 0.71, 0.33, 1, 0.71, 2.2, 0.76, 0.7, 0.3, 0.3, 1.5, 1.7, 0.71, 1.1, 0.6, 1.06, 2.07, 0.3, 0.3, 0.71, 0.72, 1.02, 1.7, 1, 1.11, 1.5, 0.31, 0.41, 1.61, 0.71, 1.24, 0.42, 1.26, 0.52, 2.53, 0.53, 1.56, 2.03, 1.05, 0.72, 1.25, 0.78, 1.22, 0.27, 1.2, 0.72, 0.7, 2.5, 1.58, 0.52, 0.76, 0.36, 0.59, 1.69, 0.7, 1, 1.28, 0.56, 1.05, 0.32, 0.44, 0.39, 0.51, 1.51, 0.76, 0.48, 0.31, 0.25, 0.77, 1.32, 0.32, 1.21, 0.71, 0.9, 2.01, 1, 1.13, 1.3, 0.57, 0.95]
           }
         },
+        "textfont": {
+          "size": [50.1298701298701, 28.3116883116883, 15.0649350649351, 82.8571428571429, 48.1818181818182, 78.961038961039, 16.6233766233766, 40.7792207792208, 24.8051948051948, 22.4675324675325, 24.4155844155844, 43.1168831168831, 60.2597402597403, 22.0779220779221, 36.4935064935065, 14.6753246753247, 59.4805194805195, 12.7272727272727, 61.038961038961, 55.5844155844156, 48.1818181818182, 50.1298701298701, 17.4025974025974, 12.7272727272727, 47.7922077922078, 16.6233766233766, 24.8051948051948, 47.7922077922078, 13.1168831168831, 21.2987012987013, 42.3376623376623, 12.7272727272727, 13.5064935064935, 40.3896103896104, 22.8571428571429, 43.8961038961039, 13.1168831168831, 59.8701298701299, 36.1038961038961, 21.6883116883117, 78.961038961039, 59.8701298701299, 20.5194805194805, 22.0779220779221, 12.7272727272727, 29.8701298701299, 54.025974025974, 30.2597402597403, 29.4805194805195, 50.1298701298701, 13.1168831168831, 34.1558441558442, 36.1038961038961, 13.5064935064935, 13.1168831168831, 28.7012987012987, 17.4025974025974, 12.7272727272727, 25.1948051948052, 29.0909090909091, 11.1688311688312, 45.8441558441558, 28.7012987012987, 11.1688311688312, 22.4675324675325, 16.6233766233766, 40.7792207792208, 47.7922077922078, 20.5194805194805, 67.2727272727273, 14.2857142857143, 25.5844155844156, 20.5194805194805, 23.2467532467532, 24.025974025974, 78.961038961039, 36.1038961038961, 13.1168831168831, 42.3376623376623, 15.8441558441558, 29.0909090909091, 17.7922077922078, 87.5324675324675, 23.6363636363636, 60.2597402597403, 21.6883116883117, 20.5194805194805, 40, 13.8961038961039, 24.4155844155844, 31.4285714285714, 60.2597402597403, 79.3506493506493, 20.5194805194805, 50.5194805194805, 22.8571428571429, 13.1168831168831, 21.2987012987013, 22.8571428571429, 24.025974025974, 28.7012987012987, 41.5584415584416, 13.1168831168831, 44.2857142857143, 31.038961038961, 28.7012987012987, 44.6753246753247, 28.3116883116883, 40.3896103896104, 24.025974025974, 45.8441558441558, 48.1818181818182, 60.2597402597403, 17.012987012987, 21.2987012987013, 44.6753246753247, 21.2987012987013, 16.6233766233766, 40.3896103896104, 24.8051948051948, 17.4025974025974, 21.6883116883117, 20.9090909090909, 15.0649350649351, 11.5584415584416, 17.4025974025974, 29.0909090909091, 24.025974025974, 13.5064935064935, 13.5064935064935, 14.2857142857143, 12.7272727272727, 79.3506493506493, 40, 16.6233766233766, 13.1168831168831, 48.1818181818182, 11.9480519480519, 20.5194805194805, 45.0649350649351, 38.4415584415584, 43.8961038961039, 47.7922077922078, 10.3896103896104, 12.7272727272727, 37.2727272727273, 21.2987012987013, 59.8701298701299, 12.7272727272727, 12.7272727272727, 41.5584415584416, 60.2597402597403, 38.4415584415584, 61.8181818181818, 45.4545454545455, 11.5584415584416, 10.3896103896104, 13.5064935064935, 60.2597402597403, 78.961038961039, 14.2857142857143, 15.0649350649351, 40, 31.8181818181818, 10.3896103896104, 13.1168831168831, 13.1168831168831, 20.9090909090909, 22.0779220779221, 13.1168831168831, 13.5064935064935, 11.5584415584416, 49.7402597402597, 41.5584415584416, 36.1038961038961, 44.6753246753247, 13.5064935064935, 29.8701298701299, 47.7922077922078, 48.5714285714286, 14.2857142857143, 28.3116883116883, 17.012987012987, 21.6883116883117, 62.987012987013, 43.8961038961039, 45.4545454545455, 66.8831168831169, 48.1818181818182, 16.6233766233766, 14.2857142857143, 12.7272727272727, 40.3896103896104, 12.7272727272727, 36.4935064935065, 61.8181818181818, 44.2857142857143, 17.7922077922078, 41.948051948052, 60.6493506493507, 22.8571428571429, 13.5064935064935, 12.7272727272727, 11.5584415584416, 13.8961038961039, 68.051948051948, 11.1688311688312, 10, 17.012987012987, 20.1298701298701, 22.0779220779221, 44.2857142857143, 30.6493506493506, 40, 18.1818181818182, 21.2987012987013, 13.1168831168831, 36.4935064935065, 40, 12.7272727272727, 40, 100, 17.7922077922078, 13.1168831168831, 15.8441558441558, 13.8961038961039, 36.1038961038961, 79.7402597402597, 20.5194805194805, 11.9480519480519, 48.1818181818182, 15.0649350649351, 62.5974025974026, 41.948051948052, 13.5064935064935, 36.4935064935065, 14.6753246753247, 36.1038961038961, 61.4285714285714, 13.5064935064935, 12.7272727272727, 59.8701298701299, 23.2467532467532, 12.7272727272727, 45.4545454545455, 21.2987012987013, 45.8441558441558, 36.8831168831169, 14.6753246753247, 32.5974025974026, 27.5324675324675, 29.0909090909091, 66.8831168831169, 14.6753246753247, 22.8571428571429, 12.7272727272727, 20.9090909090909, 59.4805194805195, 40, 45.0649350649351, 79.3506493506493, 10, 18.1818181818182, 36.4935064935065, 15.8441558441558, 40, 42.7272727272727, 24.4155844155844, 20.9090909090909, 40.3896103896104, 59.8701298701299, 21.6883116883117, 29.0909090909091, 87.1428571428571, 18.961038961039, 40.3896103896104, 18.961038961039, 30.2597402597403, 14.2857142857143, 14.6753246753247, 59.8701298701299, 10.7792207792208, 40, 20.5194805194805, 48.5714285714286, 21.6883116883117, 19.3506493506493, 13.5064935064935, 21.6883116883117, 32.2077922077922, 27.9220779220779, 21.2987012987013, 13.5064935064935, 28.3116883116883, 58.3116883116883, 29.0909090909091, 44.6753246753247, 18.961038961039, 20.5194805194805, 23.6363636363636, 61.8181818181818, 23.6363636363636, 40.3896103896104, 67.2727272727273, 40.7792207792208, 36.1038961038961, 16.6233766233766, 36.8831168831169, 30.2597402597403, 47.7922077922078, 30.2597402597403, 18.1818181818182, 21.6883116883117, 41.1688311688312, 13.5064935064935, 37.6623376623377, 20.5194805194805, 36.1038961038961, 59.4805194805195, 13.1168831168831, 11.9480519480519, 63.7662337662338, 17.012987012987, 26.3636363636364, 15.8441558441558, 16.6233766233766, 10, 20.5194805194805, 14.2857142857143, 94.9350649350649, 40.3896103896104, 13.5064935064935, 15.0649350649351, 36.1038961038961, 16.6233766233766, 64.1558441558442, 47.7922077922078, 36.8831168831169, 14.2857142857143, 16.2337662337662, 24.025974025974, 12.7272727272727, 21.2987012987013, 42.7272727272727, 28.3116883116883, 24.8051948051948, 28.3116883116883, 10.3896103896104, 16.6233766233766, 13.5064935064935, 62.5974025974026, 59.8701298701299, 18.1818181818182, 29.0909090909091, 10, 15.8441558441558, 14.2857142857143, 11.9480519480519, 19.3506493506493, 17.012987012987, 12.7272727272727, 45.8441558441558, 13.5064935064935, 19.7402597402597, 28.3116883116883, 20.5194805194805, 29.0909090909091, 40.7792207792208, 28.3116883116883, 47.7922077922078, 40, 43.1168831168831, 23.6363636363636, 27.1428571428571, 42.7272727272727, 20.9090909090909, 11.9480519480519, 57.1428571428571, 16.6233766233766, 67.2727272727273, 42.3376623376623, 29.0909090909091, 28.3116883116883, 36.4935064935065, 13.5064935064935, 40.3896103896104, 13.5064935064935, 50.1298701298701, 31.4285714285714, 29.8701298701299, 28.7012987012987, 21.2987012987013, 62.987012987013, 67.6623376623376, 61.8181818181818, 15.0649350649351, 13.5064935064935, 15.4545454545455, 20.9090909090909, 50.1298701298701, 15.0649350649351, 24.8051948051948, 28.3116883116883, 45.4545454545455, 36.1038961038961, 17.012987012987, 40.3896103896104, 13.5064935064935, 30.6493506493506, 13.8961038961039, 28.3116883116883, 13.8961038961039, 41.5584415584416, 82.8571428571429, 13.8961038961039, 18.961038961039, 50.1298701298701, 60.6493506493507, 20.5194805194805, 40.3896103896104, 40.3896103896104, 28.7012987012987, 13.8961038961039, 40, 28.7012987012987, 86.7532467532468, 30.6493506493506, 28.3116883116883, 12.7272727272727, 12.7272727272727, 59.4805194805195, 67.2727272727273, 28.7012987012987, 43.8961038961039, 24.4155844155844, 42.3376623376623, 81.6883116883117, 12.7272727272727, 12.7272727272727, 28.7012987012987, 29.0909090909091, 40.7792207792208, 67.2727272727273, 40, 44.2857142857143, 59.4805194805195, 13.1168831168831, 17.012987012987, 63.7662337662338, 28.7012987012987, 49.3506493506494, 17.4025974025974, 50.1298701298701, 21.2987012987013, 99.6103896103896, 21.6883116883117, 61.8181818181818, 80.1298701298701, 41.948051948052, 29.0909090909091, 49.7402597402597, 31.4285714285714, 48.5714285714286, 11.5584415584416, 47.7922077922078, 29.0909090909091, 28.3116883116883, 98.4415584415584, 62.5974025974026, 21.2987012987013, 30.6493506493506, 15.0649350649351, 24.025974025974, 66.8831168831169, 28.3116883116883, 40, 50.9090909090909, 22.8571428571429, 41.948051948052, 13.5064935064935, 18.1818181818182, 16.2337662337662, 20.9090909090909, 59.8701298701299, 30.6493506493506, 19.7402597402597, 13.1168831168831, 10.7792207792208, 31.038961038961, 52.4675324675325, 13.5064935064935, 48.1818181818182, 28.7012987012987, 36.1038961038961, 79.3506493506493, 40, 45.0649350649351, 51.6883116883117, 23.2467532467532, 38.0519480519481]
+        },
+        "error_y": {
+          "width": []
+        },
+        "error_x": {
+          "width": []
+        },
         "xaxis": "x",
-        "yaxis": "y"
+        "yaxis": "y",
+        "frame": null
       },
       {
-        "x": [0.23, 2.68],
-        "y": [363, 18735],
+        "x": [0.23, 2.54],
+        "y": [354, 18678],
         "type": "scatter",
         "mode": "markers",
         "opacity": 0,
@@ -684,47 +846,67 @@ plot_ly(d, x = d$carat, y = d$price,
         "marker": {
           "colorbar": {
             "title": "",
-            "ticklen": 2
+            "ticklen": 2,
+            "len": 0.5,
+            "lenmode": "fraction",
+            "y": 1,
+            "yanchor": "top"
           },
           "cmin": 0.23,
-          "cmax": 2.68,
+          "cmax": 2.54,
           "colorscale": [
             ["0", "rgba(68,1,84,1)"],
-            ["0.0285714285714286", "rgba(70,14,93,1)"],
-            ["0.0326530612244898", "rgba(70,15,94,1)"],
-            ["0.036734693877551", "rgba(70,17,96,1)"],
-            ["0.0448979591836735", "rgba(70,20,98,1)"],
-            ["0.0653061224489796", "rgba(71,27,105,1)"],
-            ["0.073469387755102", "rgba(71,29,108,1)"],
-            ["0.0857142857142857", "rgba(72,33,112,1)"],
-            ["0.114285714285714", "rgba(72,41,120,1)"],
-            ["0.122448979591837", "rgba(71,44,122,1)"],
-            ["0.142176870748299", "rgba(70,50,125,1)"],
-            ["0.191836734693878", "rgba(66,65,132,1)"],
-            ["0.2", "rgba(65,68,134,1)"],
-            ["0.212244897959184", "rgba(63,71,135,1)"],
-            ["0.273469387755102", "rgba(58,88,139,1)"],
-            ["0.301530612244898", "rgba(54,96,141,1)"],
-            ["0.318367346938775", "rgba(52,100,141,1)"],
-            ["0.326530612244898", "rgba(50,102,142,1)"],
-            ["0.351020408163265", "rgba(48,108,142,1)"],
-            ["0.391836734693878", "rgba(45,118,142,1)"],
-            ["0.408163265306122", "rgba(43,121,142,1)"],
-            ["0.518367346938776", "rgba(35,149,139,1)"],
-            ["0.536394557823129", "rgba(33,153,138,1)"],
-            ["0.726530612244898", "rgba(88,195,105,1)"],
+            ["0.0416666666666667", "rgba(70,19,97,1)"],
+            ["0.0833333333333333", "rgba(72,32,111,1)"],
+            ["0.125", "rgba(71,45,122,1)"],
+            ["0.166666666666667", "rgba(68,58,128,1)"],
+            ["0.208333333333333", "rgba(64,70,135,1)"],
+            ["0.25", "rgba(60,82,138,1)"],
+            ["0.291666666666667", "rgba(56,93,140,1)"],
+            ["0.333333333333333", "rgba(49,104,142,1)"],
+            ["0.375", "rgba(46,114,142,1)"],
+            ["0.416666666666667", "rgba(42,123,142,1)"],
+            ["0.458333333333333", "rgba(38,133,141,1)"],
+            ["0.5", "rgba(37,144,140,1)"],
+            ["0.541666666666667", "rgba(33,154,138,1)"],
+            ["0.583333333333333", "rgba(39,164,133,1)"],
+            ["0.625", "rgba(47,174,127,1)"],
+            ["0.666666666666667", "rgba(53,183,121,1)"],
+            ["0.708333333333333", "rgba(79,191,110,1)"],
+            ["0.75", "rgba(98,199,98,1)"],
+            ["0.791666666666667", "rgba(119,207,85,1)"],
+            ["0.833333333333333", "rgba(147,214,70,1)"],
+            ["0.875", "rgba(172,220,52,1)"],
+            ["0.916666666666667", "rgba(199,225,42,1)"],
+            ["0.958333333333333", "rgba(226,228,40,1)"],
             ["1", "rgba(253,231,37,1)"]
           ],
           "showscale": true,
-          "color": [0.23, 2.68]
+          "color": [0.23, 2.54],
+          "line": {
+            "color": "rgba(255,127,14,1)"
+          }
         },
         "xaxis": "x",
-        "yaxis": "y"
+        "yaxis": "y",
+        "frame": null
       }
     ],
+    "highlight": {
+      "on": "plotly_click",
+      "persistent": false,
+      "dynamic": false,
+      "selectize": false,
+      "opacityDim": 0.2,
+      "selected": {
+        "opacity": 1
+      },
+      "debounce": 0
+    },
+    "shinyEvents": ["plotly_hover", "plotly_click", "plotly_selected", "plotly_relayout", "plotly_brushed", "plotly_brushing", "plotly_clickannotation", "plotly_doubleclick", "plotly_deselect", "plotly_afterplot", "plotly_sunburstclick"],
     "base_url": "https://plot.ly"
   },
-  "evals": ["config.modeBarButtonsToAdd.0.click"],
+  "evals": [],
   "jsHooks": []
 }</script>
 </div>
@@ -786,6 +968,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 
 </body>
