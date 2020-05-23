@@ -594,10 +594,9 @@ inst/
 </ul>
 <p>This method is highly recommended as it ensures that you get started with the right file structure. Here’s an example that assumes you want to create a widget named ‘mywidget’ in a new package of the same name:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>devtools<span class="op">::</span><span class="kw">create</span>(<span class="st">&quot;mywidget&quot;</span>)               <span class="co"># create package using devtools</span></span>
-<span id="cb12-2"><a href="#cb12-2"></a><span class="kw">setwd</span>(<span class="st">&quot;mywidget&quot;</span>)                          <span class="co"># navigate to package dir</span></span>
-<span id="cb12-3"><a href="#cb12-3"></a>htmlwidgets<span class="op">::</span><span class="kw">scaffoldWidget</span>(<span class="st">&quot;mywidget&quot;</span>)    <span class="co"># create widget scaffolding</span></span>
-<span id="cb12-4"><a href="#cb12-4"></a>devtools<span class="op">::</span><span class="kw">document</span>()                       <span class="co"># roxygenize, so NAMESPACE is updated</span></span>
-<span id="cb12-5"><a href="#cb12-5"></a>devtools<span class="op">::</span><span class="kw">install</span>()                        <span class="co"># install the package so we can try it</span></span></code></pre></div>
+<span id="cb12-2"><a href="#cb12-2"></a>htmlwidgets<span class="op">::</span><span class="kw">scaffoldWidget</span>(<span class="st">&quot;mywidget&quot;</span>)    <span class="co"># create widget scaffolding</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a>devtools<span class="op">::</span><span class="kw">document</span>()                       <span class="co"># roxygenize, so NAMESPACE is updated</span></span>
+<span id="cb12-4"><a href="#cb12-4"></a>devtools<span class="op">::</span><span class="kw">install</span>()                        <span class="co"># install the package so we can try it</span></span></code></pre></div>
 <p>This creates a simple widget that takes a single <code>text</code> argument and displays that text within the widgets HTML element. You can try it like this:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">library</span>(mywidget)</span>
 <span id="cb13-2"><a href="#cb13-2"></a><span class="kw">mywidget</span>(<span class="st">&quot;hello, world&quot;</span>)</span></code></pre></div>
