@@ -590,15 +590,22 @@
             if (window.HTMLWidgets.stateChangedHook)
               window.HTMLWidgets.stateChangedHook(state)
           } else {
-            if (window.localStorage) {
-              if (state)
-                window.localStorage.setItem(localStorageKey, JSON.stringify(state))
-              else
-                window.localStorage.removeItem(localStorageKey)
+            try {
+              if (window.localStorage) {
+                if (state)
+                  window.localStorage.setItem(localStorageKey, JSON.stringify(state))
+                else
+                  window.localStorage.removeItem(localStorageKey)
+              }
+            } catch {
             }
           }
         }
-        var initialState = !shouldSaveStateExternally() && window.localStorage ? JSON.parse(window.localStorage.getItem(localStorageKey)) : null;
+        var initialState;
+        try {
+          initialState = !shouldSaveStateExternally() && window.localStorage ? JSON.parse(window.localStorage.getItem(localStorageKey)) : null;
+        } catch {
+        }
         if (!initialState) {
           // No locally-stored state.  Use anything provided in a script tag as a default.
           var initialStateData = document.querySelector("script[data-for='" + el.id + "'][type='application/htmlwidget-state']");
