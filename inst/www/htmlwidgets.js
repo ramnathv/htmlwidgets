@@ -597,14 +597,14 @@
                 else
                   window.localStorage.removeItem(localStorageKey)
               }
-            } catch {
+            } catch (e) {
             }
           }
         }
         var initialState;
         try {
           initialState = !shouldSaveStateExternally() && window.localStorage ? JSON.parse(window.localStorage.getItem(localStorageKey)) : null;
-        } catch {
+        } catch (e) {
         }
         if (!initialState) {
           // No locally-stored state.  Use anything provided in a script tag as a default.
