@@ -228,19 +228,37 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
 
 }
 
+widget_html <- function (name, package, id, style, class, inline = FALSE, ...) {
 
-widget_html <- function(name, package, id, style, class, inline = FALSE, ...){
+  # attempt to lookup custom html function for with more s3 like behavior for widget
+  fn <- tryCatch(
+      get(paste0("widget_html.", name),
+          asNamespace(package),
+          inherits = FALSE),
+      error = function(e)
+        NULL
+    )
 
-  # attempt to lookup custom html function for widget
-  fn <- tryCatch(get(paste0(name, "_html"),
-                     asNamespace(package),
-                     inherits = FALSE),
-                 error = function(e) NULL)
+  if(is.function(fn)){
+    fn_res <- fn(id = id, style = style, class = class, inline = inline, ...)
+    if(!inherits(fn_res,"shiny.tag")){
+      warning(
+        paste0("widget_html.",name),
+        " returned an object of class `",
+        deparse(class(z)),
+        "` instead of a `shiny.tag`."
+      )
+    }
+  }else{
+    fn_res <- widget_html.default(id = id, style = style, class = class, inline = inline, ...)
+  }
 
-  # call the custom function if we have one, otherwise create a div
-  if (is.function(fn)) {
-    fn(id = id, style = style, class = class, ...)
-  } else if (inline) {
+  fn_res
+
+}
+
+widget_html.default <- function (name, package, id, style, class, inline = FALSE, ...) {
+  if (inline) {
     tags$span(id = id, style = style, class = class)
   } else {
     tags$div(id = id, style = style, class = class)
