@@ -200,7 +200,7 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
     container(
       htmltools::tagList(
         x$prepend,
-        widget_html(
+        widget_html_wrapper(
           name = class(x)[1],
           package = attr(x, "package"),
           id = id,
@@ -228,37 +228,55 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
 
 }
 
-widget_html <- function (name, package, id, style, class, inline = FALSE, ...) {
+widget_html_wrapper <- function(name, package, id, style, class, inline = FALSE, ...) {
 
-  # attempt to lookup custom html function for with more s3 like behavior for widget
-  fn <- tryCatch(
-      get(paste0("widget_html.", name),
-          asNamespace(package),
-          inherits = FALSE),
-      error = function(e)
-        NULL
+  fn_res <- widget_html(
+    name = structure(name, class = c("character", name)),
+    package = package,
+    id = id,
+    style = style,
+    class = class,
+    inline = inline,
+    ...)
+
+  if(!inherits(fn_res,c("shiny.tag","shiny.tag.list"))){
+    warning(
+      paste0("widget_html.",name),
+      " returned an object of class `",
+      deparse(class(fn_res)),
+      "` instead of a `shiny.tag`."
     )
-
-  if(is.function(fn)){
-    fn_res <- fn(id = id, style = style, class = class, inline = inline, ...)
-    if(!inherits(fn_res,"shiny.tag")){
-      warning(
-        paste0("widget_html.",name),
-        " returned an object of class `",
-        deparse(class(z)),
-        "` instead of a `shiny.tag`."
-      )
-    }
-  }else{
-    fn_res <- widget_html.default(id = id, style = style, class = class, inline = inline, ...)
   }
 
   fn_res
 
 }
 
+widget_html <- function (name, package, id, style, class, inline = FALSE, ...) {
+  UseMethod("widget_html", name)
+}
+
+
 widget_html.default <- function (name, package, id, style, class, inline = FALSE, ...) {
-  if (inline) {
+
+  fn <- tryCatch(get(paste0(name, "_html"),
+                     asNamespace(package),
+                     inherits = FALSE),
+                 error = function(e) NULL)
+
+  if (is.function(fn)) {
+    .Deprecated(
+      new = paste0("widget_html.",name),
+      package = package,
+      msg = paste("Using `widgetname_html` is about to be deprecated.",
+                  "widget_html going forward will now follow standard s3 method",
+                  "deployment for creating custom HTML 'housings'.",
+                  "See docs for details at http://www.htmlwidgets.org/develop_advanced.html"),
+      old = paste0(name, "_html")
+    )
+    fn(id = id, style = style, class = class, ...)
+
+  } else if (inline) {
     tags$span(id = id, style = style, class = class)
   } else {
     tags$div(id = id, style = style, class = class)
