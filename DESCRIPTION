@@ -8,6 +8,7 @@ Authors@R: c(
     person("JJ", "Allaire", role = c("aut")),
     person("Joe", "Cheng", role = c("aut", "cre"), email = "joe@rstudio.com"),
     person("Kenton", "Russell", role = c("aut", "cph")),
+    person("Ellis", "Hughes", role = c("ctb")),
     person(family = "RStudio", role = "cph")
     )
 Description: A framework for creating HTML widgets that render in various
