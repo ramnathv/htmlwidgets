@@ -239,15 +239,6 @@ widget_html_wrapper <- function(name, package, id, style, class, inline = FALSE,
     inline = inline,
     ...)
 
-  if(!inherits(fn_res,c("shiny.tag","shiny.tag.list"))){
-    warning(
-      paste0("widget_html.",name),
-      " returned an object of class `",
-      deparse(class(fn_res)),
-      "` instead of a `shiny.tag`."
-    )
-  }
-
   fn_res
 
 }
@@ -265,6 +256,7 @@ widget_html.default <- function (name, package, id, style, class, inline = FALSE
                  error = function(e) NULL)
 
   if (is.function(fn)) {
+
     .Deprecated(
       new = paste0("widget_html.",name),
       package = package,
@@ -274,7 +266,17 @@ widget_html.default <- function (name, package, id, style, class, inline = FALSE
                   "See docs for details at http://www.htmlwidgets.org/develop_advanced.html"),
       old = paste0(name, "_html")
     )
+
     fn(id = id, style = style, class = class, ...)
+
+    if(!inherits(fn_res,c("shiny.tag","shiny.tag.list"))){
+      warning(
+        paste0("widget_html.",name),
+        " returned an object of class `",
+        deparse(class(fn_res)),
+        "` instead of a `shiny.tag`."
+      )
+    }
 
   } else if (inline) {
     tags$span(id = id, style = style, class = class)
