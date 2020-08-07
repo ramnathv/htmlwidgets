@@ -571,6 +571,113 @@
     return !!window.htmlWidgetsUseExternalStateSaving  || !!window.HTMLWidgets.stateChangedHook;
   }
 
+  // Render a single new static widget.
+  function initializeWidget(el, binding, sizeObj) {
+    var localStorageKey = 'htmlwidget.'+el.id+'.state'
+    var widgetStateChanged = function(state) {
+      if (shouldSaveStateExternally()) {
+        if (window.HTMLWidgets.stateChangedHook)
+          window.HTMLWidgets.stateChangedHook(state)
+      } else {
+        try {
+          if (window.localStorage) {
+            if (state)
+              window.localStorage.setItem(localStorageKey, JSON.stringify(state))
+            else
+              window.localStorage.removeItem(localStorageKey)
+          }
+        } catch (e) {
+        }
+      }
+    }
+    var initialState;
+    try {
+      initialState = !shouldSaveStateExternally() && window.localStorage ? JSON.parse(window.localStorage.getItem(localStorageKey)) : null;
+    } catch (e) {
+    }
+    if (!initialState) {
+      // No locally-stored state.  Use anything provided in a script tag as a default.
+      var initialStateData = document.querySelector("script[data-for='" + el.id + "'][type='application/htmlwidget-state']");
+      if (initialStateData)
+        initialState = JSON.parse(initialStateData.textContent || initialStateData.text);
+    }
+
+    var initResult;
+    if (binding.initialize) {
+      initResult = binding.initialize(el,
+        sizeObj ? sizeObj.getWidth() : el.offsetWidth,
+        sizeObj ? sizeObj.getHeight() : el.offsetHeight,
+        widgetStateChanged
+      );
+      elementData(el, "init_result", initResult);
+    }
+
+    if (binding.resize) {
+      var lastSize = {
+        w: sizeObj ? sizeObj.getWidth() : el.offsetWidth,
+        h: sizeObj ? sizeObj.getHeight() : el.offsetHeight
+      };
+      var resizeHandler = function(e) {
+        var size = {
+          w: sizeObj ? sizeObj.getWidth() : el.offsetWidth,
+          h: sizeObj ? sizeObj.getHeight() : el.offsetHeight
+        };
+        if (size.w === 0 && size.h === 0)
+          return;
+        if (size.w === lastSize.w && size.h === lastSize.h)
+          return;
+        lastSize = size;
+        binding.resize(el, size.w, size.h, initResult);
+      };
+
+      on(window, "resize", resizeHandler);
+
+      // This is needed for cases where we're running in a Shiny
+      // app, but the widget itself is not a Shiny output, but
+      // rather a simple static widget. One example of this is
+      // an rmarkdown document that has runtime:shiny and widget
+      // that isn't in a render function. Shiny only knows to
+      // call resize handlers for Shiny outputs, not for static
+      // widgets, so we do it ourselves.
+      if (window.jQuery) {
+        window.jQuery(document).on(
+          "shown.htmlwidgets shown.bs.tab.htmlwidgets shown.bs.collapse.htmlwidgets",
+          resizeHandler
+        );
+        window.jQuery(document).on(
+          "hidden.htmlwidgets hidden.bs.tab.htmlwidgets hidden.bs.collapse.htmlwidgets",
+          resizeHandler
+        );
+      }
+
+      // This is needed for the specific case of ioslides, which
+      // flips slides between display:none and display:block.
+      // Ideally we would not have to have ioslide-specific code
+      // here, but rather have ioslides raise a generic event,
+      // but the rmarkdown package just went to CRAN so the
+      // window to getting that fixed may be long.
+      if (window.addEventListener) {
+        // It's OK to limit this to window.addEventListener
+        // browsers because ioslides itself only supports
+        // such browsers.
+        on(document, "slideenter", resizeHandler);
+        on(document, "slideleave", resizeHandler);
+      }
+    }
+
+    var scriptData = document.querySelector("script[data-for='" + el.id + "'][type='application/json']");
+    if (scriptData) {
+      var data = JSON.parse(scriptData.textContent || scriptData.text);
+      // Resolve strings marked as javascript literals to objects
+      if (!(data.evals instanceof Array)) data.evals = [data.evals];
+      for (var k = 0; data.evals && k < data.evals.length; k++) {
+        window.HTMLWidgets.evaluateStringMember(data.x, data.evals[k]);
+      }
+      binding.renderValue(el, data.x, initResult, initialState);
+      evalAndRun(data.jsHooks.render, initResult, [el, data.x]);
+    }
+  }
+
   // Render static widgets after the document finishes loading
   // Statically render all elements that are of this widget's class
   window.HTMLWidgets.staticRender = function() {
@@ -584,109 +691,7 @@
           return;
         el.className = el.className + " html-widget-static-bound";
 
-        var localStorageKey = 'htmlwidget.'+el.id+'.state'
-        var widgetStateChanged = function(state) {
-          if (shouldSaveStateExternally()) {
-            if (window.HTMLWidgets.stateChangedHook)
-              window.HTMLWidgets.stateChangedHook(state)
-          } else {
-            try {
-              if (window.localStorage) {
-                if (state)
-                  window.localStorage.setItem(localStorageKey, JSON.stringify(state))
-                else
-                  window.localStorage.removeItem(localStorageKey)
-              }
-            } catch (e) {
-            }
-          }
-        }
-        var initialState;
-        try {
-          initialState = !shouldSaveStateExternally() && window.localStorage ? JSON.parse(window.localStorage.getItem(localStorageKey)) : null;
-        } catch (e) {
-        }
-        if (!initialState) {
-          // No locally-stored state.  Use anything provided in a script tag as a default.
-          var initialStateData = document.querySelector("script[data-for='" + el.id + "'][type='application/htmlwidget-state']");
-          if (initialStateData)
-            initialState = JSON.parse(initialStateData.textContent || initialStateData.text);
-        }
-
-        var initResult;
-        if (binding.initialize) {
-          initResult = binding.initialize(el,
-            sizeObj ? sizeObj.getWidth() : el.offsetWidth,
-            sizeObj ? sizeObj.getHeight() : el.offsetHeight,
-            widgetStateChanged
-          );
-          elementData(el, "init_result", initResult);
-        }
-
-        if (binding.resize) {
-          var lastSize = {
-            w: sizeObj ? sizeObj.getWidth() : el.offsetWidth,
-            h: sizeObj ? sizeObj.getHeight() : el.offsetHeight
-          };
-          var resizeHandler = function(e) {
-            var size = {
-              w: sizeObj ? sizeObj.getWidth() : el.offsetWidth,
-              h: sizeObj ? sizeObj.getHeight() : el.offsetHeight
-            };
-            if (size.w === 0 && size.h === 0)
-              return;
-            if (size.w === lastSize.w && size.h === lastSize.h)
-              return;
-            lastSize = size;
-            binding.resize(el, size.w, size.h, initResult);
-          };
-
-          on(window, "resize", resizeHandler);
-
-          // This is needed for cases where we're running in a Shiny
-          // app, but the widget itself is not a Shiny output, but
-          // rather a simple static widget. One example of this is
-          // an rmarkdown document that has runtime:shiny and widget
-          // that isn't in a render function. Shiny only knows to
-          // call resize handlers for Shiny outputs, not for static
-          // widgets, so we do it ourselves.
-          if (window.jQuery) {
-            window.jQuery(document).on(
-              "shown.htmlwidgets shown.bs.tab.htmlwidgets shown.bs.collapse.htmlwidgets",
-              resizeHandler
-            );
-            window.jQuery(document).on(
-              "hidden.htmlwidgets hidden.bs.tab.htmlwidgets hidden.bs.collapse.htmlwidgets",
-              resizeHandler
-            );
-          }
-
-          // This is needed for the specific case of ioslides, which
-          // flips slides between display:none and display:block.
-          // Ideally we would not have to have ioslide-specific code
-          // here, but rather have ioslides raise a generic event,
-          // but the rmarkdown package just went to CRAN so the
-          // window to getting that fixed may be long.
-          if (window.addEventListener) {
-            // It's OK to limit this to window.addEventListener
-            // browsers because ioslides itself only supports
-            // such browsers.
-            on(document, "slideenter", resizeHandler);
-            on(document, "slideleave", resizeHandler);
-          }
-        }
-
-        var scriptData = document.querySelector("script[data-for='" + el.id + "'][type='application/json']");
-        if (scriptData) {
-          var data = JSON.parse(scriptData.textContent || scriptData.text);
-          // Resolve strings marked as javascript literals to objects
-          if (!(data.evals instanceof Array)) data.evals = [data.evals];
-          for (var k = 0; data.evals && k < data.evals.length; k++) {
-            window.HTMLWidgets.evaluateStringMember(data.x, data.evals[k]);
-          }
-          binding.renderValue(el, data.x, initResult, initialState);
-          evalAndRun(data.jsHooks.render, initResult, [el, data.x]);
-        }
+        initializeWidget(el, binding, sizeObj);
       });
     });
 
