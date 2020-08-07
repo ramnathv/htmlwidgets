@@ -25,6 +25,7 @@ Imports:
 Suggests:
     knitr (>= 1.8),
     rmarkdown
+    testthat
 Enhances: shiny (>= 1.1)
 URL: https://github.com/ramnathv/htmlwidgets
 BugReports: https://github.com/ramnathv/htmlwidgets/issues

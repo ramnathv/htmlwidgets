@@ -228,33 +228,59 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
 
 }
 
+lookup_func <- function(name, package) {
+  tryCatch(
+    get(name, asNamespace(package), inherits = FALSE),
+    error = function(e) NULL
+  )
+}
+
+lookup_widget_html_method <- function(name, package) {
+  # There are two ways we look for custom widget html container methods:
+  #
+  # PACKAGE:::widget_html.NAME - This is the newer, preferred lookup. Note that
+  # it doesn't actually use S3 dispatch, because we don't have an S3 object to
+  # dispatch with (widget_html can be called without a widget instance existing
+  # yet).
+  #
+  # PACKAGE:::NAME_html - This is the original, legacy lookup. This is not
+  # preferred because it's not unique enough, i.e. someone could happen to have
+  # a function with this name that's not intended for widget_html use. However,
+  # we have to keep it for now, for backward compatibility.
+
+  fn_name <- paste0("widget_html.", name)
+  fn <- lookup_func(fn_name, package)
+  if (!is.null(fn)) {
+    return(list(fn = fn, name = fn_name, legacy = FALSE))
+  }
+
+  fn_name <- paste0(name, "_html")
+  fn <- lookup_func(fn_name, package)
+  if (!is.null(fn)) {
+    return(list(fn = fn, name = fn_name, legacy = TRUE))
+  }
+
+  list(fn = widget_html.default, name = "widget_html.default", legacy = FALSE)
+}
+
 widget_html <- function (name, package, id, style, class, inline = FALSE, ...) {
 
-  # attempt to lookup custom html function for with more s3 like behavior for widget
-  fn <- tryCatch(
-      get(paste0("widget_html.", name),
-          asNamespace(package),
-          inherits = FALSE),
-      error = function(e)
-        NULL
-    )
+  fn_info <- lookup_widget_html_method(name, package)
 
-  if(is.function(fn)){
-    fn_res <- fn(id = id, style = style, class = class, inline = inline, ...)
-    if(!inherits(fn_res,"shiny.tag")){
-      warning(
-        paste0("widget_html.",name),
-        " returned an object of class `",
-        deparse(class(z)),
+  fn <- fn_info[["fn"]]
+  fn_res <- fn(id = id, style = style, class = class, inline = inline, ...)
+  if (isTRUE(fn_info[["legacy"]])) {
+    # For the PACKAGE:::NAME_html form (only), we worry about false positives;
+    # hopefully false positives will return something that doesn't look like a
+    # Shiny tag/html and they'll get this warning as a hint
+    if (!inherits(fn_res, c("shiny.tag", "shiny.tag.list", "html"))) {
+      warning(fn_info[["name"]], " returned an object of class `", class(fn_res)[1],
         "` instead of a `shiny.tag`."
       )
     }
-  }else{
-    fn_res <- widget_html.default(id = id, style = style, class = class, inline = inline, ...)
   }
 
   fn_res
-
 }
 
 widget_html.default <- function (name, package, id, style, class, inline = FALSE, ...) {
@@ -264,6 +290,39 @@ widget_html.default <- function (name, package, id, style, class, inline = FALSE
     tags$div(id = id, style = style, class = class)
   }
 }
+
+## These functions are to support unit tests #######################
+
+widgetA_html <- function(name, package, id, style, class, inline = FALSE, ...) {
+  tags$canvas(id = id, class = class, style = style)
+}
+
+widgetB_html <- function(name, package, id, style, class, inline = FALSE, ...) {
+  # Return a non-HTML result
+  TRUE
+}
+
+widgetC_html <- function(name, package, id, style, class, inline = FALSE, ...) {
+  tags$strong(id = id, class = class, style = style)
+}
+
+widget_html.widgetC <- function(name, package, id, style, class, inline = FALSE, ...) {
+  tags$em(id = id, class = class, style = style)
+}
+
+widget_html.widgetD <- function(name, package, id, style, class, inline = FALSE, ...) {
+  TRUE
+}
+
+widgetE_html <- function(name, package, id, style, class, inline = FALSE, ...) {
+  tagList(tags$div(id = id, style = style, class = class))
+}
+
+widgetF_html <- function(name, package, id, style, class, inline = FALSE, ...) {
+  HTML(as.character(tags$div(id = id, style = style, class = class)))
+}
+
+## End unit test support functions #################################
 
 widget_dependencies <- function(name, package){
   getDependency(name, package)
