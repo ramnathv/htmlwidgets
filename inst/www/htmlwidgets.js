@@ -14,6 +14,11 @@
   var shinyMode = window.HTMLWidgets.shinyMode =
       typeof(window.Shiny) !== "undefined" && !!window.Shiny.outputBindings;
 
+  // If we're running inside of Displayr then Displayr will call instantiateDisplayrWidget()
+  // and we don't want staticRender().
+  var displayrMode = window.HTMLWidgets.displayrMode =
+      window.IsDisplayr;
+
   // We can't count on jQuery being available, so we implement our own
   // version if necessary.
   function querySelectorAll(scope, selector) {
@@ -267,6 +272,8 @@
     return result;
   }
 
+  // This handles sizing for static rendering of a widget.  It appears to assume that there
+  // is only one widget on the page.
   function initSizing(el) {
     var sizing = sizingPolicy(el);
     if (!sizing)
@@ -312,6 +319,24 @@
         getHeight: function() { return el.offsetHeight; }
       };
     }
+  }
+
+  // Initializes sizing for a widget that sits entirely with a single block element.
+  function initSizingInABlock(el) {
+    var sizing = sizingPolicy(el);
+    if (!sizing)
+      return;
+
+    if (typeof(sizing.padding) !== "undefined") {
+      el.style.margin = "0";
+      el.style.padding = paddingToCss(unpackPadding(sizing.padding));
+    }
+
+    // No other element of sizing is relevant to Displayr - we always want a widget to fill
+    // the size we've given it.  I suppose one day they could request sizes, like
+    // AnalysisPlots do.
+
+    return;  // default sizing of the element is fine
   }
 
   // Default implementations for methods
@@ -567,41 +592,8 @@
     }
   }
 
-  function shouldSaveStateExternally() {
-    return !!window.htmlWidgetsUseExternalStateSaving  || !!window.HTMLWidgets.stateChangedHook;
-  }
-
   // Render a single new static widget.
-  function initializeWidget(el, binding, sizeObj) {
-    var localStorageKey = 'htmlwidget.'+el.id+'.state'
-    var widgetStateChanged = function(state) {
-      if (shouldSaveStateExternally()) {
-        if (window.HTMLWidgets.stateChangedHook)
-          window.HTMLWidgets.stateChangedHook(state)
-      } else {
-        try {
-          if (window.localStorage) {
-            if (state)
-              window.localStorage.setItem(localStorageKey, JSON.stringify(state))
-            else
-              window.localStorage.removeItem(localStorageKey)
-          }
-        } catch (e) {
-        }
-      }
-    }
-    var initialState;
-    try {
-      initialState = !shouldSaveStateExternally() && window.localStorage ? JSON.parse(window.localStorage.getItem(localStorageKey)) : null;
-    } catch (e) {
-    }
-    if (!initialState) {
-      // No locally-stored state.  Use anything provided in a script tag as a default.
-      var initialStateData = document.querySelector("script[data-for='" + el.id + "'][type='application/htmlwidget-state']");
-      if (initialStateData)
-        initialState = JSON.parse(initialStateData.textContent || initialStateData.text);
-    }
-
+  function initializeWidget(el, binding, sizeObj, initialState, widgetStateChanged) {
     var initResult;
     if (binding.initialize) {
       initResult = binding.initialize(el,
@@ -678,6 +670,39 @@
     }
   }
 
+  // Initialize an htmlwidget for Displayr.  At this point its assets (JavaScript, CSS) ought to have
+  // finished loading, and its body elements should be within the document's DOM. 
+  //
+  // el_parent  An element that contains a single rendered widget within it.
+  //
+  // Returns { binding, element, instance }.
+  window.HTMLWidgets.instantiateDisplayrWidget = function(el_parent, initialState, stateChangedHook) {
+    var bindings = window.HTMLWidgets.widgets || [];
+    var matches = bindings.map(binding => ({binding: binding, found: binding.find(el_parent)})).filter(e => e.found.length);
+    if (matches.length === 0)
+      throw new Error('No element was found matching an installed binding.  Have you loaded all assets?');
+    const binding = matches[0].binding;
+    const el = matches[0].found[0];
+    if (HTMLWidgets.getInstance(el))
+      throw new Error('A widget has already been instantiated on this DOM element.  Don\'t reuse DOM elements for widgets.');
+    var sizeObj = initSizingInABlock(el);
+    initializeWidget(el, binding, sizeObj, initialState, stateChangedHook);
+    return {
+      binding: binding,
+      element: el,
+      instance: HTMLWidgets.getInstance(el)
+    };
+  }
+
+  // Stops a Displayr widget.  Base Htmlwidgets do not support this concept, presuming that
+  // the entire page will be closed.  Callers are expected to remove the original element
+  // from the DOM.  `widget` should be what was returned by instantiateDisplayrWidget().
+  window.HTMLWidgets.destroyDisplayrWidget = function(widget) {
+    if (widget.instance.destroy)
+      widget.instance.destroy();
+    elementData(widget.element, "init_result", undefined);
+  }
+
   // Render static widgets after the document finishes loading
   // Statically render all elements that are of this widget's class
   window.HTMLWidgets.staticRender = function() {
@@ -691,7 +716,14 @@
           return;
         el.className = el.className + " html-widget-static-bound";
 
-        initializeWidget(el, binding, sizeObj);
+        var widgetStateChanged = function(state) {
+          if (window.HTMLWidgets.stateChangedHook)
+            window.HTMLWidgets.stateChangedHook(state)
+        }
+        var initialStateData = document.querySelector("script[data-for='" + el.id + "'][type='application/htmlwidget-state']");
+        initialState = initialStateData ? JSON.parse(initialStateData.textContent || initialStateData.text) : null;
+      
+        initializeWidget(el, binding, sizeObj, initialState, widgetStateChanged);
       });
     });
 
@@ -733,7 +765,7 @@
   function maybeStaticRenderLater() {
     if (shinyMode && has_jQuery3()) {
       window.jQuery(window.HTMLWidgets.staticRender);
-    } else {
+    } else if (!displayrMode) {
       window.HTMLWidgets.staticRender();
     }
   }

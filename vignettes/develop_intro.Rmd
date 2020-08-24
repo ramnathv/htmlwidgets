@@ -178,6 +178,11 @@ HTMLWidgets.widget({
           sig.renderers[name].resize(width, height);  
       },
       
+      destroy: function() {
+        // not needed here.  Implement if you need to stop setTimeouts, etc,
+        // which might cause errors after your widget is removed from the DOM.
+      },
+
       // Make the sigma object available as a property on the widget
       // instance we're returning from factory(). This is generally a
       // good idea for extensibility--it helps users of this widget

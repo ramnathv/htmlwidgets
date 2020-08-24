@@ -1,4 +1,4 @@
-describe('htmlwidgets', () => {
+describe('static htmlwidgets', () => {
     it('should define itself globally', () => {
         expect(HTMLWidgets).toBeDefined();
     });
@@ -8,11 +8,17 @@ describe('htmlwidgets', () => {
         expect(nodata_widget).toBeDefined();
     });
 
+    it('should support getInstance()', () => {
+        const found_widget = HTMLWidgets.find('#mockwidget-nodata');
+        get_instance_widget = HTMLWidgets.getInstance(document.querySelector('#mockwidget-nodata'));
+        expect(get_instance_widget).toEqual(found_widget);
+    });
+
     it("should support find() with two arguments", () => {
-        const upperwidgets = document.querySelector('#upperwidgets');
-        let found_widget = HTMLWidgets.find(upperwidgets, '#mockwidget-bozo');
+        const upperwidget = document.querySelector('#upperwidget');
+        let found_widget = HTMLWidgets.find(upperwidget, '#mockwidget-bozo');
         expect(found_widget).toBeNull();
-        found_widget = HTMLWidgets.find(upperwidgets, '#mockwidget-nodata');
+        found_widget = HTMLWidgets.find(upperwidget, '#mockwidget-nodata');
         expect(found_widget).not.toBeNull();
     });
 
@@ -25,6 +31,18 @@ describe('htmlwidgets', () => {
         const bozo_div = document.querySelector('#mockwidget-bozo');
         const text_in_svg = bozo_div.querySelector('text').textContent;
         expect(text_in_svg).toEqual('bozo');
+    });
+
+    it('should give initial state to widget and pass back changes', () => {
+        let state_back_from_widget;
+        HTMLWidgets.stateChangedHook = (new_state) => {
+            state_back_from_widget = new_state;
+        };
+        const bozo_widget = HTMLWidgets.find('#mockwidget-bozo');
+        expect(bozo_widget.state.meaning).toEqual(42, 'see data-for in script tag');
+        const revised_state = {dog:"cat"};
+        bozo_widget.simulateStateChanged(revised_state);
+        expect(state_back_from_widget).toBe(revised_state);
     });
 
     it('should call resize when the page is resized', () => {

@@ -12,26 +12,28 @@
   <script src="lib/jasmine-3.6.0/boot.js"></script>
 
   <!-- What we are actually testing. -->
+  <script>window.IsDisplayr = true;</script>
   <script src="../inst/www/htmlwidgets.js"></script>
 
   <!-- Minimal widget. -->
   <script src="src/mock_widget.js"></script>
 
   <!-- Tests -->
-  <script src="spec/htmlwidgets_spec.js"></script>
+  <script src="spec/displayrrender_spec.js"></script>
 
   <style>div.mockwidget { margin-bottom: 0.5em; }</style>
 </head>
 
 <body>
 <div>
-  Some text.
-  <div id="upperwidgets">
+  <div id="upperwidget">
     <div class="mockwidget" style="height: 50px" id="mockwidget-nodata">
     </div>
   </div>
-  <div class="mockwidget" style="height: 50px" id="mockwidget-bozo">
-    <script data-for="mockwidget-bozo" type="application/json">{"x": "bozo","evals":[],"jsHooks":{"render":""}}</script>
+  <div id="lowerwidget">
+    <div class="mockwidget" style="height: 50px" id="mockwidget-bozo">
+      <script data-for="mockwidget-bozo" type="application/json">{"x": "bozo","evals":[],"jsHooks":{"render":""}}</script>
+    </div>
   </div>
 </div>  
 </body>
