@@ -4,7 +4,6 @@ HTMLWidgets.widget({
     type: "output",
     
     factory: function(el, width, height, state_changed_callback) {
-        window.document.createElement('svg');
         const template = document.createElement('template');
         template.innerHTML = `<svg viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="lightblue"/><text x="20" y="35" class="xtext">(no value)</text></svg>`;
         const svg = template.content.firstChild;
