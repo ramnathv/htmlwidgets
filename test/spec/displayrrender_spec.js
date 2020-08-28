@@ -1,4 +1,16 @@
 describe('Displayr htmlwidgets', () => {
+    document.body.innerHTML = '<div>'+
+    '  <div id="upperwidget">'+
+    '    <div class="mockwidget" style="height: 50px" id="mockwidget-nodata">'+
+    '    </div>'+
+    '  </div>'+
+    '  <div id="lowerwidget">'+
+    '    <div class="mockwidget" style="height: 50px" id="mockwidget-bozo">'+
+    '      <script data-for="mockwidget-bozo" type="application/json">{"x": "bozo","evals":[],"jsHooks":{"render":""}}</script>'+
+    '    </div>'+
+    '  </div>'+
+    '</div>';
+
     it('should be OK without data', () => {
         const upper_div = document.querySelector('#upperwidget');
         const nodata_widget = HTMLWidgets.instantiateDisplayrWidget(upper_div);

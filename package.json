@@ -1,0 +1,28 @@
+{
+  "name": "htmlwidgets",
+  "version": "1.0.0",
+  "description": "Jasmine unit tests for JavaScript side of htmlwidgets R package",
+  "main": "index.js",
+  "directories": {
+    "man": "man",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "npx karma start karma.static.conf.js --single-run && npx karma start karma.displayr.conf.js --single-run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Displayr/htmlwidgets.git"
+  },
+  "author": "Oliver Bock",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Displayr/htmlwidgets/issues"
+  },
+  "homepage": "https://github.com/Displayr/htmlwidgets#readme",
+  "devDependencies": {
+    "karma": "^5.1.1",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-jasmine": "^4.0.1"
+  }
+}

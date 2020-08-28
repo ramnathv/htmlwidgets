@@ -1,4 +1,17 @@
 describe('static htmlwidgets', () => {
+    document.body.innerHTML = '<div>'+
+    '  <div id="upperwidget">'+
+    '    <div class="mockwidget" style="height: 50px" id="mockwidget-nodata">'+
+    '    </div>'+
+    '  </div>'+
+    '  <div id="lowerwidget">'+
+    '    <div class="mockwidget" style="height: 50px" id="mockwidget-bozo">'+
+    '      <script type="application/htmlwidget-state" data-for="mockwidget-bozo">{"meaning":42}</script>'+
+    '      <script data-for="mockwidget-bozo" type="application/json">{"x": "bozo","evals":[],"jsHooks":{"render":""}}</script>'+
+    '    </div>'+
+    '  </div>'+
+    '</div>';
+
     it('should define itself globally', () => {
         expect(HTMLWidgets).toBeDefined();
     });
@@ -10,7 +23,7 @@ describe('static htmlwidgets', () => {
 
     it('should support getInstance()', () => {
         const found_widget = HTMLWidgets.find('#mockwidget-nodata');
-        get_instance_widget = HTMLWidgets.getInstance(document.querySelector('#mockwidget-nodata'));
+        let get_instance_widget = HTMLWidgets.getInstance(document.querySelector('#mockwidget-nodata'));
         expect(get_instance_widget).toEqual(found_widget);
     });
 

@@ -721,7 +721,7 @@
             window.HTMLWidgets.stateChangedHook(state)
         }
         var initialStateData = document.querySelector("script[data-for='" + el.id + "'][type='application/htmlwidget-state']");
-        initialState = initialStateData ? JSON.parse(initialStateData.textContent || initialStateData.text) : null;
+        var initialState = initialStateData ? JSON.parse(initialStateData.textContent || initialStateData.text) : null;
       
         initializeWidget(el, binding, sizeObj, initialState, widgetStateChanged);
       });
