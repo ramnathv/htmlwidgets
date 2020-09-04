@@ -2,15 +2,15 @@
 % Please edit documentation in R/utils.R
 \name{getDependency}
 \alias{getDependency}
-\title{Get js and css dependencies for  a htmlwidget}
+\title{Get js and css dependencies for an htmlwidget}
 \usage{
 getDependency(name, package = name)
 }
 \arguments{
-\item{name}{name of the widget.}
+\item{name}{either an htmlwidget object or the name of a widget.}
 
 \item{package}{name of the package, defaults to the widget name.}
 }
 \description{
-Get js and css dependencies for  a htmlwidget
+Get js and css dependencies for an htmlwidget
 }
