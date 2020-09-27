@@ -211,8 +211,8 @@ resolveSizing <- function(x, sp, standalone, knitrOptions = NULL) {
   } else if (!is.null(knitrOptions)) {
     knitrScopes <- list(sp$knitr, sp)
     isFigure <- any_prop(knitrScopes, "figure")
-    figWidth <- if (isFigure) knitrOptions$out.width.px else NULL
-    figHeight <- if (isFigure) knitrOptions$out.height.px else NULL
+    figWidth <- if (isFigure) knitrOptions$out.width.px[1L] else NULL
+    figHeight <- if (isFigure) knitrOptions$out.height.px[1L] else NULL
     # Compute the width and height
     return(list(
       width = x$width %||% figWidth %||% any_prop(knitrScopes, "defaultWidth") %||% DEFAULT_WIDTH,
