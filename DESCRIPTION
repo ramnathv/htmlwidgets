@@ -1,12 +1,13 @@
 Package: htmlwidgets
 Type: Package
 Title: HTML Widgets for R
-Version: 1.5.1
+Version: 1.5.2
 Authors@R: c(
     person("Ramnath", "Vaidyanathan", role = c("aut", "cph")),
     person("Yihui", "Xie", role = c("aut")),
     person("JJ", "Allaire", role = c("aut")),
-    person("Joe", "Cheng", role = c("aut", "cre"), email = "joe@rstudio.com"),
+    person("Joe", "Cheng", role = c("aut"), email = "joe@rstudio.com"),
+    person("Carson", "Sievert", role = c("aut", "cre"), email = "carson@rstudio.com", comment = c(ORCID = "0000-0002-4958-2844")),
     person("Kenton", "Russell", role = c("aut", "cph")),
     person(family = "RStudio", role = "cph")
     )
