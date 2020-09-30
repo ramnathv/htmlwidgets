@@ -1,3 +1,8 @@
+htmlwidgets 1.5.2
+-------------------------------------------------------
+
+* Emergency patch release to fix an issue with rendering htmlwidgets in flexdashboard. More generally, this change implies that any htmlwidget is printed via a knitr code chunk with multiple values for fig.width/fig.height, only the first value is used for the widget's sizing policy. (#387)
+
 htmlwidgets 1.5.1
 -------------------------------------------------------
 
