@@ -74,7 +74,7 @@ htmlwidgets:::toJSON2(unname(head(iris, 8)), dataframe = 'column', pretty = TRUE
 htmlwidgets:::toJSON2(head(iris, 8), dataframe = 'values', pretty = TRUE)
 ```
 
-As a real example, the [dygraphs](https://rstudio.github.io/dygraphs) widget uses this function to transpose the "file" (data) argument it gets from the R side before passing it on to the dygraphs library:
+As a real example, the [dygraphs](https://rstudio.github.io/dygraphs/) widget uses this function to transpose the "file" (data) argument it gets from the R side before passing it on to the dygraphs library:
 
 ```javascript
 renderValue: function(x) {
@@ -147,7 +147,7 @@ Note these features about custom JSON serializers require the **shiny** version 
 
 As you would expect, character vectors passed from R to JavaScript are converted to JavaScript strings. However, what if you want to allow users to provide custom JavaScript functions for formatting, drawing, or event handling? For this case, the **htmlwidgets** package includes a `JS()` function that allows you to request that a character value is evaluated as JavaScript when it is received on the client.
 
-For example, the [dygraphs](https://rstudio.github.io/dygraphs) widget includes a `dyCallbacks` function that allows the user to provide callback functions for a variety of contexts. These callbacks are "marked" as containing JavaScript so that they can be converted to actual JavaScript functions on the client:
+For example, the [dygraphs](https://rstudio.github.io/dygraphs/) widget includes a `dyCallbacks` function that allows the user to provide callback functions for a variety of contexts. These callbacks are "marked" as containing JavaScript so that they can be converted to actual JavaScript functions on the client:
 
 ```r
 callbacks <- list(
@@ -159,7 +159,7 @@ callbacks <- list(
 )
 ```
 
-Another example is in the [DT](https://rstudio.github.io/DT) (DataTables) widget, where users can specify an `initCallback` with JavaScript to execute after the table is loaded and initialized:
+Another example is in the [DT](https://rstudio.github.io/DT/) (DataTables) widget, where users can specify an `initCallback` with JavaScript to execute after the table is loaded and initialized:
 
 ```r
 datatable(head(iris, 20), options = list(

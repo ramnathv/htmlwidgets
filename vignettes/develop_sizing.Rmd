@@ -126,7 +126,7 @@ What you do with the passed width and height is up to you and depends on the re-
 
 #### dygraphs
 
-In the [dygraphs](http://rstudio.github.io/dygraphs) widget the implementation of re-sizing is relatively simple since the **dygraphs** library includes a resize() method to automatically size the graph to it's enclosing HTML element:
+In the [dygraphs](http://rstudio.github.io/dygraphs/) widget the implementation of re-sizing is relatively simple since the **dygraphs** library includes a resize() method to automatically size the graph to it's enclosing HTML element:
 
 ```javascript
 resize: function(width, height) {

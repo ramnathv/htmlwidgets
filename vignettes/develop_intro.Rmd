@@ -19,7 +19,7 @@ The **[htmlwidgets](https://cran.r-project.org/package=htmlwidgets)** package pr
 
 * Used at the R console for data analysis just like conventional R plots.
 * Embedded within [R Markdown](http://rmarkdown.rstudio.com) documents
-* Incorporated into [Shiny](http://shiny.rstudio.com) web applications.
+* Incorporated into [Shiny](https://shiny.rstudio.com/) web applications.
 * Saved as standalone web pages for ad-hoc sharing via email, Dropbox, etc.
 
 By following a small set of easy-to-follow conventions, it is possible to create HTML widgets with very little code. All widgets include the following components:
@@ -34,7 +34,7 @@ HTML widgets are always hosted within an R package and should include all of the
 
 ## Example (sigma.js)
 
-To start with we'll walk through the creation of a simple widget that wraps the [sigma.js](http://sigmajs.org) graph visualization library. When we're done we'll be able to use it to display interactive visualizations of [GEXF](http://gexf.net) (Graph Exchange XML Format) data files. For example:
+To start with we'll walk through the creation of a simple widget that wraps the [sigma.js](http://sigmajs.org) graph visualization library. When we're done we'll be able to use it to display interactive visualizations of [GEXF](https://gephi.org/gexf/format/) (Graph Exchange XML Format) data files. For example:
 
 ```{r, eval=FALSE}
 library(sigma)
@@ -308,9 +308,9 @@ The Sizing article is particularly important as most JavaScript libraries requir
 
 Studying the code of other packages is a great way to learn more about creating widgets:
 
-1. The [networkD3](https://github.com/christophergandrud/networkD3) package illustrates creating a widget on top of [D3](http://d3js.org), using a custom sizing policy for a larger widget, and providing multiple widgets from a single package.
+1. The [networkD3](https://github.com/christophergandrud/networkD3) package illustrates creating a widget on top of [D3](https://d3js.org/), using a custom sizing policy for a larger widget, and providing multiple widgets from a single package.
 
-2. The [dygraphs](https://github.com/rstudio/dygraphs/) package illustrates using widget instance data, handling dynamic re-sizing, and using [magrittr](https://github.com/smbache/magrittr) to decompose a large and flat JavaScript API into a more modular and pipeable R API.
+2. The [dygraphs](https://github.com/rstudio/dygraphs/) package illustrates using widget instance data, handling dynamic re-sizing, and using [magrittr](https://github.com/tidyverse/magrittr) to decompose a large and flat JavaScript API into a more modular and pipeable R API.
 
 3. The [sparkline](https://github.com/htmlwidgets/sparkline) package illustrates  providing a custom HTML generation function (since sparklines must be housed in `<span>` rather than `<div>` elements).
  

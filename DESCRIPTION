@@ -22,7 +22,8 @@ Imports:
     jsonlite (>= 0.9.16),
     yaml
 Suggests:
-    knitr (>= 1.8)
+    knitr (>= 1.8),
+    rmarkdown
 Enhances: shiny (>= 1.1)
 URL: https://github.com/ramnathv/htmlwidgets
 BugReports: https://github.com/ramnathv/htmlwidgets/issues
