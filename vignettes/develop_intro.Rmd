@@ -133,7 +133,7 @@ renderSigma <- function(expr, env = parent.frame(), quoted = FALSE) {
 
 ### JavaScript binding
 
-_**Note:** An older, less intuitive JavaScript binding API was used in htmlwidgets 0.5.2 and earlier, and continues to be supported in newer versions of htmlwidgets. See this [archived version](https://cdn.rawgit.com/ramnathv/htmlwidgets/f735840bf938d35d3c4143c0d16515da6ff252bd/develop_intro.html#javascript-binding) for details on the legacy binding API. New widgets are encouraged to use the newer API described below._
+_**Note:** An older, less intuitive JavaScript binding API was used in htmlwidgets 0.5.2 and earlier, and continues to be supported in newer versions of htmlwidgets. See this [archived version](https://github.com/ramnathv/htmlwidgets/blob/f735840bf938d35d3c4143c0d16515da6ff252bd/develop_intro.Rmd#L128) for details on the legacy binding API. New widgets are encouraged to use the newer API described below._
 
 The third piece in the puzzle is the JavaScript required to activate the widget. By convention we'll define our JavaScript binding in the file `inst/htmlwidgets/sigma.js`. Here is the full source code of the binding:
 
