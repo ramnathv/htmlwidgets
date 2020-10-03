@@ -4,9 +4,17 @@
 \alias{createWidget}
 \title{Create an HTML Widget}
 \usage{
-createWidget(name, x, width = NULL, height = NULL,
-  sizingPolicy = htmlwidgets::sizingPolicy(), package = name,
-  dependencies = NULL, elementId = NULL, preRenderHook = NULL)
+createWidget(
+  name,
+  x,
+  width = NULL,
+  height = NULL,
+  sizingPolicy = htmlwidgets::sizingPolicy(),
+  package = name,
+  dependencies = NULL,
+  elementId = NULL,
+  preRenderHook = NULL
+)
 }
 \arguments{
 \item{name}{Widget name (should match the base name of the YAML and

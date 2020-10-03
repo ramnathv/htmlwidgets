@@ -4,9 +4,15 @@
 \alias{saveWidget}
 \title{Save a widget to an HTML file}
 \usage{
-saveWidget(widget, file, selfcontained = TRUE, libdir = NULL,
-  background = "white", title = class(widget)[[1]],
-  knitrOptions = list())
+saveWidget(
+  widget,
+  file,
+  selfcontained = TRUE,
+  libdir = NULL,
+  background = "white",
+  title = class(widget)[[1]],
+  knitrOptions = list()
+)
 }
 \arguments{
 \item{widget}{Widget to save}

@@ -3,7 +3,7 @@
 #' Add the minimal code required to implement an HTML widget to an R package.
 #'
 #' @param name Name of widget
-#' @param bowerPkg Optional name of \href{http://bower.io/}{Bower} package upon
+#' @param bowerPkg Optional name of \href{https://bower.io/}{Bower} package upon
 #'   which this widget is based. If you specify this parameter then bower will
 #'   be used to automatically download the widget's source code and dependencies
 #'   and add them to the widget's YAML.

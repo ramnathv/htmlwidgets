@@ -6,8 +6,15 @@
 \alias{shinyRenderWidget}
 \title{Shiny bindings for HTML widgets}
 \usage{
-shinyWidgetOutput(outputId, name, width, height, package = name,
-  inline = FALSE, reportSize = FALSE)
+shinyWidgetOutput(
+  outputId,
+  name,
+  width,
+  height,
+  package = name,
+  inline = FALSE,
+  reportSize = FALSE
+)
 
 shinyRenderWidget(expr, outputFunction, env, quoted)
 }
