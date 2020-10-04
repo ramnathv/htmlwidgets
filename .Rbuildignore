@@ -2,3 +2,5 @@
 ^\.Rproj\.user$
 README.md
 
+^\.github$
+^revdep$

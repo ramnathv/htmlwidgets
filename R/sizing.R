@@ -211,8 +211,15 @@ resolveSizing <- function(x, sp, standalone, knitrOptions = NULL) {
   } else if (!is.null(knitrOptions)) {
     knitrScopes <- list(sp$knitr, sp)
     isFigure <- any_prop(knitrScopes, "figure")
-    figWidth <- if (isFigure) knitrOptions$out.width.px else NULL
-    figHeight <- if (isFigure) knitrOptions$out.height.px else NULL
+    # flexdashboard actually adds on another fig.width for intelligent sizing of static 
+    # figures in desktop/mobile mode
+    # https://github.com/rstudio/flexdashboard/blob/02207b7/R/flex_dashboard.R#L262
+    # flexdashboard should really only be doing this for static plots, but we make sure 
+    # to just take the first (desktop) sizing to make this "just work" for flexdashboard 
+    # (or really anyone else that provides a vector of widths/heights for a widget by 
+    # just taking the 1st value)
+    figWidth <- if (isFigure) knitrOptions$out.width.px[[1L]] else NULL
+    figHeight <- if (isFigure) knitrOptions$out.height.px[[1L]] else NULL
     # Compute the width and height
     return(list(
       width = x$width %||% figWidth %||% any_prop(knitrScopes, "defaultWidth") %||% DEFAULT_WIDTH,
@@ -227,4 +234,3 @@ resolveSizing <- function(x, sp, standalone, knitrOptions = NULL) {
     ))
   }
 }
-

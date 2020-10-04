@@ -1,5 +1,11 @@
 ### HTML Widgets for R
 
+<!-- badges: start -->
+[![R build status](https://github.com/cpsievert/htmlwidgets/workflows/R-CMD-check/badge.svg)](https://github.com/cpsievert/htmlwidgets/actions)
+[![CRAN status](https://www.r-pkg.org/badges/version/htmlwidgets)](https://CRAN.R-project.org/package=htmlwidgets)
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://www.tidyverse.org/lifecycle/#stable)
+<!-- badges: end -->
+
 The **htmlwidgets** package provides a framework for easily creating R bindings to JavaScript libraries. Widgets created using the framework can be:
 
 * Used at the R console for data analysis just like conventional R plots (via RStudio Viewer).

@@ -9,7 +9,7 @@ scaffoldWidget(name, bowerPkg = NULL, edit = interactive())
 \arguments{
 \item{name}{Name of widget}
 
-\item{bowerPkg}{Optional name of \href{http://bower.io/}{Bower} package upon
+\item{bowerPkg}{Optional name of \href{https://bower.io/}{Bower} package upon
 which this widget is based. If you specify this parameter then bower will
 be used to automatically download the widget's source code and dependencies
 and add them to the widget's YAML.}

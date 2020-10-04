@@ -1,4 +1,4 @@
-htmlwidgets 1.5.1.9000
+htmlwidgets 1.5.2.9000
 -------------------------------------------------------
 
 * Fixed an issue with passing named function declarations to `JS()` and `onRender()` (introduced by v1.4). (#356)
@@ -6,6 +6,11 @@ htmlwidgets 1.5.1.9000
 * Added a `reportTheme` argument to `shinyWidgetOutput()`. If `TRUE`, CSS styles of the widget's output container are made available to `shiny::getCurrentOutputInfo()`, making it possible to provide 'smart' styling defaults in a `renderWidget()` context. (#361)
 
 * Export the `JSEvals` function, allowing other packages to support `JS()` in non-widget contexts.
+
+htmlwidgets 1.5.2
+-------------------------------------------------------
+
+* Emergency patch release to fix an issue with rendering htmlwidgets in flexdashboard. More generally, this change implies that any htmlwidget is printed via a knitr code chunk with multiple values for fig.width/fig.height, only the first value is used for the widget's sizing policy. (#387)
 
 htmlwidgets 1.5.1
 -------------------------------------------------------
