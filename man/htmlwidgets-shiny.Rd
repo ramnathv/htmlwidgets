@@ -13,7 +13,8 @@ shinyWidgetOutput(
   height,
   package = name,
   inline = FALSE,
-  reportSize = FALSE
+  reportSize = FALSE,
+  reportTheme = FALSE
 )
 
 shinyRenderWidget(expr, outputFunction, env, quoted)
@@ -34,6 +35,9 @@ for the output}
 
 \item{reportSize}{Should the widget's container size be reported in the
 shiny session's client data?}
+
+\item{reportTheme}{Should the widget's container styles (e.g., colors and fonts)
+be reported in the shiny session's client data?}
 
 \item{expr}{An expression that generates an HTML widget (or a
 \href{https://rstudio.github.io/promises/}{promise} of an HTML widget).}

@@ -1,3 +1,12 @@
+htmlwidgets 1.5.2.9000
+-------------------------------------------------------
+
+* Fixed an issue with passing named function declarations to `JS()` and `onRender()` (introduced by v1.4). (#356)
+
+* Added a `reportTheme` argument to `shinyWidgetOutput()`. If `TRUE`, CSS styles of the widget's output container are made available to `shiny::getCurrentOutputInfo()`, making it possible to provide 'smart' styling defaults in a `renderWidget()` context. (#361)
+
+* Export the `JSEvals` function, allowing other packages to support `JS()` in non-widget contexts.
+
 htmlwidgets 1.5.2
 -------------------------------------------------------
 
