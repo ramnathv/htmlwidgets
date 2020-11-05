@@ -429,7 +429,7 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
 
   checkShinyVersion()
   # generate a function for the expression
-  func <- shiny::exprToFunction(expr, env, quoted)
+  shiny::installExprFunction(expr, "func", env, quoted)
 
   renderWidget <- function(instance) {
     if (!is.null(instance$elementId)) {
@@ -463,19 +463,14 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
     toJSON(payload)
   }
 
-  if (!is.null(asNamespace("shiny")$createRenderFunction)) {
-    shiny::createRenderFunction(
-      func,
-      function(instance, session, name, ...) {
-        renderWidget(instance)
-      },
-      outputFunction, NULL
-    )
-  } else {
-    shiny::markRenderFunction(outputFunction, function() {
-      renderWidget(func())
-    })
-  }
+  shiny::createRenderFunction(
+    func,
+    function(instance, session, name, ...) {
+      renderWidget(instance)
+    },
+    outputFunction,
+    NULL
+  )
 }
 
 checkShinyVersion <- function(error = TRUE) {
