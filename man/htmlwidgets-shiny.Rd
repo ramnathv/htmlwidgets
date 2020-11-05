@@ -17,7 +17,7 @@ shinyWidgetOutput(
   reportTheme = FALSE
 )
 
-shinyRenderWidget(expr, outputFunction, env, quoted)
+shinyRenderWidget(expr, outputFunction, env, quoted, cacheHint = "auto")
 }
 \arguments{
 \item{outputId}{output variable to read from}
@@ -49,6 +49,9 @@ function.}
 
 \item{quoted}{Is \code{expr} a quoted expression (with \code{quote()})? This
 is useful if you want to save an expression in a variable.}
+
+\item{cacheHint}{Extra information to use for optional caching using
+\code{\link[shiny]{withCache}}.}
 }
 \value{
 An output or render function that enables the use of the widget

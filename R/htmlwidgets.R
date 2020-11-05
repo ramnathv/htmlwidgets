@@ -365,6 +365,8 @@ createWidget <- function(name,
 #' @param env The environment in which to evaluate \code{expr}.
 #' @param quoted Is \code{expr} a quoted expression (with \code{quote()})? This
 #'   is useful if you want to save an expression in a variable.
+#' @param cacheHint Extra information to use for optional caching using
+#'   \code{\link[shiny]{withCache}}.
 #'
 #' @return An output or render function that enables the use of the widget
 #'   within Shiny applications.
@@ -425,8 +427,7 @@ shinyWidgetOutput <- function(outputId, name, width, height, package = name,
 
 #' @rdname htmlwidgets-shiny
 #' @export
-shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
-
+shinyRenderWidget <- function(expr, outputFunction, env, quoted, cacheHint = "auto")  {
   checkShinyVersion()
   # generate a function for the expression
   shiny::installExprFunction(expr, "func", env, quoted)
@@ -463,14 +464,28 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted) {
     toJSON(payload)
   }
 
-  shiny::createRenderFunction(
-    func,
-    function(instance, session, name, ...) {
-      renderWidget(instance)
-    },
-    outputFunction,
-    NULL
-  )
+  # The cacheHint arg is not present in Shiny < 1.6.0.
+  if ("cacheHint" %in% names(formals(shiny::createRenderFunction))) {
+    shiny::createRenderFunction(
+      func,
+      function(instance, session, name, ...) {
+        renderWidget(instance)
+      },
+      outputFunction,
+      NULL,
+      cacheHint = cacheHint
+    )
+  } else {
+    shiny::createRenderFunction(
+      func,
+      function(instance, session, name, ...) {
+        renderWidget(instance)
+      },
+      outputFunction,
+      NULL
+    )
+  }
+
 }
 
 checkShinyVersion <- function(error = TRUE) {
