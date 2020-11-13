@@ -51,7 +51,7 @@ function.}
 is useful if you want to save an expression in a variable.}
 
 \item{cacheHint}{Extra information to use for optional caching using
-\code{\link[shiny]{withCache}}.}
+\code{\link[shiny]{bindCache}}.}
 }
 \value{
 An output or render function that enables the use of the widget
