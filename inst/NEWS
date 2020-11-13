@@ -7,6 +7,8 @@ htmlwidgets 1.5.2.9000
 
 * Export the `JSEvals` function, allowing other packages to support `JS()` in non-widget contexts.
 
+* `shinyRenderWidget()` now has a `cacheHint` parameter, for use with Shiny's new `bindCache()` function. (#391)
+
 htmlwidgets 1.5.2
 -------------------------------------------------------
 
