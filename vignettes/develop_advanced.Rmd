@@ -184,7 +184,6 @@ widget_html.sparkline <- function(id, style, class, ...){
 
 Note that this function is looked up within the package implementing the widget by the convention <code>widget_html.<em>widgetname</em></code> so it need not be formally exported from your package or otherwise registered with **htmlwidgets**.
 
-(**htmlwidgets** 1.5.1 and earlier used a convention of <code><em>widgetname</em>_html</code>. This is still supported for now, but the new <code>widget_html.<em>widgetname</em></code> convention is recommended going forward, as it seems less likely to lead to false positives.)
+(**htmlwidgets** 1.5.2 and earlier used a convention of <code><em>widgetname</em>_html</code>. This is still supported for now, but the new <code>widget_html.<em>widgetname</em></code> convention is recommended going forward, as it seems less likely to lead to false positives.)
 
 Most widgets won't need a custom HTML function but if you need to generate custom HTML for your widget (e.g. you need an `<input>` or a `<span>` rather than a `<div>`) then you should use the **htmltools** package (as demonstrated by the code above).
-
