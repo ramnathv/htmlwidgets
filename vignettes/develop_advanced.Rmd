@@ -177,12 +177,13 @@ If multiple arguments are passed to `JS()` (as in the above example), they will 
 Typically the HTML "housing" for a widget is just a `<div>` element, and this is correspondingly the default behavior for new widgets that don't specify otherwise. However, sometimes you need a different element type. For example, the [sparkline](https://github.com/htmlwidgets/sparkline) widget requires a `<span>` element so implements the following custom HTML generation function:
 
 ```r
-sparkline_html <- function(id, style, class, ...){
+widget_html.sparkline <- function(id, style, class, ...){
   tags$span(id = id, class = class)
 }
 ```
 
-Note that this function is looked up within the package implementing the widget by the convention `widgetname_html` so it need not be formally exported from your package or otherwise registered with **htmlwidgets**.
+Note that this function is looked up within the package implementing the widget by the convention <code>widget_html.<em>widgetname</em></code> so it need not be formally exported from your package or otherwise registered with **htmlwidgets**.
+
+(**htmlwidgets** 1.5.2 and earlier used a convention of <code><em>widgetname</em>_html</code>. This is still supported for now, but the new <code>widget_html.<em>widgetname</em></code> convention is recommended going forward, as it seems less likely to lead to false positives.)
 
 Most widgets won't need a custom HTML function but if you need to generate custom HTML for your widget (e.g. you need an `<input>` or a `<span>` rather than a `<div>`) then you should use the **htmltools** package (as demonstrated by the code above).
-
