@@ -19,9 +19,12 @@ pandoc_save_markdown <- function(html, file, background = "white", title, libdir
 
   # ensure that the paths to dependencies are relative to the base
   # directory where the webpage is being built.
-  dir <- dirname(file)
-  oldwd <- setwd(dir)
-  on.exit(setwd(oldwd), add = TRUE)
+  if (is.character(file)) {
+    dir <- normalizePath(dirname(file), mustWork = TRUE)
+    file <- file.path(dir, basename(file))
+    owd <- setwd(dir)
+    on.exit(setwd(owd), add = TRUE)
+  }
 
   rendered <- renderTags(html)
 
