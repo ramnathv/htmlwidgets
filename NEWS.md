@@ -1,17 +1,21 @@
 htmlwidgets 1.5.2.9000
 -------------------------------------------------------
 
-* `saveWidget()` now `file` argument now properly handles relative paths. (#299)
-
-* Fixed an issue with passing named function declarations to `JS()` and `onRender()` (introduced by v1.4). (#356)
+### New features
 
 * Added a `reportTheme` argument to `shinyWidgetOutput()`. If `TRUE`, CSS styles of the widget's output container are made available to `shiny::getCurrentOutputInfo()`, making it possible to provide 'smart' styling defaults in a `renderWidget()` context. (#361)
-
-* Export the `JSEvals` function, allowing other packages to support `JS()` in non-widget contexts.
 
 * `shinyRenderWidget()` now has a `cacheHint` parameter, for use with Shiny's new `bindCache()` function. (#391)
 
 * Support a new `PACKAGE::widget_html.WIDGETNAME` convention for defining custom widget HTML. This replaces the earlier `PACKAGE::WIDGETNAME_html` convention, which continues to work but may be deprecated at some point in the future. The goal for the new convention is to prevent accidentally matching functions that were never intended for this purpose. (Thanks, @thebioengineer!) (#376)
+
+* Export the `JSEvals` function, allowing other packages to support `JS()` in non-widget contexts.
+
+### Bug fixes
+
+* `saveWidget()` now `file` argument now properly handles relative paths. (#299)
+
+* Fixed an issue with passing named function declarations to `JS()` and `onRender()` (introduced by v1.4). (#356)
 
 htmlwidgets 1.5.2
 -------------------------------------------------------
