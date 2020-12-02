@@ -564,8 +564,6 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted, cacheHint = "au
         )
         value
       }
-
-
     )
   } else {
     shiny::createRenderFunction(
@@ -603,4 +601,3 @@ createPayload <- function(instance){
 
 # package globals
 .globals <- new.env(parent = emptyenv())
-
