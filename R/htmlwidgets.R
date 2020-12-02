@@ -533,16 +533,18 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted, cacheHint = "au
     }
 
     deps <- .subset2(instance, "dependencies")
-    deps <- lapply(
+    deps_payload <- lapply(
       htmltools::resolveDependencies(deps),
       shiny::createWebDependency
     )
-    payload <- c(createPayload(instance), list(deps = deps))
-    toJSON(payload)
+    payload <- c(createPayload(instance), list(deps = deps_payload))
+    payload <- toJSON(payload)
+    attr(payload, "deps") <- deps
+    payload
   }
 
-  # The cacheHint arg is not present in Shiny < 1.6.0.
-  if ("cacheHint" %in% names(formals(shiny::createRenderFunction))) {
+  # The cacheHint and cacheReadHook args were added in Shiny 1.6.0.
+  if (all(c("cacheHint", "cacheReadHook") %in% names(formals(shiny::createRenderFunction)))) {
     shiny::createRenderFunction(
       func,
       function(instance, session, name, ...) {
@@ -550,7 +552,20 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted, cacheHint = "au
       },
       outputFunction,
       NULL,
-      cacheHint = cacheHint
+      cacheHint = cacheHint,
+      cacheReadHook = function(value) {
+        # If we've pulled the value from the cache and we're in a different R
+        # process from the one that created it, we'll need to register the
+        # dependencies again.
+        deps <- attr(value, "deps")
+        lapply(
+          htmltools::resolveDependencies(deps),
+          shiny::createWebDependency
+        )
+        value
+      }
+
+
     )
   } else {
     shiny::createRenderFunction(
