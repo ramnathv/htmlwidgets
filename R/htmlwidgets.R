@@ -443,7 +443,7 @@ createWidget <- function(name,
 #' @param quoted Is \code{expr} a quoted expression (with \code{quote()})? This
 #'   is useful if you want to save an expression in a variable.
 #' @param cacheHint Extra information to use for optional caching using
-#'   \code{\link[shiny]{bindCache}}.
+#'   \code{shiny::bindCache()}.
 #'
 #' @return An output or render function that enables the use of the widget
 #'   within Shiny applications.
@@ -577,6 +577,9 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted, cacheHint = "au
   }
 
 }
+
+# For the magic behind shiny::installExprFunction()
+utils::globalVariables("func")
 
 checkShinyVersion <- function(error = TRUE) {
   x <- utils::packageDescription('htmlwidgets', fields = 'Enhances')
