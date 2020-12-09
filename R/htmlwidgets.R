@@ -268,7 +268,14 @@ widget_html <- function (name, package, id, style, class, inline = FALSE, ...) {
   fn_info <- lookup_widget_html_method(name, package)
 
   fn <- fn_info[["fn"]]
-  fn_res <- fn(id = id, style = style, class = class, inline = inline, ...)
+  # id, style, and class have been required args for years, but inline is fairly new
+  # and undocumented, so unsuprisingly there are widgets out there are don't have an
+  # inline arg https://github.com/renkun-ken/formattable/blob/484777/R/render.R#L79-L88
+  args <- list(id = id, style = style, class = class, ...)
+  if ("inline" %in% names(formals(fn))) {
+    args$inline <- inline
+  }
+  fn_res <- do.call(fn, args)
   if (isTRUE(fn_info[["legacy"]])) {
     # For the PACKAGE:::NAME_html form (only), we worry about false positives;
     # hopefully false positives will return something that doesn't look like a
