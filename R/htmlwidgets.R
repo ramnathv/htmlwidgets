@@ -268,7 +268,14 @@ widget_html <- function (name, package, id, style, class, inline = FALSE, ...) {
   fn_info <- lookup_widget_html_method(name, package)
 
   fn <- fn_info[["fn"]]
-  fn_res <- fn(id = id, style = style, class = class, inline = inline, ...)
+  # id, style, and class have been required args for years, but inline is fairly new
+  # and undocumented, so unsuprisingly there are widgets out there are don't have an
+  # inline arg https://github.com/renkun-ken/formattable/blob/484777/R/render.R#L79-L88
+  args <- list(id = id, style = style, class = class, ...)
+  if ("inline" %in% names(formals(fn))) {
+    args$inline <- inline
+  }
+  fn_res <- do.call(fn, args)
   if (isTRUE(fn_info[["legacy"]])) {
     # For the PACKAGE:::NAME_html form (only), we worry about false positives;
     # hopefully false positives will return something that doesn't look like a
@@ -443,7 +450,7 @@ createWidget <- function(name,
 #' @param quoted Is \code{expr} a quoted expression (with \code{quote()})? This
 #'   is useful if you want to save an expression in a variable.
 #' @param cacheHint Extra information to use for optional caching using
-#'   \code{\link[shiny]{bindCache}}.
+#'   \code{shiny::bindCache()}.
 #'
 #' @return An output or render function that enables the use of the widget
 #'   within Shiny applications.
@@ -577,6 +584,9 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted, cacheHint = "au
   }
 
 }
+
+# For the magic behind shiny::installExprFunction()
+utils::globalVariables("func")
 
 checkShinyVersion <- function(error = TRUE) {
   x <- utils::packageDescription('htmlwidgets', fields = 'Enhances')
