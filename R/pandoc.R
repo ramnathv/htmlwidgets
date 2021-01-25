@@ -10,7 +10,23 @@ write_md_for_pandoc <- function(html, file, background = "white", title, libdir 
     on.exit(setwd(owd), add = TRUE)
   }
 
-  rendered <- renderTags(html, indent = FALSE)
+  # Fix for https://github.com/ramnathv/htmlwidgets/issues/358: HTML indented by
+  # 4 characters or more was being interpreted by pandoc_self_contained_html as
+  # markdown code blocks. We have two strategies for dealing with this, but the
+  # better one only works with pandoc >=2.0.
+  if (pandoc_available("2.0")) {
+    # Preferred strategy is to keep indenting the HTML (indent = 0 doesn't turn
+    # off indentation, it just means the indentation level starts at 0), and use
+    # a raw block (```{=html}...```) to protect the HTML from markdown parser.
+    indent <- 0
+    use_raw_attr <- TRUE
+  } else {
+    # Legacy pandoc doesn't support raw blocks, so just turn off indentation
+    indent <- FALSE
+    use_raw_attr <- FALSE
+  }
+
+  rendered <- renderTags(html, indent = indent)
 
   deps <- lapply(rendered$dependencies, function(dep) {
     dep <- htmltools::copyDependencyToDir(dep, libdir, FALSE)
@@ -34,7 +50,9 @@ write_md_for_pandoc <- function(html, file, background = "white", title, libdir 
       "background-color" = htmltools::htmlEscape(background, attribute = TRUE)
     )),
     "---",
-    rendered$html
+    if (use_raw_attr) "``````````{=html}",
+    rendered$html,
+    if (use_raw_attr) "``````````"
   )
 
   # write it
