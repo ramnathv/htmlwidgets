@@ -29,7 +29,9 @@ registerMethods <- function(methods) {
   # htmlwidgets and knitr are loaded.
   registerMethods(list(
     # c(package, genname, class)
-    c("knitr", "knit_print", "htmlwidget")
+    c("knitr", "knit_print", "htmlwidget"),
+    c("downlit", "replay_html", "htmlwidget"),
+    c("pkgdown", "pkgdown_print", "htmlwidget")
   ))
 }
 

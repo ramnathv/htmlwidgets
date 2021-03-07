@@ -24,6 +24,7 @@ Imports:
     yaml
 Suggests:
     knitr (>= 1.8),
+    downlit,
     rmarkdown,
     testthat
 Enhances: shiny (>= 1.1)
