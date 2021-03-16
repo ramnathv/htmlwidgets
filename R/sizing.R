@@ -225,6 +225,14 @@ resolveSizing <- function(x, sp, standalone, knitrOptions = NULL) {
       width = x$width %||% figWidth %||% any_prop(knitrScopes, "defaultWidth") %||% DEFAULT_WIDTH,
       height = x$height %||% figHeight %||% any_prop(knitrScopes, "defaultHeight") %||% DEFAULT_HEIGHT
     ))
+  } else if (requireNamespace("pkgdown", quietly = TRUE) &&
+             pkgdown::in_pkgdown() &&
+             "fig_settings" %in% getNamespaceExports("pkgdown")) {
+    settings <- pkgdown::fig_settings()
+    return(list(
+      width = x$width %||% with(settings, fig.width*dpi) %||% DEFAULT_WIDTH,
+      height = x$height %||% with(settings, fig.height*dpi) %||% DEFAULT_HEIGHT
+    ))
   } else {
     # Some non-knitr, non-print scenario.
     # Just resolve the width/height vs. defaultWidth/defaultHeight
