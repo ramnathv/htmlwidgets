@@ -1,6 +1,7 @@
 htmlwidgets 1.5.3.9000
 -------------------------------------------------------
 
+* Fixed #408: An error type-check did not work correctly because it was missing parentheses. (#409)
 
 htmlwidgets 1.5.3
 -------------------------------------------------------
