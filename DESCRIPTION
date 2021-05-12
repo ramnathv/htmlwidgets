@@ -32,4 +32,4 @@ Enhances: shiny (>= 1.1)
 URL: https://github.com/ramnathv/htmlwidgets
 BugReports: https://github.com/ramnathv/htmlwidgets/issues
 RoxygenNote: 7.1.1
-Remotes: dmurdoch/downlit@rglpatch, dmurdoch/pkgdown@rglpatch
+Remotes: r-lib/downlit, r-lib/pkgdown
