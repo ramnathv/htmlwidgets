@@ -589,15 +589,19 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted, cacheHint = "au
 utils::globalVariables("func")
 
 checkShinyVersion <- function(error = TRUE) {
-  x <- utils::packageDescription('htmlwidgets', fields = 'Enhances')
+  x <- packageDescription('htmlwidgets', fields = 'Enhances')
   r <- '^.*?shiny \\(>= ([0-9.]+)\\).*$'
   if (is.na(x) || length(grep(r, x)) == 0 || system.file(package = 'shiny') == '')
     return()
   v <- gsub(r, '\\1', x)
   f <- if (error) stop else packageStartupMessage
-  if (utils::packageVersion('shiny') < v)
+  if (packageVersion('shiny') < v)
     f("Please upgrade the 'shiny' package to (at least) version ", v)
 }
+checkShinyVersion <- memoise::memoise(checkShinyVersion)
+
+packageVersion <- memoise::memoise(utils::packageVersion)
+packageDescription <- memoise::memoise(utils::packageDescription)
 
 # Helper function to create payload
 createPayload <- function(instance){
