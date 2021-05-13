@@ -56,7 +56,8 @@ system.file <- function(..., package = "base", lib.loc = NULL,
     # be installed. To fully duplicate R's package-building and installation
     # behavior would be complicated, so we'll just use this simple method.
   } else {
-    base::system.file(..., package = package, lib.loc = lib.loc,
+    system.file_memoised(..., package = package, lib.loc = lib.loc,
       mustWork = mustWork)
   }
 }
+system.file_memoised <- memoise::memoise(base::system.file)
