@@ -49,12 +49,12 @@ getDependency <- function(name, package = name){
   #  in this cases dependencies should be provided through the
   #  dependencies argument of createWidget
   widgetDep <- list()
-  if(file.exists(system.file(config, package = package))) {
+  if (file.exists(system.file(config, package = package))) {
     config = yaml::yaml.load_file(
       system.file(config, package = package)
     )
-    widgetDep <- lapply(config$dependencies, function(l){
-      l$src = system.file(l$src, package = package)
+    widgetDep <- lapply(config$dependencies, function(l) {
+      l$package = package
       do.call(htmlDependency, l)
     })
   }
@@ -63,17 +63,23 @@ getDependency <- function(name, package = name){
   #  some other mechanism such as a specified `htmlDependency` or `script` tag.
   #  Note, this is a very special case.
   bindingDep <- if (file.exists(system.file(jsfile, package = package))) {
-    bindingDir <- system.file("htmlwidgets", package = package)
     htmlDependency(
-      paste0(name, "-binding"), packageVersion(package),
-      bindingDir, script = basename(jsfile), all_files = FALSE
+      name = paste0(name, "-binding"),
+      version = packageVersion(package),
+      src = "htmlwidgets",
+      package = package,
+      script = basename(jsfile),
+      all_files = FALSE
     )
   }
 
   c(
-    list(htmlDependency("htmlwidgets", packageVersion("htmlwidgets"),
-                        src = system.file("www", package="htmlwidgets"),
-                        script = "htmlwidgets.js"
+    list(htmlDependency(
+      name = "htmlwidgets",
+      version = packageVersion("htmlwidgets"),
+      src = "www",
+      package = "htmlwidgets",
+      script = "htmlwidgets.js"
     )),
     widgetDep,
     list(bindingDep)
