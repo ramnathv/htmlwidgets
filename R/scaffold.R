@@ -99,8 +99,10 @@ addWidgetJS <- function(name, edit){
 # This function uses bower to install a javascript package along with
 # its dependencies.
 installBowerPkg <- function(pkg){
+  bowerPath = findBower()
+
   # check if bower is installed
-  if (findBower() == ""){
+  if (is.null(bowerPath) || bowerPath == ""){
     stop(
       "Please install bower from http://bower.io",
       call. = FALSE
@@ -127,15 +129,16 @@ installBowerPkg <- function(pkg){
 findBower <- function(){
   # a slightly more robust finder of bower for windows
   # which does not require PATH environment variable to be set
-  bowerPath = if(Sys.which("bower") == "") {
+
+  # try to find the easy case
+  bowerPath = Sys.which("bower")
+
+  if(bowerPath == "" && identical(.Platform$OS.type,"windows")) {
     # if it does not find Sys.which('bower')
-    # also check APPDATA to see if found there
-    if(identical(.Platform$OS.type,"windows")) {
-      Sys.which(file.path(Sys.getenv("APPDATA"),"npm","bower."))
-    }
-  } else {
-    Sys.which("bower")
+    # also check APPDATA if Windows to see if found there
+    bowerPath = Sys.which(file.path(Sys.getenv("APPDATA"),"npm","bower."))
   }
+
   return(bowerPath)
 }
 
@@ -162,6 +165,11 @@ readBower <- function(pkg, src = "inst/htmlwidgets/lib"){
 
 # Get YAML configuration for widget
 getConfig <- function(pkg, src = "inst/htmlwidgets/lib"){
+  # handle bower when in github shorthand or with full git path
+  # by using basename and removing .git from basename
+  # see http://bower.io/#install-bower
+  # "A package can be a GitHub shorthand, a Git endpoint, a URL, and more."
+  pkg = gsub(basename(pkg),pattern="([.]*)(.git)",replacement="")
   deps = readBower(pkg, src)$deps
   all = c(names(deps),pkg)
   config = lapply(all, function(pkg){
