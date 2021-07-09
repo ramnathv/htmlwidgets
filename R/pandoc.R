@@ -26,7 +26,7 @@ pandoc_save_markdown <- function(html, file, background = "white", title, libdir
     on.exit(setwd(owd), add = TRUE)
   }
 
-  rendered <- renderTags(html)
+  rendered <- renderTags(html, indent = FALSE)
 
   deps <- lapply(rendered$dependencies, function(dep) {
     dep <- htmltools::copyDependencyToDir(dep, libdir, FALSE)
