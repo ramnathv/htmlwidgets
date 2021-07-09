@@ -357,25 +357,11 @@
             .css("left", el.offsetLeft)
             // setting width can push out the page size, forcing otherwise
             // unnecessary scrollbars to appear and making it impossible for
-            // the element to shrink; so use max-width instead
+            // the element to shrink; so use max-width and max-height instead
             .css("maxWidth", el.offsetWidth)
-            .css("height", el.offsetHeight);
+            .css("maxHeight", el.offsetHeight);
           errorDiv.text(err.message);
           $el.after(errorDiv);
-
-          // Really dumb way to keep the size/position of the error in sync with
-          // the parent element as the window is resized or whatever.
-          var intId = setInterval(function() {
-            if (!errorDiv[0].parentElement) {
-              clearInterval(intId);
-              return;
-            }
-            errorDiv
-              .css("top", el.offsetTop)
-              .css("left", el.offsetLeft)
-              .css("maxWidth", el.offsetWidth)
-              .css("height", el.offsetHeight);
-          }, 500);
         }
       }
     },
