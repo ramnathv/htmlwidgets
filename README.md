@@ -3,13 +3,13 @@
 <!-- badges: start -->
 [![R build status](https://github.com/ramnathv/htmlwidgets/workflows/R-CMD-check/badge.svg)](https://github.com/ramnathv/htmlwidgets/actions)
 [![CRAN status](https://www.r-pkg.org/badges/version/htmlwidgets)](https://CRAN.R-project.org/package=htmlwidgets)
-[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://www.tidyverse.org/lifecycle/#stable)
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 <!-- badges: end -->
 
 The **htmlwidgets** package provides a framework for easily creating R bindings to JavaScript libraries. Widgets created using the framework can be:
 
 * Used at the R console for data analysis just like conventional R plots (via RStudio Viewer).
-* Seamlessly embedded within [R Markdown](http://rmarkdown.rstudio.com) documents and [Shiny](http://shiny.rstudio.com) web applications.
+* Seamlessly embedded within [R Markdown](https://rmarkdown.rstudio.com/) documents and [Shiny](https://shiny.rstudio.com/) web applications.
 * Saved as standalone web pages for ad-hoc sharing via email, Dropbox, etc.
 
 There are already several R packages based on **htmlwidgets**, including:
