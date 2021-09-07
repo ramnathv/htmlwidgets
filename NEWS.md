@@ -1,6 +1,7 @@
 htmlwidgets 1.5.3.9000
 -------------------------------------------------------
 
+* Closed #320: `getDependency()` no longer includes an absolute src path in its return value. (#384)
 * Fixed #408: An error type-check did not work correctly because it was missing parentheses. (#409)
 
 htmlwidgets 1.5.3
