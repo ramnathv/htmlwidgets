@@ -1,4 +1,4 @@
-htmlwidgets 1.5.3.9000
+htmlwidgets 1.5.4
 -------------------------------------------------------
 
 * Closed #320: `getDependency()` no longer includes an absolute src path in its return value. (#384)
