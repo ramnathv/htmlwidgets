@@ -1,5 +1,5 @@
 # @staticimports pkg:staticimports
-#  is_installed get_package_version
+#  is_installed get_package_version system_file
 #  register_s3_method register_upgrade_message
 #  %||%
 
@@ -44,7 +44,7 @@ getDependency <- function(name, package = name){
   #  in this cases dependencies should be provided through the
   #  dependencies argument of createWidget
   widgetDep <- list()
-  yaml_file <- system.file(config, package = package)
+  yaml_file <- system_file(config, package = package)
   if (file.exists(yaml_file)) {
     config = yaml::yaml.load_file(yaml_file)
     widgetDep <- lapply(config$dependencies, function(l) {
@@ -56,7 +56,7 @@ getDependency <- function(name, package = name){
   # if js binding does not exist then assume provided through
   #  some other mechanism such as a specified `htmlDependency` or `script` tag.
   #  Note, this is a very special case.
-  bindingDep <- if (file.exists(system.file(jsfile, package = package))) {
+  bindingDep <- if (file.exists(system_file(jsfile, package = package))) {
     htmlDependency(
       name = paste0(name, "-binding"),
       version = get_package_version(package),

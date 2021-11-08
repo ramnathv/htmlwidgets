@@ -32,7 +32,7 @@ scaffoldWidget <- function(name, bowerPkg = NULL, edit = interactive()){
 
 addWidgetConstructor <- function(name, package, edit){
   tpl <- paste(readLines(
-    system.file('templates/widget_r.txt', package = 'htmlwidgets')
+    system_file('templates/widget_r.txt', package = 'htmlwidgets')
   ), collapse = "\n")
 
   capName = function(name){
@@ -80,7 +80,7 @@ addWidgetYAML <- function(name, bowerPkg, edit){
 
 addWidgetJS <- function(name, edit){
   tpl <- paste(readLines(
-    system.file('templates/widget_js.txt', package = 'htmlwidgets')
+    system_file('templates/widget_js.txt', package = 'htmlwidgets')
   ), collapse = "\n")
 
   if (!file.exists(file_ <- sprintf('inst/htmlwidgets/%s.js', name))){
