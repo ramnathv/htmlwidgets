@@ -476,13 +476,9 @@ createWidget <- function(name,
 shinyWidgetOutput <- function(outputId, name, width, height, package = name,
                               inline = FALSE, reportSize = FALSE, reportTheme = FALSE) {
 
-  checkShinyVersion()
-
   # Theme reporting requires this shiny feature
   # https://github.com/rstudio/shiny/pull/2740/files
-  if (reportTheme &&
-      nzchar(system.file(package = "shiny")) &&
-      packageVersion("shiny") < "1.4.0.9003") {
+  if (reportTheme && !is_installed("shiny", "1.4.0.9003")) {
     message("`reportTheme = TRUE` requires shiny v.1.4.0.9003 or higher. Consider upgrading shiny.")
   }
 
@@ -512,7 +508,6 @@ shinyWidgetOutput <- function(outputId, name, width, height, package = name,
 #' @rdname htmlwidgets-shiny
 #' @export
 shinyRenderWidget <- function(expr, outputFunction, env, quoted, cacheHint = "auto")  {
-  checkShinyVersion()
   # generate a function for the expression
   shiny::installExprFunction(expr, "func", env, quoted)
 
@@ -587,17 +582,6 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted, cacheHint = "au
 
 # For the magic behind shiny::installExprFunction()
 utils::globalVariables("func")
-
-checkShinyVersion <- function(error = TRUE) {
-  x <- utils::packageDescription('htmlwidgets', fields = 'Enhances')
-  r <- '^.*?shiny \\(>= ([0-9.]+)\\).*$'
-  if (is.na(x) || length(grep(r, x)) == 0 || system.file(package = 'shiny') == '')
-    return()
-  v <- gsub(r, '\\1', x)
-  f <- if (error) stop else packageStartupMessage
-  if (utils::packageVersion('shiny') < v)
-    f("Please upgrade the 'shiny' package to (at least) version ", v)
-}
 
 # Helper function to create payload
 createPayload <- function(instance){

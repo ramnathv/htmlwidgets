@@ -1,3 +1,9 @@
+# @staticimports pkg:staticimports
+#  is_installed get_package_version system_file
+#  s3_register register_upgrade_message
+#  %||%
+
+
 # Copied from shiny 0.14.2
 toJSON2 <- function(
   x, ...,  dataframe = "columns", null = "null", na = "null", auto_unbox = TRUE,
@@ -13,17 +19,6 @@ toJSON2 <- function(
     json_verbatim = TRUE, ...
   )
 }
-
-if (requireNamespace('shiny') && packageVersion('shiny') >= '0.12.0') local({
-  tryCatch({
-    toJSON <- getFromNamespace('toJSON', 'shiny')
-    args2 <- formals(toJSON2)
-    args1 <- formals(toJSON)
-    if (!identical(args1, args2)) {
-      warning('Check shiny:::toJSON and make sure htmlwidgets:::toJSON is in sync')
-    }
-  })
-})
 
 toJSON <- function(x) {
   if (!is.list(x) || !('x' %in% names(x))) return(toJSON2(x))
@@ -49,10 +44,9 @@ getDependency <- function(name, package = name){
   #  in this cases dependencies should be provided through the
   #  dependencies argument of createWidget
   widgetDep <- list()
-  if (file.exists(system.file(config, package = package))) {
-    config = yaml::yaml.load_file(
-      system.file(config, package = package)
-    )
+  yaml_file <- system_file(config, package = package)
+  if (file.exists(yaml_file)) {
+    config = yaml::yaml.load_file(yaml_file)
     widgetDep <- lapply(config$dependencies, function(l) {
       l$package = package
       do.call(htmlDependency, l)
@@ -62,10 +56,10 @@ getDependency <- function(name, package = name){
   # if js binding does not exist then assume provided through
   #  some other mechanism such as a specified `htmlDependency` or `script` tag.
   #  Note, this is a very special case.
-  bindingDep <- if (file.exists(system.file(jsfile, package = package))) {
+  bindingDep <- if (file.exists(system_file(jsfile, package = package))) {
     htmlDependency(
       name = paste0(name, "-binding"),
-      version = packageVersion(package),
+      version = get_package_version(package),
       src = "htmlwidgets",
       package = package,
       script = basename(jsfile),
@@ -76,7 +70,7 @@ getDependency <- function(name, package = name){
   c(
     list(htmlDependency(
       name = "htmlwidgets",
-      version = packageVersion("htmlwidgets"),
+      version = get_package_version("htmlwidgets"),
       src = "www",
       package = "htmlwidgets",
       script = "htmlwidgets.js"
@@ -86,9 +80,6 @@ getDependency <- function(name, package = name){
   )
 }
 
-`%||%` <- function(x, y){
-  if (is.null(x)) y else x
-}
 
 prop <- function(x, path) {
   tryCatch({
