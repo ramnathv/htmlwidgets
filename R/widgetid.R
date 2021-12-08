@@ -25,19 +25,26 @@ createWidgetId <- function(bytes = 10) {
 
   # Note what the system's random seed is before we start, so we can restore it after
   sysSeed <- .GlobalEnv$.Random.seed
-  # Replace system seed with our own seed
+
   if (!is.null(.globals$idSeed)) {
+    # Replace system seed with our own seed
     .GlobalEnv$.Random.seed <- .globals$idSeed
+    on.exit({
+      # Continue using our own seed for subsequent widget ids
+      .globals$idSeed <- .GlobalEnv$.Random.seed
+    })
+  } else if (exists(".Random.seed", envir = .GlobalEnv)) {
+    # or remove the seed for a fresh RNG if we don't have an internal RNG state
+    rm(".Random.seed", envir = .GlobalEnv)
   }
+
   on.exit({
-    # Change our own seed to match the current seed
-    .globals$idSeed <- .GlobalEnv$.Random.seed
     # Restore the system seed--we were never here
-    if(!is.null(sysSeed))
+    if (!is.null(sysSeed))
       .GlobalEnv$.Random.seed <- sysSeed
     else
       rm(".Random.seed", envir = .GlobalEnv)
-  })
+  }, add = TRUE)
 
   paste(
     format(as.hexmode(sample(256, bytes, replace = TRUE)-1), width=2),
