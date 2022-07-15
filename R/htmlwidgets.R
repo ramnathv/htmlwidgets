@@ -474,7 +474,7 @@ createWidget <- function(name,
 #'
 #' @export
 shinyWidgetOutput <- function(outputId, name, width, height, package = name,
-                              inline = FALSE, reportSize = FALSE, reportTheme = FALSE) {
+                              inline = FALSE, reportSize = TRUE, reportTheme = FALSE) {
 
   # Theme reporting requires this shiny feature
   # https://github.com/rstudio/shiny/pull/2740/files
