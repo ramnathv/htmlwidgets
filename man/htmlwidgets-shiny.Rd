@@ -13,7 +13,7 @@ shinyWidgetOutput(
   height,
   package = name,
   inline = FALSE,
-  reportSize = FALSE,
+  reportSize = TRUE,
   reportTheme = FALSE
 )
 

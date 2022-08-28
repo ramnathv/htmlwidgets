@@ -84,6 +84,30 @@ pandoc_self_contained_html <- function(input, output) {
     "</html>"
   ), template)
 
+  # changed by Erich Neuwirth to adapt for deprecated command
+  # line parameter --self-contained up from version 2.19
+  # of pandoc
+
+  options = c(
+    "--self-contained",
+    "--template", template
+  )
+
+  find_pandoc()
+  if (utils::compareVersion(.pandoc$version,
+                     numeric_version("2.19") >= 0)){
+    options = c(
+      "--embed-resources",
+      "--standalone",
+      "--template", template
+    )
+
+  }
+
+
+
+
+
   # convert from markdown to html to get base64 encoding
   # (note there is no markdown in the source document but
   # we still need to do this "conversion" to get the
@@ -92,10 +116,7 @@ pandoc_self_contained_html <- function(input, output) {
     input = input,
     from = "markdown",
     output = output,
-    options = c(
-      "--self-contained",
-      "--template", template
-    )
+    options = options
   )
 
   invisible(output)

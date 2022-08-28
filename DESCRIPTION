@@ -10,6 +10,7 @@ Authors@R: c(
     person("Carson", "Sievert", role = c("aut", "cre"), email = "carson@rstudio.com", comment = c(ORCID = "0000-0002-4958-2844")),
     person("Kenton", "Russell", role = c("aut", "cph")),
     person("Ellis", "Hughes", role = c("ctb")),
+    person("Erich", "Neuwirth", role = c("ctb")),
     person(family = "RStudio", role = "cph")
     )
 Description: A framework for creating HTML widgets that render in various
