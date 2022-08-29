@@ -1,3 +1,8 @@
+htmlwidgets 1.5.4.9010
+-------------------------------------------------------
+
+* `pandoc_self_contained_html` now uses options `—embed-resources` and `—standalone` instead of deprecated `--self-contained` for `pandoc 1.9` or higher
+
 htmlwidgets 1.5.4.9000
 -------------------------------------------------------
 
