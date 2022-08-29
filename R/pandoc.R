@@ -93,9 +93,7 @@ pandoc_self_contained_html <- function(input, output) {
     "--template", template
   )
 
-  find_pandoc()
-  if (utils::compareVersion(.pandoc$version,
-                     numeric_version("2.19") >= 0)){
+    if (pandoc_available("2.19")){
     options = c(
       "--embed-resources",
       "--standalone",
