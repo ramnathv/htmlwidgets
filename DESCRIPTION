@@ -1,7 +1,7 @@
 Package: htmlwidgets
 Type: Package
 Title: HTML Widgets for R
-Version: 1.5.4
+Version: 1.5.4.9010
 Authors@R: c(
     person("Ramnath", "Vaidyanathan", role = c("aut", "cph")),
     person("Yihui", "Xie", role = c("aut")),
@@ -10,6 +10,7 @@ Authors@R: c(
     person("Carson", "Sievert", role = c("aut", "cre"), email = "carson@rstudio.com", comment = c(ORCID = "0000-0002-4958-2844")),
     person("Kenton", "Russell", role = c("aut", "cph")),
     person("Ellis", "Hughes", role = c("ctb")),
+    person("Erich", "Neuwirth", role = c("ctb")),
     person(family = "RStudio", role = "cph")
     )
 Description: A framework for creating HTML widgets that render in various
@@ -29,4 +30,4 @@ Suggests:
 Enhances: shiny (>= 1.1)
 URL: https://github.com/ramnathv/htmlwidgets
 BugReports: https://github.com/ramnathv/htmlwidgets/issues
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1

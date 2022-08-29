@@ -84,6 +84,20 @@ pandoc_self_contained_html <- function(input, output) {
     "</html>"
   ), template)
 
+  options = c(
+    "--self-contained",
+    "--template", template
+  )
+
+  if (pandoc_available("2.19")){
+    options = c(
+      "--embed-resources",
+      "--standalone",
+      "--template", template
+    )
+  }
+
+
   # convert from markdown to html to get base64 encoding
   # (note there is no markdown in the source document but
   # we still need to do this "conversion" to get the
@@ -92,10 +106,7 @@ pandoc_self_contained_html <- function(input, output) {
     input = input,
     from = "markdown",
     output = output,
-    options = c(
-      "--self-contained",
-      "--template", template
-    )
+    options = options
   )
 
   invisible(output)
