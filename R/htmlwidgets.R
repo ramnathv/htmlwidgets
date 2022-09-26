@@ -170,31 +170,14 @@ addHook <- function(x, hookName, jsCode, data = NULL) {
 
 toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
 
-  sizeInfo <- resolveSizing(x, x$sizingPolicy, standalone = standalone, knitrOptions = knitrOptions)
+  x$id <- x$elementId %||% paste("htmlwidget", createWidgetId(), sep = "-")
 
-  if (!is.null(x$elementId))
-    id <- x$elementId
-  else
-    id <- paste("htmlwidget", createWidgetId(), sep="-")
-
-  w <- validateCssUnit(sizeInfo$width)
-  h <- validateCssUnit(sizeInfo$height)
-
-  # create a style attribute for the width and height
-  style <- paste(
-    "width:", w, ";",
-    "height:", h, ";",
-    sep = "")
-
-  x$id <- id
-
-  container <- if (isTRUE(standalone)) {
-    function(x) {
-      div(id="htmlwidget_container", x)
-    }
-  } else {
-    identity
+  container <- identity
+  if (isTRUE(standalone)) {
+    container <- function(x) div(id = "htmlwidget_container", x)
   }
+
+  sizeInfo <- resolveSizing(x, x$sizingPolicy, standalone = standalone, knitrOptions = knitrOptions)
 
   html <- htmltools::tagList(
     container(
@@ -203,18 +186,25 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
         widget_html(
           name = class(x)[1],
           package = attr(x, "package"),
-          id = id,
-          style = style,
-          class = paste(class(x)[1], "html-widget"),
+          id = x$id,
+          style = htmltools::css(
+            width = validateCssUnit(sizeInfo$width),
+            height = validateCssUnit(sizeInfo$height)
+          ),
+          class = paste(
+            class(x)[1],
+            "html-widget",
+            if (is.null(x$height)) "vfill-item"
+          ),
           width = sizeInfo$width,
           height = sizeInfo$height
         ),
         x$append
       )
     ),
-    widget_data(x, id),
+    widget_data(x, x$id),
     if (!is.null(sizeInfo$runtime)) {
-      tags$script(type="application/htmlwidget-sizing", `data-for` = id,
+      tags$script(type="application/htmlwidget-sizing", `data-for` = x$id,
         toJSON(sizeInfo$runtime)
       )
     }
@@ -263,7 +253,7 @@ lookup_widget_html_method <- function(name, package) {
   list(fn = widget_html.default, name = "widget_html.default", legacy = FALSE)
 }
 
-widget_html <- function (name, package, id, style, class, inline = FALSE, ...) {
+widget_html <- function(name, package, id, style, class, inline = FALSE, ...) {
 
   fn_info <- lookup_widget_html_method(name, package)
 
@@ -489,13 +479,14 @@ shinyWidgetOutput <- function(outputId, name, width, height, package = name,
       class = paste0(
         name, " html-widget html-widget-output",
         if (reportSize) " shiny-report-size",
-        if (reportTheme) " shiny-report-theme"
+        if (reportTheme) " shiny-report-theme",
+        if (is.null(height)) " vfill-item"
       ),
-      style = sprintf("width:%s; height:%s; %s",
-        htmltools::validateCssUnit(width),
-        htmltools::validateCssUnit(height),
-        if (inline) "display: inline-block;" else ""
-      ), width = width, height = height
+      style = htmltools::css(
+        width = htmltools::validateCssUnit(width),
+        height = htmltools::validateCssUnit(height),
+        display = if (inline) "inline-block"
+      )
     )
   )
 
