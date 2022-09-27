@@ -5,6 +5,10 @@ htmlwidgets 1.5.4.9000
 
 * `shinyWidgetOutput()`'s `reportSize` argument now defaults to `TRUE`. This way, calling `shiny::getCurrentOutputInfo()` inside a `shinyRenderWidget()` context will report the current height and width of the widget. 
 
+### Improvements
+
+* Closed #433: `saveWidget()` no longer throw deprecation warning when pandoc 2.19 or higher is used.
+
 htmlwidgets 1.5.4
 -------------------------------------------------------
 

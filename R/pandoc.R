@@ -92,10 +92,11 @@ pandoc_self_contained_html <- function(input, output) {
     input = input,
     from = "markdown",
     output = output,
-    options = c(
-      "--self-contained",
-      "--template", template
-    )
+    options = if (pandoc_available("2.19")) {
+      c("--embed-resources", "--standalone", "--template", template)
+    } else {
+      c("--self-contained", "--template", template)
+    }
   )
 
   invisible(output)
