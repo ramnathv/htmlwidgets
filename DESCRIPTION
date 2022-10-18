@@ -21,7 +21,8 @@ Imports:
     grDevices,
     htmltools (>= 0.5.3.9001),
     jsonlite (>= 0.9.16),
-    yaml
+    yaml,
+    utils
 Suggests:
     knitr (>= 1.8),
     rmarkdown,
