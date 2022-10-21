@@ -51,6 +51,10 @@
 #' @param knitr.figure Apply the default knitr fig.width and fig.height to the
 #'   widget when it's rendered within R Markdown documents. Defaults to
 #'   \code{TRUE}.
+#' @param fill whether or not the returned tag should be wrapped
+#'   [htmltools::asFillItem()] so that it's `height` is allowed to grow/shrink
+#'   inside a tag wrapped with [htmltools::asFillContainer()] (e.g.,
+#'   [bslib::card_body_fill()]).
 #'
 #' @return A widget sizing policy
 #'
@@ -85,12 +89,13 @@ sizingPolicy <- function(
   browser.defaultWidth = NULL, browser.defaultHeight = NULL,
   browser.padding = NULL, browser.fill = FALSE, browser.external = FALSE,
   knitr.defaultWidth = NULL, knitr.defaultHeight = NULL,
-  knitr.figure = TRUE) {
+  knitr.figure = TRUE, fill = NULL) {
 
   list(
     defaultWidth = defaultWidth,
     defaultHeight = defaultHeight,
     padding = padding,
+    fill = fill,
     viewer = list(
       defaultWidth = viewer.defaultWidth,
       defaultHeight = viewer.defaultHeight,
@@ -185,9 +190,11 @@ DEFAULT_PADDING_VIEWER <- 15
 #' @keywords internal
 #' @noRd
 resolveSizing <- function(x, sp, standalone, knitrOptions = NULL) {
+  userSized <- !is.null(x$width) || !is.null(x$height)
+  viewerScopes <- list(sp$viewer, sp)
+  viewerFill <- !userSized && any_prop(viewerScopes, "fill") %||% TRUE
+
   if (isTRUE(standalone)) {
-    userSized <- !is.null(x$width) || !is.null(x$height)
-    viewerScopes <- list(sp$viewer, sp)
     browserScopes <- list(sp$browser, sp)
     # Precompute the width, height, padding, and fill for each scenario.
     return(list(
@@ -196,7 +203,7 @@ resolveSizing <- function(x, sp, standalone, knitrOptions = NULL) {
           width = x$width %||% any_prop(viewerScopes, "defaultWidth") %||% DEFAULT_WIDTH_VIEWER,
           height = x$height %||% any_prop(viewerScopes, "defaultHeight") %||% DEFAULT_HEIGHT_VIEWER,
           padding = any_prop(viewerScopes, "padding") %||% DEFAULT_PADDING_VIEWER,
-          fill = !userSized && any_prop(viewerScopes, "fill") %||% TRUE
+          fill = viewerFill
         ),
         browser = list(
           width = x$width %||% any_prop(browserScopes, "defaultWidth") %||% DEFAULT_WIDTH,
@@ -206,31 +213,36 @@ resolveSizing <- function(x, sp, standalone, knitrOptions = NULL) {
         )
       ),
       width = x$width %||% prop(sp, "defaultWidth") %||% DEFAULT_WIDTH,
-      height = x$height %||% prop(sp, "defaultHeight") %||% DEFAULT_HEIGHT
+      height = x$height %||% prop(sp, "defaultHeight") %||% DEFAULT_HEIGHT,
+      fill = prop(sp, "fill") %||% viewerFill
     ))
-  } else if (!is.null(knitrOptions)) {
+  }
+
+  if (!is.null(knitrOptions)) {
     knitrScopes <- list(sp$knitr, sp)
     isFigure <- any_prop(knitrScopes, "figure")
-    # flexdashboard actually adds on another fig.width for intelligent sizing of static 
+    # flexdashboard actually adds on another fig.width for intelligent sizing of static
     # figures in desktop/mobile mode
     # https://github.com/rstudio/flexdashboard/blob/02207b7/R/flex_dashboard.R#L262
-    # flexdashboard should really only be doing this for static plots, but we make sure 
-    # to just take the first (desktop) sizing to make this "just work" for flexdashboard 
-    # (or really anyone else that provides a vector of widths/heights for a widget by 
+    # flexdashboard should really only be doing this for static plots, but we make sure
+    # to just take the first (desktop) sizing to make this "just work" for flexdashboard
+    # (or really anyone else that provides a vector of widths/heights for a widget by
     # just taking the 1st value)
     figWidth <- if (isFigure) knitrOptions$out.width.px[[1L]] else NULL
     figHeight <- if (isFigure) knitrOptions$out.height.px[[1L]] else NULL
     # Compute the width and height
     return(list(
       width = x$width %||% figWidth %||% any_prop(knitrScopes, "defaultWidth") %||% DEFAULT_WIDTH,
-      height = x$height %||% figHeight %||% any_prop(knitrScopes, "defaultHeight") %||% DEFAULT_HEIGHT
-    ))
-  } else {
-    # Some non-knitr, non-print scenario.
-    # Just resolve the width/height vs. defaultWidth/defaultHeight
-    return(list(
-      width = x$width %||% prop(sp, "defaultWidth") %||% DEFAULT_WIDTH,
-      height = x$height %||% prop(sp, "defaultHeight") %||% DEFAULT_HEIGHT
+      height = x$height %||% figHeight %||% any_prop(knitrScopes, "defaultHeight") %||% DEFAULT_HEIGHT,
+      fill = prop(knitrScopes, "fill") %||% viewerFill
     ))
   }
+
+  # Some non-knitr, non-print scenario.
+  # Just resolve the width/height vs. defaultWidth/defaultHeight
+  list(
+    width = x$width %||% prop(sp, "defaultWidth") %||% DEFAULT_WIDTH,
+    height = x$height %||% prop(sp, "defaultHeight") %||% DEFAULT_HEIGHT,
+    fill = prop(sp, "fill") %||% viewerFill
+  )
 }

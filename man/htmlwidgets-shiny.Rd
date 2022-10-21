@@ -14,7 +14,8 @@ shinyWidgetOutput(
   package = name,
   inline = FALSE,
   reportSize = TRUE,
-  reportTheme = FALSE
+  reportTheme = FALSE,
+  fill = is.null(height)
 )
 
 shinyRenderWidget(expr, outputFunction, env, quoted, cacheHint = "auto")
@@ -38,6 +39,11 @@ shiny session's client data?}
 
 \item{reportTheme}{Should the widget's container styles (e.g., colors and fonts)
 be reported in the shiny session's client data?}
+
+\item{fill}{whether or not the returned tag should be wrapped
+[htmltools::asFillItem()] so that it's `height` is allowed to grow/shrink
+inside a tag wrapped with [htmltools::asFillContainer()] (e.g.,
+[bslib::card_body_fill()]).}
 
 \item{expr}{An expression that generates an HTML widget (or a
 \href{https://rstudio.github.io/promises/}{promise} of an HTML widget).}

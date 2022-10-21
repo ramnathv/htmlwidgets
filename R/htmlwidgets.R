@@ -170,62 +170,53 @@ addHook <- function(x, hookName, jsCode, data = NULL) {
 
 toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
 
+  x$id <- x$elementId %||% paste("htmlwidget", createWidgetId(), sep = "-")
+
   sizeInfo <- resolveSizing(x, x$sizingPolicy, standalone = standalone, knitrOptions = knitrOptions)
 
-  if (!is.null(x$elementId))
-    id <- x$elementId
-  else
-    id <- paste("htmlwidget", createWidgetId(), sep="-")
+  name <- class(x)[1]
+  package <- attr(x, "package")
 
-  w <- validateCssUnit(sizeInfo$width)
-  h <- validateCssUnit(sizeInfo$height)
+  html <- widget_html(
+    name, package, id = x$id,
+    style = css(
+      width = validateCssUnit(sizeInfo$width),
+      height = validateCssUnit(sizeInfo$height)
+    ),
+    class = paste(name, "html-widget"),
+    width = sizeInfo$width,
+    height = sizeInfo$height
+  )
 
-  # create a style attribute for the width and height
-  style <- paste(
-    "width:", w, ";",
-    "height:", h, ";",
-    sep = "")
-
-  x$id <- id
-
-  container <- if (isTRUE(standalone)) {
-    function(x) {
-      div(id="htmlwidget_container", x)
-    }
-  } else {
-    identity
+  if (sizeInfo$fill) {
+    html <- asFillItem(html)
   }
 
-  html <- htmltools::tagList(
-    container(
-      htmltools::tagList(
-        x$prepend,
-        widget_html(
-          name = class(x)[1],
-          package = attr(x, "package"),
-          id = id,
-          style = style,
-          class = paste(class(x)[1], "html-widget"),
-          width = sizeInfo$width,
-          height = sizeInfo$height
-        ),
-        x$append
-      )
-    ),
-    widget_data(x, id),
+  if (!is.null(x$prepend) || !is.null(x$append)) {
+    html <- tagList(x$append, html, x$prepend)
+  }
+
+  if (isTRUE(standalone)) {
+    html <- div(id = "htmlwidget_container", html)
+  }
+
+  html <- tagList(
+    html, widget_data(x, x$id),
     if (!is.null(sizeInfo$runtime)) {
-      tags$script(type="application/htmlwidget-sizing", `data-for` = id,
+      tags$script(
+        type = "application/htmlwidget-sizing",
+        `data-for` = x$id,
         toJSON(sizeInfo$runtime)
       )
     }
   )
-  html <- htmltools::attachDependencies(html,
-    c(widget_dependencies(class(x)[1], attr(x, 'package')),
-      x$dependencies)
+
+  deps <- c(
+    widget_dependencies(name, package),
+    x$dependencies
   )
 
-  htmltools::browsable(html)
-
+  browsable(attachDependencies(html, deps, append = TRUE))
 }
 
 lookup_func <- function(name, package) {
@@ -263,7 +254,7 @@ lookup_widget_html_method <- function(name, package) {
   list(fn = widget_html.default, name = "widget_html.default", legacy = FALSE)
 }
 
-widget_html <- function (name, package, id, style, class, inline = FALSE, ...) {
+widget_html <- function(name, package, id, style, class, inline = FALSE, ...) {
 
   fn_info <- lookup_widget_html_method(name, package)
 
@@ -451,6 +442,10 @@ createWidget <- function(name,
 #'   is useful if you want to save an expression in a variable.
 #' @param cacheHint Extra information to use for optional caching using
 #'   \code{shiny::bindCache()}.
+#' @param fill whether or not the returned tag should be wrapped
+#'   [htmltools::asFillItem()] so that it's `height` is allowed to grow/shrink
+#'   inside a tag wrapped with [htmltools::asFillContainer()] (e.g.,
+#'   [bslib::card_body_fill()]).
 #'
 #' @return An output or render function that enables the use of the widget
 #'   within Shiny applications.
@@ -474,7 +469,8 @@ createWidget <- function(name,
 #'
 #' @export
 shinyWidgetOutput <- function(outputId, name, width, height, package = name,
-                              inline = FALSE, reportSize = TRUE, reportTheme = FALSE) {
+                              inline = FALSE, reportSize = TRUE, reportTheme = FALSE,
+                              fill = TRUE) {
 
   # Theme reporting requires this shiny feature
   # https://github.com/rstudio/shiny/pull/2740/files
@@ -482,26 +478,27 @@ shinyWidgetOutput <- function(outputId, name, width, height, package = name,
     message("`reportTheme = TRUE` requires shiny v.1.4.0.9003 or higher. Consider upgrading shiny.")
   }
 
-  # generate html
-  html <- htmltools::tagList(
-    widget_html(
-      name, package, id = outputId,
-      class = paste0(
-        name, " html-widget html-widget-output",
-        if (reportSize) " shiny-report-size",
-        if (reportTheme) " shiny-report-theme"
-      ),
-      style = sprintf("width:%s; height:%s; %s",
-        htmltools::validateCssUnit(width),
-        htmltools::validateCssUnit(height),
-        if (inline) "display: inline-block;" else ""
-      ), width = width, height = height
+  tag <- widget_html(
+    name, package, id = outputId,
+    class = paste0(
+      name, " html-widget html-widget-output",
+      if (reportSize) " shiny-report-size",
+      if (reportTheme) " shiny-report-theme"
+    ),
+    style = css(
+      width = validateCssUnit(width),
+      height = validateCssUnit(height),
+      display = if (inline) "inline-block"
     )
   )
 
-  # attach dependencies
-  dependencies = widget_dependencies(name, package)
-  htmltools::attachDependencies(html, dependencies)
+  if (fill) {
+    tag <- asFillItem(tag)
+  }
+
+  attachDependencies(
+    tag, widget_dependencies(name, package), append = TRUE
+  )
 }
 
 
