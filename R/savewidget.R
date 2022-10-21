@@ -37,15 +37,10 @@ saveWidget <- function(widget, file, selfcontained = TRUE, libdir = NULL,
   # make it self-contained if requested
   if (selfcontained) {
 
-    # Save the file
-    # Include a title; pandoc 2.0 complains if you don't have one
-    pandoc_save_markdown(html, file = file, libdir = libdir,
-                         background = background, title = title)
-
-    if (!pandoc_available()) {
-      stop("Saving a widget with selfcontained = TRUE requires pandoc. For details see:\n",
-           "https://github.com/rstudio/rmarkdown/blob/master/PANDOC.md")
-    }
+    # write the html to a md file (pandoc 2.0 complains if you don't have a title)
+    write_md_for_pandoc(
+      html, file = file, libdir = libdir, background = background, title = title
+    )
 
     pandoc_self_contained_html(file, file)
     unlink(libdir, recursive = TRUE)
