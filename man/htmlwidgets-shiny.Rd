@@ -41,10 +41,10 @@ shiny session's client data?}
 be reported in the shiny session's client data?}
 
 \item{fill}{whether or not the returned tag should be treated as a fill item
-([htmltools::asFillItem()]), meaning that its `height` is allowed to
-grow/shrink inside a fill container ([htmltools::asFillContainer()]) with
-an opinionated height. Examples of fill containers include [bslib::card()]
-and [bslib::card_body_fill()].}
+(\code{\link[htmltools:asFillContainer]{htmltools::asFillItem()}}), meaning that its \code{height} is allowed to
+grow/shrink inside a fill container (\code{\link[htmltools:asFillContainer]{htmltools::asFillContainer()}}) with
+an opinionated height. Examples of fill containers include \code{bslib::card()}
+and \code{bslib::card_body_fill()}.}
 
 \item{expr}{An expression that generates an HTML widget (or a
 \href{https://rstudio.github.io/promises/}{promise} of an HTML widget).}
@@ -62,7 +62,7 @@ is useful if you want to save an expression in a variable.}
 }
 \value{
 An output or render function that enables the use of the widget
-  within Shiny applications.
+within Shiny applications.
 }
 \description{
 Helpers to create output and render functions for using HTML widgets within
@@ -70,8 +70,8 @@ Shiny applications and interactive Rmd documents.
 }
 \details{
 These functions are delegated to from within your widgets own shiny
-  output and render functions. The delegation is boilerplate and always works
-  the same for all widgets (see example below).
+output and render functions. The delegation is boilerplate and always works
+the same for all widgets (see example below).
 }
 \examples{
 # shiny output binding for a widget named 'foo'

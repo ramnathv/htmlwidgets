@@ -421,11 +421,11 @@ createWidget <- function(name,
 #'
 #' @param outputId output variable to read from
 #' @param name Name of widget to create output binding for
-#' @param width,height Must be a valid CSS unit (like \code{"100\%"},
-#'   \code{"400px"}, \code{"auto"}) or a number, which will be coerced to a
-#'   string and have \code{"px"} appended.
-#' @param package Package containing widget (defaults to \code{name})
-#' @param inline use an inline (\code{span()}) or block container (\code{div()})
+#' @param width,height Must be a valid CSS unit (like `"100%"`,
+#'   `"400px"`, `"auto"`) or a number, which will be coerced to a
+#'   string and have `"px"` appended.
+#' @param package Package containing widget (defaults to `name`)
+#' @param inline use an inline (`span()`) or block container (`div()`)
 #' for the output
 #' @param outputFunction Shiny output function corresponding to this render
 #'   function.
@@ -434,17 +434,17 @@ createWidget <- function(name,
 #' @param reportTheme Should the widget's container styles (e.g., colors and fonts)
 #' be reported in the shiny session's client data?
 #' @param expr An expression that generates an HTML widget (or a
-#'   \href{https://rstudio.github.io/promises/}{promise} of an HTML widget).
-#' @param env The environment in which to evaluate \code{expr}.
-#' @param quoted Is \code{expr} a quoted expression (with \code{quote()})? This
+#'   [promise](https://rstudio.github.io/promises/) of an HTML widget).
+#' @param env The environment in which to evaluate `expr`.
+#' @param quoted Is `expr` a quoted expression (with `quote()`)? This
 #'   is useful if you want to save an expression in a variable.
 #' @param cacheHint Extra information to use for optional caching using
-#'   \code{shiny::bindCache()}.
+#'   `shiny::bindCache()`.
 #' @param fill whether or not the returned tag should be treated as a fill item
 #'   ([htmltools::asFillItem()]), meaning that its `height` is allowed to
 #'   grow/shrink inside a fill container ([htmltools::asFillContainer()]) with
-#'   an opinionated height. Examples of fill containers include [bslib::card()]
-#'   and [bslib::card_body_fill()].
+#'   an opinionated height. Examples of fill containers include `bslib::card()`
+#'   and `bslib::card_body_fill()`.
 #'
 #' @return An output or render function that enables the use of the widget
 #'   within Shiny applications.
@@ -467,6 +467,7 @@ createWidget <- function(name,
 #' @name htmlwidgets-shiny
 #'
 #' @export
+#' @md
 shinyWidgetOutput <- function(outputId, name, width, height, package = name,
                               inline = FALSE, reportSize = TRUE, reportTheme = FALSE,
                               fill = !inline) {
