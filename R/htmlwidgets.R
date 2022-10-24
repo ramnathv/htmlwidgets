@@ -442,10 +442,11 @@ createWidget <- function(name,
 #'   is useful if you want to save an expression in a variable.
 #' @param cacheHint Extra information to use for optional caching using
 #'   \code{shiny::bindCache()}.
-#' @param fill whether or not the returned tag should be wrapped
-#'   [htmltools::asFillItem()] so that it's `height` is allowed to grow/shrink
-#'   inside a tag wrapped with [htmltools::asFillContainer()] (e.g.,
-#'   [bslib::card_body_fill()]).
+#' @param fill whether or not the returned tag should be treated as a fill item
+#'   ([htmltools::asFillItem()]), meaning that its `height` is allowed to
+#'   grow/shrink inside a fill container ([htmltools::asFillContainer()]) with
+#'   an opinionated height. Examples of fill containers include [bslib::card()]
+#'   and [bslib::card_body_fill()].
 #'
 #' @return An output or render function that enables the use of the widget
 #'   within Shiny applications.
@@ -470,7 +471,7 @@ createWidget <- function(name,
 #' @export
 shinyWidgetOutput <- function(outputId, name, width, height, package = name,
                               inline = FALSE, reportSize = TRUE, reportTheme = FALSE,
-                              fill = TRUE) {
+                              fill = !inline) {
 
   # Theme reporting requires this shiny feature
   # https://github.com/rstudio/shiny/pull/2740/files
