@@ -10,7 +10,7 @@ htmlwidgets 1.5.4.9000
 
 ### Improvements
 
-* Closed #433: `saveWidget()` no longer throw deprecation warning when pandoc 2.19 or higher is used.
+* Closed #433 and #440: `saveWidget(selfcontained=TRUE)` now uses the `{rmarkdown}` package to discover and call pandoc, which fixes a couple existing issues and helps "future proof" this code path from future changes to pandoc.
 
 htmlwidgets 1.5.4
 -------------------------------------------------------
