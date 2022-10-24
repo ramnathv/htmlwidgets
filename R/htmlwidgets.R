@@ -192,9 +192,7 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
     html <- asFillItem(html)
   }
 
-  if (!is.null(x$prepend) || !is.null(x$append)) {
-    html <- tagList(x$append, html, x$prepend)
-  }
+  html <- tagList(x$append, html, x$prepend)
 
   if (isTRUE(standalone)) {
     html <- div(id = "htmlwidget_container", html)
@@ -496,6 +494,10 @@ shinyWidgetOutput <- function(outputId, name, width, height, package = name,
   if (fill) {
     tag <- asFillItem(tag)
   }
+
+  # Adds an additional and unnecessary tagList() container to the return value...
+  # I'd love remove it, but lets keep it for backwards-compatibility
+  tag <- tagList(tag)
 
   attachDependencies(
     tag, widget_dependencies(name, package), append = TRUE

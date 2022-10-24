@@ -4,7 +4,6 @@ htmlwidgets 1.5.4.9000
 ### Breaking change
 
 * `shinyWidgetOutput()`'s `reportSize` argument now defaults to `TRUE`. This way, calling `shiny::getCurrentOutputInfo()` inside a `shinyRenderWidget()` context will report the current height and width of the widget.
-* `shinyWidgetOutput()` (and `as.tags.htmlwidget()`) no longer unnecessarily wraps the return value in an additional `tagList()`. (#442)
 
 ### Improvements
 
