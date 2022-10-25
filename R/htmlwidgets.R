@@ -188,9 +188,7 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
     height = sizeInfo$height
   )
 
-  if (sizeInfo$fill) {
-    html <- asFillItem(html)
-  }
+  html <- bindFillRole(html, item = sizeInfo$fill)
 
   html <- tagList(x$append, html, x$prepend)
 
@@ -440,11 +438,11 @@ createWidget <- function(name,
 #'   is useful if you want to save an expression in a variable.
 #' @param cacheHint Extra information to use for optional caching using
 #'   `shiny::bindCache()`.
-#' @param fill whether or not the returned tag should be treated as a fill item
-#'   ([htmltools::asFillItem()]), meaning that its `height` is allowed to
-#'   grow/shrink inside a fill container ([htmltools::asFillContainer()]) with
-#'   an opinionated height. Examples of fill containers include `bslib::card()`
-#'   and `bslib::card_body_fill()`.
+#' @param fill whether or not the returned tag should be treated as a fill item,
+#'   meaning that its `height` is allowed to grow/shrink to fit a fill container
+#'   with an opinionated height (see [htmltools::bindFillRole()] for more).
+#'   Examples of fill containers include `bslib::card()` and
+#'   `bslib::card_body_fill()`.
 #'
 #' @return An output or render function that enables the use of the widget
 #'   within Shiny applications.
@@ -492,9 +490,7 @@ shinyWidgetOutput <- function(outputId, name, width, height, package = name,
     )
   )
 
-  if (fill) {
-    tag <- asFillItem(tag)
-  }
+  tag <- bindFillRole(tag, item = fill)
 
   # Adds an additional and unnecessary tagList() container to the return value...
   # I'd love remove it, but lets keep it for backwards-compatibility

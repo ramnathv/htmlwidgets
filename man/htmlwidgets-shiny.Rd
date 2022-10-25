@@ -40,11 +40,11 @@ shiny session's client data?}
 \item{reportTheme}{Should the widget's container styles (e.g., colors and fonts)
 be reported in the shiny session's client data?}
 
-\item{fill}{whether or not the returned tag should be treated as a fill item
-(\code{\link[htmltools:asFillContainer]{htmltools::asFillItem()}}), meaning that its \code{height} is allowed to
-grow/shrink inside a fill container (\code{\link[htmltools:asFillContainer]{htmltools::asFillContainer()}}) with
-an opinionated height. Examples of fill containers include \code{bslib::card()}
-and \code{bslib::card_body_fill()}.}
+\item{fill}{whether or not the returned tag should be treated as a fill item,
+meaning that its \code{height} is allowed to grow/shrink to fit a fill container
+with an opinionated height (see \code{\link[htmltools:bindFillRole]{htmltools::bindFillRole()}} for more).
+Examples of fill containers include \code{bslib::card()} and
+\code{bslib::card_body_fill()}.}
 
 \item{expr}{An expression that generates an HTML widget (or a
 \href{https://rstudio.github.io/promises/}{promise} of an HTML widget).}
