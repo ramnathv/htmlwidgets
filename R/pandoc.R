@@ -178,7 +178,7 @@ find_pandoc <- function() {
 
     # determine the versions of the sources
     versions <- lapply(sources, function(src) {
-      if (file.exists(src))
+      if (dir.exists(src))
         get_pandoc_version(src)
       else
         numeric_version("0")
@@ -280,6 +280,8 @@ base_dir <- function(x) {
 # Get an S3 numeric_version for the pandoc utility at the specified path
 get_pandoc_version <- function(pandoc_dir) {
   pandoc_path <- file.path(pandoc_dir, "pandoc")
+  if (is_windows()) pandoc_path <- paste0(pandoc_path, ".exe")
+  if (!utils::file_test("-x", pandoc_path)) return(numeric_version("0"))
   with_pandoc_safe_environment({
     version_info <- system(paste(shQuote(pandoc_path), "--version"),
                            intern = TRUE)
