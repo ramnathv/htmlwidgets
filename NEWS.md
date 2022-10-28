@@ -3,14 +3,12 @@ htmlwidgets 1.5.4.9000
 
 ### Potentially breaking changes
 
+* Closed #433 and #440: `saveWidget(selfcontained=TRUE)` now requires the `{rmarkdown}` package to discover and call pandoc, which fixes a couple existing issues and helps "future proof" this code path from future changes to pandoc.
 * `shinyWidgetOutput()` and `sizingPolicy()` both gain a new `fill` parameter. When `TRUE` (the default), the widget's container element is allowed to grow/shrink to fit it's parent container so long as that parent is opinionated about its height and has been marked with `htmltools::bindFillRole(x, container = TRUE)`. (#442)
   * The primary motivation for this is to allow widgets to grow/shrink by default [inside `bslib::card_body_fill()`](https://rstudio.github.io/bslib/articles/cards.html#responsive-sizing)
   * Widgets that aren't designed to fill their container in this way should consider setting `sizingPolicy(fill = FALSE)`/`shinyWidgetOutput(fill = FALSE)` and/or allowing users to customize these settings (i.e., add a `fill` argument to the `customWidgetOutput()` function signature).
 * `shinyWidgetOutput()`'s `reportSize` argument now defaults to `TRUE`. This way, calling `shiny::getCurrentOutputInfo()` inside a `shinyRenderWidget()` context will report the current height and width of the widget.
 
-### Improvements
-
-* Closed #433: `saveWidget()` no longer throw deprecation warning when pandoc 2.19 or higher is used.
 
 htmlwidgets 1.5.4
 -------------------------------------------------------
