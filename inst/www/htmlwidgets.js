@@ -591,15 +591,15 @@
           return;
         el.className = el.className + " html-widget-static-bound";
 
-        var lastSize = getSize(el);
-
         var initResult;
         if (binding.initialize) {
-          initResult = binding.initialize(el, lastSize.w, lastSize.h);
+          var size = getSize(el);
+          initResult = binding.initialize(el, size.w, size.h);
           elementData(el, "init_result", initResult);
         }
 
         if (binding.resize) {
+          var lastSize = getSize(el);
           var resizeHandler = function(e) {
             var size = getSize(el);
             if (size.w === 0 && size.h === 0)
