@@ -1,4 +1,4 @@
-htmlwidgets 1.5.4.9000
+htmlwidgets 1.6.0
 -------------------------------------------------------
 
 ### Potentially breaking changes
