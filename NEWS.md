@@ -160,7 +160,7 @@ htmlwidgets 0.6
 * Add `appendContent` and `prependContent` functions for adding HTML
   to a widget rendered in a static context (i.e. R console or Rmd)
 
-* Fix a bug where the string "</body></html>" in the widget data caused
+* Fix a bug where the string `</body></html>` in the widget data caused
   `saveWidget()` to have malformed output. (#168)
 
 * Tweak pandoc conversion used in saveWidget to prevent hanging with
@@ -181,7 +181,7 @@ htmlwidgets 0.5
 
 * Add background parameter to saveWidget function
 
-* Fix a bug where "</script>" appearing in widget data would break
+* Fix a bug where `</script>` appearing in widget data would break
   parsing
 
 * Fix a bug where multiple widgets on a page caused all but one to miss
