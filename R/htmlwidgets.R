@@ -499,7 +499,9 @@ shinyWidgetOutput <- function(outputId, name, width, height, package = name,
       width = validateCssUnit(width),
       height = validateCssUnit(height),
       display = if (inline) "inline-block"
-    )
+    ),
+    width = width,
+    height = height
   )
 
   tag <- bindFillRole(tag, item = fill)
