@@ -18,14 +18,19 @@ write_md_for_pandoc <- function(html, file, background = "white", title, libdir 
     dep
   })
 
+  deps_html <- renderDependencies(deps, c("href", "file"))
+
   # Build the markdown page. Anything that goes into the eventual <head> goes in
   # the yaml header, and will be rendered using the pandoc template.
   html <- c(
     "---",
     yaml::as.yaml(list(
       title = htmltools::htmlEscape(title),
-      "header-include" = renderDependencies(deps, c("href", "file")),
-      "head" = rendered$head,
+      # Append a newline to prevent pandoc from treating as inline
+      # (which inserts a pilcrow between blocks)
+      # https://github.com/jgm/pandoc/issues/8475
+      "header-include" = paste0(deps_html, "\n"),
+      "head" = paste0(rendered$head, "\n"),
       "background-color" = htmltools::htmlEscape(background, attribute = TRUE)
     )),
     "---",
