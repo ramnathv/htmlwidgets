@@ -9,6 +9,9 @@ htmlwidgets 1.5.4.9000
   * Widgets that aren't designed to fill their container in this way should consider setting `sizingPolicy(fill = FALSE)`/`shinyWidgetOutput(fill = FALSE)` and/or allowing users to customize these settings (i.e., add a `fill` argument to the `customWidgetOutput()` function signature).
 * `shinyWidgetOutput()`'s `reportSize` argument now defaults to `TRUE`. This way, calling `shiny::getCurrentOutputInfo()` inside a `shinyRenderWidget()` context will report the current height and width of the widget.
 
+### Bug fixes
+
+* Closed #257 and #358: `saveWidget(selfcontained=TRUE)` now correctly prevents HTML from being interpreted as markdown. (#401)
 
 htmlwidgets 1.5.4
 -------------------------------------------------------
