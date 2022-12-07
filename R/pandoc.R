@@ -1,4 +1,4 @@
-write_md_for_pandoc <- function(html, file, background = "white", title, libdir = "lib") {
+write_md_for_pandoc <- function(html, file, background = "white", title, libdir = "lib", use_raw_attr = rmarkdown::pandoc_available("2.0")) {
   # Forked from htmltools::save_html to work better with pandoc_self_contained_html
 
   # ensure that the paths to dependencies are relative to the base
@@ -14,16 +14,14 @@ write_md_for_pandoc <- function(html, file, background = "white", title, libdir 
   # 4 characters or more was being interpreted by pandoc_self_contained_html as
   # markdown code blocks. We have two strategies for dealing with this, but the
   # better one only works with pandoc >=2.0.
-  if (rmarkdown::pandoc_available("2.0")) {
+  if (use_raw_attr) {
     # Preferred strategy is to keep indenting the HTML (indent = 0 doesn't turn
     # off indentation, it just means the indentation level starts at 0), and use
     # a raw block (```{=html}...```) to protect the HTML from markdown parser.
     indent <- 0
-    use_raw_attr <- TRUE
   } else {
     # Legacy pandoc doesn't support raw blocks, so just turn off indentation
     indent <- FALSE
-    use_raw_attr <- FALSE
   }
 
   rendered <- renderTags(html, indent = indent)

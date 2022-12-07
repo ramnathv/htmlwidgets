@@ -17,8 +17,15 @@ test_that("Fix for issue #358 works", {
     )
   )
 
-  write_md_for_pandoc(html, file, title = "test")
-  pandoc_self_contained_html(file, file)
-  lines <- readLines(file)
+  get_pandoc_html <- function(html, file, title = "test", ...) {
+    write_md_for_pandoc(html, file, title = title, ...)
+    pandoc_self_contained_html(file, file)
+    readLines(file)
+  }
+
+  lines <- get_pandoc_html(html, file)
+  expect_false(any(grepl("<pre", lines)))
+
+  lines <- get_pandoc_html(html, file, use_raw_attr = FALSE)
   expect_false(any(grepl("<pre", lines)))
 })
