@@ -197,7 +197,7 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
 
   html <- bindFillRole(html, item = sizeInfo$fill)
 
-  html <- tagList(x$append, html, x$prepend)
+  html <- tagList(x$prepend, html, x$append)
 
   if (isTRUE(standalone)) {
     html <- div(id = "htmlwidget_container", html)
