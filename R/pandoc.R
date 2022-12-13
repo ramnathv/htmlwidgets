@@ -60,13 +60,6 @@ write_md_for_pandoc <- function(html, file, background = "white", title, libdir 
 # The input should be the path to a file that was created using pandoc_save_markdown
 pandoc_self_contained_html <- function(input, output) {
 
-  if (!is_installed("rmarkdown")) {
-    stop(
-      "Saving a widget with selfcontained = TRUE requires the rmarkdown package. ",
-      "Install it with `install.packages('rmarkdown')`"
-    )
-  }
-
   if (!rmarkdown::pandoc_available()) {
     stop(
       "Saving a widget with selfcontained = TRUE requires pandoc. ",
