@@ -21,10 +21,10 @@ Imports:
     grDevices,
     htmltools (>= 0.5.3.9001),
     jsonlite (>= 0.9.16),
-    yaml
-Suggests:
+    yaml,
     knitr (>= 1.8),
-    rmarkdown,
+    rmarkdown
+Suggests:
     testthat
 Enhances: shiny (>= 1.1)
 URL: https://github.com/ramnathv/htmlwidgets
