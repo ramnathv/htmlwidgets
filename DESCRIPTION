@@ -1,7 +1,7 @@
 Package: htmlwidgets
 Type: Package
 Title: HTML Widgets for R
-Version: 1.5.4.9001
+Version: 1.6.0
 Authors@R: c(
     person("Ramnath", "Vaidyanathan", role = c("aut", "cph")),
     person("Yihui", "Xie", role = c("aut")),
@@ -19,7 +19,7 @@ License: MIT + file LICENSE
 VignetteBuilder: knitr
 Imports:
     grDevices,
-    htmltools (>= 0.5.3.9001),
+    htmltools (>= 0.5.4),
     jsonlite (>= 0.9.16),
     yaml,
     knitr (>= 1.8),
@@ -31,5 +31,3 @@ URL: https://github.com/ramnathv/htmlwidgets
 BugReports: https://github.com/ramnathv/htmlwidgets/issues
 RoxygenNote: 7.2.1
 Encoding: UTF-8
-Remotes:
-    rstudio/htmltools

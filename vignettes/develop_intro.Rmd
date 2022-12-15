@@ -34,7 +34,7 @@ HTML widgets are always hosted within an R package and should include all of the
 
 ## Example (sigma.js)
 
-To start with we'll walk through the creation of a simple widget that wraps the [sigma.js](http://sigmajs.org) graph visualization library. When we're done we'll be able to use it to display interactive visualizations of [GEXF](https://gephi.org/gexf/format/) (Graph Exchange XML Format) data files. For example:
+To start with we'll walk through the creation of a simple widget that wraps the [sigma.js](https://www.sigmajs.org/) graph visualization library. When we're done we'll be able to use it to display interactive visualizations of [GEXF](http://gexf.net/) (Graph Exchange XML Format) data files. For example:
 
 ```{r, eval=FALSE}
 library(sigma)

@@ -1,16 +1,16 @@
-htmlwidgets 1.5.4.9000
+htmlwidgets 1.6.0
 -------------------------------------------------------
 
 ### Potentially breaking changes
 
-* Closed #433 and #440: `saveWidget(selfcontained=TRUE)` now uses the `{rmarkdown}` package to discover and call pandoc, which fixes a couple existing issues and helps "future proof" this code path from future changes to pandoc.
 * `shinyWidgetOutput()` and `sizingPolicy()` both gain a new `fill` parameter. When `TRUE` (the default), the widget's container element is allowed to grow/shrink to fit it's parent container so long as that parent is opinionated about its height and has been marked with `htmltools::bindFillRole(x, container = TRUE)`. (#442)
   * The primary motivation for this is to allow widgets to grow/shrink by default [inside `bslib::card_body_fill()`](https://rstudio.github.io/bslib/articles/cards.html#responsive-sizing)
   * Widgets that aren't designed to fill their container in this way should consider setting `sizingPolicy(fill = FALSE)`/`shinyWidgetOutput(fill = FALSE)` and/or allowing users to customize these settings (i.e., add a `fill` argument to the `customWidgetOutput()` function signature).
 * `shinyWidgetOutput()`'s `reportSize` argument now defaults to `TRUE`. This way, calling `shiny::getCurrentOutputInfo()` inside a `shinyRenderWidget()` context will report the current height and width of the widget.
 
-### Bug fixes
+### Improvements
 
+* Closed #433 and #440: `saveWidget(selfcontained=TRUE)` now uses the `{rmarkdown}` package to discover and call pandoc, which fixes a couple existing issues and helps "future proof" this code path from future changes to pandoc.
 * Closed #257 and #358: `saveWidget(selfcontained=TRUE)` now correctly prevents HTML from being interpreted as markdown. (#401)
 
 htmlwidgets 1.5.4
@@ -160,7 +160,7 @@ htmlwidgets 0.6
 * Add `appendContent` and `prependContent` functions for adding HTML
   to a widget rendered in a static context (i.e. R console or Rmd)
 
-* Fix a bug where the string "</body></html>" in the widget data caused
+* Fix a bug where the string `</body></html>` in the widget data caused
   `saveWidget()` to have malformed output. (#168)
 
 * Tweak pandoc conversion used in saveWidget to prevent hanging with
@@ -181,7 +181,7 @@ htmlwidgets 0.5
 
 * Add background parameter to saveWidget function
 
-* Fix a bug where "</script>" appearing in widget data would break
+* Fix a bug where `</script>` appearing in widget data would break
   parsing
 
 * Fix a bug where multiple widgets on a page caused all but one to miss
