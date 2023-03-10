@@ -50,7 +50,7 @@ print.suppress_viewer <- function(x, ..., view = interactive()) {
 
 #' @method as.tags htmlwidget
 #' @export
-as.tags.htmlwidget <- function(x, standalone = FALSE) {
+as.tags.htmlwidget <- function(x, standalone = FALSE, ...) {
   toHTML(x, standalone = standalone)
 }
 
