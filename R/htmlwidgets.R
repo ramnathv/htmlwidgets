@@ -1,5 +1,5 @@
 #' @export
-print.htmlwidget <- function(x, ..., view = interactive()) {
+print.htmlwidget <- function(x, ..., view = interactive(), background = "white") {
 
   # if we have a viewer then forward viewer pane height (if any)
   viewer <- getOption("viewer")
@@ -23,14 +23,15 @@ print.htmlwidget <- function(x, ..., view = interactive()) {
   }
 
   # call html_print with the viewer
-  html_print(htmltools::as.tags(x, standalone=TRUE), viewer = if (view) viewerFunc)
+  html_print(htmltools::as.tags(x, standalone=TRUE),
+             background = background, viewer = if (view) viewerFunc)
 
   # return value
   invisible(x)
 }
 
 #' @export
-print.suppress_viewer <- function(x, ..., view = interactive()) {
+print.suppress_viewer <- function(x, ..., background = "white", view = interactive()) {
 
   viewer <- if (view) {
     if (isTRUE(x$sizingPolicy$browser$external)) {
@@ -44,7 +45,7 @@ print.suppress_viewer <- function(x, ..., view = interactive()) {
     NULL
   }
 
-  html_print(htmltools::as.tags(x, standalone=TRUE), viewer = viewer)
+  html_print(htmltools::as.tags(x, standalone=TRUE), background = background, viewer = viewer)
   invisible(x)
 }
 
@@ -385,7 +386,6 @@ widget_data <- function(x, id, ...){
 #' @param preRenderHook A function to be run on the widget, just prior to
 #'   rendering. It accepts the entire widget object as input, and should return
 #'   a modified widget object.
-#'
 #' @return An object of class \code{htmlwidget} that will intelligently print
 #'   itself into HTML in a variety of contexts including the R console, within R
 #'   Markdown documents, and within Shiny output bindings.
