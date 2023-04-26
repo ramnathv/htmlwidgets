@@ -192,7 +192,7 @@ $(document).on("slide.bs.carousel", "#widget-carousel", function(e) {
   <h3>Interactive dashboards</h3>
   <div class="row">
     <div class="col-sm-9">
-      <div class="row showcase-teaser">
+      <div class="row showcase-teaser" style="display: none;">
         <div class="col-xs-6 col-sm-3">
           <a href="https://beta.rstudioconnect.com/jjallaire/htmlwidgets-showcase-storyboard/htmlwidgets-showcase-storyboard.html"><img src="http://rmarkdown.rstudio.com/flexdashboard/images/htmlwidgets-showcase-storyboard.png"/></a>
         </div>
