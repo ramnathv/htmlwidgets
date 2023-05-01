@@ -165,7 +165,7 @@ shouldEval <- function(options) {
     if ((n <- length(options)) == 0) return(FALSE)
     # use numeric indices as names (remember JS indexes from 0, hence -1 here)
     if (is.null(names(options)))
-      names(options) <- seq_len(n) - 1L
+      names(options) <- as.character(seq_len(n) - 1L)
     # Escape '\' and '.' by prefixing them with '\'. This allows us to tell the
     # difference between periods as separators and periods that are part of the
     # name itself.
