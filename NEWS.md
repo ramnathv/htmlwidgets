@@ -1,6 +1,7 @@
 htmlwidgets 1.6.2.9000
 ------------------------------------------------------
 
+* Closed #417: `saveWidget()` will now throw an error if `libdir` is provided and not empty or non-existent when writing self-contained widget files to avoid unexpectedly deleting user files. (#468)
 
 htmlwidgets 1.6.2
 ------------------------------------------------------
