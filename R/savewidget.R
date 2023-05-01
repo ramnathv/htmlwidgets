@@ -8,7 +8,9 @@
 #'   (with external resources base64 encoded) or a file with external resources
 #'   placed in an adjacent directory.
 #' @param libdir Directory to copy HTML dependencies into (defaults to
-#'   filename_files).
+#'   filename_files). When `selfcontained = TRUE`, this directory must be empty
+#'   or not exist, in which case it will be created temporarily and removed
+#'   when the widget is saved.
 #' @param background Text string giving the html background color of the widget.
 #'   Defaults to white.
 #' @param title Text to use as the title of the generated page.
@@ -17,6 +19,17 @@
 saveWidget <- function(widget, file, selfcontained = TRUE, libdir = NULL,
                        background = "white", title = class(widget)[[1]],
                        knitrOptions = list()) {
+
+  if (selfcontained && !is.null(libdir) && file_test("-d", libdir)) {
+    libdir_files <- setdiff(dir(libdir, all.files = TRUE), c(".", ".."))
+    if (length(libdir_files) > 0) {
+      stop(
+        "`selfcontained = TRUE` but the `libdir` directory exists and contains files. ",
+        "When `selfcontained = TRUE`, the `libdir` directory is used ",
+        "temporarily and then deleted when the widget is saved."
+      )
+    }
+  }
 
   # Transform #RRGGBB/#RRGGBBAA colors to rgba(r,g,b,a) form, because the
   # pound sign interferes with pandoc processing
