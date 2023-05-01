@@ -20,11 +20,18 @@ saveWidget <- function(widget, file, selfcontained = TRUE, libdir = NULL,
                        background = "white", title = class(widget)[[1]],
                        knitrOptions = list()) {
 
-  if (selfcontained && !is.null(libdir) && file_test("-d", libdir)) {
+  # form a path for dependenent files
+  if (is.null(libdir)){
+    libdir <- paste(tools::file_path_sans_ext(basename(file)), "_files",
+      sep = "")
+  }
+
+  if (selfcontained && file_test("-d", libdir)) {
     libdir_files <- setdiff(dir(libdir, all.files = TRUE), c(".", ".."))
     if (length(libdir_files) > 0) {
       stop(
-        "`selfcontained = TRUE` but the `libdir` directory exists and contains files. ",
+        "`selfcontained = TRUE` but the `libdir` directory '", libdir,
+        "' exists and contains files. ",
         "When `selfcontained = TRUE`, the `libdir` directory is used ",
         "temporarily and then deleted when the widget is saved."
       )
@@ -40,12 +47,6 @@ saveWidget <- function(widget, file, selfcontained = TRUE, libdir = NULL,
 
   # convert to HTML tags
   html <- toHTML(widget, standalone = TRUE, knitrOptions = knitrOptions)
-
-  # form a path for dependenent files
-  if (is.null(libdir)){
-    libdir <- paste(tools::file_path_sans_ext(basename(file)), "_files",
-      sep = "")
-  }
 
   # make it self-contained if requested
   if (selfcontained) {
