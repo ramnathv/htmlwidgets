@@ -33,7 +33,7 @@ test_that("New-style widget html methods do not trigger warning on non-tag outpu
 
 test_that("Fallback logic still works", {
   res <- widget_html("does_not_exist", "htmlwidgets", id = "id", style = NULL, class = NULL)
-  expect_identical(res, tags$div(id = "id"))
+  expect_identical(res, tags$div(id = "id", "aria-labelledby" = "id-aria"))
 })
 
 test_that("Legacy methods work with tagList() and HTML()", {

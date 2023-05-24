@@ -1,11 +1,14 @@
 htmlwidgets 1.6.2.9000
 ------------------------------------------------------
 
+* Added `aria-labelledby` attribute to the `widget_html.default()` 
+output to work with accessibility improvements in `knitr` version 
+1.42.12.
 
 htmlwidgets 1.6.2
 ------------------------------------------------------
 
-* Closed #452: `as.tag.htmlwidget()` now includes `...` in it's function signature (for compatibility with the `htmltools::as.tags` generic).
+* Closed #452: `as.tag.htmlwidget()` now includes `...` in its function signature (for compatibility with the `htmltools::as.tags` generic).
 
 htmlwidgets 1.6.1
 ------------------------------------------------------

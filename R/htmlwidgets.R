@@ -286,9 +286,11 @@ widget_html <- function(name, package, id, style, class, inline = FALSE, ...) {
 
 widget_html.default <- function (name, package, id, style, class, inline = FALSE, ...) {
   if (inline) {
-    tags$span(id = id, style = style, class = class)
+    tags$span(id = id, style = style, class = class,
+              "aria-labelledby" = paste0(id, "-aria"))
   } else {
-    tags$div(id = id, style = style, class = class)
+    tags$div(id = id, style = style, class = class,
+             "aria-labelledby" = paste0(id, "-aria"))
   }
 }
 
