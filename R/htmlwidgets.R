@@ -167,6 +167,12 @@ addHook <- function(x, hookName, jsCode, data = NULL) {
   x
 }
 
+do_use_aria <- function(knitrOptions) {
+  getOption("htmlwidgets.USE_ARIA") %||%
+  ("fig.alt" %in% names(knitrOptions) &&
+    requireNamespace("knitr") &&
+    packageVersion("knitr") >= "1.42.12")
+}
 
 toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
 
@@ -192,7 +198,8 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
       if (sizeInfo$fill) "html-fill-item-overflow-hidden"
     ),
     width = sizeInfo$width,
-    height = sizeInfo$height
+    height = sizeInfo$height,
+    use_aria = do_use_aria(knitrOptions)
   )
 
   html <- bindFillRole(html, item = sizeInfo$fill)
@@ -257,17 +264,21 @@ lookup_widget_html_method <- function(name, package) {
   list(fn = widget_html.default, name = "widget_html.default", legacy = FALSE)
 }
 
-widget_html <- function(name, package, id, style, class, inline = FALSE, ...) {
+widget_html <- function(name, package, id, style, class, inline = FALSE, use_aria = FALSE, ...) {
 
   fn_info <- lookup_widget_html_method(name, package)
 
   fn <- fn_info[["fn"]]
   # id, style, and class have been required args for years, but inline is fairly new
-  # and undocumented, so unsuprisingly there are widgets out there are don't have an
+  # and undocumented, so unsurprisingly there are widgets out there that don't have an
   # inline arg https://github.com/renkun-ken/formattable/blob/484777/R/render.R#L79-L88
   args <- list(id = id, style = style, class = class, ...)
   if ("inline" %in% names(formals(fn))) {
     args$inline <- inline
+  }
+  # use_aria was added to support accessibility in knitr
+  if ("use_aria" %in% names(formals(fn))) {
+    args$use_aria <- use_aria
   }
   fn_res <- do.call(fn, args)
   if (isTRUE(fn_info[["legacy"]])) {
@@ -284,10 +295,11 @@ widget_html <- function(name, package, id, style, class, inline = FALSE, ...) {
   fn_res
 }
 
-widget_html.default <- function (name, package, id, style, class, inline = FALSE, ...) {
+widget_html.default <- function (name, package, id, style, class, inline = FALSE, use_aria = FALSE, ...) {
   if (inline) {
-    tags$span(id = id, style = style, class = class,
-              "aria-labelledby" = paste0(id, "-aria"))
+    tags$span(id = id, style = style, class = class)
+  } else if (!use_aria) {
+    tags$div(id = id, style = style, class = class)
   } else {
     tags$div(id = id, style = style, class = class,
              "aria-labelledby" = paste0(id, "-aria"))

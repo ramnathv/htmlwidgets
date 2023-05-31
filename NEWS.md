@@ -1,9 +1,14 @@
 htmlwidgets 1.6.2.9000
 ------------------------------------------------------
 
-* Added `aria-labelledby` attribute to the `widget_html.default()` 
-output to work with accessibility improvements in `knitr` version 
-1.42.12.
+* `widget_html.*` methods can now support a `use_aria`
+argument to support accessibility.  By default, this will be
+`TRUE` in `knitr` version 1.42.12 if a `fig.alt` chunk option is
+supplied.  The default can be overridden by setting the 
+`"htmlwidgets.USE_ARIA"` option.
+* Added optional `aria-labelledby` attribute to the
+`widget_html.default()` output to work with accessibility improvements in `knitr`.  `knitr` will insert the specified
+`fig.alt` or `fig.cap` text if `use_aria` is `TRUE`.
 
 htmlwidgets 1.6.2
 ------------------------------------------------------
