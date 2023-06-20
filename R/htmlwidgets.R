@@ -170,7 +170,7 @@ addHook <- function(x, hookName, jsCode, data = NULL) {
 do_use_aria <- function(knitrOptions) {
   getOption("htmlwidgets.USE_ARIA") %||%
   ("fig.alt" %in% names(knitrOptions) &&
-    requireNamespace("knitr") &&
+    isNamespaceLoaded("knitr") &&
     packageVersion("knitr") >= "1.42.12")
 }
 
