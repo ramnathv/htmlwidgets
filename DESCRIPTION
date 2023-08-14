@@ -1,33 +1,36 @@
-Package: htmlwidgets
 Type: Package
+Package: htmlwidgets
 Title: HTML Widgets for R
 Version: 1.6.2.9000
 Authors@R: c(
     person("Ramnath", "Vaidyanathan", role = c("aut", "cph")),
-    person("Yihui", "Xie", role = c("aut")),
-    person("JJ", "Allaire", role = c("aut")),
-    person("Joe", "Cheng", role = c("aut"), email = "joe@rstudio.com"),
-    person("Carson", "Sievert", role = c("aut", "cre"), email = "carson@rstudio.com", comment = c(ORCID = "0000-0002-4958-2844")),
+    person("Yihui", "Xie", role = "aut"),
+    person("JJ", "Allaire", role = "aut"),
+    person("Joe", "Cheng", , "joe@posit.co", role = "aut"),
+    person("Carson", "Sievert", , "carson@posit.co", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-4958-2844")),
     person("Kenton", "Russell", role = c("aut", "cph")),
-    person("Ellis", "Hughes", role = c("ctb")),
-    person(family = "RStudio", role = "cph")
-    )
+    person("Ellis", "Hughes", role = "ctb"),
+    person("Posit Software, PBC", role = c("cph", "fnd"))
+  )
 Description: A framework for creating HTML widgets that render in various
     contexts including the R console, 'R Markdown' documents, and 'Shiny'
     web applications.
 License: MIT + file LICENSE
-VignetteBuilder: knitr
+URL: https://github.com/ramnathv/htmlwidgets
+BugReports: https://github.com/ramnathv/htmlwidgets/issues
 Imports:
     grDevices,
     htmltools (>= 0.5.4),
     jsonlite (>= 0.9.16),
-    yaml,
     knitr (>= 1.8),
-    rmarkdown
+    rmarkdown,
+    yaml
 Suggests:
     testthat
-Enhances: shiny (>= 1.1)
-URL: https://github.com/ramnathv/htmlwidgets
-BugReports: https://github.com/ramnathv/htmlwidgets/issues
-RoxygenNote: 7.2.3
+Enhances: 
+    shiny (>= 1.1)
+VignetteBuilder: 
+    knitr
 Encoding: UTF-8
+RoxygenNote: 7.2.3
