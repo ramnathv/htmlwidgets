@@ -1,6 +1,10 @@
 htmlwidgets 1.6.2.9000
 ------------------------------------------------------
 
+### Potentially breaking changes
+
+* Closed #466: htmlwidgets no longer recurses into list-like objects when searching for JavaScript strings wrapped in `JS()`, unless the object has the class `"list"` or `"data.frame"`. This stops htmlwidgets from (possibly infinitely) recursively searching objects that are not actually recursive. Widget authors who relied on the previous behavior should ensure that their widget's `JS()` calls are wrapped in objects that have the class `"list"` or `"data.frame"`. (#467)
+
 
 htmlwidgets 1.6.2
 ------------------------------------------------------
