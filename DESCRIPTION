@@ -21,15 +21,13 @@ URL: https://github.com/ramnathv/htmlwidgets
 BugReports: https://github.com/ramnathv/htmlwidgets/issues
 Imports:
     grDevices,
-    htmltools (>= 0.5.4.9000),
+    htmltools (>= 0.5.7),
     jsonlite (>= 0.9.16),
     knitr (>= 1.8),
     rmarkdown,
     yaml
 Suggests:
     testthat
-Remotes:
-    rstudio/htmltools
 Enhances: 
     shiny (>= 1.1)
 VignetteBuilder: 
