@@ -1,0 +1,7 @@
+Title: R Package using htmlwidgets
+Binding: projectTemplate
+OpenFiles: README.Rmd
+
+Parameter: bower
+Widget: TextInput
+Label: Bower package
