@@ -6,7 +6,7 @@
 #' be: 
 #' 
 #'   * Used at the R console for data analysis just like conventional R plots (via RStudio Viewer)
-#'   * Seamlessly embedded within [R Markdown](https://rmarkdown.rstudio.com/) documents and [Shiny](https://shiny.rstudio.com/) web applications.
+#'   * Seamlessly embedded within [R Markdown](https://rmarkdown.rstudio.com/) documents and [Shiny](https://shiny.posit.co/) web applications.
 #'   * Saved as standalone web pages for ad-hoc sharing via email, Dropbox, etc.
 #'
 #' To get started creating your own HTML widgets, see the documentation

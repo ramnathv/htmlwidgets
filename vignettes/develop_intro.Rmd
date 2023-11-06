@@ -19,7 +19,7 @@ The **[htmlwidgets](https://cran.r-project.org/package=htmlwidgets)** package pr
 
 * Used at the R console for data analysis just like conventional R plots.
 * Embedded within [R Markdown](https://rmarkdown.rstudio.com/) documents
-* Incorporated into [Shiny](https://shiny.rstudio.com/) web applications.
+* Incorporated into [Shiny](https://shiny.posit.co/) web applications.
 * Saved as standalone web pages for ad-hoc sharing via email, Dropbox, etc.
 
 By following a small set of easy-to-follow conventions, it is possible to create HTML widgets with very little code. All widgets include the following components:
