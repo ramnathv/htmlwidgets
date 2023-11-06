@@ -183,14 +183,7 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
       width = validateCssUnit(sizeInfo$width),
       height = validateCssUnit(sizeInfo$height),
     ),
-    class = paste(
-      name, "html-widget",
-      # bindFillRole() puts `overflow:auto` to items by default,
-      # which is a sensible generic default, but in the context of
-      # widgets, we can pretty easily run into non-pixel-perfect situations
-      # (e.g., the widget JS uses something like offsetHeight to resize itself)
-      if (sizeInfo$fill) "html-fill-item-overflow-hidden"
-    ),
+    class = paste(name, "html-widget"),
     width = sizeInfo$width,
     height = sizeInfo$height
   )
@@ -488,12 +481,7 @@ shinyWidgetOutput <- function(outputId, name, width, height, package = name,
     class = paste0(
       name, " html-widget html-widget-output",
       if (reportSize) " shiny-report-size",
-      if (reportTheme) " shiny-report-theme",
-      # bindFillRole() puts `overflow:auto` to items by default,
-      # which is a sensible generic default, but in the context of
-      # widgets, we can pretty easily run into non-pixel-perfect situations
-      # (e.g., the widget JS uses something like offsetHeight to resize itself)
-      if (fill) " html-fill-item-overflow-hidden"
+      if (reportTheme) " shiny-report-theme"
     ),
     style = css(
       width = validateCssUnit(width),
