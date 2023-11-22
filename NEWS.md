@@ -1,4 +1,4 @@
-# htmlwidgets (development version)
+# htmlwidgets 1.6.3
 
 ### Potentially breaking changes
 

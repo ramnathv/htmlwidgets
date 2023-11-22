@@ -13,7 +13,7 @@ be:
 \details{
 \itemize{
 \item Used at the R console for data analysis just like conventional R plots (via RStudio Viewer)
-\item Seamlessly embedded within \href{https://rmarkdown.rstudio.com/}{R Markdown} documents and \href{https://shiny.rstudio.com/}{Shiny} web applications.
+\item Seamlessly embedded within \href{https://rmarkdown.rstudio.com/}{R Markdown} documents and \href{https://shiny.posit.co/}{Shiny} web applications.
 \item Saved as standalone web pages for ad-hoc sharing via email, Dropbox, etc.
 }
 
