@@ -1,6 +1,6 @@
 # Revdeps
 
-## Failed to check (39)
+## Failed to check (28)
 
 |package              |version |error |warning |note |
 |:--------------------|:-------|:-----|:-------|:----|
@@ -32,21 +32,4 @@
 |omicsViewer          |?       |      |        |     |
 |palmid               |?       |      |        |     |
 |parcats              |?       |      |        |     |
-|phenomis             |?       |      |        |     |
-|piano                |?       |      |        |     |
-|Prostar              |?       |      |        |     |
-|scanMiRApp           |?       |      |        |     |
-|spatialHeatmap       |?       |      |        |     |
-|sRACIPE              |?       |      |        |     |
-|systemPipeR          |?       |      |        |     |
-|timescape            |?       |      |        |     |
-|TnT                  |?       |      |        |     |
-|trackViewer          |?       |      |        |     |
-|ViSEAGO              |?       |      |        |     |
-
-## New problems (1)
-
-|package      |version |error  |warning |note |
-|:------------|:-------|:------|:-------|:----|
-|[canvasXpress](problems.md#canvasxpress)|1.46.9  |__+1__ |        |     |
 

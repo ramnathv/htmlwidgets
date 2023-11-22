@@ -5,7 +5,7 @@
 * Version: NA
 * GitHub: NA
 * Source code: https://github.com/cran/bigPint
-* Number of recursive dependencies: 173
+* Number of recursive dependencies: 177
 
 Run `revdepcheck::cloud_details(, "bigPint")` for more info
 
@@ -40,7 +40,7 @@ Run `revdepcheck::cloud_details(, "bigPint")` for more info
 * Version: NA
 * GitHub: NA
 * Source code: https://github.com/cran/bioCancer
-* Number of recursive dependencies: 221
+* Number of recursive dependencies: 224
 
 Run `revdepcheck::cloud_details(, "bioCancer")` for more info
 
@@ -75,7 +75,7 @@ Run `revdepcheck::cloud_details(, "bioCancer")` for more info
 * Version: NA
 * GitHub: NA
 * Source code: https://github.com/cran/BiocPkgTools
-* Number of recursive dependencies: 161
+* Number of recursive dependencies: 164
 
 Run `revdepcheck::cloud_details(, "BiocPkgTools")` for more info
 
@@ -145,7 +145,7 @@ Run `revdepcheck::cloud_details(, "cellscape")` for more info
 * Version: NA
 * GitHub: NA
 * Source code: https://github.com/cran/COTAN
-* Number of recursive dependencies: 196
+* Number of recursive dependencies: 272
 
 Run `revdepcheck::cloud_details(, "COTAN")` for more info
 
@@ -215,7 +215,7 @@ Run `revdepcheck::cloud_details(, "EBImage")` for more info
 * Version: NA
 * GitHub: NA
 * Source code: https://github.com/cran/EGSEA
-* Number of recursive dependencies: 196
+* Number of recursive dependencies: 200
 
 Run `revdepcheck::cloud_details(, "EGSEA")` for more info
 
@@ -250,7 +250,7 @@ Run `revdepcheck::cloud_details(, "EGSEA")` for more info
 * Version: NA
 * GitHub: NA
 * Source code: https://github.com/cran/EpiCompare
-* Number of recursive dependencies: 233
+* Number of recursive dependencies: 234
 
 Run `revdepcheck::cloud_details(, "EpiCompare")` for more info
 
@@ -355,7 +355,7 @@ Run `revdepcheck::cloud_details(, "GeneNetworkBuilder")` for more info
 * Version: NA
 * GitHub: NA
 * Source code: https://github.com/cran/Glimma
-* Number of recursive dependencies: 198
+* Number of recursive dependencies: 199
 
 Run `revdepcheck::cloud_details(, "Glimma")` for more info
 
@@ -530,7 +530,7 @@ Run `revdepcheck::cloud_details(, "InterCellar")` for more info
 * Version: NA
 * GitHub: NA
 * Source code: https://github.com/cran/LACE
-* Number of recursive dependencies: 151
+* Number of recursive dependencies: 169
 
 Run `revdepcheck::cloud_details(, "LACE")` for more info
 
@@ -670,7 +670,7 @@ Run `revdepcheck::cloud_details(, "mapscape")` for more info
 * Version: NA
 * GitHub: NA
 * Source code: https://github.com/cran/MatrixQCvis
-* Number of recursive dependencies: 163
+* Number of recursive dependencies: 185
 
 Run `revdepcheck::cloud_details(, "MatrixQCvis")` for more info
 
@@ -810,7 +810,7 @@ Run `revdepcheck::cloud_details(, "modchart")` for more info
 * Version: NA
 * GitHub: NA
 * Source code: https://github.com/cran/motifStack
-* Number of recursive dependencies: 143
+* Number of recursive dependencies: 147
 
 Run `revdepcheck::cloud_details(, "motifStack")` for more info
 
@@ -845,7 +845,7 @@ Run `revdepcheck::cloud_details(, "motifStack")` for more info
 * Version: NA
 * GitHub: NA
 * Source code: https://github.com/cran/octad
-* Number of recursive dependencies: 177
+* Number of recursive dependencies: 180
 
 Run `revdepcheck::cloud_details(, "octad")` for more info
 
@@ -880,7 +880,7 @@ Run `revdepcheck::cloud_details(, "octad")` for more info
 * Version: NA
 * GitHub: NA
 * Source code: https://github.com/cran/omicsViewer
-* Number of recursive dependencies: 184
+* Number of recursive dependencies: 191
 
 Run `revdepcheck::cloud_details(, "omicsViewer")` for more info
 
@@ -953,391 +953,6 @@ Run `revdepcheck::cloud_details(, "palmid")` for more info
 * Number of recursive dependencies: 99
 
 Run `revdepcheck::cloud_details(, "parcats")` for more info
-
-</details>
-
-## Error before installation
-
-### Devel
-
-```
-
-
-
-
-
-
-```
-### CRAN
-
-```
-
-
-
-
-
-
-```
-# phenomis
-
-<details>
-
-* Version: NA
-* GitHub: NA
-* Source code: https://github.com/cran/phenomis
-* Number of recursive dependencies: 165
-
-Run `revdepcheck::cloud_details(, "phenomis")` for more info
-
-</details>
-
-## Error before installation
-
-### Devel
-
-```
-
-
-
-
-
-
-```
-### CRAN
-
-```
-
-
-
-
-
-
-```
-# piano
-
-<details>
-
-* Version: NA
-* GitHub: NA
-* Source code: https://github.com/cran/piano
-* Number of recursive dependencies: 146
-
-Run `revdepcheck::cloud_details(, "piano")` for more info
-
-</details>
-
-## Error before installation
-
-### Devel
-
-```
-
-
-
-
-
-
-```
-### CRAN
-
-```
-
-
-
-
-
-
-```
-# Prostar
-
-<details>
-
-* Version: NA
-* GitHub: NA
-* Source code: https://github.com/cran/Prostar
-* Number of recursive dependencies: 168
-
-Run `revdepcheck::cloud_details(, "Prostar")` for more info
-
-</details>
-
-## Error before installation
-
-### Devel
-
-```
-
-
-
-
-
-
-```
-### CRAN
-
-```
-
-
-
-
-
-
-```
-# scanMiRApp
-
-<details>
-
-* Version: NA
-* GitHub: NA
-* Source code: https://github.com/cran/scanMiRApp
-* Number of recursive dependencies: 174
-
-Run `revdepcheck::cloud_details(, "scanMiRApp")` for more info
-
-</details>
-
-## Error before installation
-
-### Devel
-
-```
-
-
-
-
-
-
-```
-### CRAN
-
-```
-
-
-
-
-
-
-```
-# spatialHeatmap
-
-<details>
-
-* Version: NA
-* GitHub: NA
-* Source code: https://github.com/cran/spatialHeatmap
-* Number of recursive dependencies: 247
-
-Run `revdepcheck::cloud_details(, "spatialHeatmap")` for more info
-
-</details>
-
-## Error before installation
-
-### Devel
-
-```
-
-
-
-
-
-
-```
-### CRAN
-
-```
-
-
-
-
-
-
-```
-# sRACIPE
-
-<details>
-
-* Version: NA
-* GitHub: NA
-* Source code: https://github.com/cran/sRACIPE
-* Number of recursive dependencies: 101
-
-Run `revdepcheck::cloud_details(, "sRACIPE")` for more info
-
-</details>
-
-## Error before installation
-
-### Devel
-
-```
-
-
-
-
-
-
-```
-### CRAN
-
-```
-
-
-
-
-
-
-```
-# systemPipeR
-
-<details>
-
-* Version: NA
-* GitHub: NA
-* Source code: https://github.com/cran/systemPipeR
-* Number of recursive dependencies: 171
-
-Run `revdepcheck::cloud_details(, "systemPipeR")` for more info
-
-</details>
-
-## Error before installation
-
-### Devel
-
-```
-
-
-
-
-
-
-```
-### CRAN
-
-```
-
-
-
-
-
-
-```
-# timescape
-
-<details>
-
-* Version: NA
-* GitHub: NA
-* Source code: https://github.com/cran/timescape
-* Number of recursive dependencies: 42
-
-Run `revdepcheck::cloud_details(, "timescape")` for more info
-
-</details>
-
-## Error before installation
-
-### Devel
-
-```
-
-
-
-
-
-
-```
-### CRAN
-
-```
-
-
-
-
-
-
-```
-# TnT
-
-<details>
-
-* Version: NA
-* GitHub: NA
-* Source code: https://github.com/cran/TnT
-* Number of recursive dependencies: 125
-
-Run `revdepcheck::cloud_details(, "TnT")` for more info
-
-</details>
-
-## Error before installation
-
-### Devel
-
-```
-
-
-
-
-
-
-```
-### CRAN
-
-```
-
-
-
-
-
-
-```
-# trackViewer
-
-<details>
-
-* Version: NA
-* GitHub: NA
-* Source code: https://github.com/cran/trackViewer
-* Number of recursive dependencies: 183
-
-Run `revdepcheck::cloud_details(, "trackViewer")` for more info
-
-</details>
-
-## Error before installation
-
-### Devel
-
-```
-
-
-
-
-
-
-```
-### CRAN
-
-```
-
-
-
-
-
-
-```
-# ViSEAGO
-
-<details>
-
-* Version: NA
-* GitHub: NA
-* Source code: https://github.com/cran/ViSEAGO
-* Number of recursive dependencies: 166
-
-Run `revdepcheck::cloud_details(, "ViSEAGO")` for more info
 
 </details>
 
