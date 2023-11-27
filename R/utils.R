@@ -161,7 +161,8 @@ JSEvals <- function(list) {
 #' @noRd
 #' @keywords internal
 shouldEval <- function(options) {
-  if (inherits(options, c("list", "data.frame"))) {
+  if (is.list(options)) {
+    if (inherits(options, "POSIXlt")) return(FALSE)
     if ((n <- length(options)) == 0) return(FALSE)
     # use numeric indices as names (remember JS indexes from 0, hence -1 here)
     if (is.null(names(options)))
