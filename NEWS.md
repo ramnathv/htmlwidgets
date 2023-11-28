@@ -1,4 +1,4 @@
-# htmlwidgets (development version)
+# htmlwidgets 1.6.4
 
 * htmlwidgets once again eagerly recurses into list-like objects when searching for JavaScript strings wrapped in `JS()`. If you encounter an infinite recursion ("C stack usage is too close to the limit"), the best strategy is to coerce the offending items to a character string. (#478)
 
