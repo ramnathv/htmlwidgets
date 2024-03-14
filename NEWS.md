@@ -1,3 +1,7 @@
+# htmlwidgets (development version)
+
+
+
 # htmlwidgets 1.6.4
 
 This release reverts the change made in v1.6.3 (to no longer recurse into list-like objects when searching for JavaScript strings wrapped in `JS()`). Although that change helped prevent infinite recursion in some cases, it ultimately broke too many existing widgets that relied on the previous behavior. If you encounter infinite recursion errors ("C stack usage is too close to the limit"), the best strategy is to coerce the offending items to a character string. (#478)
