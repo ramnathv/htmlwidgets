@@ -1,5 +1,13 @@
 # htmlwidgets (development version)
 
+* `widget_html.*` methods can now support a `use_aria`
+argument to support accessibility.  By default, this will be
+`TRUE` in `knitr` version 1.42.12 if a `fig.alt` chunk option is
+supplied.  The default can be overridden by setting the 
+`"htmlwidgets.USE_ARIA"` option.
+* Added optional `aria-labelledby` attribute to the
+`widget_html.default()` output to work with accessibility improvements in `knitr`.  `knitr` will insert the specified
+`fig.alt` or `fig.cap` text if `use_aria` is `TRUE`.
 
 
 # htmlwidgets 1.6.4
@@ -15,7 +23,7 @@ This release reverts the change made in v1.6.3 (to no longer recurse into list-l
 
 # htmlwidgets 1.6.2
 
-* Closed #452: `as.tag.htmlwidget()` now includes `...` in it's function signature (for compatibility with the `htmltools::as.tags` generic).
+* Closed #452: `as.tag.htmlwidget()` now includes `...` in its function signature (for compatibility with the `htmltools::as.tags` generic).
 
 # htmlwidgets 1.6.1
 
