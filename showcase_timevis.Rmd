@@ -1,0 +1,15 @@
+---
+title: "htmlwidgets: timevis"
+---
+
+### timevis
+<https://daattali.com/shiny/timevis-demo/>
+
+timevis lets you create rich and fully interactive timeline visualizations
+based on the [vis.js](http://visjs.org/) Timeline library. 
+
+```{r timevis}
+library(timevis)
+timevis(data = timevisData, groups = timevisDataGroups,
+        options = list(editable = TRUE))
+```
