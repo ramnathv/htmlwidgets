@@ -1,6 +1,6 @@
 # htmlwidgets (development version)
 
-
+* Closes #490: htmlwidgets no longer inserts a new HTML element (and hides the widget HTML element) to display error messages. Instead, it now inserts error messages in the widget container. This is more consistent with how Shiny output bindings work in general, and as a result, allows the new `shiny::useBusyIndicators()` to work as intended when errors (silent or otherwise) are relevant. (#491)  
 
 # htmlwidgets 1.6.4
 
