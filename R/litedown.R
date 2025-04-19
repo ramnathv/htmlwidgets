@@ -29,9 +29,9 @@ record_print.htmlwidget <- function(x, ...) {
     if (!is.null(dep$meta) || !is.null(dep$head))
       browser()
   }
-  meta <- getOption("litedown.html.meta")
+  meta <- litedown::reactor("meta")
   meta$css <- unique(c(meta$css, css))
   meta$js <- unique(c(meta$js, js))
-  options(litedown.html.meta = meta)
+  litedown::reactor(meta = meta)
   xfun::new_record(output, "asis")
 }
