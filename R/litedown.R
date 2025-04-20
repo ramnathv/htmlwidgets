@@ -8,10 +8,14 @@ record_print.htmlwidget <- function(x, ...) {
     options$fig.width <- options$fig.dim[1]
     options$fig.height <- options$fig.dim[2]
   }
+  if (is.null(options$dpi))
+    options$dpi <- 84
+  if (is.null(options$fig.retina))
+    options$fig.retina <- 1
   if (is.null(options$out.width.px))
-    options$out.width.px <- options$fig.width*84
+    options$out.width.px <- with(options, fig.width*dpi/fig.retina)
   if (is.null(options$out.height.px))
-    options$out.height.px <- options$fig.height*84
+    options$out.height.px <- with(options, fig.height*dpi/fig.retina)
 
   html <- toHTML(x, standalone = FALSE, knitrOptions = options)
   output <- knitr::knit_print(html, options = options,  ...)
