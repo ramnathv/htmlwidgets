@@ -49,10 +49,17 @@ record_print.htmlwidget <- local({
       metatag <- list()
       for (i in seq_along(meta)) {
         dep <- meta[[i]]
+        src <- dep$src$file
+        if (is.null(src))
+          src <- dep$src$href
+        if (is.null(src)) {
+          warning("dependency '", dep$name, "' has neither `file` nor `href` source, so will be ignored.")
+          next
+        }
         if (!is.null(dep$stylesheet))
-          css <- c(css, file.path(dep$src$file, dep$stylesheet))
+          css <- c(css, file.path(src, dep$stylesheet))
         if (!is.null(dep$script))
-          js <- c(js, file.path(dep$src$file, dep$script))
+          js <- c(js, file.path(src, dep$script))
         if (!is.null(dep$meta))
           metatag <- c(metatag, list(dep$meta))
         if (!is.null(dep$head))
