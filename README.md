@@ -1,4 +1,4 @@
-### HTML Widgets for R
+### HTML Widgets for R <a href="https://htmlwidgets.org"><img src="man/figures/logo.png" align="right" height="138" alt="htmlwidget website" /></a>
 
 <!-- badges: start -->
 [![R build status](https://github.com/ramnathv/htmlwidgets/workflows/R-CMD-check/badge.svg)](https://github.com/ramnathv/htmlwidgets/actions)
