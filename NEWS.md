@@ -1,6 +1,6 @@
 # htmlwidgets (development version)
 
-
+* htmlwidgets hex sticker added
 
 # htmlwidgets 1.6.4
 
