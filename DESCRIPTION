@@ -11,6 +11,7 @@ Authors@R: c(
            comment = c(ORCID = "0000-0002-4958-2844")),
     person("Kenton", "Russell", role = c("aut", "cph")),
     person("Ellis", "Hughes", role = "ctb"),
+    person("Duncan", "Murdoch", role = "ctb"),
     person("Posit Software, PBC", role = c("cph", "fnd"))
   )
 Description: A framework for creating HTML widgets that render in various
@@ -27,10 +28,12 @@ Imports:
     rmarkdown,
     yaml
 Suggests:
-    testthat
+    testthat, litedown (>= 0.7.1), webshot2, xfun
 Enhances: 
     shiny (>= 1.1)
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
+Remotes: 
+  dmurdoch/litedown@htmlwidgets
