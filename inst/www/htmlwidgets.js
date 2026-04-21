@@ -565,14 +565,15 @@
     }
   }
 
-  var resizeObserver = new ResizeObserver(function(entries) {
-    entries.forEach(function(entry) {
-      var resizeHandler = elementData(entry.target, "resize_handler");
-      if (resizeHandler) {
-        resizeHandler(entry);
-      }
-    });
-  });
+  var resizeObserver = typeof ResizeObserver !== "undefined" ?
+    new ResizeObserver(function(entries) {
+      entries.forEach(function(entry) {
+        var resizeHandler = elementData(entry.target, "resize_handler");
+        if (resizeHandler) {
+          resizeHandler(entry);
+        }
+      });
+    }) : null;
 
   // Render static widgets after the document finishes loading
   // Statically render all elements that are of this widget's class
@@ -605,7 +606,7 @@
 
         if (binding.resize) {
           var lastSize = getSize(el);
-          elementData(el, "resize_handler", function() {
+          var resizeHandler = function() {
             var size = getSize(el);
             if (size.w === 0 && size.h === 0)
               return;
@@ -613,8 +614,14 @@
               return;
             lastSize = size;
             binding.resize(el, size.w, size.h, initResult);
-          });
-          resizeObserver.observe(el);
+          };
+
+          if (resizeObserver) {
+            elementData(el, "resize_handler", resizeHandler);
+            resizeObserver.observe(el);
+          } else {
+            on(window, "resize", resizeHandler);
+          }
         }
 
         var scriptData = document.querySelector("script[data-for='" + el.id + "'][type='application/json']");
