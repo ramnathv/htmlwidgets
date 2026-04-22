@@ -1,4 +1,5 @@
 test_that("Fix for issue #358 works", {
+  skip_if_not_installed("rmarkdown")
   skip_if_not(
     rmarkdown::pandoc_available(),
     "Test requires pandoc to be installed"

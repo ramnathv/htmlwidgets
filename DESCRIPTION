@@ -24,7 +24,7 @@ Imports:
     htmltools (>= 0.5.7),
     jsonlite (>= 0.9.16),
     knitr (>= 1.8),
-    rlang,
+    rlang (>= 1.0.0),
     yaml
 Suggests:
     rmarkdown,
