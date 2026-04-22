@@ -1,5 +1,7 @@
 # htmlwidgets (development version)
 
+* Moved `{rmarkdown}` from `Imports` to `Suggests`. It's now only required when calling `saveWidget(selfcontained = TRUE)`. (#455)
+
 * htmlwidgets hex sticker added
 
 * Static widget resize detection now uses `ResizeObserver` instead of `window.resize`, Bootstrap tab/collapse, and ioslides event listeners. This enables widgets to detect container-level size changes (e.g., CSS-driven resizing, sidebar toggles, flexbox/grid layout changes) that were previously missed. (#496)

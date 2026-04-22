@@ -1,4 +1,8 @@
-write_md_for_pandoc <- function(html, file, background = "white", title, libdir = "lib", use_raw_attr = rmarkdown::pandoc_available("2.0")) {
+write_md_for_pandoc <- function(html, file, background = "white", title, libdir = "lib", use_raw_attr = NULL) {
+  rlang::check_installed("rmarkdown")
+  if (is.null(use_raw_attr)) {
+    use_raw_attr <- rmarkdown::pandoc_available("2.0")
+  }
   # Forked from htmltools::save_html to work better with pandoc_self_contained_html
 
   # ensure that the paths to dependencies are relative to the base
@@ -60,6 +64,7 @@ write_md_for_pandoc <- function(html, file, background = "white", title, libdir 
 # The input should be the path to a file that was created using pandoc_save_markdown
 pandoc_self_contained_html <- function(input, output) {
 
+  rlang::check_installed("rmarkdown")
   if (!rmarkdown::pandoc_available()) {
     stop(
       "Saving a widget with selfcontained = TRUE requires pandoc. ",
