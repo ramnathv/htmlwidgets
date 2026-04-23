@@ -16,6 +16,7 @@ This release reverts the change made in v1.6.3 (to no longer recurse into list-l
 
 * Closed #466: htmlwidgets no longer recurses into list-like objects when searching for JavaScript strings wrapped in `JS()`, unless the object has the class `"list"` or `"data.frame"`. This stops htmlwidgets from (possibly infinitely) recursively searching objects that are not actually recursive. Widget authors who relied on the previous behavior should ensure that their widget's `JS()` calls are wrapped in objects that have the class `"list"` or `"data.frame"`. (#467)
 
+* Closed #417: `saveWidget()` will now throw an error if `libdir` is provided and not empty or non-existent when writing self-contained widget files to avoid unexpectedly deleting user files. (#468)
 
 # htmlwidgets 1.6.2
 
