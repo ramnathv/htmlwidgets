@@ -25,13 +25,28 @@ saveWidget <- function(widget, file, selfcontained = TRUE, libdir = NULL,
     background <- sprintf("rgba(%d,%d,%d,%f)", bgcol[1,1], bgcol[2,1], bgcol[3,1], bgcol[4,1]/255)
   }
 
-  # convert to HTML tags
-  html <- toHTML(widget, standalone = TRUE, knitrOptions = knitrOptions)
-
   # form a path for dependenent files
   if (is.null(libdir)){
     libdir <- paste(tools::file_path_sans_ext(basename(file)), "_files",
       sep = "")
+  }
+
+  # convert to HTML tags
+  isWidget <- inherits(widget, "htmlwidget")
+  isTags <- inherits(widget, c("shiny.tag", "shiny.tag.list"))
+  html <- if (isWidget) {
+    toHTML(widget, standalone = TRUE, knitrOptions = knitrOptions)
+  } else if (isTags) {
+    widget
+  } else {
+    stop("`widget` must be an object of class 'htmlwidget' or 'shiny.tag' or 'shiny.tag.list'.", call. = FALSE)
+  }
+
+  # selfcontained isn't yet supported in htmltools, but maybe it will someday
+  # https://github.com/rstudio/htmltools/issues/73
+  if (isTags && selfcontained) {
+    warning("`selfcontained` is not yet supported for HTML tags (just HTML widgets).", call. = FALSE)
+    selfcontained <- FALSE
   }
 
   # make it self-contained if requested
