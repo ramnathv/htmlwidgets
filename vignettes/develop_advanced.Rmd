@@ -187,3 +187,31 @@ Note that this function is looked up within the package implementing the widget 
 (**htmlwidgets** 1.5.2 and earlier used a convention of <code><em>widgetname</em>_html</code>. This is still supported for now, but the new <code>widget_html.<em>widgetname</em></code> convention is recommended going forward, as it seems less likely to lead to false positives.)
 
 Most widgets won't need a custom HTML function but if you need to generate custom HTML for your widget (e.g. you need an `<input>` or a `<span>` rather than a `<div>`) then you should use the **htmltools** package (as demonstrated by the code above).
+
+### Accessibility
+
+By default, widgets will usually be invisible to screen readers
+and other accessibility aids, but there is now some support
+in `htmlwidgets` when used with `knitr` version 1.42.12 or higher.
+That version added support for including alternate text in a
+widget:  if the
+HTML housing for the widget contains an `aria-labelledby`
+attribute, `knitr` will construct a label based on the
+`fig.alt` or `fig.cap` text provided in the chunk options.
+
+To support this, the `widget_html.default` function has a 
+new argument `use_aria`.  If `TRUE`, it will insert an
+`aria-labelledby` attribute containing `<id>-aria`, where
+`<id>` is the id of the widget.  If custom widgets have that
+argument, they'll also receive the value.
+
+The value will be automatically set to `TRUE` if the installed version
+of `knitr` is sufficient and the `htmlwidgets::toHTML` function detects
+a `fig.alt` setting in `knitrOptions`.  This setting can
+be overridden by setting `options("htmlwidgets.USE_ARIA")` to
+`TRUE` or `FALSE`.
+
+Widget developers are advised to test this feature with one or
+more screen readers, as they are not entirely consistent in 
+supporting it.  For example, the `rgl` package added a `role="img"`
+attribute so that one screen reader would detect its figures.

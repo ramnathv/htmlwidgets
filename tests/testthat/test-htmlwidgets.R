@@ -42,3 +42,10 @@ test_that("Legacy methods work with tagList() and HTML()", {
     widget_html("widgetF", "htmlwidgets", id = "id", style = NULL, class = NULL)
   }, NA)
 })
+
+test_that("The widget_html.default respects use_aria option", {
+  res <- widget_html("does_not_exist", "htmlwidgets", id = "id", style = NULL, class = NULL, use_aria = TRUE)
+  expect_identical(res, tags$div(id = "id", "aria-labelledby" = "id-aria"))
+  res <- widget_html("does_not_exist", "htmlwidgets", id = "id", style = NULL, class = NULL, use_aria = FALSE)
+  expect_identical(res, tags$div(id = "id"))
+})
