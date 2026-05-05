@@ -29,6 +29,14 @@ Source code for the package is available on GitHub:
 
 \url{https://github.com/ramnathv/htmlwidgets}
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/ramnathv/htmlwidgets}
+  \item Report bugs at \url{https://github.com/ramnathv/htmlwidgets/issues}
+}
+
+}
 \author{
 Ramnath Vaidyanathan, Joe Cheng, JJ Allaire, and Yihui Xie
 }

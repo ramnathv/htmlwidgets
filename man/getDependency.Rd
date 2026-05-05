@@ -2,15 +2,16 @@
 % Please edit documentation in R/utils.R
 \name{getDependency}
 \alias{getDependency}
-\title{Get js and css dependencies for  a htmlwidget}
+\title{Deprecated: use [widgetDependencies()] instead.}
 \usage{
 getDependency(name, package = name)
 }
 \arguments{
-\item{name}{name of the widget.}
+\item{name}{Widget name.}
 
-\item{package}{name of the package, defaults to the widget name.}
+\item{package}{Package name.}
 }
 \description{
-Get js and css dependencies for  a htmlwidget
+Deprecated: use [widgetDependencies()] instead.
 }
+\keyword{internal}

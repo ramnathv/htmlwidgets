@@ -42,3 +42,39 @@ test_that("Legacy methods work with tagList() and HTML()", {
     widget_html("widgetF", "htmlwidgets", id = "id", style = NULL, class = NULL)
   }, NA)
 })
+
+dep_names <- function(deps) {
+  deps <- Filter(Negate(is.null), deps)
+  vapply(deps, function(d) d$name, character(1))
+}
+
+test_that("widgetDependencies.character returns YAML + binding deps", {
+  deps <- widgetDependencies("nonexistent_widget", package = "htmlwidgets")
+  expect_true("htmlwidgets" %in% dep_names(deps))
+})
+
+test_that("widgetDependencies.htmlwidget returns YAML + binding + runtime deps", {
+  extra_dep <- htmltools::htmlDependency(
+    name = "extra-dep", version = "1.0", src = ".",
+    script = "extra.js"
+  )
+  w <- createWidget(
+    name = "nonexistent_widget",
+    x = list(),
+    package = "htmlwidgets",
+    dependencies = list(extra_dep)
+  )
+  deps <- widgetDependencies(w)
+  expect_true("htmlwidgets" %in% dep_names(deps))
+  expect_true("extra-dep" %in% dep_names(deps))
+})
+
+test_that("widgetDependencies.htmlwidget works with NULL dependencies", {
+  w <- createWidget(
+    name = "nonexistent_widget",
+    x = list(),
+    package = "htmlwidgets"
+  )
+  deps <- widgetDependencies(w)
+  expect_true("htmlwidgets" %in% dep_names(deps))
+})
