@@ -1,5 +1,7 @@
 # htmlwidgets (development version)
 
+* Added `widgetDependencies()`, an S3 generic for retrieving all HTML dependencies from a widget name (character) or object (htmlwidget). The htmlwidget method includes runtime dependencies passed via `createWidget(dependencies = ...)`, which were previously not accessible through the public API. `getDependency()` is now deprecated in favour of `widgetDependencies()`. (#255)
+
 * Moved `{rmarkdown}` from `Imports` to `Suggests`. It's now only required when calling `saveWidget(selfcontained = TRUE)`. (#455)
 
 * htmlwidgets hex sticker added
