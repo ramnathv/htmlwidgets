@@ -31,31 +31,35 @@ toJSON <- function(x) {
   structure(res, class = 'json')
 }
 
-#' Get js and css dependencies for  a htmlwidget
+#' Get HTML dependencies for a widget
 #'
-#' @param name name of the widget.
-#' @param package name of the package, defaults to the widget name.
+#' @param x A widget name (character) or an \code{htmlwidget} object.
+#' @param ... Currently unused.
+#' @param package Name of the package containing the widget (only used when
+#'   \code{x} is a character string). Defaults to the widget name.
+#' @return A list of \code{\link[htmltools]{htmlDependency}} objects.
 #' @export
-getDependency <- function(name, package = name){
-  config = sprintf("htmlwidgets/%s.yaml", name)
-  jsfile = sprintf("htmlwidgets/%s.js", name)
+widgetDependencies <- function(x, ...) {
+  UseMethod("widgetDependencies")
+}
 
-  # if yaml does not exist then assume no dependencies
-  #  in this cases dependencies should be provided through the
-  #  dependencies argument of createWidget
+#' @rdname widgetDependencies
+#' @export
+widgetDependencies.character <- function(x, ..., package = x) {
+  name <- x
+  config <- sprintf("htmlwidgets/%s.yaml", name)
+  jsfile <- sprintf("htmlwidgets/%s.js", name)
+
   widgetDep <- list()
   yaml_file <- system_file(config, package = package)
   if (file.exists(yaml_file)) {
-    config = yaml::yaml.load_file(yaml_file)
+    config <- yaml::yaml.load_file(yaml_file)
     widgetDep <- lapply(config$dependencies, function(l) {
-      l$package = package
+      l$package <- package
       do.call(htmlDependency, l)
     })
   }
 
-  # if js binding does not exist then assume provided through
-  #  some other mechanism such as a specified `htmlDependency` or `script` tag.
-  #  Note, this is a very special case.
   bindingDep <- if (file.exists(system_file(jsfile, package = package))) {
     htmlDependency(
       name = paste0(name, "-binding"),
@@ -78,6 +82,28 @@ getDependency <- function(name, package = name){
     widgetDep,
     list(bindingDep)
   )
+}
+
+#' @rdname widgetDependencies
+#' @export
+widgetDependencies.htmlwidget <- function(x, ...) {
+  name <- class(x)[1]
+  package <- attr(x, "package")
+  c(
+    widgetDependencies(name, package = package),
+    x$dependencies
+  )
+}
+
+
+#' Deprecated: use [widgetDependencies()] instead.
+#' @param name Widget name.
+#' @param package Package name.
+#' @keywords internal
+#' @export
+getDependency <- function(name, package = name) {
+  .Deprecated("widgetDependencies")
+  widgetDependencies(name, package = package)
 }
 
 

@@ -207,12 +207,7 @@ toHTML <- function(x, standalone = FALSE, knitrOptions = NULL) {
     }
   )
 
-  deps <- c(
-    widget_dependencies(name, package),
-    x$dependencies
-  )
-
-  browsable(attachDependencies(html, deps, append = TRUE))
+  browsable(attachDependencies(html, widgetDependencies(x), append = TRUE))
 }
 
 lookup_func <- function(name, package) {
@@ -317,10 +312,6 @@ widgetF_html <- function(name, package, id, style, class, inline = FALSE, ...) {
 }
 
 ## End unit test support functions #################################
-
-widget_dependencies <- function(name, package){
-  getDependency(name, package)
-}
 
 # Generates a <script type="application/json"> tag with the JSON-encoded data,
 # to be picked up by htmlwidgets.js for static rendering.
@@ -499,7 +490,7 @@ shinyWidgetOutput <- function(outputId, name, width, height, package = name,
   tag <- tagList(tag)
 
   attachDependencies(
-    tag, widget_dependencies(name, package), append = TRUE
+    tag, widgetDependencies(name, package = package), append = TRUE
   )
 }
 
@@ -533,7 +524,7 @@ shinyRenderWidget <- function(expr, outputFunction, env, quoted, cacheHint = "au
         "Shiny render call")
     }
 
-    deps <- .subset2(instance, "dependencies")
+    deps <- widgetDependencies(instance)
     deps_payload <- lapply(
       htmltools::resolveDependencies(deps),
       shiny::createWebDependency
