@@ -67,7 +67,7 @@ getDependency <- function(name, package = name){
     )
   }
 
-  c(
+  deps <- c(
     list(htmlDependency(
       name = "htmlwidgets",
       version = get_package_version("htmlwidgets"),
@@ -78,6 +78,22 @@ getDependency <- function(name, package = name){
     widgetDep,
     list(bindingDep)
   )
+
+  if (getOption("htmlwidgets.compress_payload", FALSE)) {
+    deps <- c(
+      list(
+        htmlDependency(
+          name = "fflate",
+          version = "0.8.3",
+          src = "www",
+          package = "htmlwidgets",
+          script = "fflate.0.8.3.min.js"
+        )
+      ),
+      deps
+    )
+  }
+  deps
 }
 
 

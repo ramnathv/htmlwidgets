@@ -339,7 +339,12 @@ widget_data <- function(x, id, ...){
   # we can replace all instances of "</" with "\\u003c/".
   payload <- toJSON(createPayload(x))
   payload <- gsub("</", "\\u003c/", payload, fixed = TRUE)
-  tags$script(type = "application/json", `data-for` = id, HTML(payload))
+  compress <- getOption("htmlwidgets.compress_payload", FALSE)
+  if (compress) {
+    # jsonlite::base64_enc automatically adds linebreaks to generated base64 string
+    payload <- gsub("\n", "", jsonlite::base64_enc(memCompress(payload, type = "gzip")))
+  }
+  tags$script(type = "application/json", compressed = compress, `data-for` = id, HTML(payload))
 }
 
 #' Create an HTML Widget

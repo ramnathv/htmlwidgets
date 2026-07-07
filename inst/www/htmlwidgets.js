@@ -312,6 +312,19 @@
     }
   }
 
+  function decompressString(str) {
+    var bytes;
+    if (typeof Uint8Array.fromBase64 == "function") {
+      bytes = Uint8Array.fromBase64(str);
+    } else {
+      var binaryString = atob(str);
+      bytes = new Uint8Array(binaryString.length);
+      for (var i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+    }
+    return window.fflate.strFromU8(window.fflate.unzlibSync(bytes));
+  }
   // Default implementations for methods
   var defaults = {
     find: function(scope) {
@@ -626,7 +639,9 @@
 
         var scriptData = document.querySelector("script[data-for='" + el.id + "'][type='application/json']");
         if (scriptData) {
-          var data = JSON.parse(scriptData.textContent || scriptData.text);
+          var txt = scriptData.textContent || scriptData.text;
+          var compressed = scriptData.getAttribute("compressed") === "TRUE";
+          var data = JSON.parse(compressed ? decompressString(txt) : txt)
           // Resolve strings marked as javascript literals to objects
           if (!(data.evals instanceof Array)) data.evals = [data.evals];
           for (var k = 0; data.evals && k < data.evals.length; k++) {
